@@ -1,0 +1,75 @@
+<!--更新入口網站-->
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+	<head>
+		<title>SA更新入口網站</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="css/common.css">
+		<link rel="stylesheet" href="css/updateweb.css">
+	</head>
+
+	<body>
+		<header>
+	      	<nav class="nav navbarBack">
+	        <div class="navbarContainer">
+	          <div class="navbarCenter">
+	            <a class="navbarBrand" href="homepage.html"><!--"portal.html":before login-->
+	              <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="img/brandWhite.png" />
+	              <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="img/brandColor.png" />
+	            </a>
+	          </div>
+	        </div>
+	      </nav>
+	    </header>
+	    <div class="content">
+	    	<h3>更新入口網站</h3>
+	    	<div class="leftContent" id="leftContent">
+	    		<h3>修改網站介紹</h3>
+		    	<form class="intro" action="#" method="post">
+		    		<textarea class="introduction" rows="16" cols="80">輸入網站介紹..</textarea>
+          			<input type="submit" id="store" value="儲存">
+		    	</form>	
+		    </div>
+			<div class="rightContent" id="rightContent">
+				<h3>修改最新消息</h3>
+				<form class="News" action="#" method="post">
+					<div class="block1">	            
+		            	<h4>新增訊息</h4>
+			        	<div class="uploadpic">
+			        		<!--上傳圖片-->
+			        		<label class="upload_cover">
+								<input id="upload_input" type="file">
+							</label>
+			        	</div>
+			        	<div class="inputnews">
+			              <textarea class="news" rows="15" cols="50">輸入最新消息..</textarea>
+			            </div>
+			            <input type="submit" id="store" value="儲存">
+			        </div>
+			    
+			        <div class="editnews">
+			           	<div class="block2">
+			              刪除或修改此消息-news1
+			              <input type="submit" id="edit" value="編輯">
+			              <input type="submit" id="delete" value="刪除">
+			            </div>
+			            <div class="block3">
+			              刪除或修改此消息-news2
+			              <input type="submit" id="edit" value="編輯">
+			              <input type="submit" id="delete" value="刪除">
+			            </div>
+			            <div class="block4">
+			              刪除或修改此消息-news3
+			              <input type="submit" id="edit" value="編輯">
+			              <input type="submit" id="delete" value="刪除">
+			            </div>
+			        </div>
+		        </form>
+			</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!--USER設定-->
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>USER設定</title>
+
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
+        <meta name="description" content="時間銀行以交換服務的時數為概念，不再以金錢，而是以時數衡量工作的價值，人人每日都有平等的24小時，如何善用有限的時間，將成為關鍵。" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="css/common.css" type="text/css">
+        <link rel="stylesheet" href="css/navbarUser.css" type="text/css">
+        <link rel="stylesheet" href="css/settingUser.css" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown menuIconBack">
+                            <a href="#"><div class="menuIcon"></div></a>
+                            <ul class="dropdownMenu dropdownMenuLeft">
+                                <li class="hiddenLarge">
+                                    <a class="point" href="point.html">
+                                        <img class="navbarPointImg" alt="Point" src="img/point3.png" />
+                                        目前沒有點數
+                                    </a>
+                                </li>
+                                <li><a href="allTask.html">所有任務</a></li>
+                                <li><a href="createTask.html">新增任務</a></li>
+                                <li><a href="schedule.html">行事曆</a></li>
+                                <li><a href="application.html">點數申請</a></li>
+                                <li><a href="setting.html">設定</a></li>
+                                <li><a href="#">登出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <a class="navbarBrand" href="homepage.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="img/brandColor.png" />
+                        </a>
+                    </div>
+                    <div class="navbarRight">
+                        <ul class="nav navbarUl">
+                            <li class="dropdown">
+                                <a href="">通知</a>
+                                <ul class="dropdownMenu dropdownMenuRight">
+                                    <li><a href="#"><div>First</div></a></li>
+                                    <li><a href="#"><div>Second</div></a></li>
+                                    <li><a href="#"><div>Third</div></a></li>
+                                    <li><a href="#"><div>Fourth</div></a></li>
+                                    <li><a href="#"><div>Fifth</div></a></li>
+                                    <li><a href="#"><div>Sixth</div></a></li>
+                                    <li><a href="#"><div>Seventh</div></a></li>
+                                    <li><a href="#"><div>Eighth</div></a></li>
+                                    <li><a href="#"><div>Nineth</div></a></li>
+                                    <li><a href="#"><div>Tenth</div></a></li>
+                                </ul>
+                            </li>
+                            <li class="hiddenSmall">
+                                <a class="point" href="point.html">
+                                    <img class="navbarPointImg" alt="Point" src="img/point3.png" />
+                                    目前沒有點數
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="navbarPortrait" href="personal.html">
+                            <img class="navbarPortraitImg" alt="Portrait" src="img/portrait1.jpg" />
+                        </a>                           
+                    </div>
+                </div>
+            </nav>
+        </header>
+        
+        <div class="content">
+            <h3>設定</h3>
+            <div class="leftContent">
+                <div class="pic">
+                    <img id="photo" src="img/photo.jpg">
+                    <div class="upload">
+                        <label class="btn btn-info">
+                            <input id="upload_img" style="display:none;" type="file">
+                            <i class="fa fa-photo"></i> 上傳圖片
+                        </label>
+                    </div>                  
+                </div>
+                <div class="text">
+                    <h3>個人簡介</h3>
+                    <textarea cols="50" rows="10">修改個人檔案</textarea>
+                </div>
+            </div>
+            <div class="rightContent">
+                <div class="splitColumn">
+                    <form class="setting" action="#" method="post">
+                        <label for="userName">使用者名稱</label>
+                        <input type="text" id="userName" name="userName" placeholder="修改名稱，最多20字元">
+                        <br><br>
+
+                        <label for="psw">舊密碼</label>
+                        <input type="password" id="psw" name="psw" placeholder="輸入舊密碼以驗證身份">
+                        <br><br>
+
+                        <label for="newpsw">新密碼</label>
+                        <input type="password" id="newpsw" name="newpsw" placeholder="請輸入8-20字元(包含數字、大小寫字母及特殊符號)" maxlength="20">
+                        <br><br>
+
+                        <label for="checknewpsw">確認新密碼</label>
+                        <input type="password" id="checknewpsw" name="checknewpsw" placeholder="確認新密碼">
+                        <br><br>
+
+                        <label for="tel">電話號碼</label>
+                        <input type="text" name="tel" id="tel" placeholder="修改電話號碼">
+                        <br><br> 
+
+                        <label for="mail">電子郵件</label>
+                        <input type="text" name="mail" id="mail" placeholder="修改電子郵件">
+                        <br><br>                   
+
+                        <label for="gender">性別</label>
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">男</label>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">女</label>
+                        <input type="radio" id="radio-other" name="gender" value="other">
+                        <label for="other">其他</label>
+                        <input type="text" id="other" name="other" placeholder="選填">
+                        <br><br>
+
+                        <label for="birthday">出生日期</label>
+                        <input type="date" id="birthday" name="birthday">
+                        <br><br>
+
+                        <input type="submit" id="store" value="儲存">
+                        <input type="submit" id="cancel" value="取消">
+                        <br>
+                    </form>
+                </div>  
+            </div>
+        </div>  
+
+    </body>
+
+</html>
+
+
+

@@ -1,0 +1,101 @@
+/*搜尋*/
+input[type="text"]
+{
+	padding:5px 15px; border:2px #787f86 solid;
+	-webkit-border-radius: 5px;
+	border-radius: 5px; 
+	width: 95%;
+}
+
+/*選項選擇*/
+.tabs,.tabs .tabOne
+{
+	list-style-type:none;
+ 	float:left;
+}
+.tabs .tabOne
+{
+	margin: 10px;
+}
+.tabs
+{
+	margin-bottom: 0px;
+	padding-left: 35PX;
+	font-size: 20px;
+}
+.tabOne a{
+	text-decoration:none;
+	color:black;
+	text-align:center;
+}
+.tabOne a:hover,.tabOne a:focus
+{
+	color: #05439e;
+	padding: 6px;
+	border-bottom: 2px solid #a92c07;
+}
+
+/*表格*/
+#giveTable
+{
+	border-top: 1.5px solid #736d6d;
+	width: 95%;
+	margin-left: 45px;
+	padding:10px 0px;
+}
+.tabsPart
+{
+	overflow:auto;
+}
+
+#giveTable td, #giveTable th
+{
+	border: 1px ridge #ddd;
+	padding: 10px;
+}
+#giveTable td:hover
+{
+	background-color: #7e8b98;
+}
+
+#giveTable td 
+{
+	padding-top: 8px;
+	padding-bottom: 8px;
+	background-color: #787f86;
+	color: white;
+	display: flex;
+	align-items: center; 
+}
+.introduction
+{
+	float: left;
+	width: 95%;
+}
+.giveBotton
+{
+	float:right;
+	border: 2px solid white;
+	padding: 0.5%;
+	border-radius:10px;
+}
+.giveBotton:hover
+{
+	background-color: white;
+	color:#787f86;
+	border: 2px solid #787f86;
+}
+.introductionLeft
+{
+	float: left;
+	width: 70%;
+}
+.introductionRight
+{
+	float: right;
+}
+.bodyContainer
+{
+	margin-top: 50px;
+	position: relative;
+}

@@ -1,0 +1,35 @@
+#pointTable
+{
+	width: 70%;
+	margin:auto;
+	background-color: #fbf9b2;
+}
+#pointTable td,#pointPart th
+{
+	border: 1px ridge #ddd;
+}
+.name,.time
+{
+	margin: 2% 0px;
+}
+.introduction
+{
+	float: left;
+}
+.point
+{
+	float: right;
+	margin: 1.7% 1.5% 0.5% 0px;
+}
+.navbarPointImg
+{
+	margin-left: -10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    height: 30px;
+}
+.bodyContainer
+{
+	margin-top: 50px;
+	position: relative;
+}

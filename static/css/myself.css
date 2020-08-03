@@ -1,0 +1,141 @@
+/*個人介紹*/
+.personal
+{
+	margin-bottom: 1%;
+	margin:auto;
+ 	overflow:auto;
+  	padding: 5px;
+  	background-color: white;
+}
+.picturePart
+{
+	width: 15%;
+	margin-left:20px;
+	margin-top:20px;
+	margin-bottom:2%;
+	display:table;
+}
+#picture
+{
+	width:85%;
+	border-radius: 50%;
+	display:table-cell;
+	vertical-align: middle;
+	border:1px solid #0a157d;
+}
+.introduce
+{
+	width: 75%;
+	line-height:20px;
+	margin-right:8%;
+	margin-top:auto;
+}
+.titleText
+{
+	line-height:10px;
+	font-size: 25px;
+}
+.inform,.sex,.age,.name
+{
+	font-size: 25px;
+}
+.text
+{
+	font-size: 20px;
+}
+
+/*選項選擇*/
+.tabs,.tabs .tabOne
+{
+	list-style-type:none;
+ 	float:left;
+}
+.tabs .tabOne
+{
+	margin: 10px;
+}
+.tabs
+{
+	margin-bottom: 0px;
+	padding-left: 35PX;
+	font-size: 20px;
+}
+.tabone a{
+	text-decoration:none;
+	color:black;
+	text-align:center;
+}
+.tabOne a:hover,.tabOne a:focus
+{
+	color: #05439e;
+	padding: 6px;
+	border-bottom: 2px solid #a92c07;
+}
+
+/*表格*/
+#task,#SR,#SP
+{
+	border-top: 1.5px solid #736d6d;
+	width: 95%;
+	margin-left: 45px;
+	padding:10px 0px;
+}
+.tabPartMyself,.pageChoose
+{
+	overflow:auto;
+}
+
+#task td, #task th ,#SR td,#SR th,#SP td,#SP th
+{
+	border: 1px ridge #ddd;
+	padding: 10px;
+}
+#task td:hover ,#SR td:hover,#SP td:hover
+{
+	background-color: #7e8b98;
+}
+
+#task td 
+{
+	padding-top: 20px;
+	padding-bottom: 8px;
+	background-color: #787f86;
+	color: white;
+}
+.bottonTask
+{
+	float:right;
+	border: 2px solid white;
+	padding: 5px;
+}
+.bottonTask:hover
+{
+	border: 2px solid #787f86;
+	background-color: white;
+	color:#787f86;
+}
+#SR td,#SP td
+{
+	background-color: #787f86;
+	color: white;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+#task tr:nth-child(1) ,#SR tr:nth-child(1),#SP tr:nth-child(1)
+{
+	margin-top: 15px;
+}
+.point
+{
+	float: left
+}
+.bodyContainer
+{
+	margin-top: 50px;
+	position: relative;
+}
+/*頁面選擇*/
+.pageChoose
+{
+	margin: auto;
+}

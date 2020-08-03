@@ -1,0 +1,75 @@
+body
+{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-size: 20px;  
+}
+
+.content
+{
+    margin: auto;
+    margin-top: 100px;
+    height: 600px;
+    width: 500px;
+    border: 3px solid #f1f1f1;
+}
+
+form > h3
+{
+    margin-left: 225px;
+    margin-top: 40px;
+    font-size: 25px;
+}
+
+input[type=text], [type=password]
+{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+button 
+{
+    background-color: #24478f;
+    color: white;
+    padding: 14px 20px;
+    margin: 40px 0;
+    border: none;
+    cursor: pointer;        /*滑鼠游標的圖案*/
+    width: 100%;
+    border-radius: 5px;
+}
+
+button:hover 
+{
+    opacity: 0.8;           /*按鈕透明度*/
+}
+
+.container 
+{
+    padding: 16px;
+    margin-top: 60px;
+}
+
+span.psw 
+{
+    padding-top: 16px;
+    margin-left: 200px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}

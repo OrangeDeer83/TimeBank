@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+    <head>
+        <title>TimeBank Visitor Navbar</title>
+
+        <meta charset="utf-8" />
+        <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
+        <meta name="description" content="時間銀行以交換服務的時數為概念，不再以金錢，而是以時數衡量工作的價值，人人每日都有平等的24小時，如何善用有限的時間，將成為關鍵。" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="css/common.css" type="text/css">
+        <link rel="stylesheet" href="css/navbarVisitor.css" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                    </div>
+                    <div class="navbarCenter">
+                        <a class="navbarBrand" href="portal.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="img/brandColor.png" />
+                        </a>
+                    </div>
+                    <div class="navbarRight">
+                        <ul class="nav navbarUl">
+                            <li id="loginLi">
+                                <div class="unspanned" id="loginMenu" onclick="clickToSpan('loginForm')">登入</div>
+                                <form class="unspanned loginForm" id="loginForm" name="loginForm" onsubmit="return login(1)">
+                                    <div class="loginFormContainer">
+                                        <div class="loginItem loginFont">帳號:</div>
+                                        <div class="loginItem">
+                                            <input class="loginItem loginInput" id="userID" type="text" name="userID" autocomplete="off" placeholder="輸入您的帳號" maxlength="20" />
+                                            <div id="idError" class="error">請輸入帳號(1至20位字元)</div>
+                                        </div>
+                                        <div class="loginItem loginFont">密碼:</div>
+                                        <div class="loginItem">
+                                            <input class="loginItem loginInput" id="userPassword" type="password" name="userPassword" placeholder="輸入您的密碼" />
+                                            <div id="passwordError" class="error">請輸入密碼(至少8位字元)</div>
+                                            <div id="loginError1" class="error">帳號或密碼錯誤，請再試一次</div>
+                                            <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
+                                        </div>
+                                        <a href="forgotPasswordUser.html"><div id="loginForgot">忘記密碼？</div></a>
+                                        <button class="loginItem loginButton" type="submit" >登入</button>
+                                        <a href="registerUser.html"><span class="loginItem loginButton">註冊</span></a>
+                                    </div>
+                                </form>
+                                <script src="js/clickToSpan.js"></script>
+                                <script src="js/login.js"></script>
+                            </li>
+                        </ul>                     
+                    </div>
+                </div>
+            </nav>
+        </header>
+        
+    </body>
+
+</html>

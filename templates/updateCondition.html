@@ -1,0 +1,126 @@
+<!--SA更新申請條件-->
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>更新申請條件</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="css/common.css" type="text/css">
+        <link rel="stylesheet" href="css/navbarSA.css" type="text/css">
+        <link rel="stylesheet" href="css/updateCondition.css" type="text/css">
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown">
+                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
+                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
+                                <div class="unspanned" id="HRSpan">
+                                    <div class="dropdownMenuItem HRSpanItem"><a href="humanResourceManagementSystem.html">系統管理員</a></div>
+                                    <div class="dropdownMenuItem HRSpanItem"><a href="humanResourceManagementGM.html">評論管理員</a></div>
+                                </div>
+                                <li><a href="sendPointSystem.html" class="dropdownMenuItem">配發系統</a></li>
+                                <li><a href="approveSystem.html" class="dropdownMenuItem">核准系統</a></li>
+                                <li><a href="updateCondition.html" class="dropdownMenuItem">更新申請條件</a></li>
+                                <li><a href="updateWeb.html" class="dropdownMenuItem">更新入口網站</a></li>
+                                <li><a href="settingManager.html" class="dropdownMenuItem">設定</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <div class="navbarBrand">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="AU" src="img/AUWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="AU" src="img/AUColor.png" />
+                        </div>
+                    </div>
+                    <div class="navbarRight">
+                        <div class="navbarUl" id="logout">登出</div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="updateDiv">
+          <div id="formTitleDiv"><h3 id="formTitle">更新申請條件</h3></div>
+          <div class="formColumn">
+            <form class="updateCondition" id="updateCondition" name="updateCondition" onsubmit="return register()">
+              <div class="formLine">
+                <div class="formLabelDiv"><label for="userName" class="formLabel">申請對象:</label></div>
+                <input type="text" class="formText" id="group" name="group" placeholder="無生活能力之特殊需求族群">
+              </div>
+              <div class="formLine">
+                <div class="formLabelDiv"><label for="userName" class="formLabel">申請類別:</label></div>
+                <i class='fas fa-minus-circle' id="circle1"></i>        
+                <label>輕度</label>
+                <i class='fas fa-minus-circle' id="circle2"></i>
+                <label>中度</label>
+                <i class='fas fa-minus-circle' id="circle3"></i>
+                <label>重度</label>
+                <i class='fas fa-plus-circle' id="circle4"></i>
+                <input type="text" id="newapply" name="newapply"  placeholder="輸入新類別">              
+              </div>
+              <div class="formLine">
+                <div class="formLabelDiv"><label for="userName" class="formLabel">申請條件:</label></div>
+                  <label class="upload_condition">
+                    <input type="file" id="applier" name="applier">
+                    <i class='fas fa-user-alt' id="useralt"></i>上傳檔案
+                  </label> 
+              </div>
+              <div class="formLine">          
+                <div class="formLabelDiv"><label for="userName" class="formLabel">申請額度:</label></div>
+                  <select id="quota">
+                    <option value="classify">選擇類別</option>
+                    <option value="slight">輕度</option>
+                    <option value="mild">中度</option>
+                    <option value="severe">重度</option>
+                  </select>
+              </div>
+              <div class="formLine">
+                <div class="formLabelDiv"><label for="userName" class="formLabel">申請週期:</label></div>
+                <div class="formCycle">
+                  <input type="checkbox"id="ones" name="cycle" value="ones">
+                  <label for="cycle" class="formLabelDiv">一次性</label>
+                  <input type="text" class="cycle" id="Ones" name="cycle" placeholder="輸入金額">
+                </div>
+                <div class="formCycle">
+                  <input type="checkbox" id="onemonth" name="cycle" value="onemonth">
+                  <label for="cycle" class="formLabelDiv">一個月</label>
+                  <input type="text" class="cycle" id="oneMonth" name="cycle" placeholder="輸入金額">
+                </div>   
+                <div class="formCycle">
+                  <input type="checkbox" id="threemonth" name="cycle" value="threemonth">
+                  <label for="cycle" class="formLabelDiv">三個月</label>
+                  <input type="text" class="cycle" id="threeMonth" name="cycle"  placeholder="輸入金額">
+                </div>
+                <div class="formCycle">
+                  <input type="checkbox" id="halfyear" name="cycle" value="halfyear">
+                  <label for="cycle" class="formLabelDiv">半年</label>
+                  <input type="text" class="cycle" id="halfYear" name="cycle" placeholder="輸入金額">
+                </div>   
+                <div class="formCycle">
+                  <input type="checkbox" id="year" name="cycle" value="year">
+                    <label for="cycle" class="formLabelDiv">一年</label>
+                    <input type="text" class="cycle" id="Year" name="cycle" placeholder="輸入金額">
+                </div>                       
+              </div>                                           
+              <div class="formButtons">
+                <input type="submit" class="formButton" value="儲存">
+                <input type="reset" class="formButton" value="取消">
+              </div>                                                 
+            </form>
+          </div>  
+        </div>  
+        <script src="js/clickToSpan.js"></script>
+    </body>
+
+</html>

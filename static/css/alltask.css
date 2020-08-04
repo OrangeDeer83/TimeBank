@@ -1,0 +1,204 @@
+.tabPartMyself
+{
+	overflow:auto;
+	width: 80%;
+	margin: auto;
+}
+.f,.s,.t
+{
+	overflow: auto;
+}
+.f
+{
+	float:left;
+}
+.s,.t
+{
+	float:right;
+	margin-top: 6px;
+}
+.addTaskPart
+{
+	overflow: auto;
+}
+.addTask
+{
+	float: right;
+	background-color: #3A4953;
+	padding: 8px 15px;
+	border-radius:10px;
+	color:white;
+	margin-right: 10%;
+}
+.tabsFirst,.tabsFirst li,.tabsSecond,.tabsSecond li,.tabsThird,.tabsThird li
+{
+	list-style-type:none;
+ 	float:left;
+}
+.tabsFirst .boss ,.tabsFirst .employee
+{
+	padding:5px 25px;
+	background-color:#3A4953;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+}
+.tabsFirst,.tabsSecond,.tabsThird
+{
+	padding-left: 0px;
+	margin: 0px;
+	font-size: 20px;
+	color: white;
+}
+.tabsSecond li,.tabsThird li 
+{
+	font-size: 16px;
+	padding:5px 22px;
+	background-color:#3A4953;
+	width:65px;
+	text-align:center;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+}
+.tabsFirst .boss,.tabsSecond .passed,.tabsThird .passed
+{
+	background-color:#bd5d5dab;
+}
+
+.taskName,.taskPoint
+{
+	float: left;
+	width:20%;
+}
+.taskTime
+{
+	float: left;
+	width:30%;
+}
+.taskDelete,.taskReport
+{
+	float: right;
+	width:10%;
+	text-align:center;
+	background-color:#4f6b7d;
+	padding: 5px 0px;
+	margin-left: 20%;
+}
+.rightBottom
+{
+	float: right;
+	width:15%;
+	margin-left: 20%;
+}
+.taskDelete:hover,.taskReport:hover
+{
+	float: right;
+	width:10%;
+	text-align:center;
+	background-color:#3A4953;
+	padding: 5px 0px;
+	margin-left: 20%;
+	cursor: pointer;
+}
+.done,.cancel
+{
+	float: right;
+	width:45%;
+	text-align:center;
+	background-color:#4f6b7d;
+	padding: 5px 0px;
+	margin:0px 2px;
+}
+.done:hover,.cancel:hover
+{
+	float: right;
+	width:45%;
+	text-align:center;
+	background-color:#3A4953;
+	padding: 5px 0px;
+	margin:0px 2px;
+	cursor: pointer;
+}
+#bpass,#bRecord,#bAccepted,#epass,#eCheck,#eRefused,#eRecord
+{
+	width: 80%;
+	margin:auto;
+	background-color:#3A4953;
+	color:white;
+}
+#bpass td, #bpass th,#bRecord td,#bRecord th,#bAccepted td,#bAccepted th,#epass td,#epass th,#eCheck td,#eCheck th,#eRefused td,#eRefused th,#eRecord td,#eRecord th
+{
+	border: 1px ridge #ddd;
+}
+.introduction
+{
+	overflow: auto;
+	margin: 4px 2px;
+	display: flex;
+	align-items: center;
+}
+.detailed
+{
+	border-top: 2px solid #ff9900;
+	overflow: auto;
+	align-items: center;
+	display: flex;
+}
+.taskPlaceContext
+{
+	float: left;
+	width: 73%;
+}
+#bRecord .detailed .taskPlaceContext
+{
+	float: left;
+	width: 50%;
+}
+.place,.context,.employeeName,.bossName
+{
+	margin: 2% 0px;
+}
+.bossScore,.bossComment,.employeeScore,.employeeeComment
+{
+	margin: 5% 0px;
+}
+.application
+{
+	float: right;
+	margin-right: 1.5%;
+	width: 25%;
+	align-items: center;
+	display: flex;
+}
+.applicationText
+{
+	float: left;
+}
+.applicationChoose
+{
+	float: right;
+	align-items: center;
+	display: flex;
+	width: 65%;
+	margin-left:10px;
+}
+.choose
+{
+	margin: auto;
+	float: left;
+	width: 80%
+}	
+.chooseBottom
+{
+	margin:auto;
+	float: right;
+	margin-left:15px;
+}
+.ch
+{
+	margin:6%;
+}
+.bodyContainer
+{
+	margin-top: 50px;
+	position: relative;
+}

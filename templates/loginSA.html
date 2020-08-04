@@ -12,20 +12,28 @@
   </head>
 
   <body>
-    <div class="content">
-      <form action="/action_page.php" method="post">
-        <h3 class="logIn">登入</h3>
-        <div class="container">
-          <label for="account"><b>帳號</b></label>
-          <input type="text" name="account" id="account" placeholder="請輸入您的帳號">
-
-          <label for="psw"><b>密碼</b></label>
-          <input type="password" name="psw" id="psw"  placeholder="請輸入您的密碼">
-        
-          <input type="submit" id="login" value="登入">
-          <span class="psw"><a href="#">忘記密碼?</a></span>
-        </div>     
-      </form>
+    <div class="loginDiv">
+      <div class="formTitleDiv"><h3 id="formTitle">登入</h3></div>
+      <div class="formColumn">
+        <form class="loginSA" id="loginSA" name="loginSA" onsubmit="return register()">       
+          <div class="formLine">
+            <div class="formLabelDiv"><label for="userID" class="formLabel">帳號</label></div>
+            <input type="text" class="formText" id="userID" name="userID" placeholder="最多20字元，且不得與他人重複，無法修改" maxlength="20" />
+            <div id="idError1" class="error">請輸入帳號，至多20字元</div>
+            <div id="idError2" class="error">此帳號已有人使用，請再試一次</div>
+          </div>
+          <div class="formLine">
+            <div class="formLabelDiv"><label for="userPassword" class="formLabel">密碼</label></div>
+            <input type="password" class="formText" id="userPassword" name="userPassword" placeholder="8-30字元(含數字、大小寫字母及特殊符號)" maxlength="30" />
+            <div id="passwordError1" class="error">請輸入密碼，至多30字元</div>
+            <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
+          </div>
+          <div class="formLine">
+            <input type="submit" class="formButton" value="登入">
+            <span class="psw"><a href="forgotPasswordSA.html">忘記密碼?</a></span>             
+          </div>                                
+        </form>
+      </div>      
     </div>
   </body>
   

@@ -1,0 +1,87 @@
+body
+{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+.content
+{
+    margin: auto;
+    margin-top: 100px;
+    height: 600px;
+    width: 500px;
+    border: 3px solid #f1f1f1;
+    background-color: navy;
+    color: #FFFFFF;
+}
+
+.content > h3
+{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.splitColumn
+{   
+    margin-top: 20px;
+    text-align: center;
+}
+
+#group, #newapply         /*text的外框大小*/
+{
+    height: 30px;  
+    text-align: center;            /*文字置中*/
+    vertical-align: middle;    
+    border-radius: 5px; 
+}
+
+#circle1, #circle2, #circle3, #circle4
+{
+    color: lightgreen;
+}
+
+#group                     /*輸入新類別外框*/
+{
+    width: 320px;
+} 
+
+.upload_condition          /*申請條件*/
+{
+    width: 320px;
+    height: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#applier                  /*上傳檔案*/
+{
+    display: none;
+    float: left;
+}
+
+
+#useralt                  /*PDF icon*/
+{
+    width: 50px;
+}
+
+.upload_icon {            /*upload icon*/
+    font-weight: bold;
+    position: absolute;
+    float: right;
+} 
+
+/*申請類別*/
+
+input[type=submit]
+{
+    margin: 0 0 0 200px;
+    width: 70px;
+    height: 30px;
+    background-color: #24478f;
+    color: white;
+    cursor: pointer;
+}
+

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
     <head>
-        <title>USER設定</title>
+        <title>設定</title>
 
         <meta charset="UTF-8" />
         <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
@@ -15,7 +15,7 @@
 
         <link rel="stylesheet" href="css/common.css" type="text/css">
         <link rel="stylesheet" href="css/navbarUser.css" type="text/css">
-        <link rel="stylesheet" href="css/settingUser.css" type="text/css">
+        <link rel="stylesheet" href="css/setting.css" type="text/css">
     </head>
 
     <body>
@@ -80,71 +80,92 @@
         </header>
         
         <div class="content">
-            <h3>設定</h3>
-            <div class="leftContent">
-                <div class="pic">
-                    <img id="photo" src="img/photo.jpg">
+            <div class="settingPhotoDiv">
+                <div class="formPicture">
+                    <div id="forImageDiv"><img class="photo" src="img/photo.jpg"></div>
                     <div class="upload">
-                        <label class="btn btn-info">
-                            <input id="upload_img" style="display:none;" type="file">
-                            <i class="fa fa-photo"></i> 上傳圖片
+                        <label class="uploadButton">
+                            <input id="upload_img" type="file">                            
                         </label>
                     </div>                  
                 </div>
-                <div class="text">
+                <div class="text" id="file">
                     <h3>個人簡介</h3>
-                    <textarea cols="50" rows="10">修改個人檔案</textarea>
+                    <textarea id="profile" cols="50" rows="10">修改個人檔案..</textarea>
                 </div>
             </div>
-            <div class="rightContent">
-                <div class="splitColumn">
-                    <form class="setting" action="#" method="post">
-                        <label for="userName">使用者名稱</label>
-                        <input type="text" id="userName" name="userName" placeholder="修改名稱，最多20字元">
-                        <br><br>
+            <div class="settingDiv">
+                <div id="formTitleDiv"><h3 id="formTitle">設定</h3></div>
+                    <div class="formColumn">
+                        <form class="settingUser" id="settingUser" name="settingUser" onsubmit="return register()">
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userName" class="formLabel">使用者名稱</label></div>
+                                <input type="text" class="formText" id="userName" name="userName" placeholder="最多20字元，之後可至設定修改" autofocus maxlength="20" />
+                                <div id="nameError" class="error">請輸入使用者名稱，至多20字元</div>
+                            </div>
 
-                        <label for="psw">舊密碼</label>
-                        <input type="password" id="psw" name="psw" placeholder="輸入舊密碼以驗證身份">
-                        <br><br>
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userID" class="formLabel">帳號</label></div>
+                                <input type="text" class="formText" id="userID" name="userID" placeholder="最多20字元，且不得與他人重複，無法修改" maxlength="20" />
+                                <div id="idError1" class="error">請輸入帳號，至多20字元</div>
+                                <div id="idError2" class="error">此帳號已有人使用，請再試一次</div>
+                            </div>
 
-                        <label for="newpsw">新密碼</label>
-                        <input type="password" id="newpsw" name="newpsw" placeholder="請輸入8-20字元(包含數字、大小寫字母及特殊符號)" maxlength="20">
-                        <br><br>
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userPassword" class="formLabel">密碼</label></div>
+                                <input type="password" class="formText" id="userPassword" name="userPassword" placeholder="8-30字元(含數字、大小寫字母及特殊符號)" maxlength="30" />
+                                <div id="passwordError1" class="error">請輸入密碼，至多30字元</div>
+                                <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
+                            </div>
 
-                        <label for="checknewpsw">確認新密碼</label>
-                        <input type="password" id="checknewpsw" name="checknewpsw" placeholder="確認新密碼">
-                        <br><br>
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="checkPassword" class="formLabel">確認密碼</label></div>
+                                <input type="password" class="formText" id="checkPassword" name="checkPassword" placeholder="再次輸入密碼" maxlength="30" />
+                                <div id="passwordError3" class="error">請再次輸入您的密碼</div>
+                                <div id="passwordError4" class="error">密碼不相符，請再試一次</div>
+                            </div>
 
-                        <label for="tel">電話號碼</label>
-                        <input type="text" name="tel" id="tel" placeholder="修改電話號碼">
-                        <br><br> 
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userEmail" class="formLabel">電子郵件</label></div>
+                                <input type="email" class="formText" id="userEmail" name="userEmail" placeholder="輸入您的電子郵件" />
+                                <div id="emailError" class="error">請輸入您的電子郵件</div>
+                            </div>
 
-                        <label for="mail">電子郵件</label>
-                        <input type="text" name="mail" id="mail" placeholder="修改電子郵件">
-                        <br><br>                   
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userPhone" class="formLabel">手機號碼</label></div>
+                                <input type="tel" class="formText" name="userPhone" id="userPhone" placeholder="輸入您的電話號碼" />
+                                <div id="phoneError1" class="error">請輸入您的手機號碼</div>
+                                <div id="phoneError2" class="error">手機號碼格式錯誤</div>
+                            </div>
 
-                        <label for="gender">性別</label>
-                        <input type="radio" id="male" name="gender" value="male">
-                        <label for="male">男</label>
-                        <input type="radio" id="female" name="gender" value="female">
-                        <label for="female">女</label>
-                        <input type="radio" id="radio-other" name="gender" value="other">
-                        <label for="other">其他</label>
-                        <input type="text" id="other" name="other" placeholder="選填">
-                        <br><br>
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label class="formLabel">性別</label></div>
+                                <div class="formRadios">
+                                    <input type="radio" id="genderMale" name="gender" value="genderMale">
+                                    <label for="genderMale" class="radioText">男</label>
+                                    <input type="radio" id="genderFemale" name="gender" value="genderFemale">
+                                    <label for="genderFemale" class="radioText">女</label>
+                                    <input type="radio" id="genderOther" name="gender" value="genderOther" checked>
+                                    <label for="genderOther" class="radioText">其他</label>
+                                </div>
+                            </div>
 
-                        <label for="birthday">出生日期</label>
-                        <input type="date" id="birthday" name="birthday">
-                        <br><br>
+                            <div class="formLine">
+                                <div class="formLabelDiv"><label for="userBirthday" class="formLabel">出生日期</label></div>
+                                <input type="date" class="formText" id="userBirthday" name="userBirthday" />
+                                <div id="birthError1" class="error">請輸入您的生日</div>
+                                <div id="birthError2" class="error">請輸入正確日期</div>
+                                <div id="registerError" class="error">伺服器錯誤，請稍後再試</div>
+                            </div>
 
-                        <input type="submit" id="store" value="儲存">
-                        <input type="submit" id="cancel" value="取消">
-                        <br>
-                    </form>
-                </div>  
-            </div>
+                            <div class="formLine">
+                                <input type="submit" class="formButton" value="儲存">
+                                <input type="reset" class="formButton" value="取消">
+                            </div>
+                        </form>
+                    </div>  
+            </div>  
         </div>  
-
     </body>
 
 </html>

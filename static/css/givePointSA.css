@@ -15,37 +15,49 @@ input[type="text"]
 }
 .tabs .tabOne
 {
-	margin: 10px;
+	margin: 10px 15px 10px 0px;
 }
 .tabs
 {
 	margin-bottom: 0px;
-	padding-left: 35PX;
 	font-size: 20px;
+	padding-left: 0px;
 }
 .tabOne a{
 	text-decoration:none;
 	color:black;
-	text-align:center;
 }
+	
 .tabOne a:hover,.tabOne a:focus
 {
 	color: #05439e;
-	padding: 6px;
 	border-bottom: 2px solid #a92c07;
+	padding-bottom: 2px;
 }
 
 /*表格*/
+.enterID
+{
+	float:left ;
+	width: 80%;
+}
+.search
+{
+	float: right ;
+	margin-left:15%;
+}
 #giveTable
 {
 	border-top: 1.5px solid #736d6d;
-	width: 95%;
-	margin-left: 45px;
+	width: 80%;
+	margin: auto;
 	padding:10px 0px;
 }
 .tabsPart
 {
 	overflow:auto;
+	margin: auto;
+	width: 80%;
 }
 
 #giveTable td, #giveTable th
@@ -64,8 +76,11 @@ input[type="text"]
 	padding-bottom: 8px;
 	background-color: #787f86;
 	color: white;
+}
+#giveTable tr:nth-child(1) td
+{
 	display: flex;
-	align-items: center; 
+	align-items: center;
 }
 .introduction
 {
@@ -75,9 +90,10 @@ input[type="text"]
 .giveBotton
 {
 	float:right;
-	border: 2px solid white;
+	border: 1.5px solid white;
 	padding: 0.5%;
 	border-radius:10px;
+	text-align:center;
 }
 .giveBotton:hover
 {
@@ -85,17 +101,107 @@ input[type="text"]
 	color:#787f86;
 	border: 2px solid #787f86;
 }
-.introductionLeft
+
+/*配發內容*/
+.nameTitle,.scoreSRTitle,.scoreSPTitle
 {
 	float: left;
-	width: 70%;
+	width: 97px;
 }
-.introductionRight
+.name,.scoreSR,.scoreSP
 {
-	float: right;
+	float: left;
+	width: 55%;
+}
+.total
+{
+	overflow: auto;
+}
+.title,.timeTitle
+{
+	width: 90px;
+	float: left;
+}
+.context
+{
+	float: left;
+	width: 100px;
+}
+.date
+{
+	width: 90px;
+	float: left;
+}
+.time
+{
+	float: left;
+	width: 20px;
 }
 .bodyContainer
 {
 	margin-top: 50px;
 	position: relative;
+}
+
+/*紀錄頁面*/
+@media (min-width: 610px) 
+{
+	.introductionLeft
+	{
+		float: left;
+		width: 50%;
+	}
+	.introductionRight
+	{
+		float: right;
+		width: 50%;
+	}
+	#giveTable td 
+	{
+		display: flex;
+		align-items: center;
+	} 
+}
+
+/*申請頁面*/
+@media (max-width: 1150px) 
+{
+	.introduction
+	{
+		width: 85%;
+	}
+	.enterID
+	{
+		width: 70%;
+	}
+	.search
+	{
+		margin-left:15%;
+	}
+}
+
+/*申請+紀錄頁面*/
+@media (max-width: 300px) 
+{
+	.enterID
+	{
+		width: 8%;
+	}
+	.search
+	{
+		margin-left:45%;
+	}
+	.tabs .tabOne
+	{
+		margin-right: 10px;
+	}
+}
+@media (max-width: 340px) 
+{
+	.total,.nameTitle,.name,.scoreSRTitle,.scoreSR,.scoreSPTitle,.scoreSP,.timeTitle,.context,.date,.time,.title
+	{
+		width:100%;
+		margin-bottom: 5px;
+	}
+
 }

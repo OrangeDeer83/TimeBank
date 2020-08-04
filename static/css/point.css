@@ -8,18 +8,39 @@
 {
 	border: 1px ridge #ddd;
 }
-.name,.time
-{
-	margin: 2% 0px;
-}
 .introduction
 {
 	float: left;
 }
+.nameTitle,.timeTitle
+{
+	float: left;
+	width: 20%;
+}
+.name
+{
+	float: left;
+	width: 80%;
+}
+.date
+{
+	float: left;
+	width: 30%;
+}
+.time
+{
+	float: left;
+	width: 50%;
+}
+.nameTitle,.timeTitle,.name,.date,.time
+{
+	margin-top: 1%;
+	margin-bottom: 1%;
+}
 .point
 {
 	float: right;
-	margin: 1.7% 1.5% 0.5% 0px;
+	margin: 2.8% 1.5% 0.5% 0px;
 }
 .navbarPointImg
 {
@@ -33,3 +54,21 @@
 	margin-top: 50px;
 	position: relative;
 }
+@media (max-width: 580px) {
+.introduction
+{
+	width: 100%;
+}
+.point
+{
+	float: left;
+}
+.nameTitle,.timeTitle,.name,.date,.time
+{
+	width: 100%;
+}
+.name,.time
+{
+	margin-bottom: 10px;
+}
+

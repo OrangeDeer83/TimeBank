@@ -8,12 +8,12 @@ input[type="text"]
 }
 
 /*選項選擇*/
-.tabs,.tabs .tabOne
+.tabs,.tabs .tabOne,.tabs .tabTwo
 {
 	list-style-type:none;
  	float:left;
 }
-.tabs .tabOne
+.tabs .tabOne,.tabs .tabTwo
 {
 	margin: 10px 15px 10px 0px;
 }
@@ -23,12 +23,13 @@ input[type="text"]
 	font-size: 20px;
 	padding-left: 0px;
 }
-.tabOne a{
+.tabOne a,.tabs .tabTwo a
+{
 	text-decoration:none;
 	color:black;
 }
 	
-.tabOne a:hover,.tabOne a:focus
+.tabOne a:hover,.tabTwo a:hover
 {
 	color: #05439e;
 	border-bottom: 2px solid #a92c07;
@@ -60,6 +61,7 @@ input[type="text"]
 	width: 80%;
 }
 
+/*配發介面表格*/
 #giveTable td, #giveTable th
 {
 	border: 1px ridge #ddd;
@@ -102,7 +104,7 @@ input[type="text"]
 	border: 2px solid #787f86;
 }
 
-/*配發內容*/
+/*配發+紀錄內容*/
 .nameTitle,.scoreSRTitle,.scoreSPTitle
 {
 	float: left;
@@ -181,8 +183,42 @@ input[type="text"]
 }
 
 /*申請+紀錄頁面*/
-@media (max-width: 300px) 
+@media (max-width: 400px) 
 {
+	#giveTable
+	{
+		width: 100%;
+		margin: none;
+	}
+	.tabs
+	{
+		width: 100%;
+	}
+	.tabs .tabOne
+	{
+		margin: 10px 0px;
+		width: 50%;
+		text-align:center;
+	}
+	.tabsPart
+	{
+		width: 100%;
+	}
+	.tabs .tabTwo
+	{
+		margin: 10px 0px;
+		width: 50%;
+		float: right;
+		text-align:center;
+	}
+}
+@media (max-width: 280px) 
+{
+	.total,.nameTitle,.name,.scoreSRTitle,.scoreSR,.scoreSPTitle,.scoreSP,.timeTitle,.context,.date,.time,.title
+	{
+		width:100%;
+		margin-bottom: 5px;
+	}
 	.enterID
 	{
 		width: 8%;
@@ -191,17 +227,10 @@ input[type="text"]
 	{
 		margin-left:45%;
 	}
-	.tabs .tabOne
+	.tabs .tabOne,.tabs .tabTwo
 	{
 		margin-right: 10px;
 	}
-}
-@media (max-width: 340px) 
-{
-	.total,.nameTitle,.name,.scoreSRTitle,.scoreSR,.scoreSPTitle,.scoreSP,.timeTitle,.context,.date,.time,.title
-	{
-		width:100%;
-		margin-bottom: 5px;
-	}
+
 
 }

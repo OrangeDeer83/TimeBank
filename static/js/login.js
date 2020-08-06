@@ -88,7 +88,7 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.100.50:5000/login", true);
+        request.open("POST", "http://192.168.1.146:5000/login", true);
         console.log("XMLHttpRequest opened.");
 
         request.onreadystatechange = function()

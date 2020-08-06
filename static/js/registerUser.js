@@ -67,10 +67,9 @@ function idTest()
     else // Old IE browser.
         checkID = new ActiveXObject("Microsoft.XMLHTTP");
 
-    checkID.open("POST", "http://114.39.116.18:5000/detect_repeated");
-    /*checkID.open("POST", "http://192.168.100.50:5000/detect_repeated");*/
+    checkID.open("POST", "http://192.168.1.146:5000/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
-    checkID.send(JSON.stringify({"userID": userId.value}));
+    checkID.send(JSON.stringify({"userID": userID.value}));
     console.log("CheckID JSON sent.");
     checkID.onload = function()
     {
@@ -333,8 +332,7 @@ function register()
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
 
-        request.open("POST", "http://114.39.116.18:5000/register");
-        /*request.open("POST", "http://192.168.100.50:5000/user_register");*/
+        request.open("POST", "http://192.168.1.146:5000/user_register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"userName": userName.value, "userID": userID.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));

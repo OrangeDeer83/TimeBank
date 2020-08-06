@@ -35,20 +35,20 @@
                                 <div class="unspanned" id="loginMenu" onclick="clickToSpan('loginForm')">登入</div>
                                 <form class="unspanned loginForm" id="loginForm" name="loginForm" onsubmit="return login(1)">
                                     <div class="loginFormContainer">
-                                        <div class="loginItem loginFont">帳號:</div>
+                                        <div class="loginItem loginFont">帳號</div>
                                         <div class="loginItem">
-                                            <input class="loginItem loginInput" id="userID" type="text" name="userID" autocomplete="off" placeholder="輸入您的帳號" maxlength="20" />
+                                            <input class="loginItem loginInput" id="userID" type="text" name="userID" placeholder="輸入您的帳號" maxlength="20" />
                                             <div id="idError" class="error">請輸入帳號(1至20位字元)</div>
                                         </div>
-                                        <div class="loginItem loginFont">密碼:</div>
+                                        <div class="loginItem loginFont">密碼</div>
                                         <div class="loginItem">
-                                            <input class="loginItem loginInput" id="userPassword" type="password" name="userPassword" placeholder="輸入您的密碼" />
-                                            <div id="passwordError" class="error">請輸入密碼(至少8位字元)</div>
+                                            <input class="loginItem loginInput" id="userPassword" type="password" name="userPassword" placeholder="輸入您的密碼" maxlength="30" />
+                                            <div id="passwordError" class="error">請輸入密碼，8-30字元</div>
                                             <div id="loginError1" class="error">帳號或密碼錯誤，請再試一次</div>
                                             <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
                                         </div>
                                         <a href="forgotPasswordUser.html"><div id="loginForgot">忘記密碼？</div></a>
-                                        <button class="loginItem loginButton" type="submit" >登入</button>
+                                        <input class="loginItem loginButton" type="submit" value="登入" />
                                         <a href="registerUser.html"><span class="loginItem loginButton">註冊</span></a>
                                     </div>
                                 </form>

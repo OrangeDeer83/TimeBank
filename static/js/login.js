@@ -9,8 +9,8 @@ var loginError2 = document.getElementById("loginError2");
 
 var request;
 
-userID.addEventListener("textInput", userIDVerify);
-userPassword.addEventListener("textInput", userPasswordVerify);
+userID.addEventListener("input", userIDVerify);
+userPassword.addEventListener("input", userPasswordVerify);
 
 /* If user didn't fill the input element, and clicked submit button directly. */
 function validated()
@@ -41,9 +41,9 @@ function userIDVerify()
 {
     loginError1.style.display = "none";
     loginError2.style.display = "none";
-    if (userID.value.length >= 0 || userID.value.length <= 21)
+    if (userID.value.length >= 1 && userID.value.length <= 20)
     {
-        userID.style.border = "1px solid #cccccc";
+        userID.style.border = "1px solid #CCCCCC";
         idError.style.display = "none";
         console.log("Avalible user id.");
         return true;
@@ -56,7 +56,7 @@ function userPasswordVerify()
     loginError2.style.display = "none";
     if (userPassword.value.length >= 7)
     {
-        userPassword.style.border = "1px solid #cccccc";
+        userPassword.style.border = "1px solid #CCCCCC";
         passwordError.style.display = "none";
         console.log("Avalible password.");
         return true;
@@ -88,40 +88,48 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.100.50:5000/login");
+        request.open("POST", "http://192.168.100.50:5000/login", true);
         console.log("XMLHttpRequest opened.");
-        request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));
-        /*req = {"userID": userID, "userPassword": userPassword, "type": num};
-        reqJson = JSON.stringify(req);
-        request.send(reqJson);*/
-        console.log("JSON sent.");
-        request.onload = function()
+
+        request.onreadystatechange = function()
         {
-            console.log(request.responseText);
-            rst = JSON.parse(request.responseText);
-            if (rst.rspCode == "200")
+            if (request.readyState == 4 && request.status == 200)
             {
-                console.log("Login success!");
-                // Different identity.
-                if (num == 1)
-                    window.location.assign("personal.html");
-                return true;
-            }
-            else if(rst.rspCode == "400")
-            {
-                console.log("Login failed!");
-                showLoginError1();
-                return false;
-            }
-            else
-            {
-                console.log("Login failed! Unknow response text code.");
-                showLoginError2();
-                return false;
+                request.setRequestHeader("Content-Type", "application/json");
+                request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));
+                console.log("JSON sent.");
+                console.log(request.responseText);
+                rst = JSON.parse(request.responseText);
+
+                request.onload = function()
+                {
+                    if (rst.rspCode == "200")
+                    {
+                        console.log("Login success!");
+                        // Different identity.
+                        if (num == 1) // USER
+                            window.location.assign("");
+                        else if (num == 2) // SA, AA, AG, AS, AU
+                            windows.location.assign("");
+                        else if (num == 3) // GM
+                            windows.location.assign("");
+                        return true;
+                    }
+                    else if(rst.rspCode == "400")
+                    {
+                        console.log("Login failed!");
+                        showLoginError1();
+                        return false;
+                    }
+                    else
+                    {
+                        console.log("Login failed! Unknow response text code.");
+                        showLoginError2();
+                        return false;
+                    }
+                }
             }
         }
-        console.log("Login failed! not onload.");
         showLoginError2();
         return false;
     }

@@ -1,4 +1,4 @@
-<!-- GM登入 -->
+<!-- SA, AA, AG, AS, AU登入 -->
 <!DOCTYPE HTML>
 <html lang="zh-TW">
 
@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="css/common.css" type="text/css">
         <link rel="stylesheet" href="css/loginManager6.css" type="text/css">
     </head>
-
+    
     <body>
         <header>
             <nav class="nav navbarBack">
@@ -33,12 +33,11 @@
                 </div>
             </nav>
         </header>
-
         <div class="bodyContainer">
             <div class="loginDiv">
                 <div class="formTitleDiv"><h3 id="formTitle">登入</h3></div>
                 <div class="formColumn">
-                    <form class="loginForm" id="loginFrom" name="loginForm" onsubmit="return login(3)">
+                    <form class="loginForm" id="loginFrom" name="loginForm" onsubmit="return login(2)">
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="userID" class="formLabel">帳號</label></div>
                             <input type="text" class="formText" id="userID" name="userID" placeholder="輸入您的帳號" maxlength="20" />
@@ -53,7 +52,7 @@
                         </div>
                         <div class="formLine">
                             <input type="submit" class="formButton" value="登入">
-                            <span class="psw"><a href="forgotPasswordGM.html">忘記密碼?</a></span>             
+                            <span class="psw"><a href="forgotPasswordSA.html">忘記密碼?</a></span>             
                         </div>
                     </form>
                     <script src="js/login.js"></script>

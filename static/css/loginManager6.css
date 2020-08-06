@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 .loginDiv
 {
     padding: 30px 0;
@@ -25,7 +27,6 @@
 .formText
 {
     vertical-align: middle;
-    padding-left: 5px;
     text-align: left;
     height: 30px;
     width: 300px;
@@ -81,9 +82,12 @@
     }
     .formLabelDiv
     {
-        width: 85px;
         margin-right: 15px;
         text-align: right;
+    }
+    .formText
+    {
+        padding-left: 5px;
     }
     .formButton
     {

@@ -32,13 +32,13 @@ function clickToSpan(name)
         element.style.display = "";
         classVal = classVal.replace("spanned","unspanned");
         element.setAttribute("class", classVal);
-        console.log("Spanned login form.");
+        console.log("Spanned.");
     }
     else if (contains(classVal, "unspanned")) // Span the element.
     {
         element.style.display = "block";
         classVal = classVal.replace("unspanned","spanned");
         element.setAttribute("class", classVal);
-        console.log("Hide login form.");
+        console.log("Hide.");
     }
 }

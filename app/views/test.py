@@ -1,11 +1,13 @@
 #coding: utf-8
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request
-import re, datetime
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app
+import re, datetime, smtplib
 from sqlalchemy.sql import func
 from ..models.model import *
 from ..models.dao import *
 from ..models.hash import *
+from ..models.token import *
 from ..models import db
+from email.mime.text import MIMEText
 test = Blueprint('test', __name__)
 
 @test.route('/USER/detect_repeated', methods=['POST'])
@@ -13,29 +15,24 @@ def user_detect_repeated():
     if request.method == 'POST':
         value = request.get_json()
         userID = value['userID']
-        print(userID)
         if re.search(r"^[\w]{1,20}$", userID) == None:
             return jsonify({"rspCode": "401"})  #帳號格式不符
         else:
             try:
                 query_data = account.query.filter(account.userID == func.binary(userID)).first()
             except:
-                return jsonify({"rspCode": "402"})  #資料庫錯誤
+                return jsonify({"rspCode": "400"})  #資料庫錯誤
             if query_data == None:
-                print(200)
                 return jsonify({"rspCode": "200"})  #沒有重複帳號，帳號可使用
             else:
-                return jsonify({"rspCode": "400"})  #偵測到重複帳號，帳號無法使用
+                return jsonify({"rspCode": "402"})  #偵測到重複帳號，帳號無法使用
     else:
         return jsonify({"rspCode": "300"})  #methods使用錯誤
-
-
 
 @test.route('/USER/register', methods=['POST'])
 def user_register():
     if request.method == 'POST':
         value = request.get_json()
-        print(value)
         user = []
         user.append(value['userName'])
         user.append(value['userID'])
@@ -91,15 +88,119 @@ def user_register():
     else:
         return jsonify({"rspCode": "300"})  #methods使用錯誤
 
+@test.route('/USER/login', methods=['POST'])
+def user_login():
+    if request.method == 'POST':
+        value = request.get_json()
+        print(value) 
+        userID = value['userID']
+        userPassword = value['userPassword']
+        try:
+            query_data = account.query.filter(account.userID == func.binary(userID)).first()
+            print(query_data)
+        except:
+            return jsonify({"rspCode": "400", "URL": ""})   #資料庫錯誤
+        if check_same(userPassword, query_data.userPassword, query_data.salt):
+            session['userID'] = userID
+            session['userName'] = query_data.userName
+            session['userType'] = 1
+            return jsonify({"rspCode": "200", "URL": url_for('test.info')}) #登入成功
+        else:
+            return jsonify({"rspCode": "401", "URL": ""}) #登入失敗       
+    else:
+        return jsonify({"rspCode": "300"})  #methods使用錯誤
+
+@test.route('/logout')
+def logout():
+    if session.get('userID'):
+        session.clear()
+        return jsonify({"rspCode": "200"})  #登出成功
+    else:
+        return jsonify({"rspCode": "400"})  #登出失敗
+
+@test.route('/USER/forget_password', methods=['POST'])
+def user_forget_password():
+    if request.method == 'POST':
+        value = request.get_json()
+        userMail = value['userMail']
+        print(value)
+        if len(userMail) > 50 or len(userMail) < 1:
+            return ({"rspCode": "401"})      #信箱長度不符
+        elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", userMail) == None:
+            return ({"rspCode": "402"})      #信箱格式不符
+        else:
+            try:
+                query_data = account.query.filter(account.userMail == func.binary(userMail)).first()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            print(query_data)
+            if query_data:
+                userID = query_data.userID
+                #產生token
+                token = create_token(current_app.config['SECRET_KEY'], userID, 300)
+                token_cut = str(token).split("'")[1]
+                #撰寫信件
+                mime = MIMEText("點擊以下連結以重設密碼\nhttp://192.168.100.50:5000" +\
+                    url_for('test.reset_password_page', token=token_cut), "plain", "utf-8")     #內文
+                mime["Subject"] = "TimeBank - 重設密碼"                                         #標題
+                #mime["From"] = "steven200083@gmail.com"                                        #寄件人
+                mime["To"] = userMail                                                           #收件人
+                msg = mime.as_string()                                                          #轉字串
+                #設定SMTP
+                smtp=smtplib.SMTP('smtp.gmail.com', 587)
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login('steven200083@gmail.com','itzqgclbfpojylmw')
+                from_addr = 'noreply@timeBank.com'
+                to_addr = userMail
+                status = smtp.sendmail(from_addr, to_addr, msg)
+                if status == {}:
+                    print("寄信成功\n")
+                    smtp.quit()
+                    return ({"rspCode": "200"})     #重置信寄送成功
+                else:
+                    print("寄信失敗\n"  )
+                    smtp.quit()
+                    return ({"rspCode": "404"})     #重置信寄送失敗
+            else:
+                return ({"rspCode": "403"})         #信箱輸入錯誤，沒有找到對應的信箱
+            
+    else:
+        return ({"rspCode": "300"})         #methods使用錯誤
+
+@test.route('/USER/reset_password/<token>', methods=['POST'])
+def user_reset_password(token):
+    if request.method == 'POST':
+        value = request.get_json()
+        print(value)
+        token_data = validate_token(current_app.config['SECRET_KEY'], token)
+        if token_data:
+            userPassword = value['userPassword']
+            if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,30}$", userPassword) == None:
+                return jsonify({"rspCode": "402"})      #密碼格式不符
+            else:
+                try:
+                    update_account = account.query.filter(account.userID == func.binary(token_data['userID'])).first()
+                    salt = generate_salt()
+                    update_account.userPassword = encrypt(userPassword, salt)
+                    update_account.salt = salt
+                    db.session.commit()
+                except:
+                    print(400)
+                    return jsonify({"rspCode": "400"})          #資料庫錯誤
+                print(200)
+                return jsonify({"rspCode": "200"})              #重設密碼成功
+        else:
+            print(401)
+            return jsonify({"rspCode": "401"})                  #token驗證失敗
+    else:
+        print(300)
+        return jsonify({"rspCode": "300"})                      #method使用錯誤
 
 
 @test.route('/USER/mail', methods=['POST'])
 def delete():
-    json = request.get_json()
-    if re.search(r"^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$", json['userMail']) == None:
-        return jsonify({"rspCode": "405"})      #信箱格式不符
-    else:
-        return 'good'
+    
     return 'ok'
 
 @test.route('/login_user_page')
@@ -117,12 +218,13 @@ def register_page():
 def directory():
     return render_template('test/directory.html')
 
-@test.route('/info/<userID>')
-def info(userID):
-    if not session.get('userID'):   
+@test.route('/info')
+def info():
+    userName =session.get('userName') 
+    if not userName:   
         return redirect(url_for('login_user_page'))
     else:
-        return render_template('test/directory.html', welcome = '歡迎' + userID)
+        return render_template('test/directory.html', welcome = '歡迎' + userName)
 
 @test.route('/upload_js_page')
 def upload_js_page():
@@ -144,13 +246,10 @@ def upload_img_page():
 def forget_password_page():
     return render_template('test/forget_password.html')
 
-
-'''
-@test.route('/reset_password_page/<token>')
+@test.route('/USER/reset_password_page/<token>')
 def reset_password_page(token):
     print(token)
-    if validate_token(token):
+    if validate_token(current_app.config['SECRET_KEY'], token):
         return render_template('test/reset_password.html')
     else:
         return "該網頁已過期"
-'''

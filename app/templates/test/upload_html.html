@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>上傳html</title>
+</head>
+<body>
+    <form action="{{url_for('upload_html')}}" method="POST" enctype="multipart/form-data">
+		<input type="file" name="html_file" />
+		<input type="submit" name="button" />
+	</form>
+</body>
+</html>

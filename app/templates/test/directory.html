@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>目錄</title>
+    <script type="text/javascript">
+        function register(){
+            window.location.href = "{{url_for('test.register_page')}}";
+        }
+
+        function login(){
+            window.location.href = "{{url_for('test.login_user_page')}}";
+        }
+
+        function forget_password(){
+            window.location.href = "{{url_for('test.forget_password_page')}}";
+        }
+
+        function upload_js(){
+            window.location.href = "{{url_for('test.upload_js_page')}}";
+        }
+
+        function upload_html(){
+            window.location.href = "{{url_for('test.upload_html_page')}}";
+        }
+
+        function upload_css(){
+            window.location.href = "{{url_for('test.upload_css_page')}}";
+        }
+
+        function upload_img(){
+            window.location.href = "{{url_for('test.upload_img_page')}}";
+        }
+
+        function logout(){
+            /*var xhr = new XMLHttpRequest();
+            xhr.open("GET", "")
+            xhr.send();
+            xhr.onload = function(){
+                rsp = JSON.parse(xhr.responseText);
+                if (rsp.rspCode == "200"){
+                    alert("登出成功");
+                    window.location.href = "{{url_for('test.directory')}}";
+                }
+                else {
+                    alert("登出失敗，請再試一次");
+                }
+            }*/
+        }
+    </script>
+</head>
+<body>
+    <input type="submit" value="註冊" onclick="register();" />
+    <input type="submit" value="登入" onclick="login();" />
+    <input type="submit" value="忘記密碼" onclick="forget_password();" />
+    <input type="submit" value="上傳js" onclick="upload_js();">
+    <input type="submit" value="上傳html" onclick="upload_html();">
+    <input type="submit" value="上傳css" onclick="upload_css();">
+    <input type="submit" value="上傳img" onclick="upload_img();">
+    <input type="submit" value="登出" onclick="logout();" /><br />
+    {{welcome}}
+</body>
+</html>

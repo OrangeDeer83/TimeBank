@@ -180,8 +180,12 @@ response:
 ### 下面是新的  
 
 理論上存在txt的沒有字數限制
- (rspCode:200、300沒意外意思都一樣，後面有例外才寫說明)
-# 1.網站介紹上傳(先不要)
+1.網站介紹存在static\uploadFile\webIntro.txt
+2.最新消息圖片存在static\uploadFile\newsImage\number.jpg
+3.最新消息內文存在
+static\uploadFile\newsContent\number.txt
+
+# 1.網站介紹上傳
 ### POST
 ### 上傳網站介紹
 ### path:/test/upload_web_intro
@@ -207,11 +211,11 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 ```response```
 
 {
-* rspCode:"": 200 | 300 | 400:txt開啟失敗
+* rspCode:"": 200 : OK |300 : methods wrong | 400:txt開啟失敗
 * webIntro:""(傳網站介紹出來)
 }
 
-# 3.最新消息上傳(有上傳圖片先不要)
+# 3.最新消息上傳
 ### POST
 ### 上傳title,img,content
 ### path:upload_news
@@ -222,12 +226,12 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 都不可為空
 * title:""(30個字以內)content
 * file:""(只能是jpg,jpeg,png)
-* content:""(存在txt)
+* content:""(傳送字串，會以txt儲存)
 }
 
 ```response```
 {
-* rspCOde:"" 400:title,file,content有空| 401:圖片檔名有問題| 402:圖片上傳錯誤| 403:內文上傳錯誤| 404:標題上傳錯誤| 405:title太長
+* rspCOde:"" 200 : OK |300 : methods wrong | 400:title,file,content有空| 401:圖片檔名有問題| 402:圖片上傳錯誤| 403:內文上傳錯誤| 404:標題上傳錯誤| 405:title太長
 }
 
 # 4.最新資訊圖片顯示
@@ -242,11 +246,11 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 ```response```
 
 {
-* rspCode:"":200 | 300 | 400:不知道哪裡爆了 | 401:這個number沒東西
+* rspCode:"":200 : OK |300 : methods wrong | 400:未知 | 401:這個number沒東西
 * img:""(圖片檔名)
 }
 
-# 5.最新資訊內文顯示(檔案位置未定)
+# 5.最新資訊內文顯示
 ### GET
 ### 傳最新資訊的內文
 ### path:/test/output_news_content/<number>
@@ -257,7 +261,7 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 }
 ```response```
 {
-* rspCode:"":200 | 300 | 400:不知道哪裡爆了 
+* rspCode:"":200 : OK |300 : methods wrong | 400:未知 
 * content:""(圖片檔名)
 }
 
@@ -273,11 +277,11 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 ```response```
 
 {
-* rspCode:"":200 | 300 | 400:不知道哪裡爆了 
+* rspCode:"":200 : OK |300 : methods wrong | 400:未知 
 * title:""(標題)
 }
 
-# 7.編輯最新消息(先不要)
+# 7.編輯最新消息
 ### POST
 ### 編輯網址中指定的news
 ### path:/edit_news/<number>
@@ -287,14 +291,14 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 {
 用form傳
 * title:"" (小於30個字)
-* content:"" (存在txt)
+* content:"" (傳送字串，會以txt儲存)
 * file:(jpg,png,jpeg)
 }
 
 ```response```
 
 {
-* rspCode:"":200 | 300 | 400:圖片檔名錯誤 | 401:圖片更新失敗 | 402:標題更新失敗 | 403:內文更新失敗 | 404:title太長 
+* rspCode:"":200 : OK |300 : methods wrong | 400:圖片檔名錯誤 | 401:圖片更新失敗or不存在此news | 402:標題更新失敗or不存在此news | 403:內文更新失敗or不存在此news | 404:title太長 
 }
 
 # 8.刪除最新消息
@@ -309,12 +313,12 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 }
 ```response```
 {
-* rspCode: 200 | 300 | 400:title刪除失敗 | 401:圖片不存在 | 402:圖片刪除失敗 | 403:內文刪除失敗
+* rspCode: 200 : OK |300 : methods wrong | 400:title刪除失敗or不存在此news | 401:圖片不存在 | 402:圖片刪除失敗 | 403:內文刪除失敗
 }
 
 下面是apply的部分
 
-# 9.更新申請對象(先不要)
+# 9.更新申請對象
 ### POST
 ### 更新申請對象
 ### path:test//update_apply_group
@@ -326,7 +330,7 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 }
 ```response```
 {
-* rspCode:"": 200 | 300 | 400(寫入失敗)
+* rspCode:"": 200 : OK |300 : methods wrong | 400(寫入失敗)
 }
 
 
@@ -342,7 +346,7 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 }
 ```response```
 {
-* rspCode:"" 200 | 300 | 400讀取失敗
+* rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗
 *groupName:"" (對象名稱)
 }
 

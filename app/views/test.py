@@ -497,3 +497,18 @@ def delete_news(number):
     else:
         return jsonify({"rspCode":"300"})
 
+#顯示現在有的newsID
+#回傳 rspCode 、 number
+@test.route("/useful_numbers", methods = ['GET'])
+def userful_numbers():
+    if request.method != "GET":
+        return jsonify({"rspCode":"300","numberList":"","max":""})
+    try:
+        number_list = []
+        number = db.session.query(news.newsID).all()
+        for num in number:
+            number_list.append(num[0])
+        return jsonify({"rspCode":"200","numberList":number_list,"max":number_list[len(number_list)-1]})
+    except:
+        return jsonify({"rspCode":"400","numberList":"","max":""})
+

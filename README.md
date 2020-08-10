@@ -350,6 +350,23 @@ rspCode:""200 : OK |300 : methods wrong | 400 : 寫入失敗
 *groupName:"" (對象名稱)
 }
 
+# 11.顯示可用的news number
+### GET
+### 傳可用的number和其中的最大值
+### path:test/useful_numbers
+
+```request```
+{
+	* 沒有
+}
+
+```response```
+```response```
+{
+* rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗
+* numberList:"" (可用的numbers)
+* max:"" 可用的numbers中最大的
+}
 
 # 下面先別看
 ---

@@ -265,10 +265,10 @@ def reset_password_page(token):
 #用json傳intro
 #回傳rspCode
 @test.route('/upload_web_intro', methods = ['POST'])
-def upload_web_intro(): 
+def upload_web_intro():
     if request.method == 'POST':    
        #寫在webIntro.txt(路徑未定)
-       file = open(os.getcwd() + '\\' + 'webIntro.txt' , 'w')
+       file = open(os.getcwd() + '\\app\\static\\uploadFile\\' + 'webIntro.txt' , 'w')
        #目前預設傳來的資訊叫intro
        #且直接是str
        json = request.get_json()
@@ -290,7 +290,7 @@ def output_web_intro():
     if request.method == 'GET':
         #開啟webIntro.txt(路徑未定)
         try:
-            file = open(os.getcwd() + '\\' + "webIntro.txt", 'r')
+            file = open(os.getcwd() + '\\app\\static\\uploadFile\\' + "webIntro.txt", 'r')
         except:
             #rspCode 400:webIntro.txt開啟失敗
             return jsonify({"rspCode" : "400","webIntro":''})
@@ -308,7 +308,7 @@ def upload_news():
         #目前預設傳來的資訊叫content,title,file
         #且文字直接是str
         title = request.values['title']
-        content = request.values['content']
+        content = request.values['content'] 
         fileImage = request.files['file']
         #檢查values是否為空
         if title == '' or content == '' or fileImage.filename == '':
@@ -332,9 +332,7 @@ def upload_news():
                 #設定filename = newsID.jpg
                 filename = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.jpg'
                 #儲存檔案到指定位置(未定)
-           #     os.makedirs(app.config['UPLOAD_FOLDER']
-           #     +'\\uploadFile\\newsImage')
-                fileImage.save(os.path.join(app.config['UPLOAD_FOLDER'] + '\\uploadFile\\newsImage' , filename))
+                fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' + 'newsImage' , filename))
             except:
                 #rspCode 402:圖片上傳錯誤
                 return jsonify({"rspCode":"402"})
@@ -345,7 +343,7 @@ def upload_news():
             #內文上傳
             #(路徑未定)
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
-            fileContent = open(os.getcwd() + '\\newsContent\\' + fileContentName, 'w')
+            fileContent = open(os.getcwd() + '\\app\\static\\uploadFile\\' +  'newsContent\\' + fileContentName, 'w')
             fileContent.write(content)
             fileContent.close()
             return jsonify({"rspCode":"200"})
@@ -363,7 +361,7 @@ def upload_news():
 def output_newsImage(number):
     if request.method == 'GET':
         try:
-            if os.path.isfile(app.config["UPLOAD_FOLDER"] + '\\uploadFile\\newsImage' + "\\{}.jpg".format(number)):
+            if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' + 'newsImage' + "\\{}.jpg".format(number)):
                 filename = number + '.jpg'
                 return jsonify({"rspCode": "200", "img": filename})
             else:
@@ -384,7 +382,7 @@ def output_news_content(number):
 
         try:
             filename = number + '.txt'
-            file = open(os.getcwd() + '\\newsContent\\' + filename, 'r')
+            file = open(os.getcwd() + '\\app\\static\\uploadFile\\' + 'newsContent\\' + filename, 'r')
             content = jsonify({"rspCode": "200","content":file.read()})
             file.close()
             return content
@@ -428,8 +426,8 @@ def edit_news(number):
                     #設定filename = newsID.jpg
                     filename = number + '.jpg'
                     #儲存檔案到指定位置(未定)
-                    os.remove(app.config['UPLOAD_FOLDER'] + '\\uploadFile\\newsImage' + "\\" + filename)
-                    fileImage.save(os.path.join(app.config['UPLOAD_FOLDER'] + '\\uploadFile\\newsImage', filename))
+                    os.remove(current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' + 'newsImage' + "\\" + filename)
+                    fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' +'newsImage', filename))
                 except:
                     #rspCode 401:圖片更新失敗
                     return jsonify({"rspCode":"401"})
@@ -437,16 +435,22 @@ def edit_news(number):
                 #rspCode 400:圖片檔名錯誤
                 return jsonify({"rspCode" : "400"})
         if title != '':
-            try:    
-                db.engine.execute(update_title(title,number))
+            try:
+               if db.engine.execute(select_title(number)).fetchone() != None:
+                    db.engine.execute(update_title(title,number))
+               else:
+                    return jsonify({"rspCode":"402"})
             except:
                 #rspCode 402:標題更新失敗
                 return jsonify({"rspCode":"402"})
         if content != '':
             try:
-                file = open(os.getcwd() + "\\newsContent\\{}.txt".format(number),'w')
-                file.write(content)
-                file.close()
+                if os.path.isfile(os.getcwd() + '\\app\\static\\uploadFile\\' + "newsContent\\{}.txt"):
+                    file = open(os.getcwd() + '\\app\\static\\uploadFile\\' + "newsContent\\{}.txt".format(number),'w')
+                    file.write(content)
+                    file.close()
+                else:
+                    return jsonify({"rspCode":"403"})
             except:
                 #rspCode 403:內文更新失敗
                 return jsonify({"rspCode":"403"})
@@ -462,17 +466,21 @@ def delete_news(number):
     if request.method == 'POST':
         #刪除資料庫中資料
         try:
-            db.engine.execute(delete_news(number))
+            if db.engine.execute(select_title(number)).fetchone() != None:
+                db.engine.execute(delete_news_(number))
+            else:
+                #rspCode 400:資料庫資料刪除失敗
+                return jsonify({"rspCode" : "400"})
         except: 
             #rspCode 400:資料庫資料刪除失敗
             return jsonify({"rspCode" : "400"})
         #刪除伺服器中檔案(路徑未定)
-        if os.path.isfile(app.config["UPLOAD_FOLDER"] + '\\uploadFile\\newsImage' + "\\{}.jpg".format(number)):
-            newsImage = app.config["UPLOAD_FOLDER"] + '\\uploadFile\\newsImage' + "\\{}.jpg".format(number)
+        if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' + 'newsImage' + "\\{}.jpg".format(number)):
+            newsImage = current_app.config['UPLOAD_FOLDER'] + '\\app\\static\\uploadFile\\' +'newsImage' + "\\{}.jpg".format(number)
         else:
             #rspCode 401:圖片檔案不存在
             return jsonify({"rspCode" : "401"})
-        newsContent = os.getcwd() + "\\newsContent\\{}.txt".format(number)
+        newsContent = os.getcwd() + '\\app\\static\\uploadFile' + "\\newsContent\\{}.txt".format(number)
         try:
             os.remove(newsImage)
         except:
@@ -486,3 +494,5 @@ def delete_news(number):
             return jsonify({"rspCode" : "403"})
     else:
         return jsonify({"rspCode":"300"})
+
+

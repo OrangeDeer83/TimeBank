@@ -19,6 +19,7 @@ class account(db.Model):
     userBirthday = db.Column(db.DateTime, nullable=False)
     salt = db.Column(db.String, nullable=False)
 
+
     def __init__(self, userID, userName, userPassword, userMail, userPhone, userInfo, userPoint, SRRate, SRRateTimes, SPRate, SPRateTimes, userGender, userBirthday, salt):
         self.userID = userID
         self.userName = userName
@@ -69,8 +70,7 @@ class allotment(db.Model):
     adminID = db.Column(db.String(20), nullable=False)
     allotmentTime = db.Column(db.DateTime, nullable = False)
 
-    def __init__(self, allotmentID, userID, allotmentStatus, frequency, period, restTime, nextTime, quota, adminID, allotmentTime):
-        self.allotmentID = allotmentID
+    def __init__(self, userID, allotmentStatus, frequency, period, restTime, nextTime, quota, adminID, allotmentTime):
         self.userID = userID
         self.allotmentStatus = allotmentStatus
         self.frequency = frequency
@@ -98,8 +98,7 @@ class apply(db.Model):
     oldConditionID = db.Column(db.Integer, nullable=True)
     judgeTime = db.Column(db.DateTime, nullable=True)
 
-    def __init__(self, applyID, applyStatus, frequency, restTime, nextTime, adminID, userID, conditionID, result, applyTime, oldConditionID, judgeTime):
-        self.applyID = applyID
+    def __init__(self, applyStatus, frequency, restTime, nextTime, adminID, userID, conditionID, result, applyTime, oldConditionID, judgeTime):
         self.applyStatus = applyStatus
         self.frequency = frequency
         self.restTime = restTime
@@ -120,8 +119,7 @@ class applyCondition(db.Model):
     quota = db.Column(db.Integer, nullable=False)
     available = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, conditionID, period, className, quota, available):
-        self.conditionID = conditionID
+    def __init__(self, period, className, quota, available):
         self.period = period
         self.className = className
         self.quota = quota
@@ -130,15 +128,14 @@ class applyCondition(db.Model):
 class comment(db.Model):
     __tablename__ = 'comment'
     commentID = db.Column(db.Integer, primary_key=True)
-    taskID = db.Column(db.Integer, nullable=False)
+    taskID = db.Column(db.Integer, nullable=False, unique=True)
     SRComment = db.Column(db.String, nullable=False)
     SPComment = db.Column(db.String, nullable=False)
     commentDeadline = db.Column(db.DateTime, nullable=False)
     commentStatus = db.Column(db.Integer, nullable=False)
-    adminID = db.Column(db.String(20), nullable=False)
+    adminID = db.Column(db.String(20), nullable=True)
 
-    def __init__(self, commentID, taskID, SRComment, SPComment, commentDeadline, commentStatus, adminID):
-        self.commentID = commentID
+    def __init__(self, taskID, SRComment, SPComment, commentDeadline, commentStatus, adminID):
         self.taskID = taskID
         self.SRComment = SRComment
         self.SPComment = SPComment
@@ -152,8 +149,7 @@ class news(db.Model):
     title = db.Column(db.String(30), nullable=False)
     newsTime = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, newsID, title, newsTime):
-        self.newsID = newsID
+    def __init__(self, title, newsTime):
         self.title = title
         self.newsTime = newsTime
 
@@ -171,12 +167,11 @@ class point(db.Model):
 class pointRecord(db.Model):
     __tablename__ = 'pointRecord'
     pointRecordID = db.Column(db.Integer, primary_key=True)
-    pointID = db.Column(db.String(50), nullable=False)
+    pointID = db.Column(db.String(50), nullable=False, unique=True)
     ownerID = db.Column(db.String(20), nullable=False)
     transferTime = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, pointRecordID, pointID, ownerID, transferTime):
-        self.pointRecordID = pointRecordID
+    def __init__(self, pointID, ownerID, transferTime):
         self.pointID = pointID
         self.ownerID = ownerID
         self.transferTime = transferTime
@@ -185,13 +180,12 @@ class report(db.Model):
     __tablename__ = 'report'
     reportID = db.Column(db.Integer, primary_key=True)
     taskID = db.Column(db.Integer, nullable=False)
-    adminID = db.Column(db.String(20), nullable=False)
+    adminID = db.Column(db.String(20), nullable=True)
     reason = db.Column(db.String, nullable=False)
     reportStatus = db.Column(db.Integer, nullable=False)
     reportUserID = db.Column(db.String(20), nullable=False)
     
-    def __init__(self, reportID, taskID, adminID, reason, reportStatus, reportUserID):
-        self.reportID = reportID
+    def __init__(self, taskID, adminID, reason, reportStatus, reportUserID):
         self.taskID = taskID
         self.adminID = adminID
         self.reason = reason
@@ -209,9 +203,9 @@ class task(db.Model):
     taskEndTime = db.Column(db.DateTime, nullable=False)
     taskStatus = db.Column(db.Integer, nullable=False)
     SRID = db.Column(db.String(20), nullable=False)
-    SPID = db.Column(db.String(20), nullable=False)
+    SPID = db.Column(db.String(20), nullable=True)
 
-    def __init__(self, taskName, taskContent, SRID, taskPoint, taskLocation, taskStartTime, taskEndTime, taskStatus, SPID):
+    def __init__(self,SPID, taskName, taskContent,SRID, taskPoint, taskLocation, taskStartTime, taskEndTime, taskStatus):
         self.taskName = taskName
         self.taskContent = taskContent
         self.taskPoint = taskPoint

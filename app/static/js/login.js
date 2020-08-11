@@ -91,42 +91,35 @@ function login(num)
         request.open("POST", "http://192.168.1.146:5000/test/USER/login", true);
         console.log("XMLHttpRequest opened.");
 
-        request.onreadystatechange = function()
-        {
-            if (request.readyState == 4 && request.status == 200)
-            {
-                request.setRequestHeader("Content-Type", "application/json");
-                request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));
-                console.log("JSON sent.");
-                console.log(request.responseText);
-                rst = JSON.parse(request.responseText);
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));
+        console.log("JSON sent.");
+        console.log(request.responseText);
+        rst = JSON.parse(request.responseText);
 
-                setTimeout(
-                    request.onload = function()
-                    {
-                        switch (rst.rspCode)
-                        {
-                            case "200": case 200:
-                                console.log("Login success!");
-                                // Different identity.
-                                if (num == 1) // USER
-                                    window.location.assign("");
-                                else if (num == 2) // SA, AA, AG, AS, AU
-                                    windows.location.assign("");
-                                else if (num == 3) // GM
-                                    windows.location.assign("");
-                                return true;
-                            case "400": case 400:
-                                console.log("Login failed!");
-                                showLoginError1();
-                                return false;
-                            default:
-                                console.log("Login failed! Unknow response text code.");
-                                showLoginError2();
-                                return false;
-                        }
-                    }
-                , 100);
+        setTimeout(function(){}, 300);
+        request.onload = function()
+        {
+            switch (rst.rspCode)
+            {
+                case "200": case 200:
+                    console.log("Login success!");
+                    // Different identity.
+                    if (num == 1) // USER
+                        window.location.assign("");
+                    else if (num == 2) // SA, AA, AG, AS, AU
+                        windows.location.assign("");
+                    else if (num == 3) // GM
+                        windows.location.assign("");
+                    return true;
+                case "400": case 400:
+                    console.log("Login failed!");
+                    showLoginError1();
+                    return false;
+                default:
+                    console.log("Login failed! Unknow response text code.");
+                    showLoginError2();
+                    return false;
             }
         }
         showLoginError2();

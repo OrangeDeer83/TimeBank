@@ -1,38 +1,45 @@
+window.onload = function()
+{
+    getIntroduction();
+    getNewsAmount();
+
+}
+
 // Introduction
 // Get web introduction from server.
 var introduction = "";
-window.onload = function()
+function getIntroduction()
 {
-    var getIntroduction;
+    var getIntroductionRequest;
     if (window.XMLHttpRequest)
-        getIntroduction = new XMLHttpRequest();
+        getIntroductionRequest = new XMLHttpRequest();
     else // Old IE browser.
-        getIntroduction = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroduction.open("GET", "http://192.168.1.146:5000/test/output_webIntro");
-    getIntroduction.setRequestHeader("Content-Type", "application/json");
-    getIntroduction.send();
-    setTimeout(function()
+        getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getIntroductionRequest.open("GET", "http://192.168.1.146:5000/test/output_webIntro");
+    getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
+    getIntroductionRequest.send();
+    
+    
+    getIntroductionRequest.onload = function()
     {
-        getIntroduction.onload = function()
+        console.log(getIntroductionRequest.responseText);
+        rst = JSON.parse(getIntroductionRequest.responseText);
+        switch (rst.rspCode)
         {
-            console.log(getIntroduction.responseText);
-            rst = JSON.parse(getIntroduction.responseText);
-            switch (rst.rspCode)
-            {
-                case "200": case 200:
-                    console.log("網站介紹讀取成功");
-                    return true;
-                case "300": case 300:
-                case "400": case 400:
-                    console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
-                    return false;
-            }
-            introduction = rst.webIntro;
-            document.getElementById("introduction").value = introduction;
+            case "200": case 200:
+                console.log("網站介紹讀取成功");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
+                break;
         }
-        if (introduction == "")
-            console.log("網站介紹載入失敗或尚無資料。");
-    }, 300);
+        introduction = rst.webIntro;
+        document.getElementById("introduction").value = introduction;
+        console.log(introduction);//
+    }
+    if (introduction == "")
+        console.log("網站介紹載入失敗或尚無資料。");
 }
 
 // Send web introduction to server.
@@ -43,29 +50,25 @@ function storeIntroduction()
         sendIntroduction = new XMLHttpRequest();
     else
         sendIntroduction = new ActiveXObject("Microsoft.XMLHTTP");
-    sendIntroduction.open("POST", "https://192.168.1.146:5000/upload_web_intro");
+    sendIntroduction.open("POST", "http://192.168.1.146:5000/test/upload_web_intro");
     sendIntroduction.setRequestHeader("Content-Type", "application/json");
     sendIntroduction.send(JSON.stringify({"intro": document.getElementById("introduction").value}));
-    setTimeout(function()
+     
+    sendIntroduction.onload = function()
     {
-        
-        sendIntroduction.onload = function()
+        console.log(sendIntroduction.responseText);
+        rst = JSON.parse(sendIntroduction.responseText);
+        switch (rst.rspCode)
         {
-            console.log(sendIntroduction.responseText);
-            rst = JSON.parse(sendIntroduction.responseText);
-            switch (rst.rspCode)
-            {
-                case "200": case 200:
-                    alert("網站介紹更新成功");
-                    return true;
-                case "300": case 300:
-                case "400": case 400:
-                    alert("系統錯誤，網站介紹更新失敗，請稍後再試");
-                    return false;
-            }
+            case "200": case 200:
+                alert("網站介紹更新成功");
+                return true;
+            case "300": case 300:
+            case "400": case 400:
+                alert("系統錯誤，網站介紹更新失敗，請稍後再試");
+                return false;
         }
     }
-    , 300);
 }
 
 // News
@@ -79,20 +82,20 @@ var currentPage = 1;
 var changePage = document.getElementById("changePage");
 
 // Get news amount.
-window.onload = function()
+function getNewsAmount()
 {
-    var getNewsAmount;
+    var getNewsAmountRequest;
     if (window.XMLHttpRequest)
-        getNewsAmount = new XMLHttpRequest();
+        getNewsAmountRequest = new XMLHttpRequest();
     else
-        getNewsAmount = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmount.open("GET", "http://192.168.1.146:5000/test/useful_numbers");
-    getNewsAmount.setRequestHeader("Content-Type", "application/json");
-    getNewsAmount.send();
-    getNewsAmount.onload = function()
+        getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getNewsAmountRequest.open("GET", "http://192.168.1.146:5000/test/useful_numbers");
+    getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
+    getNewsAmountRequest.send();
+    getNewsAmountRequest.onload = function()
     {
-        console.log(getNewsAmount.responseText);
-        rst = JSON.parse(getNewsAmount.responseText);
+        console.log(getNewsAmountRequest.responseText);
+        rst = JSON.parse(getNewsAmountRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
@@ -103,13 +106,74 @@ window.onload = function()
                 console.log("系統錯誤，最新消息數量讀取失敗，請稍後再試");
                 return false;
         }
-        maxNewsNum = rst.max;
-        existNews = rst.numberList;
-        newsAmount = existNews.length;
-        pageAmount = Math.ceil(newsAmount / 10);
+        maxNewsNum = rst.max; console.log(maxNewsNum);//
+        existNews = rst.numberList; console.log(existNews);//
+        newsAmount = existNews.length; console.log(newsAmount);//
+        pageAmount = Math.ceil(newsAmount / 10); console.log(pageAmount);//
         computePage(0);
     }
     computePage(0);
+}
+
+// getDetails from server each news
+function getTitle(i)
+{
+    var getOldTitleRequest;
+    if (window.XMLHttpRequest)
+        getOldTitleRequest = new XMLHttpRequest();
+    else
+        getOldTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getOldTitleRequest.open("GET", "http://192.168.1.146:5000/test/output_news_title/" + thisPageList[i]);
+    getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
+    getOldTitleRequest.send();
+    var index = i; console.log(i + "" + index);
+    getOldTitleRequest.onload = function()
+    {
+        console.log(getOldTitleRequest.responseText);
+        rst = JSON.parse(getOldTitleRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                console.log("最新消息標題讀取成功");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("系統錯誤，最新消息標題讀取失敗，請稍後再試");
+                //return;
+        }
+        //thisPageTitles.push(rst.title);
+        document.getElementById("newsOldTitle" + (index + 1)).innerHTML = rst.title;
+        document.getElementById("newsTitle" + (index + 1)).value = rst.title;
+    }
+}
+function getText(i)
+{
+    var getTextRequest;
+    if (window.XMLHttpRequest)
+        getTextRequest = new XMLHttpRequest();
+    else
+        getTextRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getTextRequest.open("GET", "http://192.168.1.146:5000/test/output_news_content/" + thisPageList[i]);
+    getTextRequest.setRequestHeader("Content-Type", "application/json");
+    getTextRequest.send();
+    var index = i;
+    getTextRequest.onload = function()
+    {
+        console.log(getTextRequest.responseText);
+        rst = JSON.parse(getTextRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                console.log("最新消息內容讀取成功");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
+                //return;
+        }
+        //thisPageText.push(rst.content); console.log(rst.content);
+        document.getElementById("newsText" + (index + 1)).value = rst.content;
+    }
 }
 
 // Get news old title and text of current page.
@@ -117,61 +181,11 @@ function getDetails()
 {
     thisPageTitles.length = 0;
     thisPageText.length = 0;
-    var getOldTitleRequest;
-    var getTextRequest;
-    if (window.XMLHttpRequest)
-    {
-        getOldTitleRequest = new XMLHttpRequest();
-        getTextRequest = new XMLHttpRequest();
-    }
-    else
-    {
-        getOldTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        getTextRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    
     for (var i = 0; i < thisPageList.length; i++)
     {
-        getOldTitleRequest.open("GET", "http://192.168.1.146:5000/test/output_news_title/" + thisPageList[i]);
-        getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
-        getOldTitleRequest.send();
-        getOldTitleRequest.onload = function()
-        {
-            console.log(getOldTitleRequest.responseText);
-            rst = JSON.parse(getOldTitleRequest.responseText);
-            switch (rst.rspCode)
-            {
-                case "200": case 200:
-                    console.log("最新消息標題讀取成功");
-                    break;
-                case "300": case 300:
-                case "400": case 400:
-                    console.log("系統錯誤，最新消息標題讀取失敗，請稍後再試");
-                    //return;
-            }
-            thisPageTitles.push(rst.title);
-        }
-    }
-    for (var i = 0; i < thisPageList.length; i++)
-    {
-        getTextRequest.open("GET", "http://192.168.1.146:5000/test/output_news_content/" + thisPageList[i]);
-        getTextRequest.setRequestHeader("Content-Type", "application/json");
-        getTextRequest.send();
-        getTextRequest.onload = function()
-        {
-            console.log(getTextRequest.responseText);
-            rst = JSON.parse(getTextRequest.responseText);
-            switch (rst.rspCode)
-            {
-                case "200": case 200:
-                    console.log("最新消息內容讀取成功");
-                    break;
-                case "300": case 300:
-                case "400": case 400:
-                    console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
-                    //return;
-            }
-            thisPageText.push(rst.content);
-        }
+        getTitle(i);
+        getText(i);
     }
 }
 
@@ -206,15 +220,16 @@ function computePageNews()
     else
         for (var i = 0; i < (newsAmount % 10); i++)
             thisPageList.push(existNews[newsAmount - 10 * (currentPage - 1) - i - 1]);
+    console.log(thisPageList);
 
     getDetails();
 
     for (var i = 1; i <= thisPageList.length; i++)
     {
         document.getElementById("news" + i).style.display = "block";
-        document.getElementById("newsOldTitle" + i).innerHTML = thisPageTitles[i - 1];
+        /*document.getElementById("newsOldTitle" + i).innerHTML = thisPageTitles[i - 1];
         document.getElementById("newsTitle" + i).value = thisPageTitles[i - 1];
-        document.getElementById("newsText" + i).value = thisPageText[i - 1];
+        document.getElementById("newsText" + i).value = thisPageText[i - 1];*/
     }
     for (var i = thisPageList.length + 1; i <= 10; i++)
         document.getElementById("news" + i).style.display = "none";
@@ -237,6 +252,7 @@ function getCurrentIndex()
 function previewImg()
 {
     var currentIndex = getCurrentIndex();
+    console.log(currentIndex);//
     var img = document.getElementById("uploadImg" + currentIndex);
     var newsImg = document.getElementById("newsImg" + currentIndex);
     var reader = new FileReader;
@@ -270,8 +286,9 @@ function changeSpan(newIndex)
         currentSpan.style.display = "none";
         newSpan.style.display = "block";
     }
-    if (currentIndex != 0)   
-        document.getElementById("newImg" + currentIndex).src = "../static/uploadFile/newsImage/" + thisPageList[currentIndex - 1] + ".jpg";
+    console.log("../static/uploadFile/newsImage/" + thisPageList[newIndex - 1] + ".jpg " + newIndex);
+    if (newIndex != 0) // src="../static/uploadFile/newsImage/<number>.jpg"
+        document.getElementById("newsImg" + newIndex).src = "../static/uploadFile/newsImage/" + thisPageList[newIndex - 1] + ".jpg";
 }
 
 function deleteNews(index)
@@ -348,11 +365,11 @@ function editNews()
     }
 }
 
-function editNews()
+function addNews()
 {
     var newsTitle = document.getElementById("newsTitle0").value;
     var newsText = document.getElementById("newsText0").value;
-    var img = document.getElementById("uploadIm0");
+    var img = document.getElementById("uploadImg0");
     var reader = new FileReader;
     reader.readAsDataURL(img.files[0]);
 

@@ -1,10 +1,12 @@
 #coding:utf-8
 from flask import Flask
+from flask_cors import CORS
 from .models import db
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
+CORS(app)
 db.init_app(app)
 
 #匯入views

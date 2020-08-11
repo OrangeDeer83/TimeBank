@@ -2,7 +2,7 @@ repeat = false;
 
 function detect_repeated(){
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://192.168.100.50:5000/detect_repeated");
+    xhr.open("POST", "http://114.39.116.18:5000/detect_repeated");
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({"userID": document.getElementById('userID').value}));
     xhr.onload = function(){
@@ -30,7 +30,7 @@ function register(){
             rsp = JSON.parse(xhr.responseText);
             if (rsp.rspCode == "200") {
                 alert("註冊成功");
-                window.location.assign("http://192.168.100.50:5000/directory");
+                window.location.assign("http://114.39.116.18:5000/directory");
             }
             else {
                 alert("註冊失敗，請再試一次");

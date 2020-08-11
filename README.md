@@ -102,8 +102,8 @@ request:
 
 {
 	type: "",	0:no login | 1:USER | 2:AS | 3:AA | 4:AU | 5:AG | 6:GM | 7:SA
-	userID: "",		(max length 20)
-	userPassword: ""
+	userID: "",			(max length 20)
+	userPassword: ""	(max length 30)
 }
 
 response:
@@ -165,7 +165,7 @@ response:
 request:
 
 {
-	userPassword: ""	(max length 20)
+	userPassword: ""	(max length 30)
 }
 
 response:
@@ -177,6 +177,49 @@ response:
 
 <br>
 
+# API 7 - Create Admins
+### POST
+#### for SA to create admins
+#### path : /test/create_admins
+```
+request:
+
+{
+	adminType: ""		2:AS | 3:AA | 4:AU | 5:AG
+	adminID: ""		 	(max length 20)
+	adminPassword: ""	(max length 30)
+}
+
+response:
+
+{
+	rspCode: ""			200:管理員新增成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:管理員權限不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:帳號重複
+}
+```
+
+<br>
+
+# API 8 - Delete Admin
+### POST
+#### for SA to delete admin
+#### path : /test/delete_admin
+>我想讓SA輸入一次密碼再進行刪除的動作，第一次點擊刪除(SAPassword留空)顯示輸入密碼，輸入一次後就不必再輸入
+```
+request:
+
+{
+	adminID: ""			(max length 20)
+	SAPassword: ""		(max length 30)
+}
+
+response:
+
+{
+	rspCode: ""			200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:尚未輸入第一次密碼 | 402:adminID不在資料庫中，前端可能遭到竄改 | 403:
+}
+```
+
+<br>
 
 
 # 下面先別看

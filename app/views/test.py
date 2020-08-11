@@ -164,7 +164,6 @@ def user_forget_password():
                     return ({"rspCode": "404"})     #重置信寄送失敗
             else:
                 return ({"rspCode": "403"})         #信箱輸入錯誤，沒有找到對應的信箱
-            
     else:
         return ({"rspCode": "300"})         #methods使用錯誤
 
@@ -197,10 +196,89 @@ def user_reset_password(token):
         print(300)
         return jsonify({"rspCode": "300"})                      #method使用錯誤
 
+@test.route('/create_admins', methods=['POST'])
+def create_admins():
+    if request.method == 'POST':
+        value = request.get_json()
+        print(value)
+        adminType = value['adminType']
+        if int(adminType) > 5 or int(adminType) < 2:
+            return jsonify({"rspCode": "401"})          #管理員權限不符
+        adminID = value['adminID']
+        if re.search(r"^\w{1,20}$", adminID) == None:
+            return jsonify({"rspCode": "402"})          #帳號格式不符
+        adminPassword = value['adminPassword']
+        if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
+            return jsonify({"rspCode": "403"})          #密碼格式不符
+        try:
+            query_data = adminAccount.query.filter(adminAccount.adminID == func.binary(adminID)).first()
+            print(query_data)
+        except:
+            return jsonify({"rspCode": "400"})          #資料庫錯誤
+        if query_data == None:
+            try:
+                salt = generate_salt()
+                print(salt)
+                new_adminAccount = adminAccount(adminID=adminID, adminName='admin', adminPassword=encrypt(adminPassword, salt)\
+                    , adminType=adminType, adminPhone=None,adminMail=None, salt=salt)
+                print(new_adminAccount)
+                db.session.add(new_adminAccount)
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤    
+            return jsonify({"rspCode": "200"})          #管理員新增成功
+        else:
+            return jsonify({"rspCode": "404"})          #帳號重複
+    else:
+        return jsonify({"rspCode": "300"})              #method使用錯誤
 
-@test.route('/USER/mail', methods=['POST'])
-def delete():
-    
+@test.route('/delete_admin', methods=['POST'])
+def delete_admin():
+    if request.method == 'POST':
+        value = request.get_json()
+        adminID = value['adminID']
+        try:
+            SA_data = adminAccount.query.filter(adminAccount.adminType == 7).first()
+        except:
+            return jsonify({"rspCode": "400"})              #資料庫錯誤
+        if session.get('SALogin') == SA_data.adminPassword:
+            try:
+                query_data = adminAccount.query.filter(adminAccount.adminID == func.binary(adminID)).first()
+                if query_data == None:
+                    return jsonify({"rspCode": "401"})  #adminID不在資料庫中，前端可能遭到竄改
+                db.session.delete(query_data)
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})          #資料庫錯誤
+            return jsonify({"rspCode": "200"})              #刪除成功
+        else:
+            SAPassword = value['SAPassword']
+            if SAPassword == None:
+                return ({"rspCode": "401"})                 #尚未輸入第一次密碼
+            if check_same(SAPassword, SA_data.adminPassword, SA_data.salt):
+                session['SALogin'] = SA_data.adminPassword
+                try:
+                    query_data = adminAccount.query.filter(adminAccount.adminID == func.binary(adminID)).first()
+                    if query_data == None:
+                        return jsonify({"rspCode": "402"})  #adminID不在資料庫中，前端可能遭到竄改
+                    db.session.delete(query_data)
+                    db.session.commit()
+                except:
+                    return jsonify({"rspCode": "400"})      #資料庫錯誤
+            else:
+                return jsonify({"rspCode": "403"})          #密碼輸入錯誤
+        return jsonify({"rspCode": "200"})                  #刪除成功
+    else:
+        return jsonify({"rspCode": "300"})          #method使用錯誤
+
+@test.route('/sql_test')
+def sql_test():
+    query = task.query.first()
+    task.SP.append(userID)
+    print(query.SP[0].userName)
+    for i in query.SP:
+        print(i)
+
     return 'ok'
 
 @test.route('/login_user_page')

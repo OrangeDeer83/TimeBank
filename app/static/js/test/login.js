@@ -69,7 +69,7 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.100.50:5000/test/USER/login");
+        request.open("POST", "http://114.39.116.18:5000/test/USER/login");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));

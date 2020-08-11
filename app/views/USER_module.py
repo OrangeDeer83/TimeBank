@@ -1,5 +1,3 @@
-print("USER.module.py在", __name__)
-
 from flask import Blueprint
 from ..models.model import *
 

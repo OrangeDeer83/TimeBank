@@ -1,4 +1,4 @@
 from flask import Blueprint
 from ..models.model import *
 
-alloment = Blueprint('alloment', __name__)
+Alloment = Blueprint('alloment', __name__)

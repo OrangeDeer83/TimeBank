@@ -1,5 +1,5 @@
 from flask import Blueprint
-from ..models.model import *
+#from ..models.model import *
 
 
 USER = Blueprint('USER', __name__)

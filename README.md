@@ -48,7 +48,7 @@ Data Access Object(再不看R)
 
 # API 1 - USER Detect Repeated
 ### POST
-#### use for detect if the userID repeated
+#### 在一般使用者註冊時偵測帳號是否重複
 #### path : /test/USER/detect_repeated
 >tip : JavaScript can use onkeyup
 ```
@@ -69,7 +69,7 @@ response:
 
 # API 2 - USER Register
 ### POST
-#### register the user account
+#### 供一般使用者註冊
 #### path : /test/USER/Register
 ```
 request:
@@ -95,13 +95,13 @@ response:
 
 # API 3 - USER Login
 ### POST
-#### for all user to login
+#### 供一般使用者登入
 #### path : /test/USER/login
 ```
 request:
 
 {
-	type: "",	0:no login | 1:USER | 2:AS | 3:AA | 4:AU | 5:AG | 6:GM | 7:SA
+	type: "",			0:no login | 1:USER | 2:AS | 3:AA | 4:AU | 5:AG | 6:GM | 7:SA
 	userID: "",			(max length 20)
 	userPassword: ""	(max length 30)
 }
@@ -109,7 +109,7 @@ request:
 response:
 
 {
-	rspCode: "",	200:登入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:登入失敗
+	rspCode: "",		200:登入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:登入失敗
 	URL: ""
 }
 ```
@@ -118,7 +118,7 @@ response:
 
 # API 4 - Logout
 ### GET
-#### for all user to logout
+#### 供所有使用者登出
 #### path : /test/logout
 ```
 request:
@@ -138,7 +138,7 @@ response:
 
 # API 5 - USER Forget Password
 ### POST 
-#### for user to apply the email to reset password
+#### 供一般使用者申請重設密碼信
 #### path : /test/USER/forget_password
 ```
 request:
@@ -158,7 +158,7 @@ response:
 
 # API 6 - USER Reset Password
 ### POST
-#### for user to reset the password
+#### 在驗證token後一般使用者能夠重設密碼
 #### path : /test/USER/reset_password/\<token\>
 >tip:需要將網址中最後段的token擷取下來並放在API路徑中
 ```
@@ -177,9 +177,29 @@ response:
 
 <br>
 
+# API 7 - SA Detect Repeated
+### POST
+#### 在SA新增管理員時避免帳號重複
+#### path : /test/SA/detect_repeated
+```
+request:
+
+{
+	adminID: ""		(max length 20)
+}
+
+response:
+
+{
+	rspCode: ""		200:沒有重複 | 300:method使用錯誤 | 400: 資料庫錯誤 | 401:帳號格式不符 | 402:偵測到重複帳號
+}
+```
+
+<br>
+
 # API 7 - Create Admins
 ### POST
-#### for SA to create admins
+#### SA新增管理員
 #### path : /test/create_admins
 ```
 request:
@@ -201,7 +221,7 @@ response:
 
 # API 8 - Delete Admin
 ### POST
-#### for SA to delete admin
+#### SA刪除管理員
 #### path : /test/delete_admin
 >我想讓SA輸入一次密碼再進行刪除的動作，第一次點擊刪除(SAPassword留空)顯示輸入密碼，輸入一次後就不必再輸入
 ```
@@ -224,9 +244,9 @@ response:
 # Tom
 
 理論上存在txt的沒有字數限制
-1. 網站介紹存在static\uploadFile\webIntro.txt
-2. 最新消息圖片存在static\uploadFile\newsImage\number.jpg
-3. 最新消息內文存在static\uploadFile\newsContent\number.txt
+1. 網站介紹存在/static/uploadFile/webIntro.txt
+2. 最新消息圖片存在/static/uploadFile/newsImage/number.jpg
+3. 最新消息內文存在/static/uploadFile/newsContent/number.txt
 
 # 1.網站介紹上傳
 ### POST
@@ -387,7 +407,8 @@ response:
 ### 更新申請對象
 ### path:test//update_apply_group
 
-```request:
+```
+request:
 
 {
 	groupName: ""	(對象名稱)
@@ -404,7 +425,8 @@ response:
 ### 傳申請對象是什麼
 ### path:test/output_apply_group
 
-```request
+```
+request:
 
 {
 	NULL
@@ -421,7 +443,8 @@ response:
 ### 傳可用的number和其中的最大值
 ### path:test/useful_numbers
 
-```request:
+```
+request:
 
 {
 	NULL

@@ -1,4 +1,4 @@
 from flask import Blueprint
 from ..models.model import *
 
-profile = Blueprint('profile', __name__)
+Profile = Blueprint('profile', __name__)

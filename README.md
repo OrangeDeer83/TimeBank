@@ -221,245 +221,219 @@ response:
 
 <br>
 
+# Tom
 
-# 下面先別看
----
+理論上存在txt的沒有字數限制
+1. 網站介紹存在static\uploadFile\webIntro.txt
+2. 最新消息圖片存在static\uploadFile\newsImage\number.jpg
+3. 最新消息內文存在static\uploadFile\newsContent\number.txt
 
-<br>
-
-# API 5 - Upload Web Intro
+# 1.網站介紹上傳
 ### POST
-#### upload the introdruction of website
-#### path : /upload_web_intro
+### 上傳網站介紹
+### path:/test/upload_web_intro
+
 ```
 request:
 
 {
-	intro: ""
+	intro: ""		(存在txt)
 }
 
 response:
 
 {
-	rspCode: ""		200:success | 300:methods wrong | 400:failed
+	rspCode: ""200 : OK |300 : methods wrong | 400 : 寫入失敗
 }
-
 ```
 
-<br>
-
-# API 6 - Output Web Intro
+# 2.網站介紹顯示
 ### GET
-#### output the introduction of the website, for editing or general user to watch
-#### path : /output_webIntro
+### 回傳網站介紹
+### path:/test/output_webIntro
+
 ```
 request:
 
 {
-	null
+	NULL
 }
 
 response:
 
 {
-	rspCode: "",	200:success | 300:methods wrong | 400:failed
-	intro: ""
+	rspCode:"": 200 : OK |300 : methods wrong | 400:txt開啟失敗
+	webIntro:""(傳網站介紹出來)
 }
 ```
 
-<br>
-
-# API 7 - Upload News
+# 3.最新消息上傳
 ### POST
-#### upload the photo, title and content of the news
-#### path : /upload_news
->tip : use the form to upload the news NOT JAVASCRIPT. The file, title and image in the request should be the name of the input tag in the form. Thus, who make the html also should do this part.
+### 上傳title,img,content
+### path:upload_news
+>用form
 ```
 request:
 
 {
-	file: "",
-	title: "",		(max length 30)
-	content: ""
+都不可為空
+	title:""		(30個字以內)content
+	file:""			(只能是jpg,jpeg,png)
+	content:""		(傳送字串，會以txt儲存)
 }
 
-response:
-
+response
 {
-	rspCode: ""     200:success | 300:methods wrong | 400:標題、內文、圖片有空值 | 401:圖片檔名錯誤 | 402:圖片上傳錯誤 | 403:內文上傳錯誤 | 404:標題上傳錯誤
+	rspCOde:""		200 : OK |300 : methods wrong | 400:title,file,content有空| 401:圖片檔名有問題| 402:圖片上傳錯誤| 403:內文上傳錯誤| 404:標題上傳錯誤| 405:title太長
 }
 ```
 
-<br>
-
-# API 8 - Output News Image
+# 4.最新資訊圖片顯示
 ### GET
-#### ouput the image of news, use for editing and general to watch
-#### path : /output_news_image/<number>
->tip : number is the parameter indicate the serial of news
+### 傳最新資訊的圖片檔名
+### path:/test/output_news_image/<number>
 ```
 request:
 
 {
-	null
+	NULL
 }
-
-response:
+response
 
 {
-	rspCode: "",	200:success | 300:methods wrong | 400:failed
-	img: ""
+	rspCode: ""		200 : OK |300 : methods wrong | 400:未知 | 401:這個number沒東西
+	img: ""			(圖片檔名)
 }
 ```
 
-<br>
-
-# API 9 - Output News Content
+# 5.最新資訊內文顯示
 ### GET
-#### uput the content of news, use for editing and general to watch
-#### path : /output_news_content/<number>
+### 傳最新資訊的內文
+### path:/test/output_news_content/<number>
 ```
 request:
 
 {
-	null
+	NULL
 }
-
-response:
-
+```response:
 {
-	rspCode: "",	200:success | 300:methods wrong | 400:failed
-	content: ""
+	rspCode: ""		200 : OK |300 : methods wrong | 400:未知 
+	content: ""		(圖片檔名)
 }
 ```
 
-<br>
-
-# API 10 - Output News Title
+# 6.最新資訊標題顯示
 ### GET
-#### Output the title of news, use for editing and general to watch
-#### path : /output_news_title/<number>
+### 傳最新資訊的內文
+### path:/test/output_news_title/<number>
 ```
 request:
 
 {
-	null
+	NULL
 }
-
 response:
 
 {
-	rspCode: "",	200:success | 300:methods wrong | 400:failed
-	title: ""
+	rspCode: ""		200 : OK |300 : methods wrong | 400:未知 
+	title: ""		(標題)
 }
 ```
 
-<br>
-
-# API 11 Edit News
+# 7.編輯最新消息
 ### POST
-#### edit the news including title, image and content
-#### path : /edit_news/<number>
+### 編輯網址中指定的news
+### path:/edit_news/<number>
+>用form
 ```
 request:
 
 {
-	title: "",
-	img: "",
-	content: ""
+	title: ""		(小於30個字)
+	content: ""		(傳送字串，會以txt儲存)
+	file: ""		(jpg,png,jpeg)
 }
 
 response:
 
 {
-	rspCode: ""		200:success | 300:methods wrong | 400:圖片檔名錯誤 | 401:圖片更新失敗 | 402:標題更新錯誤 | 403:內文更新失敗
+	rspCode: ""		200 : OK |300 : methods wrong | 400:圖片檔名錯誤 | 401:圖片更新失敗or不存在此news | 402:標題更新失敗or不存在此news | 403:內文更新失敗or不存在此news | 404:title太長 
 }
 ```
-
-<br>
-
-# API 12 - Delete News
+# 8.刪除最新消息
 ### POST
-#### delete the news on the portal site
-#### path : /delete_news/<number>
+### 刪除網址中指定的news
+### path:/test/delete_news/<number>
+
 ```
 request:
 
 {
-	null
+	沒有
 }
-
 response:
 
 {
-	rspCode: ""		200:success | 300:methods wrong | 400:database delete error | 401:image doesn't exist | 402:image delete error | 403:content delete error
+	rspCode: ""		200 : OK |300 : methods wrong | 400:title刪除失敗or不存在此news | 401:圖片不存在 | 402:圖片刪除失敗 | 403:內文刪除失敗
 }
 ```
-
 <br>
 
-# API 13 - Update Apply Group
+# 下面是apply的部分
+
+# 9.更新申請對象
 ### POST
-#### update the name of apply group
-#### path : /update_apply_group
-```
-request:
+### 更新申請對象
+### path:test//update_apply_group
+
+```request:
 
 {
-    groupName: ""
+	groupName: ""	(對象名稱)
 }
-
 response:
 
 {
-	rspCode: ""     200:success | 300:methods wrong | 400:update apply group failed
+	rspCode: ""		200 : OK |300 : methods wrong | 400(寫入失敗)
 }
 ```
 
-<br>
-
-# API 14 - Output Apply Group
+# 10.顯示申請對象
 ### GET
-#### output the name of apply group
-#### path : /output_apply_group
-```
-request:
+### 傳申請對象是什麼
+### path:test/output_apply_group
+
+```request
 
 {
-    null
+	NULL
+}
+response:
+
+{
+	rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗	groupName:"" (對象名稱)
+}
+```
+
+# 11.顯示可用的news number
+### GET
+### 傳可用的number和其中的最大值
+### path:test/useful_numbers
+
+```request:
+
+{
+	NULL
 }
 
 response:
 
 {
-    rspCode: ""     200:success | 300: methods wrong | 400:file access failed
+	rspCode: ""			200 : OK |300 : methods wrong | 400讀取失敗
+	numberList: "" 		(可用的numbers)
+	max: ""				可用的numbers中最大的
 }
-```
-
-<br>
-
-# API 15 - Add Apply Class
-### POST
-#### add and update quota of the class and period
-#### path : 
-```
-request:
-
-{
-    class: "",
-    once: "",       (max amount 1~99999)
-    one: "",        (max amount 1~99999)
-    three: "",      (max amount 1~99999)
-    six: "",        (max amount 1~99999)
-    year: ""        (max amount 1~99999)
-}
-
-response:
-
-{
-	rspCode: ""     200:success | 
-}
-```
 
 <br>
 

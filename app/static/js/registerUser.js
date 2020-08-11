@@ -67,31 +67,33 @@ function idTest()
     else // Old IE browser.
         checkID = new ActiveXObject("Microsoft.XMLHTTP");
 
-    checkID.open("POST", "http://192.168.1.146:5000/detect_repeated");
+    checkID.open("POST", "http://192.168.1.146:5000/test/USER/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
     checkID.send(JSON.stringify({"userID": userID.value}));
     console.log("CheckID JSON sent.");
-    checkID.onload = function()
-    {
-        console.log(checkID.responseText);
-        var rst = JSON.parse(checkID.responseText);
-        hideError(userID, idError3);
-        switch (rst.rspCode)
+    setTimeout(
+        checkID.onload = function()
         {
-            case "200": // ID no repeat
-                hideError(userID, idError2);
-                return true;
-            case "400": // ID repeat
-                showError(userID, idError2);
-                return false;
-            case "401": // ID too long
-                showError(userID, idError1);
-                return false;
-            default: // Unkonwn response text
-                showError(userID, idError3);
-                return false;
+            console.log(checkID.responseText);
+            var rst = JSON.parse(checkID.responseText);
+            hideError(userID, idError3);
+            switch (rst.rspCode)
+            {
+                case "200": // ID no repeat
+                    hideError(userID, idError2);
+                    return true;
+                case "400": // ID repeat
+                    showError(userID, idError2);
+                    return false;
+                case "401": // ID too long
+                    showError(userID, idError1);
+                    return false;
+                default: // Unkonwn response text
+                    showError(userID, idError3);
+                    return false;
+            }
         }
-    }
+    , 100);
     showError(userID, idError3);
     return false;
 }
@@ -130,7 +132,7 @@ function birthTest(birthday)
     compare = new Date(1897, 4 - 1, 19);
     if ((birthDate - compare) < 0)
         return false;
-    // No future people.
+    // No future person.
     compare = new Date();
     if ((birthDate - compare) > 0)
         return false;
@@ -332,49 +334,59 @@ function register()
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
 
-        request.open("POST", "http://192.168.1.146:5000/user_register");
+        request.open("POST", "http://192.168.1.146:5000/test/USER/Register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"userName": userName.value, "userID": userID.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
         console.log("Register JSON sent.");
-        request.onload = function()
-        {
-            console.log(request.responseText);
-            var rst = JSON.parse(request.responseText);
-            switch (rst.rspCode)
+        setTimeout(
+            request.onload = function()
             {
-                case 200: // Register success
-                    console.log("Register success!");
-                    return true;
-                case 300: // Methods wrong
-                    registerError.style.display = "block";
-                    return false;
-                case 400: // Length of userID is illegal ?????
+                console.log(request.responseText);
+                var rst = JSON.parse(request.responseText);
+                switch (rst.rspCode)
+                {
+                    case "200": case 200: // Register success.
+                        console.log("Register success!");
+                        return true;
+                    case "300": case 300: // Methods wrong.
+                        registerError.style.display = "block";
+                        return false;
+                    case "400": case 400: // Database wrong.
+                        registerError.style.display = "block";
+                        return false;
+                    case "401": case 401: // Length of userName is illegal.
                     showError(userID, idError1);
-                    return false;
-                case 401: // Format of userID is illegal ?????
-                    showError(userID, idError2);
-                    return false;
-                case 402: // Length of username is illegal
-                    showError(userName, nameError);
-                    return false;
-                case 403: // Length of password is illegal ?????
-                    showError(userPassword, passwordError1);
-                    return false;
-                case 404: // Format of password is illegal ?????
-                    showError(userPassword, passwordError2);
-                    return false;
-                case 405: // Length of email is illegal
-                    showError(userEmail, emailError1);
-                    return false;
-                case 406: // Format of email is illegal
-                    showError(userEmail, emailError2);
-                    return false;
-                default:
-                    registerError.style.display = "block";
-                    return false;
+                        return false;
+                    case "402": case 402: // Format of userID is illegal?
+                        showError(userID, idError3);
+                        return false;
+                    case "403": case 403: // Format of password is illegal.
+                        showError(userPassword, passwordError2);
+                        return false;
+                    case "404": case 404: // Length of email is illegal.
+                    case "405": case 405: // Format of email is illegal
+                        showError(userEmail, emailError2);
+                        return false;
+                    case "406": case 406: // Format of phone is illegal.
+                        showError(userPhone, phoneError2);
+                        return false;
+                    case "407": case 407: // Error of gender.
+                        genderError.style.display = "block";
+                        return false;
+                    case "408": case 408: // Format of bithday is illegal.
+                    case "409": case 409: // No future person.
+                        genderError.style.display = "block";
+                        return false;
+                    case "410": case 410: // User ID repeat.
+                        showError(userId, idError2);
+                        return false;
+                    default:
+                        registerError.style.display = "block";
+                        return false;
+                }
             }
-        }
+        , 100);
         console.log("Login failed! not onload.");
         registerError.style.display = "block";
         return false;

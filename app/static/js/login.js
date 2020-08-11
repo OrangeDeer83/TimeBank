@@ -88,7 +88,7 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.1.146:5000/login", true);
+        request.open("POST", "http://192.168.1.146:5000/test/USER/login", true);
         console.log("XMLHttpRequest opened.");
 
         request.onreadystatechange = function()
@@ -101,33 +101,32 @@ function login(num)
                 console.log(request.responseText);
                 rst = JSON.parse(request.responseText);
 
-                request.onload = function()
-                {
-                    if (rst.rspCode == "200")
+                setTimeout(
+                    request.onload = function()
                     {
-                        console.log("Login success!");
-                        // Different identity.
-                        if (num == 1) // USER
-                            window.location.assign("");
-                        else if (num == 2) // SA, AA, AG, AS, AU
-                            windows.location.assign("");
-                        else if (num == 3) // GM
-                            windows.location.assign("");
-                        return true;
+                        switch (rst.rspCode)
+                        {
+                            case "200": case 200:
+                                console.log("Login success!");
+                                // Different identity.
+                                if (num == 1) // USER
+                                    window.location.assign("");
+                                else if (num == 2) // SA, AA, AG, AS, AU
+                                    windows.location.assign("");
+                                else if (num == 3) // GM
+                                    windows.location.assign("");
+                                return true;
+                            case "400": case 400:
+                                console.log("Login failed!");
+                                showLoginError1();
+                                return false;
+                            default:
+                                console.log("Login failed! Unknow response text code.");
+                                showLoginError2();
+                                return false;
+                        }
                     }
-                    else if(rst.rspCode == "400")
-                    {
-                        console.log("Login failed!");
-                        showLoginError1();
-                        return false;
-                    }
-                    else
-                    {
-                        console.log("Login failed! Unknow response text code.");
-                        showLoginError2();
-                        return false;
-                    }
-                }
+                , 100);
             }
         }
         showLoginError2();

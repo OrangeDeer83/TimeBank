@@ -27,7 +27,7 @@ def login_user(userID):
     sql = "SELECT userID, userPassword, salt FROM account WHERE userID = '" + userID + "'"
     return sql
 
-def forget_password(userMail):
+def forgot_password(userMail):
     sql = "SELECT userID, userMail FROM account WHERE userMail = '" + userMail + "'"
     return sql
 

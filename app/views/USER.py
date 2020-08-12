@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, url_for, redirect
 
 USER = Blueprint('USER', __name__)
 
@@ -21,7 +21,7 @@ def resetPassword():
 #登入頁面
 @USER.route('/login')
 def login():
-    render_template('login.html')
+    return redirect(url_for('USER.index'))
 
 #註冊頁面
 @USER.route('/register')
@@ -110,3 +110,8 @@ def SR_all_task_record():
 @USER.route('/createTask')
 def create_task():
     render_template('createUSER.html')
+
+#個人頁面 - 已發任務
+@USER.route('/myselfTask')
+def myself_task():
+    render_template('myselfTask.html')

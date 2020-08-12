@@ -1,6 +1,6 @@
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 
-def user_forget_password_token(key, userID):
+def user_forgot_password_token(key, userID):
     s = TimedJSONWebSignatureSerializer(key, 300)
     token = s.dumps({"userID": userID})
     return token
@@ -16,7 +16,7 @@ def validate_token(key, token):
         data = s.loads(bytes(token, encoding="utf-8"))
     except SignatureExpired:
         print("Time out")
-        return False
+        return "Time out"
     except BadSignature:
         print("BadSignature")
         return False

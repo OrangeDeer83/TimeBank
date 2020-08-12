@@ -6,7 +6,13 @@ Admin = Blueprint('Admin', __name__)
 #忘記密碼頁面
 @Admin.route('/forgotPassword')
 def forgotPassword():
-    render_template('forgotPasswordManager.html')
+    render_template('forgotPasswordManager5.html')
+
+#輸入新密碼
+@Admin.route('/resetPassword')
+def resetPassword():
+    render_template('resetPasswordManager5.html')
+
 
 #登入頁面
 @Admin.route('/login')
@@ -73,20 +79,20 @@ def AA_update_condition():
 def SA_givePoint():
     render_template('givePointSA.html')
 
-#AA - 配發點數
-@Admin.route('/AA/givePoint')
-def AA_givePoint():
-    render_template('givePointAA.html')
+#AS - 配發點數
+@Admin.route('/AS/givePoint')
+def AS_givePoint():
+    render_template('givePointAS.html')
 
 #SA - 配發紀錄
 @Admin.route('/SA/giveRecord')
 def SA_giveRecord():
     render_template('giveRecordSA.html')
 
-#AA - 配發紀錄
-@Admin.route('/AA/giveRecord')
-def AA_giveRecord():
-    render_template('giveRecordAA.html')
+#AS - 配發紀錄
+@Admin.route('/AS/giveRecord')
+def AS_giveRecord():
+    render_template('giveRecordAS.html')
 
 #SA - 人事管理 - GM申請
 @Admin.route('/SA/GMApplication')

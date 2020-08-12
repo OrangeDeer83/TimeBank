@@ -136,10 +136,10 @@ response:
 
 <br>
 
-# API 5 - USER Forget Password
+# API 5 - USER forgot Password
 ### POST 
 #### 供一般使用者申請重設密碼信
-#### path : /test/USER/forget_password
+#### path : /test/USER/forgot_password
 ```
 request:
 

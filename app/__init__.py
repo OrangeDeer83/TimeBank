@@ -9,26 +9,31 @@ app.config.from_pyfile('config.py')
 CORS(app)
 db.init_app(app)
 
+#匯入controllers
+from .controllers.account import Account
+from .controllers.apply import Apply
+from .controllers.calender import Calender
+from .controllers.comment import Comment
+from .controllers.HRManage import HRManage
+from .controllers.point import Point
+from .controllers.portal import Portal
+from .controllers.profile import Profile
+from .controllers.report import Report
+from .controllers.task import Task
+from .controllers.test import test
+
 #匯入views
-from .views.USER_module import USER
-from .views.account import Account
-from .views.apply import Apply
-from .views.calender import Calender
-from .views.comment import Comment
-from .views.HRManage import HRManage
-from .views.point import Point
-from .views.portal import Portal
-from .views.profile import Profile
-from .views.report import Report
-from .views.task import Task
-from .views.test import test
+from .views.Admin import Admin
+from .views.GM import GM
+from .views.USER import USER
 
 #註冊blueprint設定路徑
-app.register_blueprint(USER, url_prefix='/USER')
 app.register_blueprint(Account, url_prefix='/account')
+app.register_blueprint(Admin, url_prefix='/Admin')
 app.register_blueprint(Apply, url_prefix='/apply')
 app.register_blueprint(Calender, url_prefix='/calender')
 app.register_blueprint(Comment, url_prefix='/comment')
+app.register_blueprint(GM, url_prefix='/GM')
 app.register_blueprint(HRManage, url_prefix='/HRManage')
 app.register_blueprint(Point, url_prefix='/point')
 app.register_blueprint(Portal, url_prefix='/portal')
@@ -36,3 +41,4 @@ app.register_blueprint(Profile, url_prefix='/profile')
 app.register_blueprint(Report, url_prefix='/report')
 app.register_blueprint(Task, url_prefix='/task')
 app.register_blueprint(test, url_prefix='/test')
+app.register_blueprint(USER, url_prefix='/USER')

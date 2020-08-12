@@ -1,4 +1,4 @@
 from flask import Blueprint
 from ..models.model import *
 
-Point = Blueprint('point', __name__)
+Portal = Blueprint('portal', __name__)

@@ -1,4 +1,5 @@
 from flask import Blueprint
 from ..models.model import *
 
-Portal = Blueprint('portal', __name__)
+HRManage = Blueprint('HRManage', __name__)
+

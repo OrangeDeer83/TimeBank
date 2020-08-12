@@ -1,4 +1,4 @@
 from flask import Blueprint
 from ..models.model import *
 
-Comment = Blueprint('comment', __name__)
+Task = Blueprint('task', __name__)

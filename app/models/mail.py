@@ -6,7 +6,7 @@ smtp=smtplib.SMTP('smtp.gmail.com', 587)
 
 def forget_password_mail(token, mail):
     mime = MIMEText("點擊以下連結以重設密碼\nhttp://192.168.1.146:5000" +\
-                    url_for('test.reset_password_page', token=token), "plain", "utf-8")     #內文
+                    url_for('account.USER_forgotPassword', token=token), "plain", "utf-8")      #內文
     mime["Subject"] = "TimeBank - 重設密碼"                                                     #標題
     #mime["From"] = "steven200083@gmail.com"                                                    #寄件人
     mime["To"] = mail                                                                           #收件人
@@ -23,8 +23,8 @@ def forget_password_mail(token, mail):
 
 
 def GM_verify_mail(token, mail):
-    mime = MIMEText("點擊以下連結以重設密碼\nhttp://192.168.1.146:5000" +\
-                    url_for('test.reset_password_page', token=token), "plain", "utf-8")         #內文
+    mime = MIMEText("點擊以下連結以驗證帳號\nhttp://192.168.1.146:5000" +\
+                    url_for('account.GM_verify_page', token=token), "plain", "utf-8")           #內文
     mime["Subject"] = "TimeBank - 評論管理員驗證信"                                              #標題
     #mime["From"] = "steven200083@gmail.com"                                                    #寄件人
     mime["To"] = mail                                                                           #收件人

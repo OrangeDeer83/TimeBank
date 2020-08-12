@@ -270,7 +270,7 @@ response:
 # 3.最新消息上傳
 ### POST
 ### 上傳title,img,content
-### path:upload_news
+### path:test/upload_news
 >用form
 ```
 request:
@@ -344,7 +344,7 @@ response:
 # 7.編輯最新消息
 ### POST
 ### 編輯網址中指定的news
-### path:/edit_news/<number>
+### path:test/edit_news/<number>
 >用form
 ```
 request:
@@ -370,7 +370,7 @@ response:
 request:
 
 {
-	沒有
+	NULL
 }
 response:
 
@@ -380,17 +380,41 @@ response:
 ```
 <br>
 
+# 9.顯示可用的news number
+### GET
+### 傳可用的number和其中的最大值
+### path:test/useful_numbers
+
+``` 
+request:
+
+{
+	NULL
+}
+
+response:
+
+{
+	rspCode: ""			200 : OK |300 : methods wrong | 400讀取失敗
+	numberList: "" 		(可用的numbers)
+	max: ""				可用的numbers中最大的
+}
+```
+
 # 下面是apply的部分
 
-# 9.更新申請對象
+申請條件pdf在app\static\uploadFile\apply_condition.pdf
+申請對象txt在app\static\uploadFile\group_name.txt
+
+# 10.更新申請對象
 ### POST
 ### 更新申請對象
-### path:test//update_apply_group
+### path:test/update_apply_group
 
 ```request:
 
 {
-	groupName: ""	(對象名稱)
+	groupName: ""	(對象名稱)(txt)
 }
 response:
 
@@ -399,9 +423,9 @@ response:
 }
 ```
 
-# 10.顯示申請對象
+# 11.顯示申請對象
 ### GET
-### 傳申請對象是什麼
+### 傳現在的申請對象是什麼
 ### path:test/output_apply_group
 
 ```request
@@ -416,12 +440,36 @@ response:
 }
 ```
 
-# 11.顯示可用的news number
-### GET
-### 傳可用的number和其中的最大值
-### path:test/useful_numbers
 
-```request:
+<br>
+
+# 12.更新申請文件
+### POST
+#### 上傳申請文件
+#### path : test/upload_apply_condition_pdf
+> 用form
+```
+request:
+
+{
+	file:"" (pdf)
+}
+
+response:
+
+{
+	rspCOde:"" 200 : OK |300 : methods wrong | 400 : 圖片上傳錯誤 | 401 : 檔案類型不許可 | 402 : 檔案傳輸方式錯誤、或是檔案超過2MB
+}
+```
+
+<br>
+
+# 13.檢查申請文件是否存在
+### GET
+#### 檢查檔案是否存在
+#### path : test/output_apply_condition_pdf
+```
+request:
 
 {
 	NULL
@@ -429,49 +477,112 @@ response:
 
 response:
 
-{
-	rspCode: ""			200 : OK |300 : methods wrong | 400讀取失敗
-	numberList: "" 		(可用的numbers)
-	max: ""				可用的numbers中最大的
+{	
+	fileName:"" (固定)
+	rspCOde:"" 200 : OD | 300  : method false | 400 未知 | 401 : 檔案不存在
 }
+```
+
+# 14.顯示可申請類別
+### GET
+#### 把可申請的類別列出來
+#### path : test/output_apply_class
+```
+request:
+
+{
+	NULL
+}
+
+response:
+
+{	
+	allClass:"" (list)
+	rspCode:"' 200 OK | 300 method wrong | 400 fail
+}
+```
 
 <br>
 
-# API 
-### 
+# 15.根據所選的class回復可申請的period和其quota 
+### GET
 #### 
 #### path : 
 ```
 request:
 
 {
-
+	class:"" (輸入大於10個字會報錯)
 }
 
 response:
 
 {
-	
+	"periodList":"" (0,30,90,180,365)以天數表示(list)
+	"quotaList":"" (list)
+	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知
 }
 ```
 
 <br>
 
-# API 
+# 16. 新增與更新申請條件
 ### 
-#### 
+#### 用於更新與新增
 #### path : 
 ```
 request:
 
-{
-
+{	
+	class:"" (輸入的如果是'其他'或是大於10個字會報錯)
+	once:"", one:"", three:"" , six:"", year:""(輸入0代表刪除此申請period或是不新增此項目,可輸入0~99999)(如果沒有變動請傳回原數值)(不可為空)
 }
 
 response:
 
 {
-	
+	rspCode:"" 200 OK| 300 method wrong | 400 未知 | 401 輸入不合法
+}
+```
+
+<br>
+
+# 17.刪除申請類別 
+### POST
+#### 會一次刪光所有此類型的可申請項目
+#### path : 
+```
+request:
+
+{
+	class:"" (小於10個字)
+}
+
+response:
+
+{
+	rsoCode :"" 200 OK | 300 method wrong | 400 刪除失敗或是此類型不存在可申請項目
+}
+```
+
+<br>
+
+# 18.回傳要求的quota和condition id 
+### GET
+#### 可以只查個別的quota和condition ID
+#### path : /test/output_quota_conditionID
+```
+request:
+
+{
+	class:""(小於10個字)
+	period:""(0~99999)
+}
+
+response:
+
+{
+	rspCode:"" 200 OK | 201 其他沒有quota | 300 method wrong |400 class或是period為空	| 401 抓取資料失敗 | 402 沒有此資料
 }
 ```
 

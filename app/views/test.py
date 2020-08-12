@@ -513,6 +513,310 @@ def userful_numbers():
     except:
         return jsonify({"rspCode":"400","numberList":"","max":""})
 
-@test.route('/updateWeb')
-def updateWeb():
-    return render_template('updatewebSA.html')
+    #前往更新入口網站
+@test.route("update_web_SA")
+def updateWebSA():
+    return render_template("updateWebSA.html")
+
+@test.route("update_web_AU")
+def updateWebAU():
+    return render_template("updateWebAU.html")
+ 
+#點數申請相關
+#更新申請對象(路徑未定)
+#要json傳groupName
+#回傳rspCpde
+@test.route('/update_apply_group', methods = ['POST'])
+def update_apply_group():
+    if request.method == 'POST':
+        try:
+            json = request.get_json()
+            groupName = json['groupName']
+            file = open(os.getcwd() + '/app/static/uploadFile/' +'/group_name.txt','w')
+            file.write(groupName)
+            file.close()
+            return jsonify({"rspCode":"200"})
+        except:
+            #rspCode 400:申請對象寫入失敗
+            return jsonify({"rspCode":"400"})
+    else:
+        return jsonify({"rspCode":"300"})
+#顯示申請對象(路徑未定)
+#回復rspCode,groupName
+@test.route('/output_apply_group', methods = ['GET'])
+def output_apply_group():
+    if request.method == "GET":
+        try:
+            file = open(os.getcwd() + '/app/static/uploadFile' + '/group_name.txt','r')
+            groupName = file.read()
+            file.close()
+            return jsonify({"rspCode":"200","groupName":groupName})
+        except:
+            #rspCode 400:檔案讀取失敗
+            return jsonify({"rspCode":"400","groupName":""})
+    else:
+        return jsonify({"rspCode":"300","groupName":""})
+
+
+#顯示可申請類別
+#回復rspCode,allClass
+@test.route("/output_apply_class" ,methods = ['GET'])
+def output_apply_class():
+    if request.method == 'GET':
+        try:
+            dbClassData = db.engine.execute(list_alive_apply_class()).fetchall()
+            allClass = []
+            for object in dbClassData:
+                allClass.append(object[0])
+            return jsonify({"rspCode":"200","allClass":allClass})
+        except:
+            #rspCode 400:顯示失敗
+            return jsonify({"rspCode":"400","allClass":""})
+    else:
+        return jsonify({"rspCode":"300","allClass":""})
+ 
+#刪除申請類別
+#要json輸入className
+#回傳rspCode
+@test.route("/delete_apply_class", methods = ['POST'])
+def delete_apply_class():
+    if request.method == 'POST':
+        try:
+            json = request.get_json()
+            deleteClassName = json['class']
+            db.engine.execute(let_apply_condition_die(deleteClassName))
+            return jsonify({"rspCode":"200"})
+        except:
+            #rspCode 400:刪除失敗
+            return jsonify({"rspCode":"400"})
+    else:
+        return jsonify({"rspCode":"300"})
+#更新申請文件
+#要form傳file(pdf)
+#回傳rspCode
+@test.route("/upload_apply_condition_pdf" ,methods = ['POST'])
+def upload_apply_condition_pdf():
+    if request.method == 'POST':
+        #目前預設傳來的東西叫做file,允許pdf(路徑未定)
+        try:
+            filePdf = request.files['file']
+        except:
+            #檔案傳輸方式錯誤、或是檔案超過2MB
+            return jsonify({"rspCode":"402"})
+        #檢查fileImage
+        if filePdf.mimetype == 'application/pdf':
+            try:
+                #儲存檔案到指定位置(未定)
+                filePdf.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' , 'apply_condition.pdf'))
+                return jsonify({"rspCode":"200"})
+            except:
+                #rspCode 400:圖片上傳錯誤
+                return jsonify({"rspCode":"400"})
+        else:
+            #檔案類型或名稱不許可
+            return jsonify({"rspCode":"401"})
+    else:
+        return jsonify({"rspCode":"300"})
+#回傳申請文件名
+#回傳rspCode,fileName
+@test.route("/output_apply_condition_pdf", methods = ['GET'])
+def ouput_apply_condition_pdf():
+    if request.method == 'GET':
+        #try:
+            
+            if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/'+'apply_condition.pdf'):
+                return jsonify({"rspCode":"200","fileName":"apply_condition.pdf"})
+            else:
+                #檔案不存在
+                return jsonify({"rspCode":"401","fileName":""})
+        #except:
+            #rspCode 400:回傳失敗
+            return jsonify({"rspCode":"400","fileName":""})
+    else:
+        return jsonify({"repCode":"300"})
+
+#新增與更新
+#要json傳class,once,one,three,six,year(後面幾個是quota,0為移除)
+#回傳rspCode,notAllow
+@test.route('/update_add_apply_quota' ,methods = ['POST'])
+def update_add_apply_quota():
+    try:
+        if request.method == 'POST':
+            json = request.get_json()
+            notAllow = []
+            className = json['class']
+            once = json['once']
+            one = json['one']
+            three = json['three']
+            six = json['six']
+            year = json['year']
+            #檢查輸入
+            if className == '' or className == '其他':
+                notAllow.append("class")
+            if once.isdigit() == False:
+                notAllow.append("once")
+            elif int(once) < 0:
+                notAllow.append("once")
+            elif len(once) > 5:
+                notAllow.append("once")
+            if one.isdigit() == False:
+                notAllow.append("one")
+            elif int(one) < 0:
+                notAllow.append("one")
+            elif len(one) > 5:
+                notAllow.append("one")
+            if three.isdigit() == False:
+                notAllow.append("three")
+            elif int(three) < 0:
+                notAllow.append("three")
+            elif len(three) > 5:
+                notAllow.append("three")
+            if six.isdigit() == False:
+                notAllow.append("six")
+            elif int(six) < 0:
+                notAllow.append("six")
+            elif len(six) > 5:
+                notAllow.append("six")
+            if year.isdigit() == False:
+                notAllow.append("year")
+            elif int(year) < 0:
+                notAllow.append("year")
+            elif len(year) > 5:
+                notAllow.append("year")
+            if notAllow != []:
+                #rspCode 401:輸入不合法
+                return jsonify({"rspCode":"401","notAllow":notAllow})
+            #一次性
+            #檢查是不是0
+            if once != '0':
+                #檢查原本有沒有這種一次性
+                if db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone() != None:
+                    #檢查和已有的once一不一樣，一樣的話不做事
+                    if int(once) != db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_class_period(className,0))
+                        db.engine.execute(add_apply_condition(0,className,int(once)))                    
+                else:
+                    db.engine.execute(add_apply_condition(0,className,int(once)))
+            else:
+                #檢查有沒有這種一次性
+                if db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_class_period(className,0))
+            #一個月
+            if one != '0':
+                if db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone() != None:
+                    if int(one) != db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_class_period(className,30))
+                        db.engine.execute(add_apply_condition(30,className,int(one)))                    
+                else:
+                    db.engine.execute(add_apply_condition(30,className,int(one)))
+            else:
+                if db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_class_period(className,30))
+            #三個月
+            if three != '0':
+                if db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone() != None:
+                    if int(three) != db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_class_period(className,90))
+                        db.engine.execute(add_apply_condition(90,className,int(three)))                    
+                else:
+                    db.engine.execute(add_apply_condition(90,className,int(three)))
+            else:
+                if db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_class_period(className,90))
+            #六個月
+            if six != '0':
+                if db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone() != None:
+                    if int(six) != db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_class_period(className,180))
+                        db.engine.execute(add_apply_condition(180,className,int(six)))                    
+                else:
+                    db.engine.execute(add_apply_condition(180,className,int(six)))
+            else:
+                if db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_class_period(className,180))
+            #一年
+            if year != '0':
+                if db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone() != None:
+                    if int(year) != db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_class_period(className,365))
+                        db.engine.execute(add_apply_condition(365,className,int(year)))                    
+                else:
+                    db.engine.execute(add_apply_condition(365,className,int(year)))
+            else:
+                if db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_class_period(className,365))
+            return jsonify({"rspCode":"200","notAllow":""})
+
+        else:
+            return jsonify({"rspCode":"300","notAllow":""})
+    except:
+        #rspCode 400:某個地方爆掉但不知道哪裡
+        return jsonify({"rspCode":"400","notAllow":""})
+
+#回傳要求的quota和condition id
+#要json傳class,period
+#回傳rspCode,conditionID,quota
+@test.route("/output_quota_conditionID",methods =['GET'])
+def output_quota_conditionID():
+    if request.method == 'GET':
+        try:
+            json = request.get_json()   
+            if json['class'] == '其他':
+                #其他沒id和quota
+                return jsonify({"conditionID":"","quota":"","rspCode":"201"})
+            elif json['class'] == '' or json['period'] == '':
+                #class或period未填
+                return jsonify({"conditionID":"","quota":"","rspCode":"400"})
+            dbData = db.engine.execute(show_quota_conditionID_by_class_period(json['class'],json['period'])).fetchone()
+            if dbData != None:
+                return jsonify({"conditionID":str(dbData[0]),"quota":str(dbData[1]),"rspCode":"200"})
+            else:
+                #rspCode 402:沒有此資料
+                return jsonify({"conditionID":"","quota":"","rspCode":"402"})
+        except:
+            #抓取資料失敗
+            return jsonify({"conditionID":"","quota":"","rspCode":"401"})
+    else:
+        return jsonify({"conditionID":"","quota":"","rspCode":"300"})
+
+#根據所選的class回復period
+#要json傳class
+#回傳rspCode,periodList
+@test.route("/output_allow_period", methods = ['GET'])
+def return_period_by_class():
+    try:
+        if request.method == 'GET':
+            json = request.get_json()
+            className = json['class']
+            if className == '其他':
+                return jsonify({"periodList":"0,30,90,180,365","quotaList":"","rspCode":"200"})
+            else:
+                dbData = db.engine.execute(out_put_allow_period(className)).fetchall()
+                quotaList = []
+                periodList = []
+                conditionIDList = []
+                if dbData != []:
+                    for period in dbData:
+                        dbData2 = db.engine.execute(show_quota_conditionID_by_class_period(className,period[0])).fetchone()
+                        periodList.append(str(period[0]))
+                        quotaList.append(dbData2[1])
+                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspCoide":"200"})
+                else:
+                    #rspCode 201:此class沒有可被申請的週期
+                    return jsonify({"periodList":"","quotaList":"","rspCoide":"201"})
+        else:
+            return jsonify({"periodList":"","quotaList":"","rspCode":"300"})
+    except:
+            #rspCode 400:某個地方爆掉
+            return jsonify({"periodList":"","rspCode":"400"})
+
+#前往更新申請條件 AA
+@test.route("/update_condition_AA")
+def updateConditionAA():
+    return render_template("updateConditionAA.html")
+
+#前往更新申請條件 SA
+@test.route("/update_condition_SA")
+def updateConditionSA():
+    return render_template("updateConditionSA.html")
+

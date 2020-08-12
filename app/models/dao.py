@@ -53,7 +53,7 @@ def delete_news_(number):
     return "DELETE FROM `news` WHERE `news`.`newsID` = {}".format(number)
 
 def add_apply_condition(period,className,quota):
-    return "INSERT INTO `applyCondition` (`period`, `class`, `quota`) VALUES ('{}', '{}', '{}')".format(period,className,quota)
+    return "INSERT INTO `applyCondition` (`period`, `class`, `quota`,`available`) VALUES ('{}', '{}', '{}',1)".format(period,className,quota)
 
 def list_alive_apply_class():
     return "SELECT DISTINCT class FROM `applyCondition` WHERE `class` != '其他' AND `available` != 0 ORDER BY class "
@@ -68,7 +68,7 @@ def let_apply_condition_die_class_period(className,period):
     return "UPDATE `applyCondition` SET available = 0 WHERE class ='{}' AND period ={}".format(className,period)
 
 def show_quota_conditionID_by_class_period(className,period):
-    return "SELECT `conditionID`, `quota` FROM `applyCondition` WHERE `class` = '{}' AND `period` ={}".format(className,period)
+    return "SELECT `conditionID`, `quota` FROM `applyCondition` WHERE `class` = '{}' AND `period` ={} AND `available` = 1".format(className,period)
 
 def out_put_allow_period(className):#
     return "SELECT `period` FROM `applyCondition` WHERE `class` = '{}' AND `available` = 1 ORDER BY period".format(className)
@@ -137,7 +137,7 @@ def select_user_name(userID):
     return "SELECT userName FROM account WHERE userID = '{}'".format(userID)
 
 def get_all_apply_status_0_search_user_name(userName):
-    return 'SELECT apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency FROM apply JOIN account WHERE apply.applyStatus = 0 AND apply.userID=account.userID AND (account.userName = "{}" OR account.userID = "{}") ORDER BY applyID'.format(userName,userName)
+    return 'SELECT apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency FROM apply JOIN account WHERE apply.applyStatus = 0 AND apply.userID=account.userID AND (account.userName = "{}" OR account.name = "{}") ORDER BY applyID'.format(userName,userName)
 
 def show_judge_history(userName = "",className = "" , period = "" , status = ""):
     sql = "SELECT apply.conditionID ,applyTime,frequency,result,applyStatus,oldConditionID,judgeTime,applyID,apply.userID FROM apply JOIN account,applyCondition WHERE apply.applyStatus != 0 AND apply.conditionID = applyCondition.conditionID AND apply.userID =account.userID "
@@ -151,21 +151,21 @@ def show_judge_history(userName = "",className = "" , period = "" , status = "")
     if className!= "":
         sql += "AND applyCondition.class = '{}'".format(className)
     if userName != "":
-        sql += "AND ( account.userName = '{}' OR account.userID = '{}')".format(userName,userName)
+        sql += "AND ( account.userName = '{}' OR account.name = '{}')".format(userName,userName)
     return sql
 
 def select_all_user():
     return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` ORDER BY userID"
 
 def select_search_user(target):
-    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes` FROM `account` WHERE userID = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
+    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
 
 def add_allotment(userID,frequency,period,quota,adminID,allotmentTime):
     return "INSERT INTO `allotment` (`allotmentID`, `userID`, `allotmentStatus`, `frequency`, `period`, `restTime`, `nextTime`, `quota`, `adminID`, `allotmentTime`) VALUES (NULL, '{}', '1', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(userID,frequency,period,str(int(period)*int(frequency)),period,quota,adminID,allotmentTime)
 
 def select_search_userID(target):
     if target != '':
-        return "SELECT `userID` FROM `account` WHERE userID = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
+        return "SELECT `userID` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
     else:
         return "SELECT `userID` FROM `account` ORDER BY userID"
 

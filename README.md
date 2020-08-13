@@ -49,13 +49,13 @@ Data Access Object(再不看R)
 # API 1 - USER Detect Repeated
 ### POST
 #### 在一般使用者註冊時偵測帳號是否重複
-#### path : /test/USER/detect_repeated
+#### path : /test/USER/detect_repeated (account)
 >tip : JavaScript can use onkeyup
 ```
 request:
 
 {
-	userID: "" (max length 20)
+	userName: "" (max length 20)
 }
 
 response:
@@ -70,13 +70,13 @@ response:
 # API 2 - USER Register
 ### POST
 #### 供一般使用者註冊
-#### path : /test/USER/Register
+#### path : /test/USER/Register (account)
 ```
 request:
 
 {
 	userName: "",		(max length 20)
-	userID: "",			(max length 20)
+	name: "",			(max length 20)
 	userPassword: "",	(max length 30)
 	userMail: "",		(max length 50)
 	userPhone: "",		(max length 20)
@@ -102,15 +102,14 @@ request:
 
 {
 	type: "",			0:no login | 1:USER | 2:AS | 3:AA | 4:AU | 5:AG | 6:GM | 7:SA
-	userID: "",			(max length 20)
+	userName: "",			(max length 20)
 	userPassword: ""	(max length 30)
 }
 
 response:
 
 {
-	rspCode: "",		200:登入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:登入失敗
-	URL: ""
+	rspCode: "",		200:登入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:登入失敗，沒有該帳號 | 402:登入失敗，密碼錯誤
 }
 ```
 
@@ -177,15 +176,15 @@ response:
 
 <br>
 
-# API 7 - SA Detect Repeated
+# API 7 - Admin Detect Repeated
 ### POST
-#### 在SA新增管理員時避免帳號重複
-#### path : /test/SA/detect_repeated
+#### 新增管理員時避免帳號重複
+#### path : /test/Admin/detect_repeated
 ```
 request:
 
 {
-	adminID: ""		(max length 20)
+	adminName: ""		(max length 20)
 }
 
 response:
@@ -197,45 +196,295 @@ response:
 
 <br>
 
-# API 7 - Create Admins
+# API 8 - Create Admin
 ### POST
 #### SA新增管理員
-#### path : /test/create_admins
+#### path : /test/create/Admin (HRManage)
 ```
 request:
 
 {
-	adminType: ""		2:AS | 3:AA | 4:AU | 5:AG
-	adminID: ""		 	(max length 20)
-	adminPassword: ""	(max length 30)
+	adminType: ""			2:AS | 3:AA | 4:AU | 5:AG
+	adminName: ""		 	(max length 20)
+	adminPassword: ""		(max length 30)
 }
 
 response:
 
 {
-	rspCode: ""			200:管理員新增成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:管理員權限不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:帳號重複
+	rspCode: ""			200:管理員新增成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:adminType異常 | 402:帳號格式不符 | 403:密碼格式不符 | 404:帳號重複
 }
 ```
 
 <br>
 
-# API 8 - Delete Admin
+# API 9 - Delete Admin
 ### POST
 #### SA刪除管理員
-#### path : /test/delete_admin
+#### path : /test/delete/admin (HRManage)
 >我想讓SA輸入一次密碼再進行刪除的動作，第一次點擊刪除(SAPassword留空)顯示輸入密碼，輸入一次後就不必再輸入
 ```
 request:
 
 {
-	adminID: ""			(max length 20)
+	adminID: ""			
+	SAID: ""			(之後有登入就不需要)
 	SAPassword: ""		(max length 30)
 }
 
 response:
 
 {
-	rspCode: ""			200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:尚未輸入第一次密碼 | 402:adminID不在資料庫中，前端可能遭到竄改 | 403:
+	rspCode: ""			200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:adminID不在資料庫中，前端可能遭到竄改 | 402:該帳號目前不是admin | 403:尚未輸入第一次密碼 | 404:密碼輸入錯誤
+}
+```
+
+<br>
+
+# API 10 - Load GM Mail
+### POST
+#### SA及AG能夠輸入GM的EMail
+#### path : /test/load_GM_mail
+```
+request:
+
+{
+	GMMail: ""		(max length 50)
+}
+
+response:
+
+{
+	rspCode: ""		200:email輸入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401: email格式不符 | 402:email與他人重複
+}
+```
+
+<br>
+
+# API 11 - GM Register
+### POST
+#### 路人能夠申請註冊GM資格，並寄發驗證信
+#### path : /test/GM/register
+```
+request:
+
+{
+	GMName: "",		(max length 20)
+	GMPassword: "",	(max length 30)
+	GMMail: "",		(max length 50)
+	GMPhone: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:信箱已被輸入，驗證信寄送成功 | 201:信箱已申請過，驗證信再次寄出 | 202:帳號申請成功，驗證信已寄出 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:帳號格式不符 | 402:密碼格式不符 | 403:信箱長度不符 | 404:信箱格式不符 | 405:電話格式不符 | 406:帳號與他人重複 | 407.408.410:驗證信寄送失敗 | 409:信箱與他人重複
+}
+```
+
+<br>
+
+# API 12 - Approve GM
+### POST
+#### SA及AG能夠同意GM註冊申請
+#### path : /test/approveGM
+```
+request:
+
+{
+	GMID: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:同意GM申請成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:該帳號並非待審核GM，前端可能遭竄改
+}
+```
+
+<br>
+
+# API 13 - Reject GM
+### POST
+#### SA及AG能夠拒絕GM註冊申請
+#### path : /test/rejectGM
+```
+request:
+
+{
+	GMID: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:拒絕GM申請成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:該帳號並非待審核GM，前端可能遭竄改
+}
+```
+
+<br>
+
+# API 14 - Admin Login
+### POST
+#### 所有管理員登入
+#### path : /Admin/login
+```
+request:
+
+{
+	adminName: ""
+	adminPassword: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:登入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:登入失敗，沒有該帳號 | 402:登入失敗，密碼輸入錯誤
+}
+```
+
+<br>
+
+# API 15 - Admin List
+### GET
+#### 取得現有Admin列表
+#### path : /test/Admin_list
+```
+request:
+
+{
+	NULL
+}
+
+response:
+
+{
+	rspCode: "",	200:成功
+	AdminList: [
+		{
+			adminType: "",		2:AS | 3:AA | 4:AU | 5:AG | 6:GM
+			adminName: "",
+			adminPhone: "",
+			adminMail: ""
+		}
+	]
+}
+```
+
+<br>
+
+# API 16 - GM Apply List
+### GET
+#### 取得GM申請列表
+#### path : /GM_apply_list
+```
+request:
+
+{
+	NULL
+}
+
+response:
+
+{
+	rspCode: "",	200:成功
+	applyList: [
+		{
+			adminName: "",
+			adminPhone: "",
+			adminMail: ""
+		}
+	]
+}
+```
+
+<br>
+
+# API 17 - GM List
+### GET
+#### 取得現有GM列表
+#### path : /GM_list
+```
+request:
+
+{
+	NULL
+}
+
+response:
+
+{
+	rspCode: "",	200:成功
+	GMList: [
+		{
+			adminName: "",
+			adminPhone: "",
+			adminMail: ""
+		}
+	]
+}
+```
+
+<br>
+
+# API 18 - Delete GM
+### POST
+#### SA及AG能夠刪除GM
+#### path : /test/delete/GM
+>當rspCode為403就跳出視窗讓管理員輸入密碼，再來就能夠連續刪除
+```
+request:
+
+{
+	GMID: "",
+	adminID: "",			(之後有登入就不用)
+	adminPassword: ""		(之後有登入就不用)
+}
+
+response:
+
+{
+	rspCode: ""		200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:GMID不在資料庫中，前端可能遭到竄改 | 402:ID錯誤，此ID可能不是GM | 403:尚未輸入第一次密碼 | 404:密碼輸入錯誤
+}
+```
+
+<br>
+
+# API 
+### 
+#### 
+#### path : 
+```
+request:
+
+{
+
+}
+
+response:
+
+{
+	
+}
+```
+
+<br>
+
+# API 
+### 
+#### 
+#### path : 
+```
+request:
+
+{
+
+}
+
+response:
+
+{
+	
 }
 ```
 

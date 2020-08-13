@@ -21,4 +21,3 @@ def validate_token(key, token):
         print("BadSignature")
         return False
     return data
-

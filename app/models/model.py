@@ -6,8 +6,9 @@ taskSR = db.Table('taskSR', db.Column('taskID', db.Integer, db.ForeignKey('task.
 
 class account(db.Model):
     __tablename__ = 'account'
-    userID = db.Column(db.String(20), primary_key=True)
+    userID = db.Column(db.Integer, primary_key=True)
     userName = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(20), nullable=False)
     userPassword = db.Column(db.String, nullable=False)
     userMail = db.Column(db.String(50), nullable=False)
     userPhone = db.Column(db.String(20), nullable=False)
@@ -28,9 +29,9 @@ class account(db.Model):
     db_account_report = db.relationship('report', backref='account')
     db_account_taskCandidate = db.relationship('taskCandidate', backref='account')
 
-    def __init__(self, userID, userName, userPassword, userMail, userPhone, userInfo, userPoint, SRRate, SRRateTimes, SPRate, SPRateTimes, userGender, userBirthday, salt):
-        self.userID = userID
+    def __init__(self, userName, name, userPassword, userMail, userPhone, userInfo, userPoint, SRRate, SRRateTimes, SPRate, SPRateTimes, userGender, userBirthday, salt):
         self.userName = userName
+        self.name = name
         self.userPassword = userPassword
         self.userMail = userMail
         self.userPhone = userPhone
@@ -47,7 +48,7 @@ class account(db.Model):
 
 class adminAccount(db.Model):
     __tablename__ = 'adminAccount'
-    adminID = db.Column(db.String(20), primary_key=True)
+    adminID = db.Column(db.Integer, primary_key=True)
     adminName = db.Column(db.String(20), nullable=False)
     adminPassword = db.Column(db.String, nullable=False)
     adminType = db.Column(db.Integer, nullable=False)
@@ -61,8 +62,7 @@ class adminAccount(db.Model):
     db_adminAccount_point = db.relationship('point', backref='adminAccount')
     db_adminAccount_report = db.relationship('report', backref='adminAccount')
 
-    def __init__(self, adminID, adminName, adminPassword, adminType, adminPhone, adminMail, salt):
-        self.adminID = adminID
+    def __init__(self, adminName, adminPassword, adminType, adminPhone, adminMail, salt):
         self.adminName = adminName
         self.adminPassword = adminPassword
         self.adminType = adminType

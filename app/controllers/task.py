@@ -1,4 +1,4 @@
 from flask import Blueprint
 from ..models.model import *
 
-calender = Blueprint('calender', __name__)
+Task = Blueprint('task', __name__)

@@ -1,8 +1,13 @@
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 
-def create_token(key, userID, timeout):
-    s = TimedJSONWebSignatureSerializer(key, timeout)
+def user_forgot_password_token(key, userID):
+    s = TimedJSONWebSignatureSerializer(key, 300)
     token = s.dumps({"userID": userID})
+    return token
+
+def GM_verify_token(key, GMID):
+    s = TimedJSONWebSignatureSerializer(key, 300)
+    token = s.dumps({"GMID": GMID})
     return token
 
 def validate_token(key, token):
@@ -11,9 +16,8 @@ def validate_token(key, token):
         data = s.loads(bytes(token, encoding="utf-8"))
     except SignatureExpired:
         print("Time out")
-        return False
+        return "Time out"
     except BadSignature:
         print("BadSignature")
         return False
-    print("驗證成功")
     return data

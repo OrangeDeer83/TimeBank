@@ -1,4 +1,9 @@
 from flask import Blueprint
 from ..models.model import *
 
-profile = Blueprint('profile', __name__)
+Comment = Blueprint('comment', __name__)
+
+
+
+
+

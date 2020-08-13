@@ -48,7 +48,7 @@ function forgotPasswordEmail()
     else // Old IE browser.
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
-    request.open("POST", "http://192.168.1.146:5000/test/USER/forget_password");
+    request.open("POST", "http://192.168.1.146:5000/test/USER/forgot_password");
     request.onreadystatechange = function()
     {
         if (request.readyState == 4 && request.status == 200)

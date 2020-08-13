@@ -269,7 +269,7 @@ def reset_password_page(token):
 @test.route('/upload_web_intro', methods = ['POST'])
 def upload_web_intro():
     if request.method == 'POST':    
-       #寫在webIntro.txt(路徑未定)
+       #寫在webIntro.txt
        file = open(os.getcwd() + '/app/static/uploadFile/' + 'webIntro.txt' , 'w')
        #目前預設傳來的資訊叫intro
        #且直接是str
@@ -290,7 +290,7 @@ def upload_web_intro():
 @test.route("/output_webIntro", methods = ['GET'])
 def output_web_intro():
     if request.method == 'GET':
-        #開啟webIntro.txt(路徑未定)
+        #開啟webIntro.txt
         try:
             file = open(os.getcwd() + '/app/static/uploadFile/' + "webIntro.txt", 'r')
         except:
@@ -326,15 +326,14 @@ def upload_news():
         except:
             #rspCode 404:標題上傳錯誤
             return jsonify({"rspCode":"404"})
-        #目前預設傳來的圖片叫做file,允許jpg,gpeg,png(路徑未定)
-        allowExtention = set(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'])
+        #目前預設傳來的圖片叫做file,允許jpg,gpeg,png
         #檢查fileImage
-        if fileImage and '.' in fileImage.filename and fileImage.filename.rsplit('.', 1)[1] in allowExtention:
+        if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
             try:
                 #設定filename = newsID.jpg
                 filename = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.jpg'
-                #儲存檔案到指定位置(未定)
-                fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage/', filename))
+                #儲存檔案到指定位置
+                fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage/' , filename))
             except:
                 #rspCode 402:圖片上傳錯誤
                 return jsonify({"rspCode":"402"})
@@ -343,7 +342,6 @@ def upload_news():
             return jsonify({"rspCode" : "401"})
         try:    
             #內文上傳
-            #(路徑未定)
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
             fileContent = open(os.getcwd() + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w')
             fileContent.write(content)
@@ -356,7 +354,7 @@ def upload_news():
     else:
         return jsonify({"repCode":"300"})
 
-#最新資訊圖片顯示(路徑未定)
+#最新資訊圖片顯示
 #在網址帶入要顯示的編號
 #回傳rspCode,img
 @test.route("/output_news_image/<number>", methods = ['GET'])
@@ -375,7 +373,7 @@ def output_newsImage(number):
     else:
         return jsonify({"rspCode":"300","img":""})
 
-#最新資訊內文顯示(路徑未定)
+#最新資訊內文顯示
 #在網址帶入要顯示的編號
 #回傳rspCode,content
 @test.route("/output_news_content/<number>", methods = ['GET'])
@@ -421,13 +419,12 @@ def edit_news(number):
             #rspCode 404:title太長
             return jsonify({"rspCode":"404"})
         if fileImage.filename != '':
-            #允許jpg,gpeg,png(路徑未定)
-            allowExtention = set(['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG'])
-            if fileImage and '.' in fileImage.filename and fileImage.filename.rsplit('.', 1)[1] in allowExtention:
+            #允許jpg,gpeg,png
+            if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
                 try:
                     #設定filename = newsID.jpg
                     filename = number + '.jpg'
-                    #儲存檔案到指定位置(未定)
+                    #儲存檔案到指定位置
                     os.remove(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage' + "/" + filename)
                     fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'newsImage', filename))
                 except:
@@ -476,7 +473,7 @@ def delete_news(number):
         except: 
             #rspCode 400:資料庫資料刪除失敗
             return jsonify({"rspCode" : "400"})
-        #刪除伺服器中檔案(路徑未定)
+        #刪除伺服器中檔案
         if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage' + "/{}.jpg".format(number)):
             newsImage = current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'newsImage' + "/{}.jpg".format(number)
         else:
@@ -497,11 +494,10 @@ def delete_news(number):
     else:
         return jsonify({"rspCode":"300"})
 
-
 #顯示現在有的newsID
 #回傳 rspCode 、 number
 @test.route("/useful_numbers", methods = ['GET'])
-def userful_numbers():
+def useful_numbers():
     if request.method != "GET":
         return jsonify({"rspCode":"300","numberList":"","max":""})
     try:
@@ -514,16 +510,16 @@ def userful_numbers():
         return jsonify({"rspCode":"400","numberList":"","max":""})
 
     #前往更新入口網站
-@test.route("update_web_SA")
+@test.route("/SA/updateWeb")
 def updateWebSA():
     return render_template("updateWebSA.html")
 
-@test.route("update_web_AU")
+@test.route("/AU/updateWeb")
 def updateWebAU():
     return render_template("updateWebAU.html")
  
 #點數申請相關
-#更新申請對象(路徑未定)
+#更新申請對象
 #要json傳groupName
 #回傳rspCpde
 @test.route('/update_apply_group', methods = ['POST'])
@@ -541,7 +537,7 @@ def update_apply_group():
             return jsonify({"rspCode":"400"})
     else:
         return jsonify({"rspCode":"300"})
-#顯示申請對象(路徑未定)
+#顯示申請對象
 #回復rspCode,groupName
 @test.route('/output_apply_group', methods = ['GET'])
 def output_apply_group():
@@ -597,7 +593,7 @@ def delete_apply_class():
 @test.route("/upload_apply_condition_pdf" ,methods = ['POST'])
 def upload_apply_condition_pdf():
     if request.method == 'POST':
-        #目前預設傳來的東西叫做file,允許pdf(路徑未定)
+        #目前預設傳來的東西叫做file,允許pdf
         try:
             filePdf = request.files['file']
         except:
@@ -606,7 +602,7 @@ def upload_apply_condition_pdf():
         #檢查fileImage
         if filePdf.mimetype == 'application/pdf':
             try:
-                #儲存檔案到指定位置(未定)
+                #儲存檔案到指定位置
                 filePdf.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' , 'apply_condition.pdf'))
                 return jsonify({"rspCode":"200"})
             except:
@@ -811,12 +807,11 @@ def return_period_by_class():
             return jsonify({"periodList":"","rspCode":"400"})
 
 #前往更新申請條件 AA
-@test.route("/update_condition_AA")
+@test.route("/AA/updateCondition")
 def updateConditionAA():
     return render_template("updateConditionAA.html")
 
 #前往更新申請條件 SA
-@test.route("/update_condition_SA")
+@test.route("/SA/updateCondition")
 def updateConditionSA():
     return render_template("updateConditionSA.html")
-

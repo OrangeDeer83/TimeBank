@@ -147,7 +147,7 @@ def Admin_list():
         Admin_list = []
         for Admin in query_data:
             Admin_list.append({"adminType": Admin.adminType, "adminName": Admin.adminName,\
-                            "adminPhone": Admin.adminPhone, "adminMail": Admin.adminMail})
+                            "adminID": Admin.adminID, "adminPhone": Admin.adminPhone, "adminMail": Admin.adminMail})
         return jsonify({"rspCode": "200", "AdminList": Admin_list})         #成功
     else:
         return jsonify({"rspCode": "500", "AdminList": ""})                 #權限不符
@@ -159,7 +159,7 @@ def GM_list():
         query_data = adminAccount.query.filter_by(adminType = userType['GM']).all()
         GM_list = []
         for GM in query_data:
-            GM_list.append({"adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
+            GM_list.append({"adminID": GM.adminID, "adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
         return jsonify({"rspCode": "200", "GMList": GM_list})               #成功
     else:
         return jsonify({"rspCode": "500", "GMList": ""})                    #權限不符
@@ -171,7 +171,7 @@ def GM_apply_list():
         query_data = adminAccount.query.filter_by(adminType = userType['GM_waiting']).all()
         apply_list = []
         for GM in query_data:
-            apply_list.append({"adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
+            apply_list.append({"adminID": GM.adminID, "adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
         return jsonify({"rspCode": "200", "applyList": apply_list})         #成功
     else:
         return jsonify({"rspCode": "500", "applyList": ""})                 #權限不符

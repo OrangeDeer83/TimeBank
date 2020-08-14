@@ -50,14 +50,14 @@ def verify(result):
 #審核評論
 @GM.route('/updateGrade')
 def updateGrade():
-    render_template('updateFrade.html')
+   return render_template('updateFrade.html')
 
 #檢舉審核
 @GM.route('/reportApprove')
 def report_approve():
-    render_template('reportApprove.html')
+   return render_template('reportApprove.html')
 
 #設定頁面
 @GM.route('/setting')
 def setting():
-   render_template('settingGM.html')
+   return render_template('settingGM.html')

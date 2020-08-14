@@ -1514,3 +1514,391 @@ def updateConditionAA():
 @test.route("/SA/updateCondition")
 def updateConditionSA():
     return render_template("updateConditionSA.html")
+
+#使用者新增申請
+#要form傳frequency,period,result,class,quota,file(pdf)
+#回傳rspCode,notAllow
+@test.route("/user_add_apply", methods = ['POST'])
+def user_add_apply():
+    try:
+        if request.method == 'POST':
+            notAllow = []
+            userID = session.get('userID')
+            userID = 1
+            time = str(datetime.datetime.now()).rsplit('.',1)[0]
+            #檢查各變數與檔案
+            if request.values['frequency'].isdigit():
+                if int(request.values['frequency']) > 0 and len(request.values['frequency']) < 6:
+                    frequency = int(request.values['frequency'])
+                else:
+                    frequency = 0
+                    notAllow.append('frequency')
+            else:
+                frequency = 0
+                notAllow.append('frequency')
+            if request.values['period'] in ['0','30','90','180','365']:
+                    restTime = int(request.values['period']) * frequency
+                    nextTime = int(request.values['period'])
+            else:
+                notAllow.append('period')
+            result = request.values['result']        
+            if(request.values['class'] != '其他'):
+                try:
+                    if notAllow != []:
+                        #rspCode 403:有輸入不符合格式
+                        return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['period'])).fetchone()[0]
+                except:
+                    #rspCode 401:找不到conditionID
+                    return jsonify({"rspCode":"401","notALlow":""})
+            else:
+                if result == '':
+                    #rspCode 402:其他要填原因
+                    return jsonify({"rspCode":"402","notALlow":""})
+                #檢查其他的quota
+                if request.values['quota'].isdigit():
+                    if int(request.values['quota']) > 0 and len(request.values['quota']) < 6:
+                        quota = request.values['quota']
+                    else:
+                        notAllow.append('quota')
+                else:
+                    notAllow.append('quota')
+                if notAllow != []:
+                    #rspCode 403:有輸入不符合格式
+                    return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                #檢查有沒有一樣的其他了
+                if db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone() != None:
+                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
+                #沒有才建新的
+                else:
+                    db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
+                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]     
+            file = request.files['file']
+            #建立apply
+            db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
+            #檢查有沒有傳檔案
+            if file.filename != "":
+                try:
+                    #檢查fileName
+                    if file.mimetype == 'application/pdf':
+                        originFileName = '{}'.format(file.filename)
+                        num = str(db.engine.execute(find_max_applyId_by_user_ID(userID)).fetchone()[0])
+                        os.makedirs(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num))
+                        fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(num,num),'w',encoding="utf-8")
+                        fileTxt.write(file.filename)
+                        fileTxt.close()
+                        #儲存檔案到指定位置
+                        filename = '{}.pdf'.format(num)
+                        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num),filename))
+                except:
+                    #rspCode 404:pdf上傳錯誤
+                    return jsonify({"rspCode":"404","notALlow":""})
+  
+            return jsonify({"rspCode":"200","notALlow":""})
+        else:
+            return jsonify({"rspCode":"300","notALlow":""})
+    except:
+        #rspCode 400:某個地方爆掉但不知道哪裡
+        jsonify({"rspCode":"400","notALlow":""})
+
+
+#審核申請資料顯示
+#要json傳(userName,name)(搜尋目標，沒有就傳空值)
+#回傳rspCode, userName, userSRRate, userSPRate, applyPdfName, applyID,
+#applyClass, applyQuota, applyPeriod, applyFrequency, applyTime, applyResult,
+#userID
+@test.route('/show_apply_status_0/', methods = ['GET'])
+def show_apply_status_0():
+    if request.method == 'GET':
+        json = request.get_json()
+        #搜尋目標
+        target = json['name']
+        userID = []
+        userName = []   
+        userSRRate = []
+        userSPRate = []
+        applyPdfName = []
+        applyID = []
+        applyClass = []
+        applyQuota = []
+        applyPeriod = []
+        applyFrequency = []
+        applyTime = []  
+        applyResult = []
+        if target == '':
+            #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
+            applyData = db.engine.execute(get_all_apply_status_0()).fetchall()
+        elif len(target) > 20:
+            #target不符合
+            return jsonify({"rspCode":"401"})
+        else:
+            #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
+            applyData = db.engine.execute(get_all_apply_status_0_search_user_name(target)).fetchall()
+           
+        try:
+           for oneData in applyData:
+               
+               #`userName`,`SRRate`,SRRateTimes,`SPRate`,SPRateTimes`
+               userID.append(oneData[1])
+               userData = db.engine.execute(get_apply_judge_user_info(oneData[1])).fetchone()
+               userName.append(userData[0])
+               try:
+                    userSRRate.append(float(userData[1]) / float(userData[2]))
+               except:
+                    userSRRate.append(None)
+               try:
+                    userSPRate.append(float(userData[3]) / float(userData[4]))
+               except:
+                    userSPRate.append(None)
+               try:
+                    fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(oneData[0],oneData[0]),'r',encoding="utf-8")   
+                    applyPdfName.append(fileTxt.read().split('"')[0])
+               except:
+                  applyPdfName.append(None)
+               applyID.append(oneData[0])
+               #`period`,`class`,`quota`
+               conditionData = db.engine.execute(show_condition_data(oneData[2])).fetchone()
+               applyClass.append(conditionData[1])
+               applyQuota.append(conditionData[2])
+               applyPeriod.append(conditionData[0])
+               applyFrequency.append(oneData[5])
+               applyTime.append(oneData[3])
+               applyResult.append(oneData[4])
+           return jsonify({"rspCode":"200","name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
+        except:
+            #rspCode 400:以防萬一
+            return jsonify({"rspCode":"400","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+        
+    else:
+            return jsonify({"rspCode":"300","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+
+#審核申請頁面中的簡略紀錄
+#要json傳applyID
+#回傳rspCode, applyTime, frequency, result, status, judgeTime, period, className,
+#quota, oldQuota, applyPdfName, applyID, userID, userName
+@test.route('/simple_personal_apply_history/',methods =['GET'])
+def simple_personal_apply_history():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300","applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+    json = request.get_json()
+    applyID = json['applyID']
+    if applyID =="":
+         #rspCode 400:applyID不存在
+        return jsonify({"rspCode":"400","applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+    if db.engine.execute(get_userID_by_applyID(applyID)).fetchone() == None:
+        #rspCode 400:applyID不存在
+        return jsonify({"rspCode":"400","applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+    userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
+    userName = db.engine.execute(select_user_name(userID)).fetchone()[0]
+    #conditionID
+    #,applyTime,frequency,result,applyStatus,oldConditionID,judgeTime,applyID
+    dbApplyData = db.engine.execute(find_all_judged_apply_by_userID(userID,applyID)).fetchall()
+    applyTime = []
+    judgeTime = []
+    result = []
+    frequency = []
+    status = []
+    quota = []
+    period = []
+    className = []
+    oldQuota = []
+    applyPdfName = []
+    historyApplyID = []
+    for apply in dbApplyData:
+        #`period`,`class`,`quota` 
+        condition = db.engine.execute(show_old_condition_data(apply[0])).fetchone()
+        applyTime.append(apply[1])
+        frequency.append(apply[2])
+        result.append(apply[3])
+        status.append(apply[4])
+        judgeTime.append(apply[6])
+        period.append(condition[0])
+        className.append(condition[1])
+        if apply[4] == 1:
+            quota.append(condition[2])
+        else:
+            quota.append(0)
+        historyApplyID.append(apply[7])
+        try:
+            fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply[7],apply[7]),'r',encoding="utf-8")
+            applyPdfName.append(fileTxt.read().split('"')[0])
+        except:
+            applyPdfName.append(None)
+        if apply[5] != None:
+            oldQuota.append(db.engine.execute(select_quota_by_conditionID(apply[5])).fetchone()[0])
+        else:
+            oldQuota.append(condition[2])
+    return jsonify({"rspCode":"200","applyTime":applyTime,"frequency":frequency,"result":result,"status":status,"judgeTime":judgeTime,"period":period,"className":className,"quota":quota,"oldQuota":oldQuota,"applyPdfName":applyPdfName,"applyID":historyApplyID,"userID":userID,"name":userName})
+
+#申請附件下載
+#要json傳applyID
+#回傳 rspCode
+@test.route('/apply_pdf_download', methods = ['GET'])
+def apply_pdf_download():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300"})
+    try:
+        json = request.get_json()
+        applyID = json['applyID']
+        filename = os.listdir(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID))[1]
+        send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),filename,as_attachment=True)
+        return jsonify({"rspCode":"200"})
+    except:
+        #rspCode 400:檔案不存在
+        return jsonify({"rspCode":"400"})
+
+#決定申請是否通過
+#要json傳 applyID,applyStatus(案的是核准就給1沒過給2),quotaChange(核准額度有變給值，沒有傳空)
+#回傳 rspCode,notAllow
+@test.route('/apply_judge', methods = ['POST'])
+def apply_judge():
+    if request.method != 'POST':
+        return jsonify({"rspCode":"300"})
+    json = request.get_json()
+    applyID = json['applyID']
+    applyStatus = json['applyStatus']
+    quotaChange = json['quotaChange']
+    notAllow = []
+    adminID = session.get('adminID')
+    adminID = 4
+    judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
+    #檢查ID 和 status
+    if applyID == "":
+        notAllow.append('applyID')
+    elif db.engine.execute(get_conditionID(applyID)).fetchone() == None:
+        notAllow.append('applyID')
+    if not(applyStatus == '1' or applyStatus == '2'):
+        notAllow.append('applyStatus')
+    if quotaChange == '':
+        if notAllow != []:
+            #rspCode 400:有非法輸入
+            return jsonify({"rspCode":"400","notAllow":notAllow})
+        db.engine.execute(alter_apply_status(applyStatus,applyID))
+        userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
+        userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
+        ConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
+        conditionData = db.engine.execute(show_old_condition_data(ConditionID)).fetchone()
+        quota = conditionData[2]
+        period = conditionData[0]
+        plus = userPoint + int(quota)
+        if period != 0:
+            rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
+            db.engine.execute(alter_apply_rest_time(applyID,rest))
+        db.engine.execute(plus_user_point(plus,userID))
+        for x in range(quota):
+            pointID = make_point()+"_{}".format(str(db.session.query(point).count()))
+            db.engine.execute(make_point_sql(pointID,adminID,userID))
+    else:
+        #有輸入新的quota才檢查quota
+        if not(quotaChange.isdigit()):
+            notAllow.append('quotaChange')
+        elif int(quotaChange) <= 0:
+            notAllow.append('quotaChange')
+        if notAllow != []:
+            #rspCode 400:有非法輸入
+            return jsonify({"rspCode":"400","notAllow":notAllow})
+        if applyStatus == '1':
+            #status是1就改變apply的condditionID和status
+            oldConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
+            conditionData = db.engine.execute(show_old_condition_data(oldConditionID)).fetchone()
+            className = conditionData[1]
+            period = conditionData[0]
+            if db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone() == None:
+                newConditionID = db.engine.execute(set_up_special_apply_condition(className,period,quotaChange)).fetchone()[0]
+            else:
+                newConditionID = db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone()[0]
+            db.engine.execute(alter_oldConditionID(oldConditionID,applyID))
+            db.engine.execute(alter_conditionID_in_apply(newConditionID,applyID))
+            db.engine.execute(alter_apply_status(applyStatus,applyID))
+
+            userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
+            userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
+            plus = userPoint + int(conditionData[2])
+            if period != 0:
+                rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
+                db.engine.execute(alter_apply_rest_time(applyID,rest))
+            for x in range(quota):
+                pointID = make_point()+"_{}".format(str(db.session.query(point).count()))
+                db.engine.execute(make_point_sql(pointID,adminID,userID))
+        else:
+            #不是1就只改status和adminID
+            db.engine.execute(alter_apply_status(applyStatus,applyID))
+
+    db.engine.execute(upudate_adminID_in_apply(adminID,applyID))
+    db.engine.execute(update_judge_time_in_apply(judgeTime,applyID))
+    return jsonify({"rspCode":"200","notAllow":""})
+
+
+#核准紀錄
+#要json傳Name(用來搜尋userName和name),class,period,status，以上四個是搜尋條件，沒有就傳空值
+#回傳rspCode, userID, userSRRate, userSPRate, userName, applyPdfName, applyID,
+#className, quota, oldQuota, applyTime, judgeTime, period, applyResult,
+#applyStatus, applyFrequency
+@test.route('/judgement_history', methods = ['GET'])
+def judgement_history():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300","userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
+    try:
+        userID = []
+        userSRRate = []
+        userSPRate = []
+        userName = []
+        applyPdf = []
+        applyID = []
+        applyClass = []
+        applyQuota = []
+        oldQuota = []
+        applyTime = []
+        judgeTime = []
+        applyPeriod = []
+        result = []
+        applyStatus = []
+        applyPdfName = []
+        frequency = []
+        json = request.get_json()
+        Name = json['name']
+        className = json['class']
+        period = json['period']
+        status = json['status']
+        #conditionID
+        #,applyTime,frequency,result,applyStatus,oldConditionID,judgeTime,applyID,userID
+        applyData = db.engine.execute(show_judge_history(Name,className,period,status)).fetchall()
+        for apply in applyData:
+            applyStatus.append(apply[4])
+            #`period`,`class`,`quota`
+            condition = db.engine.execute(show_condition_data(apply[0])).fetchone()
+            applyPeriod.append(condition[0])
+            applyClass.append(condition[1])
+            if apply[4] == 1:
+                applyQuota.append(condition[2])
+            else:
+                applyQuota.append(0)
+            applyTime.append(apply[1])
+            frequency.append(apply[2])
+            result.append(apply[3])
+            if apply[5] != None:
+                oldQuota.append(db.engine.execute(show_old_condition_data(apply[5])).fetchone()[2])
+            else:
+                oldQuota.append(condition[2])
+            judgeTime.append(apply[6])
+            applyID.append(apply[7])
+            try:
+                fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply[7],apply[7]),'r',encoding="utf-8")
+                applyPdfName.append(fileTxt.read().split('"')[0])
+            except:
+                applyPdfName.append(None)
+            userID.append(apply[8])
+            #`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`
+            userData = db.engine.execute(get_apply_judge_user_info(apply[8])).fetchone()
+            try:
+                userSRRate.append(float(userData[1] / float(userData[2])))
+            except:
+                userSRRate.append(0)
+            try:
+                userSPRate.append(float(userData[3] / float(userData[4])))
+            except:
+                userSPRate.append(0)
+            userName.append(apply[0])
+        return jsonify({"rspCode":"200","userID":userID,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":userName,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
+    except:
+        return jsonify({"rspCode":"400","userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})

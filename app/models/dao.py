@@ -37,6 +37,7 @@ def reset_USER_password(userID, userPassword):
     return sql
 '''
 
+
 def max_newsID():
     return "SELECT MAX(newsID) FROM news"
 
@@ -85,13 +86,13 @@ def find_other_apply_condition_id(period,quota):#
 def add_apply(frequency,restTime,nextTime,userID,conditionID,result,time):
     return "INSERT INTO `apply` (`applyID`, `applyStatus`, `frequency`, `restTime`, `nextTime`, `adminID`, `userID`, `conditionID`, `result`, `applyTime`) VALUES (NULL, '0', '{}', '{}', '{}', NULL, '{}', '{}', '{}', '{}')".format(frequency,restTime,nextTime,userID,conditionID,result,time)
 
-def find_max_applyId_by_USER_ID(userID):
+def find_max_applyId_by_user_ID(userID):
     return "SELECT MAX(`applyID`) FROM apply WHERE userID LIKE '{}'".format(userID)
 
 def get_all_apply_status_0():
     return "SELECT `applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency` FROM `apply` WHERE `applyStatus` = 0 ORDER BY applyID"
 
-def get_apply_judge_USER_info(userID):
+def get_apply_judge_user_info(userID):
     return "SELECT `userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` WHERE `userID` = '{}'".format(userID)
 
 def show_condition_data(conditionID):
@@ -133,10 +134,10 @@ def show_old_condition_data(conditionID):
 def update_judge_time_in_apply(judgeTime,applyID):
     return "UPDATE `apply` SET `judgeTime` = '{}' WHERE `apply`.`applyID` = {}".format(judgeTime,applyID)
 
-def select_USER_name(userID):
+def select_user_name(userID):
     return "SELECT userName FROM account WHERE userID = '{}'".format(userID)
 
-def get_all_apply_status_0_search_USER_name(userName):
+def get_all_apply_status_0_search_user_name(userName):
     return 'SELECT apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency FROM apply JOIN account WHERE apply.applyStatus = 0 AND apply.userID=account.userID AND (account.userName = "{}" OR account.name = "{}") ORDER BY applyID'.format(userName,userName)
 
 def show_judge_history(userName = "",className = "" , period = "" , status = ""):
@@ -193,10 +194,10 @@ def show_rest_time_by_alomentID(allotmentID):
 def alter_allotment_rest_time(allotmentID,rest):
     return "UPDATE `allotment` SET `restTime` = '{}' WHERE `allotment`.`allotmentID` = {}".format(rest,allotmentID)
 
-def get_USER_point(userID):
+def get_user_point(userID):
     return "SELECT `userPoint` FROM `account` WHERE userID = '{}'".format(userID)
 
-def plus_USER_point(plus,userID):
+def plus_user_point(plus,userID):
     return "UPDATE `account` SET `userPoint` = '{}' WHERE `account`.`userID` = '{}'".format(plus,userID)
 
 def make_point_sql(pointID,adminID,userID):
@@ -207,3 +208,9 @@ def show_rest_time_by_applyID(applyID):
 
 def alter_apply_rest_time(applyID,rest):
     return "UPDATE `apply` SET `restTime` = '{}' WHERE `apply`.`applyID` = {}".format(rest,applyID)
+
+def task_status_4_dead_line(task_ID,newTaskStartTime):
+    return "CREATE EVENT `task_status_4_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '4' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 0 OR `task`.`taskStatus` = 1)".format(task_ID,newTaskStartTime,task_ID)
+
+def task_status_5_dead_line(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2".format(task_ID,newTaskEndTime,task_ID)

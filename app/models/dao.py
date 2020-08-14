@@ -31,7 +31,7 @@ def forgot_password(userMail):
     sql = "SELECT userID, userMail FROM account WHERE userMail = '" + userMail + "'"
     return sql
 
-def reset_user_password(userID, userPassword):
+def reset_USER_password(userID, userPassword):
     salt = generate_salt()
     sql = "UPDATE account SET salt = '" + str(salt) + "', userPassword = '" + str(encrypt(userPassword, salt)) + "' WHERE userIDdaw = '" + str(userID) + "'"
     return sql
@@ -85,13 +85,13 @@ def find_other_apply_condition_id(period,quota):#
 def add_apply(frequency,restTime,nextTime,userID,conditionID,result,time):
     return "INSERT INTO `apply` (`applyID`, `applyStatus`, `frequency`, `restTime`, `nextTime`, `adminID`, `userID`, `conditionID`, `result`, `applyTime`) VALUES (NULL, '0', '{}', '{}', '{}', NULL, '{}', '{}', '{}', '{}')".format(frequency,restTime,nextTime,userID,conditionID,result,time)
 
-def find_max_applyId_by_user_ID(userID):
+def find_max_applyId_by_USER_ID(userID):
     return "SELECT MAX(`applyID`) FROM apply WHERE userID LIKE '{}'".format(userID)
 
 def get_all_apply_status_0():
     return "SELECT `applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency` FROM `apply` WHERE `applyStatus` = 0 ORDER BY applyID"
 
-def get_apply_judge_user_info(userID):
+def get_apply_judge_USER_info(userID):
     return "SELECT `userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` WHERE `userID` = '{}'".format(userID)
 
 def show_condition_data(conditionID):
@@ -133,10 +133,10 @@ def show_old_condition_data(conditionID):
 def update_judge_time_in_apply(judgeTime,applyID):
     return "UPDATE `apply` SET `judgeTime` = '{}' WHERE `apply`.`applyID` = {}".format(judgeTime,applyID)
 
-def select_user_name(userID):
+def select_USER_name(userID):
     return "SELECT userName FROM account WHERE userID = '{}'".format(userID)
 
-def get_all_apply_status_0_search_user_name(userName):
+def get_all_apply_status_0_search_USER_name(userName):
     return 'SELECT apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency FROM apply JOIN account WHERE apply.applyStatus = 0 AND apply.userID=account.userID AND (account.userName = "{}" OR account.name = "{}") ORDER BY applyID'.format(userName,userName)
 
 def show_judge_history(userName = "",className = "" , period = "" , status = ""):
@@ -193,10 +193,10 @@ def show_rest_time_by_alomentID(allotmentID):
 def alter_allotment_rest_time(allotmentID,rest):
     return "UPDATE `allotment` SET `restTime` = '{}' WHERE `allotment`.`allotmentID` = {}".format(rest,allotmentID)
 
-def get_user_point(userID):
+def get_USER_point(userID):
     return "SELECT `userPoint` FROM `account` WHERE userID = '{}'".format(userID)
 
-def plus_user_point(plus,userID):
+def plus_USER_point(plus,userID):
     return "UPDATE `account` SET `userPoint` = '{}' WHERE `account`.`userID` = '{}'".format(plus,userID)
 
 def make_point_sql(pointID,adminID,userID):

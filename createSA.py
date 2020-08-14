@@ -75,12 +75,12 @@ def enter_info(adminID):
     adminPassword = input("請輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、1個數字、1個符號）: ")
     while re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
         adminPassword = input("密碼不符合規範！\n請重新輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、一個數字、一個符號）:")
-    adminPhone = input("請輸入您的電話: ")
+    adminPhone = input("請輸入您的手機號碼: ")
     while re.search(r"^[0-9]+$", adminPhone) == None:
-        adminPhone = input("電話請輸入數字！\t/請重新輸入電話: ")
-    adminMail = input("請輸入您的信箱: ")
+        adminPhone = input("手機號碼請輸入數字！\t/請重新輸入手機號碼: ")
+    adminMail = input("請輸入您的電子郵件: ")
     while re.search(r"^[\w\d_\-\.]+\@[\w\d_\-\.]+\.[\w]$", adminMail):
-        adminMail = input("信箱有誤，請重新輸入正確的信箱: ")
+        adminMail = input("電子郵件有誤，請重新輸入正確的電子郵件: ")
     salt = hash.generate_salt()
     sql = "INSERT INTO adminAccount(adminID, adminName, adminPassword, adminType, adminPhone, adminMail, salt) "
     sql += "VALUES('" + str(adminID) + "', '" + str(adminName) + "', '" + str(hash.encrypt(adminPassword, salt)) + "', '7', '" + str(adminPhone) + "', '" + str(adminMail) + "', '" + str(salt) + "')"

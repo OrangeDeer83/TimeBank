@@ -22,7 +22,7 @@ function detect_repeated(){
 function register(){
     if (!repeat) {
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://192.168.100.50:5000/user_register");
+        xhr.open("POST", "http://192.168.100.50:5000/USER_register");
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({"userName": document.getElementById('userName').value, "userID": document.getElementById('userID').value, "userPassword": document.getElementById('userPw').value, "userMail": document.getElementById('userMail').value, "userPhone": document.getElementById('userPhone').value, "userGender": document.getElementById('userGender').value, "userBirthday": document.getElementById('userBirthday').value}))
         xhr.onload = function(){

@@ -62,7 +62,7 @@ def rating():
 @USER.route('/')
 def index():
     if session.get('userType') == 1:
-        return render_template('hom.html')
+        return render_template('homepage.html')
     else:
         return render_template('portal.html')
 
@@ -112,6 +112,6 @@ def create_task():
     return render_template('createUSER.html')
 
 #個人頁面 - 已發任務
-@USER.route('/myselfTask')
-def myself_task():
+@USER.route('/info/<userID>')
+def info(userID):
     return render_template('myselfTask.html')

@@ -145,17 +145,15 @@ class comment(db.Model):
     __tablename__ = 'comment'
     commentID = db.Column(db.Integer, primary_key=True)
     taskID = db.Column(db.Integer, db.ForeignKey('task.taskID'), nullable=False, unique=True)
-    SRComment = db.Column(db.String, nullable=False)
-    SPComment = db.Column(db.String, nullable=False)
-    commentDeadline = db.Column(db.DateTime, nullable=False)
+    SRComment = db.Column(db.String, nullable=True)
+    SPComment = db.Column(db.String, nullable=True)
     commentStatus = db.Column(db.Integer, nullable=False)
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=True)
 
-    def __init__(self, taskID, SRComment, SPComment, commentDeadline, commentStatus, adminID):
+    def __init__(self, taskID, SRComment, SPComment, commentStatus, adminID):
         self.taskID = taskID
         self.SRComment = SRComment
         self.SPComment = SPComment
-        self.commentDeadline = commentDeadline
         self.commentStatus = commentStatus
         self.adminID = adminID
 

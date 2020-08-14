@@ -5,12 +5,12 @@ Admin = Blueprint('Admin', __name__)
 
 #忘記密碼頁面
 @Admin.route('/forgotPassword')
-def forgotPassword():
+def forgot_password():
     render_template('forgotPasswordManager5.html')
 
 #輸入新密碼
 @Admin.route('/resetPassword')
-def resetPassword():
+def reset_password():
     render_template('resetPasswordManager5.html')
 
 

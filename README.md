@@ -87,7 +87,7 @@ request:
 response:
 
 {
-	rspCode: ""		200:success | 300:method使用錯誤 | 400:資料庫錯誤 | 401:名稱長度不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:信箱長度不符 | 405:信箱格式不符 | 406:電話格式不符 | 407:性別異常 | 408:生日格式不符 | 409:未來人錯誤 | 410:帳號重複 | 411:信箱重複
+	rspCode: ""		200:success | 300:method使用錯誤 | 400:資料庫錯誤 | 401:名稱長度不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:電子郵件長度不符 | 405:電子郵件格式不符 | 406:手機號碼格式不符 | 407:性別異常 | 408:生日格式不符 | 409:未來人錯誤 | 410:帳號重複 | 411:電子郵件重複
 }
 ```
 
@@ -149,7 +149,7 @@ request:
 response:
 
 {
-	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:信箱長度不符 | 402:信箱格式不符 | 403:信箱輸入錯誤，沒有找到對應的信箱 | 404:重置信寄送失敗
+	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件輸入錯誤，沒有找到對應的電子郵件 | 404:重置信寄送失敗
 }
 ```
 
@@ -221,7 +221,7 @@ response:
 # API 9 - Delete Admin
 ### POST
 #### SA刪除管理員
-#### path : /test/delete/admin (HRManage)
+#### path : /test/delete/Admin (HRManage)
 >我想讓SA輸入一次密碼再進行刪除的動作，第一次點擊刪除(SAPassword留空)顯示輸入密碼，輸入一次後就不必再輸入
 ```
 request:
@@ -229,33 +229,40 @@ request:
 {
 	adminID: ""			
 	SAID: ""			(之後有登入就不需要)
-	SAPassword: ""		(max length 30)
 }
 
 response:
 
 {
-	rspCode: ""			200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:adminID不在資料庫中，前端可能遭到竄改 | 402:該帳號目前不是admin | 403:尚未輸入第一次密碼 | 404:密碼輸入錯誤
+	rspCode: ""			200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:adminID不在資料庫中，前端可能遭到竄改 | 402:該帳號目前不是admin | 403:尚未輸入第一次密碼
 }
 ```
 
 <br>
 
-# API 10 - Load GM Mail
-### POST
-#### SA及AG能夠輸入GM的EMail
-#### path : /test/load_GM_mail
+# API 10 - Admin List
+### GET
+#### 取得現有Admin列表
+#### path : /test/Admin_list
 ```
 request:
 
 {
-	GMMail: ""		(max length 50)
+	NULL
 }
 
 response:
 
 {
-	rspCode: ""		200:email輸入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401: email格式不符 | 402:email與他人重複
+	rspCode: "",	200:成功
+	AdminList: [
+		{
+			adminType: "",		2:AS | 3:AA | 4:AU | 5:AG
+			adminName: "",
+			adminPhone: "",
+			adminMail: ""
+		}
+	]
 }
 ```
 
@@ -278,7 +285,7 @@ request:
 response:
 
 {
-	rspCode: ""		200:信箱已被輸入，驗證信寄送成功 | 201:信箱已申請過，驗證信再次寄出 | 202:帳號申請成功，驗證信已寄出 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:帳號格式不符 | 402:密碼格式不符 | 403:信箱長度不符 | 404:信箱格式不符 | 405:電話格式不符 | 406:帳號與他人重複 | 407.408.410:驗證信寄送失敗 | 409:信箱與他人重複
+	rspCode: ""		200:電子郵件已被輸入，驗證信寄送成功 | 201:電子郵件已申請過，驗證信再次寄出 | 202:帳號申請成功，驗證信已寄出 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:帳號格式不符 | 402:密碼格式不符 | 403:電子郵件長度不符 | 404:電子郵件格式不符 | 405:手機號碼格式不符 | 406:帳號與他人重複 | 407.408.410:驗證信寄送失敗 | 409:電子郵件與他人重複
 }
 ```
 
@@ -345,29 +352,22 @@ response:
 
 <br>
 
-# API 15 - Admin List
-### GET
-#### 取得現有Admin列表
-#### path : /test/Admin_list
+
+# API 15 - Load GM Mail
+### POST
+#### SA及AG能夠輸入GM的EMail
+#### path : /test/load_GM_mail
 ```
 request:
 
 {
-	NULL
+	GMMail: ""		(max length 50)
 }
 
 response:
 
 {
-	rspCode: "",	200:成功
-	AdminList: [
-		{
-			adminType: "",		2:AS | 3:AA | 4:AU | 5:AG | 6:GM
-			adminName: "",
-			adminPhone: "",
-			adminMail: ""
-		}
-	]
+	rspCode: ""		200:email輸入成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401: email格式不符 | 402:email與他人重複
 }
 ```
 
@@ -438,53 +438,354 @@ request:
 {
 	GMID: "",
 	adminID: "",			(之後有登入就不用)
-	adminPassword: ""		(之後有登入就不用)
 }
 
 response:
 
 {
-	rspCode: ""		200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:GMID不在資料庫中，前端可能遭到竄改 | 402:ID錯誤，此ID可能不是GM | 403:尚未輸入第一次密碼 | 404:密碼輸入錯誤
+	rspCode: ""		200:刪除成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:GMID不在資料庫中，前端可能遭到竄改 | 402:ID錯誤，此ID可能不是GM | 403:尚未輸入第一次密碼
 }
 ```
 
 <br>
 
-# API 
-### 
-#### 
-#### path : 
+# API 18 - Admin forgot Password
+### POST 
+#### 供管理員申請重設密碼信
+#### path : /test/Admin/forgot_password
 ```
 request:
 
 {
-
+	adminMail: ""	(max length 50)
 }
 
 response:
 
 {
-	
+	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件輸入錯誤，沒有找到對應的電子郵件 | 404:重置信寄送失敗
 }
 ```
 
 <br>
 
-# API 
-### 
-#### 
-#### path : 
+# API 19 - Admin Reset Password
+### POST
+#### 在驗證token後一般使用者能夠重設密碼
+#### path : /test/Admin/reset_password/\<token\>
+>tip:需要將網址中最後段的token擷取下來並放在API路徑中
 ```
 request:
 
 {
-
+	adminPassword: ""	(max length 30)
 }
 
 response:
 
 {
-	
+	rspCode: ""		200:重設密碼成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:token驗證失敗 | 402:密碼格式不符
+}
+```
+
+# API 20 - GM forgot Password
+### POST 
+#### 供GM申請重設密碼信
+#### path : /test/USER/forgot_password
+```
+request:
+
+{
+	GMMail: ""	(max length 50)
+}
+
+response:
+
+{
+	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件輸入錯誤，沒有找到對應的電子郵件 | 404:重置信寄送失敗
+}
+```
+
+<br>
+
+# API 21 - GM Reset Password
+### POST
+#### 在驗證token後一般使用者能夠重設密碼
+#### path : /test/GM/reset_password/\<token\>
+>tip:需要將網址中最後段的token擷取下來並放在API路徑中
+```
+request:
+
+{
+	GMPassword: ""	(max length 30)
+}
+
+response:
+
+{
+	rspCode: ""		200:重設密碼成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:token驗證失敗 | 402:密碼格式不符
+}
+```
+
+<br>
+
+# API 22 - Delete Admin Check Password
+### POST
+#### 刪除管理員前驗證密碼
+#### path : /test/delete/Admin/check_password
+```
+request:
+
+{
+	SAID: ""			(之後有登入就不用)
+	SAPassword: ""		(max length 30)
+}
+
+response:
+
+{
+	rspCode: ""		200:驗證密碼成功 | 300:method | 400:資料庫錯誤 | 401:密碼輸入錯誤
+}
+```
+
+<br>
+
+# API 22 - Delete Admin Check Password
+### POST
+#### 刪除管理員前驗證密碼
+#### path : /test/delete/Admin/check_password
+```
+request:
+
+{
+	adminID: ""				(之後有登入就不用)
+	adminPassword: ""		(max length 30)
+}
+
+response:
+
+{
+	rspCode: ""		200:驗證密碼成功 | 300:method | 400:資料庫錯誤 | 401:密碼輸入錯誤
+}
+```
+
+<br>
+
+>setting部分的userID之後都會由後端抓，測試時在json丟進來即可
+
+<br>
+
+# API 23 - Setting UserInfo
+### POST
+#### 設定使用者介紹內容
+#### path : /test/setting/userInfo
+```
+request:
+
+{
+	userID: "",
+	userInfo: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:使用者介紹修改成功 | 300:method使用錯誤 | 400:資料庫錯誤
+}
+```
+
+<br>
+
+# API 24 - Setting Name
+### POST
+#### 設定名稱
+#### path : /test/setting/name
+```
+request:
+
+{
+	userID: "",
+	name: ""		(max length 20)
+}
+
+response:
+
+{
+	rspCode: ""		200:名稱修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:名稱長度不符
+}
+```
+
+<br>
+
+# API 25 - Setting UserName
+### POST
+#### 設定使用者名稱
+#### path : /test/setting/UserName
+```
+request:
+
+{
+	userID: "",
+	userName: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:使用者名稱修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:使用者名稱格式不符 | 402:使用者名稱重複
+}
+```
+
+<br>
+
+# API 26 - Setting UserPassword
+### POST
+#### 設定密碼
+#### path : /test/setting/uesrPassword
+```
+request:
+
+{
+	userID: "",
+	userPassword: ""		(max length)
+}
+
+response:
+
+{
+	rspCode: ""		200:密碼修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:密碼格式不符 | 402:舊密碼錯誤
+}
+```
+
+<br>
+
+# API 27 - Setting UserMail
+### POST
+#### 設定電子郵件
+#### path : /test/setting/userMail
+```
+request:
+
+{
+	userID: "",
+	userMail: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:電子郵件修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件並未修改 | 404:電子郵件已被使用
+}
+```
+
+<br>
+
+# API 28 - Setting UserPhone
+### POST
+#### 設定手機號碼
+#### path : /test/setting/userPhone
+```
+request:
+
+{
+	userID: "",
+	userPhone: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:手機號碼修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 手機號碼格式不符
+}
+```
+
+<br>
+
+# API 29 - Setting UserGender
+### POST
+#### 設定性別
+#### path : /test/setting/userGender
+```
+request:
+
+{
+	userID: "",
+	userGender: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:性別修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:性別異常
+}
+```
+
+<br>
+
+# API 30 - Setting UserBirthday
+### POST
+#### 設定生日
+#### path : /test/setting/userBirthday
+```
+request:
+
+{
+	userID: "",
+	userBirthday: ""
+}
+
+response:
+
+{
+	rspCode: ""		200:生日修改成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:生日格式不符 | 402:未來人錯誤
+}
+```
+
+<br>
+
+# API 31 - Setting Propic
+### POST
+#### 設定個人照片
+#### path : /test/setting/propic
+>tip: form記得幫我多傳一個userID噢
+```
+request:
+
+{
+	propic: "",		(照片)
+	userID: ""
+}
+
+response:
+
+{
+	目前應該都是直接跳轉回設定頁面
+}
+```
+
+<br>
+
+# API 32 - Profile Output
+### POST
+#### 顯示個人資料
+#### path : /test/output
+>propic放在 /static/img/propic/userID.jpg
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	rspCode: "",	200:資料成功取得 | 400:資料庫錯誤 | 300:method使用錯誤
+	userID: "",
+	name: "",
+	userGender: "",
+	userAge: "",
+	userInfo: ""
 }
 ```
 

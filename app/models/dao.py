@@ -38,6 +38,7 @@ def reset_USER_password(userID, userPassword):
 '''
 
 
+
 def max_newsID():
     return "SELECT MAX(newsID) FROM news"
 
@@ -172,7 +173,7 @@ def select_search_userID(target):
 
 def select_allotment_simple_history_by_userID(userID= ''):
     if userID != '':
-        return "SELECT allotmentTime, quota, period, frequency FROM allotment WHERE userID = '{}' ORDER BY allotmentID DESC'".format(userID)
+        return "SELECT allotmentTime, quota, period, frequency FROM allotment WHERE userID = '{}' ORDER BY allotmentID DESC".format(userID)
     else:
         return "SELECT allotmentTime, quota, period, frequency FROM allotment ORDER BY allotmentID DESC"
 

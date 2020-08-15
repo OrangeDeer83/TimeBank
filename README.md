@@ -1091,7 +1091,6 @@ request:
 response:
 
 {
-	"periodList":"" (0,30,90,180,365)以天數表示(list)
 	"quotaList":"" (list)
 	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知
 }
@@ -1162,7 +1161,7 @@ response:
 # 19.使用者新增申請
 ### POST
 #### 使用者按下送出申請的動作
-#### path : test/add_apply
+#### path : test/USER/add_apply
 > 用form
 ```
 request:
@@ -1258,7 +1257,7 @@ response:
 
 <br>
 
-# 21.申請附件下載 
+# 22.申請附件下載 
 ### GET
 #### 使用此api理論上會直接跳出下載的視窗
 #### path : /test/apply_pdf_download
@@ -1278,7 +1277,7 @@ response:
 
 <br>
 
-# 21.決定申請是否通過 
+# 23.決定申請是否通過 
 ### POST
 #### 審核apply用
 #### path : /test/apply_pdf_download
@@ -1301,10 +1300,10 @@ response:
 
 <br>
 
-# 21.核准紀錄 
+# 24.核准紀錄 
 ### POST
-#### 使用此api理論上會直接跳出下載的視窗
-#### path : /test/apply_pdf_download
+#### 完整的核准紀錄
+#### path : /test/judgement_history
 ```
 request:
 
@@ -1325,3 +1324,110 @@ response:
 ```
 
 <br>
+
+
+# 25.顯示user名單 
+### POST
+#### 在主動配發頁面用的
+#### path : /test/show_user
+```
+request:
+
+{
+	target:"" 沒搜尋傳空(沒搜尋)
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 查找資料失敗(不是沒找到東西，是資料庫壞了))
+	以下是list
+	name:""
+	userID:""
+	userSRRate:
+	userSPRate:""
+
+}
+```
+
+<br>
+
+# 26.配發按鍵 
+### POST
+#### 在主動配發頁面用的
+#### path : /test/allotment
+```
+request:
+
+{
+	kind:"" 	(one or all)
+	receiver:""	(one時是目標的ID(), all是搜尋了什麼)
+	period:""	(0, 30, 90, 180, 365)
+	frequency:""	(一次性傳1)(1~99999)()
+	quota:""    (1~99999)
+	adminID:"" 測試用(數字的adminID)))
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在
+	notAllow:"" (list)
+
+}
+```
+
+
+<br>
+
+# 27.簡易個人配發紀錄 
+### POST
+#### 要哪個人就會顯示哪個人的
+#### path : /test/simple_allotment_history
+```
+request:
+
+{
+	userID:"" 要哪個人就傳哪個
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 userID有問題	
+	以下是list
+	period:"" 
+	frequency:"" 
+	quota:"" 
+	time:""
+
+}
+```
+
+<br>
+
+# 27.主動配發紀錄
+### POST
+#### 要哪個人就會顯示哪個人的
+#### path : /test/simple_allotment_history
+```
+request:
+
+{
+	target:"" 沒有搜尋傳空
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 未知
+	以下是list
+	period:"" 
+	frequency:"" 
+	quota:"" 
+	time:""
+	userID:"" 
+	name:""
+}
+```
+

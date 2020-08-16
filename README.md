@@ -257,6 +257,7 @@ response:
 	rspCode: "",	200:成功
 	AdminList: [
 		{
+			adminID: ""
 			adminType: "",		2:AS | 3:AA | 4:AU | 5:AG
 			adminName: "",
 			adminPhone: "",
@@ -390,6 +391,7 @@ response:
 	rspCode: "",	200:成功
 	applyList: [
 		{
+			adminID: "",
 			adminName: "",
 			adminPhone: "",
 			adminMail: ""
@@ -417,6 +419,7 @@ response:
 	rspCode: "",	200:成功
 	GMList: [
 		{
+			adminID: "",
 			adminName: "",
 			adminPhone: "",
 			adminMail: ""
@@ -502,7 +505,7 @@ request:
 response:
 
 {
-	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件輸入錯誤，沒有找到對應的電子郵件 | 404:重置信寄送失敗
+	rspCode: ""		200:重置信寄送成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:電子郵件長度不符 | 402:電子郵件格式不符 | 403:電子郵件輸入錯誤，沒有找到對應的電子郵件 | 404:重置信寄送失敗 | 405:該帳號不是GM
 }
 ```
 
@@ -647,7 +650,8 @@ request:
 
 {
 	userID: "",
-	userPassword: ""		(max length)
+	userPassword: "",		(max length 30)
+	userOldPassword: ""		(max length 30)
 }
 
 response:
@@ -786,6 +790,220 @@ response:
 	userGender: "",
 	userAge: "",
 	userInfo: ""
+}
+```
+
+<br>
+
+# API 33 - Output SR Task Record
+### POST
+#### 取得SR歷史的任務
+#### path : /test/SR/output/record
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskContent: "",
+			taskPoint: "",
+			taskLocation: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+			taskSP: "",			(name需要ID再跟我說)
+			taskSR: ""			(name需要ID再跟我說)
+		}
+	]
+}
+```
+
+<br>
+
+# API 34 - Output SP Task Passed
+### POST
+#### 取得SP已通過的任務
+#### path : /test/SP/output/passed
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskContent: "",
+			taskPoint: "",
+			taskLocation: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+			taskSP: "",			(name需要ID再跟我說)
+			taskSR: ""			(name需要ID再跟我說)
+		}
+	]
+}
+```
+
+<br>
+
+# API 35 - Output SP Task Checking
+### POST
+#### 取得SP審核中的任務
+#### path : /test/Sp/output/Checking
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskContent: "",
+			taskPoint: "",
+			taskLocation: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+			taskSP: "",			(name需要ID再跟我說)
+			taskSR: ""			(name需要ID再跟我說)
+		}
+	]
+}
+```
+
+<br>
+
+# API 36 - Output SP Task Refused
+### POST
+#### 取得SP遭拒絕的任務
+#### path : /test/SR/output/refused
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskContent: "",
+			taskPoint: "",
+			taskLocation: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+			taskSP: "",			(name需要ID再跟我說)
+			taskSR: ""			(name需要ID再跟我說)
+		}
+	]
+}
+```
+
+<br>
+
+# API 37 - Output SP Task Record
+### POST
+#### 取得SP歷史的任務
+#### path : /test/SR/output/record
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskContent: "",
+			taskPoint: "",
+			taskLocation: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+			taskSP: "",			(name需要ID再跟我說)
+			taskSR: ""			(name需要ID再跟我說)
+		}
+	]
+}
+```
+
+<br>
+
+# API 38 - Output Profile Task
+### POST
+#### 取得個人頁面已發任務
+#### path : /test/output/task
+```
+request:
+
+{
+	userID: ""
+}
+
+response:
+
+{
+	taskRecord: [
+		{
+			taskID: "",
+			taskName: "",
+			taskPoint: "",
+			taskStartTime: "",
+			taskEndTime: "",
+			taskStatus: "",
+		}
+	]
+}
+```
+
+<br>
+
+# API 
+### 
+#### 
+#### path : 
+```
+request:
+
+{
+
+}
+
+response:
+
+{
+	
 }
 ```
 

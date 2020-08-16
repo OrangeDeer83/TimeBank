@@ -440,8 +440,10 @@ def GM_forgot_password():
             try:
                 query_data = adminAccount.query.filter(adminAccount.adminMail == GMMail).first()
             except:
-                return jsonify({"rspCode": "400"})      #資料庫錯誤
+                return jsonify({"rspCode": "400"})          #資料庫錯誤
             if query_data:
+                if query_data.adminType != userType['GM']:
+                    return jsonify({"rspCode": "405"})      #該帳號不是GM
                 adminID = query_data.adminID
                 #產生token
                 token = GM_forgot_password_token(current_app.config['SECRET_KEY'], adminID)

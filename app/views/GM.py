@@ -1,5 +1,6 @@
 #coding:utf-8
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, session, redirect, url_for
+from ..models import userType
 
 GM = Blueprint('GM', __name__)
 
@@ -50,14 +51,23 @@ def verify(result):
 #審核評論
 @GM.route('/updateGrade')
 def updateGrade():
-   return render_template('updateFrade.html')
+   if session['userType'] == userType['GM']:
+      return render_template('updateGrade.html')
+   else:
+      return redirect(for_url('GM.login'))
 
 #檢舉審核
 @GM.route('/reportApprove')
 def report_approve():
-   return render_template('reportApprove.html')
+   if session['userType'] == userType['GM']:
+      return render_template('reportApprove.html')
+   else:
+      return redirect(for_url('GM.login'))
 
 #設定頁面
 @GM.route('/setting')
 def setting():
-   return render_template('settingGM.html')
+   if session['userType'] == userType['GM']:
+      return render_template('settingGM.html')
+   else:
+      return redirect(for_url('GM.login'))

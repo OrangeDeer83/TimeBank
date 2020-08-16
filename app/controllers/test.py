@@ -279,8 +279,11 @@ def delete_admin():
         SAID = value['SAID']
         try:
             SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
+            if SA_data == None:
+                return jsonify({"rspCode": "403"})              #SAID錯誤
         except:
             return jsonify({"rspCode": "400"})              #資料庫錯誤
+        print(session.get('AdminConfirm'))
         if session.get('AdminConfirm') == SA_data.adminPassword:
             try:
                 query_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
@@ -294,7 +297,7 @@ def delete_admin():
                 return jsonify({"rspCode": "400"})          #資料庫錯誤
             return jsonify({"rspCode": "200"})              #刪除成功
         else:
-            return ({"rspCode": "403"})                 #尚未輸入第一次密碼
+            return jsonify({"rspCode": "403"})              #尚未輸入第一次密碼
     else:
         return jsonify({"rspCode": "300"})                  #method使用錯誤
 
@@ -307,6 +310,8 @@ def delete_Admin_check_password():
         SAPassword = value['SAPassword']
         try:
             SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
+            if SA_data == None:
+                return jsonify({"rspCode": "402"})              #SAID錯誤
         except:
             return jsonify({"rspCode": "400"})              #資料庫錯誤
         if check_same(SAPassword, SA_data.adminPassword, SA_data.salt):
@@ -528,22 +533,25 @@ def delete_GM():
         adminID = value['adminID']
         try:
             Admin_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
+            if Admin_data == None:
+                return jsonify({"rspCode": "404"})                  #該帳號不是Admin帳號
         except:
             return jsonify({"rspCode": "400"})                      #資料庫錯誤
-        if session.get('AdminConfirm') == Admin_data.adminPassword:
-            try:
-                query_data = adminAccount.query.filter(adminAccount.adminID == GMID).first()
-                if query_data == None:
-                    return jsonify({"rspCode": "401"})              #GMID不在資料庫中，前端可能遭到竄改
-                if query_data.adminType != userType['GM']:
-                    return jsonify({"rspCode": "402"})              #userType錯誤，此ID可能不是GM
-                query_data.adminType = userType['STOP']
-                db.session.commit()
-            except:
-                return jsonify({"rspCode": "400"})                  #資料庫錯誤
-            return jsonify({"rspCode": "200"})                      #刪除成功
-        else:
-            return jsonify({"rspCode": "403"})                         #尚未輸入第一次密碼
+        print(Admin_data.adminPassword)
+        #if session.get('AdminConfirm') == Admin_data.adminPassword:
+        try:
+            query_data = adminAccount.query.filter(adminAccount.adminID == GMID).first()
+            if query_data == None:
+                return jsonify({"rspCode": "401"})              #GMID不在資料庫中，前端可能遭到竄改
+            if query_data.adminType != userType['GM']:
+                return jsonify({"rspCode": "402"})              #userType錯誤，此ID可能不是GM
+            query_data.adminType = userType['STOP']
+            db.session.commit()
+        except:
+            return jsonify({"rspCode": "400"})                  #資料庫錯誤
+        return jsonify({"rspCode": "200"})                      #刪除成功
+        #else:
+        #    return jsonify({"rspCode": "403"})                         #尚未輸入第一次密碼
     else:
         return jsonify({"rspCode": "300"})                      #method使用錯誤
 
@@ -801,7 +809,6 @@ def setting_userMail():
     else:
         return jsonify({"rspCode": "300"})          #method使用錯誤
 
-
 #設定手機號碼
 @test.route('/setting/userPhone', methods=['POST'])
 def setting_userPhone():
@@ -877,7 +884,7 @@ def setting_propic():
             print(f.filename)
             return redirect(url_for('USER.setting'))
 
-#顯示個人資料
+#取得個人資料
 @test.route('/output', methods=['POST'])
 def output():
     if request.method == 'POST':
@@ -886,15 +893,167 @@ def output():
             query_data = account.query.filter_by(userID = userID).first()
         except:
             return jsonify({"rspCode": "400", "userID": "", "name": "", "userGender": "", "userAge": "", "userInfo": ""})      #資料庫錯誤
-        other_day = datetime.date(query_data.userBirthday.year, query_data.userBirthday.month, query_data.userBirthday.day)
+        other_day = transferToDate(query_data.userBirthday)
         userAge = floor((datetime.date.today() - other_day).days/365.25)
         return jsonify({"rspCode": "200", "userID": userID, "name": query_data.name, "userGender": query_data.userGender,\
-                        "userAge": userAge, "userInfo": query_data.userInfo})                                  #成功取得個人資料
+                        "userAge": userAge, "userInfo": query_data.userInfo})                                                  #成功取得個人資料
     else:
         return jsonify({"rspCode": "300", "userID": "", "name": "", "userGender": "", "userAge": "", "userInfo": ""})          #method使用錯誤
 
+#取得SR歷史的任務
+@test.route('/SR/output/record', methods=['POST'])
+def SR_output_record():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = account.query.filter_by(userID = userID).first()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskRecord": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskRecord": ""})                                                  #資料庫錯誤
+        taskRecord = []
+        for task in query_data.taskSR:
+            if task.taskStatus not in [0, 1, 2]:
+                taskRecord.append(task)
+        sortTask(taskRecord, 0, len(taskRecord) - 1)
+        taskRecordJson = []
+        for task in taskRecord:
+            taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
+                                    "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+        return jsonify({"rspCode": "200", "taskRecord": taskRecordJson})                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskRecord": ""})                                        #method使用錯誤
 
+#取得SP已通過的任務
+@test.route('/SP/output/passed', methods=['POST'])
+def SP_output_passed():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = account.query.filter_by(userID = userID).first()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskPassed": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskPassed": ""})                                                  #資料庫錯誤
+        taskPassed = []
+        for task in query_data.taskSP:
+            if task.taskStatus == 2:
+                taskPassed.append(task)
+        sortTask(taskPassed, 0, len(taskPassed) - 1)
+        taskPassedJson = []
+        for task in taskPassed:
+            taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
+                                    "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+        return jsonify({"rspCode": "200", "taskPassed": taskPassedJson})                                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskPassed": ""})                                                    #method使用錯誤
 
+#取得SP審核中的任務
+@test.route('/SP/output/checking', methods=['POST'])
+def SP_output_checking():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = taskCandidate.query.filter_by(userID = userID).order_by(taskCandidate.taskID).all()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskChecking": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskChecking": ""})                                                  #資料庫錯誤
+        taskChecking = []
+        for candidate in query_data:
+            print(candidate.task.taskStatus)
+            if candidate.task.taskStatus == 1:
+                taskChecking.append(candidate.task)
+        sortTask(taskChecking, 0, len(taskChecking) - 1)
+        taskCheckingJson = []
+        for task in taskChecking:
+            taskCheckingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
+                                    "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+        return jsonify({"rpsCode": "200", "taskChecking": taskCheckingJson})                                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskChecking": ""})                                                      #method使用錯誤
+
+#取得SP遭拒絕的任務
+@test.route('/SP/output/refused', methods=['POST'])
+def SP_output_refused():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = taskCandidate.query.filter_by(userID = userID).order_by(taskCandidate.taskID).all()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskRefused": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskRefused": ""})                                                  #資料庫錯誤
+        taskRefused = []
+        for candidate in query_data:
+            if candidate.task.taskStatus >= 2 and candidate.task.SP[0].userID != userID:
+                taskRefused.append(candidate.task)
+        sortTask(taskRefused, 0, len(taskRefused) - 1)
+        taskRefusedJson = []
+        for task in taskRefused:
+            taskRefusedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
+                                    "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+        return jsonify({"rpsCode": "200", "taskRefused": taskRefusedJson})                                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskRefused": ""})                                                     #method使用錯誤
+
+#取得SP歷史的任務
+@test.route('/SP/output/record', methods=['POST'])
+def SP_output_record():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = taskCandidate.query.filter_by(userID = userID).order_by(taskCandidate.taskID).all()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskRefused": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskRefused": ""})                                                  #資料庫錯誤
+        taskRecord = []
+        for candidate in query_data:
+            if candidate.task.taskStatus >= 2 and candidate.task.SP[0].userID == userID:
+                taskRecord.append(candidate.task)
+        sortTask(taskRecord, 0, len(taskRecord) - 1)
+        taskRecordJson = []
+        for task in taskRecord:
+            taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
+                                    "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+        return jsonify({"rpsCode": "200", "taskRecord": taskRecordJson})                                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskRecord": ""})                                                     #method使用錯誤
+
+#取得個人頁面已發任務
+@test.route('/output/task', methods=['POST'])
+def output_task():
+    if request.method == 'POST':
+        userID = request.get_json()['userID']
+        try:
+            query_data = account.query.filter_by(userID = userID).first()
+            if query_data == None:
+                return jsonify({"rspCode": "401", "taskWaiting": ""})                                              #userID錯誤
+        except:
+            return jsonify({"rspCode": "400", "taskWaiting": ""})                                                  #資料庫錯誤
+        taskWaiting = []
+        for task in query_data.taskSR:
+            if task.taskStatus in [0, 1]:
+                taskWaiting.append(task)
+        sortTask(taskWaiting, 0, len(taskWaiting) - 1)
+        taskWaitingJson = []
+        for task in taskWaiting:
+            taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskPoint": task.taskPoint,\
+                                    "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime)})
+        return jsonify({"rspCode": "200", "taskWaiting": taskWaitingJson})                                        #成功取得
+    else:
+        return jsonify({"rspCode": "300", "taskWaiting": ""})                                                    #method使用錯誤
 
 
 @test.route('/sql_test')

@@ -1309,7 +1309,6 @@ request:
 response:
 
 {
-	"periodList":"" (0,30,90,180,365)以天數表示(list)
 	"quotaList":"" (list)
 	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知
 }
@@ -1377,44 +1376,276 @@ response:
 }
 ```
 
-<br>
-
-# API 
-### 
-#### 
-#### path : 
+# 19.使用者新增申請
+### POST
+#### 使用者按下送出申請的動作
+#### path : test/USER/add_apply
+> 用form
 ```
 request:
 
 {
-
+	frequency:"" 1~999999 一次性填1
+	period:"  	 必須是0,30,90,180,365 對應一次、一個月、三個月、半年、一年
+	result:""    如果class為其他就必填，無長度限制
+	class:""	 如果不在可申請範圍內會回傳錯誤
+	quota:""	 其他自填，正常的留空
+	file(pdf):"" 可有可無
 }
 
 response:
 
 {
-	
+	rspCode:""	200 OK| 300 method wrong | 400 未知 |401 找不到conditionID | 402 其他要填原因 | 403 有輸入不符合格式 | 404 pdf上傳錯誤
+	notAllow:"" 有哪些輸入有問題(只檢查格式)(list)
 }
 ```
 
+
 <br>
 
-# API 
-### 
-#### 
-#### path : 
+# 20.未審核申請資料顯示 
+### GET
+#### 列出未審核的資料
+#### path : /test/show_apply_status_0
 ```
 request:
 
 {
-
+	name:"" 你要搜尋的目標 20個字內
 }
 
 response:
 
 {
-	
+	rspCode:"" 200 OK | 300 method wrong | 400 未知 | 401 target太長
+
+	以下是list
+	userNam:""
+	userSRRate:""
+	userSPRate:""
+	applyPdfName:""
+	applyID:""
+	applyClass:""
+	applyQuota:""
+	applyPeriod:""
+	applyFrequency:""
+	applyTime:""
+	applyResult:""
+	userID:""
+
 }
 ```
 
 <br>
+
+# 21.審核申請頁面中的簡略紀錄 
+### GET
+#### 滑到申請人身上會跑出來的
+#### path : /test/simple_personal_apply_history
+```
+request:
+
+{
+	applyID:"" 滑到哪個傳哪個
+	
+}
+
+response:
+
+{
+	rsoCode:"" 200 OK | 300 method wrong | 400 applyID 不存在
+
+	以下是list
+	applyTime:""
+	frequency:""
+	result:""
+	status:"" 
+	judgeTime:"" 
+	period:"" 
+	className:""
+	quota:""
+	oldQuota:"" 
+	applyPdfName:"" 
+	applyID:""
+	userID:"" 
+	userName:""
+}
+```
+
+<br>
+
+# 22.申請附件下載 
+### GET
+#### 使用此api理論上會直接跳出下載的視窗
+#### path : /test/apply_pdf_download
+```
+request:
+
+{
+	applyID 要幾號傳幾號
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 檔案不存在
+}
+```
+
+<br>
+
+# 23.決定申請是否通過 
+### POST
+#### 審核apply用
+#### path : /test/apply_pdf_download
+```
+request:
+
+{
+	applyID :"" 要審核哪個傳哪個,
+	applyStatus :"" (案的是核准就給1沒過給2),
+	quotaChange :"" (核准額度有變給值，沒有傳空)
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 有非法輸入
+	notAllow (list)(有哪些東西不符合格式)
+}
+```
+
+<br>
+
+# 24.核准紀錄 
+### POST
+#### 完整的核准紀錄
+#### path : /test/judgement_history
+```
+request:
+
+{
+	這裡亂輸入不會出事，只是查不到東西而已
+	name :"" 
+	status :""  (1 or 2)
+	class :"" 
+	period :"" (0,30,90,180,365)
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 未知
+
+}
+```
+
+<br>
+
+
+# 25.顯示user名單 
+### POST
+#### 在主動配發頁面用的
+#### path : /test/show_user
+```
+request:
+
+{
+	target:"" 沒搜尋傳空(沒搜尋)
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 查找資料失敗(不是沒找到東西，是資料庫壞了))
+	以下是list
+	name:""
+	userID:""
+	userSRRate:
+	userSPRate:""
+
+}
+```
+
+<br>
+
+# 26.配發按鍵 
+### POST
+#### 在主動配發頁面用的
+#### path : /test/allotment
+```
+request:
+
+{
+	kind:"" 	(one or all)
+	receiver:""	(one時是目標的ID(), all是搜尋了什麼)
+	period:""	(0, 30, 90, 180, 365)
+	frequency:""	(一次性傳1)(1~99999)()
+	quota:""    (1~99999)
+	adminID:"" 測試用(數字的adminID)))
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在
+	notAllow:"" (list)
+
+}
+```
+
+
+<br>
+
+# 27.簡易個人配發紀錄 
+### POST
+#### 要哪個人就會顯示哪個人的
+#### path : /test/simple_allotment_history
+```
+request:
+
+{
+	userID:"" 要哪個人就傳哪個
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 userID有問題	
+	以下是list
+	period:"" 
+	frequency:"" 
+	quota:"" 
+	time:""
+
+}
+```
+
+<br>
+
+# 27.主動配發紀錄
+### POST
+#### 要哪個人就會顯示哪個人的
+#### path : /test/simple_allotment_history
+```
+request:
+
+{
+	target:"" 沒有搜尋傳空
+}
+
+response:
+
+{
+	200 OK | 300 method wrong | 400 未知
+	以下是list
+	period:"" 
+	frequency:"" 
+	quota:"" 
+	time:""
+	userID:"" 
+	name:""
+}
+```
+

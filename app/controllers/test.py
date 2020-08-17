@@ -2644,7 +2644,7 @@ def SR_accept():
         task_list = db.session.query(account).filter(account.userID == SPID).first().taskSR
         taskList = []
         for task_ in task_list:
-            if task_.taskStatus != 2:
+            if task_.taskStatus == 2 or task_.taskStatus == 9:
                 continue
             taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
                              "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\

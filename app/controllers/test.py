@@ -2562,10 +2562,11 @@ def SR_release():
         task_list = []
         task_list_ = db.session.query(account).filter(account.userID == userID_).first().taskSR
         for task_ in task_list_:
-            candidateList = db.session.query(account.userName,account.userID).join(taskCandidate).filter(taskCandidate.taskID == task_.taskID and taskCandidate.userID == account.userID).all()
-            candidateNum = len(candidateList)
-            task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskStatus":str(task_.taskStatus)\
-                             ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
+            if task_.taskStatus in [0,1]:
+                candidateList = db.session.query(account.userName,account.userID).join(taskCandidate).filter(taskCandidate.taskID == task_.taskID and taskCandidate.userID == account.userID).all()
+                candidateNum = len(candidateList)
+                task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskStatus":str(task_.taskStatus)\
+                                 ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
 
         return jsonify({"rspCode":"200","taskList":task_list,"taskAmount":str(len(task_list))})
     except:
@@ -2730,7 +2731,7 @@ def delete_task():
     json = request.get_json()
     taskID_ =json['taskID']
     #userID_ = int(session.get('userID'))
-    userID_ = int(json["userID"])
+    userID_ = json["userID"]
     task_ = db.session.query(task).filter(taskID_ == task.taskID).first()
     if task_ == None:
         #任務不存在
@@ -2792,7 +2793,7 @@ def SP_cancel_task():
         #return jsonify({"rspCode":"403"})
     json = request.get_json()
     taskID_ = json['taskID']
-    userID_ =json['userID']
+    userID_ = int(json['userID'])
     task_ = db.session.query(task).filter(task.taskID == taskID_).first()
     if task_ == None:
         #任務不存在
@@ -2834,7 +2835,7 @@ def task_finish_or_not():
     if not(status in ['0','1']):
         #status 只能是 0 or 1
         return jsonify({"rspCode":"403"})
-    if task_.SR[0].userID == int(userID_) :
+    if task_.SR[0].userID == userID_ :
         if task_.taskStatus in [2,7,8,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2855,7 +2856,7 @@ def task_finish_or_not():
         else:
             #不能這樣做
             return jsonify({"rspCode":"402"})
-    elif task_.SP[0].userID == int(userID_) :
+    elif task_.SP[0].userID == userID_ :
         if task_.taskStatus in [2,6,8,9]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2947,7 +2948,7 @@ def comment_action():
         return jsonify({"rspCode":"403"})
     if task_.taskStatus in [3,6,7,8]:
         comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()       
-        if task_.SR[0].userID == int(userID_):    
+        if task_.SR[0].userID == userID_:    
             if comment_ == None:
                 comment_ = comment(taskID = int(taskID_), SRComment = user_comment, SPComment = None, commentStatus = 0, adminID = None)
                 db.session.add(comment_) 
@@ -2960,7 +2961,7 @@ def comment_action():
                 comment_.SRComment = user_comment
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
-        if task_.SP[0].userID == int(userID_):    
+        if task_.SP[0].userID == userID_:    
             if comment_ == None:
                 comment_ = comment(taskID = int(taskID_), SPComment = user_comment, SRComment = None, commentStatus = 0, adminID = None)
                 db.session.add(comment_) 

@@ -2361,12 +2361,12 @@ def SR_add_task():
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
-@test.route('/SP/output/task_can_be_taken', methods = ['GET'])
+@test.route('/SP/output/task_can_be_taken', methods = ['POST'])
 def SP_output_task_can_be_taken():
-    #if method != 'GET':
-           #return jsonify({"rspCode":"300","taskList":""})
+    if method != 'POST':
+           return jsonify({"rspCode":"300","taskList":""})
     #userID = int(session.get('userID'))
-    #userID = int(request.get_json()['userID'])
+    userID = int(request.get_json()['userID'])
     taskName = []
     taskStartTime = []
     taskEndTime = []
@@ -2391,7 +2391,7 @@ def SP_output_task_can_be_taken():
             for source in db.session.query(taskCandidate.userID).filter(task_.taskID==taskCandidate.taskID).all():
                 if source[0] == userID:
                     continue
- '''       #檢查有沒有卡到時間
+        '''#檢查有沒有卡到時間
         userTaskSR =user.taskSR
         if userTaskSR != []:
             for userTaskSR_ in userTaskSR:
@@ -2429,7 +2429,7 @@ def SP_output_task_can_be_taken():
         task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),\
                           "taskEndTime":str(task_.taskEndTime),"taskPoint":str(task_.taskPoint),"SRName":task_.SR[0].userName,\
                           "taskLocation":task_.taskLocation,"taskContent":task_.taskContent})
-        return ({"rspCode":"200","taskList":task_list})
+    return ({"rspCode":"200","taskList":task_list})
 #承接接任務
 #用json傳taskID
 #回傳rspCode,taskConflit

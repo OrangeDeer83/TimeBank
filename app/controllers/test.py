@@ -2282,7 +2282,10 @@ def allotment_history():
 def SR_add_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
-    json = request.get_json()
+    try:
+        json = request.get_json()
+    except:
+        return jsonify({"rspCode":"401","notAllow":"","taskConflit":"","pointConflit":""})
     newTaskName = json['taskName']
     newTaskStartTime = json['taskStartTime']
     newTaskEndTime = json['taskStartTime']
@@ -2355,7 +2358,7 @@ def SR_add_task():
     task_ID = addTask.taskID
     db.engine.execute(task_status_4_dead_line(task_ID,newTaskStartTime))
     db.engine.execute(task_status_5_dead_line(task_ID,newTaskEndTime))
-    return jsonify({"rspCode":"200","notAllow":""})
+    return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
 @test.route('/SP/output/task_can_be_taken', methods = ['GET'])
@@ -2512,7 +2515,10 @@ def SR_release():
 #回傳rspCode
 @test.route("/SR/edit_task", methods = ['POST'])
 def SR_edit_task():
-    json = request.get_json()
+    try:
+        json = request.get_json()
+    except:
+        return jsonify({"rspCode":"403","notAllow":"","taskConflit":"","pointConflit":""})
     taskID_ = json['taskID']
     task_taeget = db.session.query(task).filter(task.taskID == int(taskID_),task.taskStatus == 0).first()
     if db.session.query(task).filter(task.taskID == int(taskID_)).first() == None:
@@ -2531,7 +2537,7 @@ def SR_edit_task():
     newTaskPoint = json['taskPoint']
     newTaskLocation = json['taskLocation']
     newTaskContent = json['taskContent']
-    userID_ = int(session.get('userID'))
+    #userID_ = int(session.get('userID'))
     userID_ = int(request.get_json()['userID'])
     notAllow = []
     pointConflict= ''
@@ -2644,7 +2650,7 @@ def SR_accept():
         task_list = db.session.query(account).filter(account.userID == SPID).first().taskSR
         taskList = []
         for task_ in task_list:
-            if task_.taskStatus == 2 or task_.taskStatus == 9:
+            if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                 continue
             taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
                              "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
@@ -2677,7 +2683,7 @@ def delete_task():
     if not(task_.taskStatus == 0 or task_.taskStatus == 1):
         #只有在任務沒被任何人申請過的階段才能刪除
         return jsonify({"rspCode":"402"})
-    task_.taskStatus = 4
+    task_.taskStatus = 12
     db.session.commit()
     return jsonify({"rspCode":"200"})
 
@@ -2706,8 +2712,8 @@ def SR_cancel_task():
     elif task_status == 2:
         task_.status = 9
         return jsonify({"rspCode":"200"})
-    elif task_.taskStatus == 9:
-        task_.taskStatus = 10        
+    elif task_.taskStatus == 10:
+        task_.taskStatus = 11       
         return jsonify({"rspCode":"200"})
     #任務不可取消
     return jsonify({"rspCode":"402"})
@@ -2734,10 +2740,10 @@ def SP_cancel_task():
         #你不是任務發布人
         return jsonify({"rspCode":"401"})
     elif task_status == 2:
-        task_.status =9
+        task_.status =10
         return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 9:
-        task_.taskStatus = 10        
+        task_.taskStatus = 11       
         return jsonify({"rspCode":"200"})
     #任務不可取消
     return jsonify({"rspCode":"402"})
@@ -2761,16 +2767,16 @@ def task_finish_or_not():
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
-    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskEndTime:
+    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=24) or datetime.datetime.now() < task_.taskEndTime:
         #不在可評價時間
         return jsonify({"rspCode":"401"})
     if not(status in ['0','1']):
         #status 只能是 0 or 1
         return jsonify({"rspCode":"403"})
     if task_.SR[0].userID == int(userID_) :
-        if task_.taskStatus in [2,7,8,9]:
+        if task_.taskStatus in [2,7,8,9,10]:
             if status == '1':
-                if task_.taskStatus == 2 or task_.taskStatus == 9:
+                if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                     task_.taskStatus = 6
                 elif task_.taskStatus == 7:
                     task_.taskStatus = 3
@@ -2781,7 +2787,7 @@ def task_finish_or_not():
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
             elif status == '0':
-                if task_.taskStatus == 2 or task_.taskStatus == 9:
+                if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                     task_.taskStatus = 8
                     db.session.commit()
                 return jsonify({"rspCode":"200"})
@@ -2791,7 +2797,7 @@ def task_finish_or_not():
     elif task_.SP[0].userID == int(userID_) :
         if task_.taskStatus in [2,6,8,9]:
             if status == '1':
-                if task_.taskStatus == 2 or task_.taskStatus == 9:
+                if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                     task_.taskStatus = 7
                 elif task_.taskStatus == 6:
                     task_.taskStatus = 3
@@ -2799,7 +2805,7 @@ def task_finish_or_not():
                     task_.taskStatus = 7
                 return jsonify({"rspCode":"200"})
             elif status == '0':
-                if task_.taskStatus == 2 or task_.taskStatus == 9:
+                if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                     task_.taskStatus = 8
                     db.session.commit()
                 return jsonify({"rspCode":"200"})
@@ -2875,6 +2881,9 @@ def comment_action():
     except:
         #taskID錯誤
         return jsonify({"rspCode":"400"})
+    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskEndTime:
+        #不在可評價時間
+        return jsonify({"rspCode":"403"})
     if task_.taskStatus in [3,6,7,8]:
         comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()       
         if task_.SR[0].userID == int(userID_):    
@@ -3008,9 +3017,8 @@ def USER_SR_allTaskAccepted():
 @test.route("/USER/SR/allTaskRecord")
 def USER_SR_allTaskRecord():
     return render_template("allTaskSRRecord.html")
-GM/updateGrade
+
 
 @test.route("/GM/updateGrade")
 def GM_updateGrade():
     return render_template("updateGrade.html")
-    

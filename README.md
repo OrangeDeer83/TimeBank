@@ -1670,7 +1670,7 @@ request:
 response:
 
 {
-	rspCode:""  200 OK |300 method wrong| 400 輸入有問題
+	rspCode:""  200 OK |300 method wrong| 400 輸入有問題|401 taskContent有符號出問題
 	notAllow:[] 輸入格式有問題的會在這裡
 	taskConflit:[
 		{
@@ -1800,7 +1800,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許| 403 taskContent符號有問題
 	notAllow:[], 會把有問題的輸入的request名傳回
 	taskConflit:{
 		taskID:"",

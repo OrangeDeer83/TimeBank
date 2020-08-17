@@ -3,7 +3,7 @@ from flask import url_for
 import smtplib
 from email.mime.text import MIMEText
 
-reset_password = "點擊以下連結以重設密碼\nhttp://192.168.100.56:5000"
+reset_password = "點擊以下連結以重設密碼\nhttp://192.168.1.146:5000"
 
 #一般使用者密碼重置信
 def USER_forgot_password_mail(token, mail):

@@ -15,7 +15,10 @@ Account = Blueprint('account', __name__)
 @Account.route('/USER/detect_repeated', methods=['POST'])
 def USER_detect_repeated():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         userName = value['userName']
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", userName) == None:
             return jsonify({"rspCode": "401"})  #帳號格式不符
@@ -35,7 +38,10 @@ def USER_detect_repeated():
 @Account.route('/USER/register', methods=['POST'])
 def USER_register():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         user = []
         user.append(value['name'])
         user.append(value['userName'])
@@ -95,7 +101,10 @@ def USER_register():
 @Account.route('/USER/login', methods=['POST'])
 def USER_login():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value) 
         userName = value['userName']
         userPassword = value['userPassword']
@@ -119,7 +128,10 @@ def USER_login():
 @Account.route('/Admin/login', methods=['POST'])
 def Admin_login():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -152,7 +164,10 @@ def logout():
 @Account.route('/USER/forgot_password', methods=['POST'])
 def USER_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         userMail = value['userMail']
         print(value)
         if len(userMail) > 50 or len(userMail) < 1:
@@ -186,7 +201,10 @@ def USER_forgot_password():
 @Account.route('/USER/reset_password/<token>', methods=['POST'])
 def USER_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         if token_data:
@@ -216,7 +234,10 @@ def USER_reset_password(token):
 @Account.route('/Admin/detect_repeated', methods=['POST'])
 def SA_detect_repeated():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminName = value['adminName']
         print(value)
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
@@ -237,7 +258,10 @@ def SA_detect_repeated():
 @Account.route('/GM/register', methods=['POST'])
 def GM_register():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMName = value['GMName']
         GMPassword = value['GMPassword']
         GMMail = value['GMMail']
@@ -349,7 +373,10 @@ def GM_verify(token):
 
     if request.metohd == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             GMID = value['GMID']
             try:
                 query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -367,7 +394,10 @@ def GM_verify(token):
 @Account.route('/Admin/forgot_password', methods=['POST'])
 def Admin_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminMail = value['adminMail']
         print(value)
         if len(adminMail) > 50 or len(adminMail) < 1:
@@ -401,7 +431,10 @@ def Admin_forgot_password():
 @Account.route('/Admin/reset_password/<token>', methods=['POST'])
 def Admin_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         try:
@@ -429,7 +462,10 @@ def Admin_reset_password(token):
 @Account.route('/GM/forgot_password', methods=['POST'])
 def GM_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMMail = value['GMMail']
         print(value)
         if len(GMMail) > 50 or len(GMMail) < 1:
@@ -464,7 +500,10 @@ def GM_forgot_password():
 @Account.route('/GM/reset_password/<token>', methods=['POST'])
 def GM_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         try:
@@ -488,4 +527,158 @@ def GM_reset_password(token):
         print(300)
         return jsonify({"rspCode": "300"})                      #method使用錯誤
 
+#設定使用者介紹
+@Account.route('/setting/userInfo', methods=['POST'])
+def setting_userInfo():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "402"})                  #非法字元
+        if session.get('userType') == userType['USER']:
+            userID = session.get('userID')
+            userInfo = value['userInfo']
+            try:
+                query_data = account.query.filter_by(userID = userID).first()
+                if query_data.userInfo != userInfo:
+                    query_data.userInfo = userInfo
+                    db.session.commit()
+                    return jsonify({"rspCode": "200"})          #使用者介紹修改成功
+            except:
+                return jsonify({"rspCode": "400"})              #資料庫錯誤
+            return jsonify({"rspCode": "401"})                  #介紹並未做更動
+        
+    else:
+        return jsonify({"rspCode": "300"})          #method使用錯誤
 
+#設定名稱
+@Account.route('/setting/name', methods=['POST'])
+def setting_name():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
+        if sessio.get('userType') == userType['USER']:
+            userID = session.get('userID')
+            name = value['name']
+            if len(name) > 20 or len(name) < 1:
+                return jsonify({"rspCode": "401"})      #名稱長度不符
+            try:
+                query_data = account.query.filter_by(userID = userID).first()
+                if query_data.name != name:
+                    query_data.name = name
+                    db.session.commit()
+                else:
+                    return jsonify({"rspCode": "402"})  #名稱並未做修動
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            return jsonify({"rspCode": "200"})          #名稱修改成功
+        else:
+            return jsonify({"rspCode": "500"})          #權限不符
+    else:
+        return jsonify({"rspCode": "300"})          #method使用錯誤
+
+#設定使用者名稱
+@Account.route('/setting/accountName', methods=['POST'])
+def setting_accountName():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
+        #驗證身分為一般使用者
+        if session.get('userType') == userType['USER']:
+            userID = session.get('userID')
+            userName = value['userName']
+            if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", userName) == None:
+                return jsonify({"rspCode": "401"})      #使用者名稱格式不符
+            try:
+                query_data = account.query.filter(account.userName == func.binary(userName)).first()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            if query_data:
+                return jsonify({"rspCode": "402"})      #使用者名稱與他人重複
+            try:
+                query_data = account.query.filter_by(userID = userID).first()
+                query_data.userName = userName
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            return jsonify({"rspCode": "200"})          #一般使用者使用者名稱修改成功
+        #驗證身分為管理員
+        elif session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['GM'], userType['SA']]:
+            adminID = session.get('adminID')
+            adminName = value['adminName']
+            if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
+                return jsonify({"rspCode": "401"})      #使用者名稱格式不符
+            try:
+                query_data = adminAccount.query.filter(adminAccount.adminName == func.binary(adminName)).first()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            if query_data:
+                return jsonify({"rspCode": "402"})      #使用者名稱與他人重複
+            try:
+                query_data = account.query.filter_by(adminID = adminID).first()
+                query_data.adminName = adminName
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            return jsonify({"rspCode": "201"})          #管理員使用者名稱修改成功
+        else:
+            return jsonify({"rspCode": "500"})          #權限不符
+    else:
+        return jsonify({"rspCode": "300"})              #method使用錯誤
+
+#設定密碼
+@Account.route('/setting/accountPassword', methods=['POST'])
+def setting_accountPassword():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
+        if session.get('userType') == userType['USER']:
+            userID = session.get('userID')
+            userPassword = value['userPassword']
+            userOldPassword = value['userOldPassword']
+            try:
+                query_data = account.query.filter_by(userID = userID).first()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            if not check_same(userOldPassword, query_data.userPassword, query_data.salt):
+                return jsonify({"rspCode": "402"})      #舊密碼錯誤
+            if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", userPassword) == None:
+                return jsonify({"rspCode": "401"})      #密碼格式不符
+            userID = request.get_json()['userID']
+            try:
+                salt = generate_salt()
+                query_data.userPassword = encrypt(userPassword, salt)
+                query_data.salt = salt
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            return jsonify({"rspCode": "200"})          #密碼修改成功
+        elif session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['GM'], userType['SA']]:
+            adminID = session.get('adminID')
+            adminPassword = value['adminPassword']
+            adminOldPassword = value['adminOldPassword']
+            try:
+                query_data = account.query.filter_by(adminID = adminID).first()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            if not check_same(adminOldPassword, query_data.adminPassword, query_data.salt):
+                return jsonify({"rspCode": "402"})      #舊密碼錯誤
+            if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
+                return jsonify({"rspCode": "401"})      #密碼格式不符
+            userID = request.get_json()['userID']
+            try:
+                salt = generate_salt()
+                query_data.adminPassword = encrypt(adminPassword, salt)
+                query_data.salt = salt
+                db.session.commit()
+            except:
+                return jsonify({"rspCode": "400"})      #資料庫錯誤
+            return jsonify({"rspCode": "200"})          #密碼修改成功
+    else:
+        return jsonify({"rspCode": "300"})          #method使用錯誤

@@ -10,8 +10,8 @@ def forgot_password():
    return render_template('forgotPasswordGM.html')
 
 #輸入新密碼頁面
-@GM.route('/resetPassword')
-def reset_password():
+@GM.route('/resetPasswor/<token>')
+def reset_password(token):
    return render_template('resetPasswordGM.html')
 
 #登入頁面
@@ -51,23 +51,23 @@ def verify(result):
 #審核評論
 @GM.route('/updateGrade')
 def updateGrade():
-   if session['userType'] == userType['GM']:
+   if session.get('userType') == userType['GM']:
       return render_template('updateGrade.html')
    else:
-      return redirect(for_url('GM.login'))
+      return redirect(url_for('GM.login'))
 
 #檢舉審核
 @GM.route('/reportApprove')
 def report_approve():
-   if session['userType'] == userType['GM']:
+   if session.get('userType') == userType['GM']:
       return render_template('reportApprove.html')
    else:
-      return redirect(for_url('GM.login'))
+      return redirect(url_for('GM.login'))
 
 #設定頁面
 @GM.route('/setting')
 def setting():
-   if session['userType'] == userType['GM']:
+   if session.get('userType') == userType['GM']:
       return render_template('settingGM.html')
    else:
-      return redirect(for_url('GM.login'))
+      return redirect(url_for('GM.login'))

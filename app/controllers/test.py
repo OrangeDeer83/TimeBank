@@ -21,7 +21,10 @@ ISOTIMEFORMAT = '%Y-%m-%d %H:%M:%S'
 @test.route('/USER/detect_repeated', methods=['POST'])
 def USER_detect_repeated():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         userName = value['userName']
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", userName) == None:
             return jsonify({"rspCode": "401"})  #帳號格式不符
@@ -41,7 +44,10 @@ def USER_detect_repeated():
 @test.route('/USER/register', methods=['POST'])
 def USER_register():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         user = []
         user.append(value['name'])
         user.append(value['userName'])
@@ -102,7 +108,10 @@ def USER_register():
 @test.route('/USER/login', methods=['POST'])
 def USER_login():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value) 
         userName = value['userName']
         userPassword = value['userPassword']
@@ -135,7 +144,10 @@ def logout():
 @test.route('/USER/forgot_password', methods=['POST'])
 def USER_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         userMail = value['userMail']
         print(value)
         if len(userMail) > 50 or len(userMail) < 1:
@@ -186,7 +198,10 @@ def USER_forgot_password():
 @test.route('/USER/reset_password/<token>', methods=['POST'])
 def USER_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         if token_data:
@@ -217,7 +232,10 @@ def USER_reset_password(token):
 @test.route('/Admin/detect_repeated', methods=['POST'])
 def sa_detect_repeated():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminName = value['adminName']
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
             return jsonify({"rspCode": "401"})  #帳號格式不符
@@ -237,7 +255,10 @@ def sa_detect_repeated():
 @test.route('/create/Admin', methods=['POST'])
 def create_admin():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         adminType = value['adminType']
         if int(adminType) > userType['AG'] or int(adminType) < userType['AS']:
@@ -274,7 +295,10 @@ def create_admin():
 @test.route('/delete/Admin', methods=['POST'])
 def delete_admin():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminID = value['adminID']
         SAID = value['SAID']
         try:
@@ -305,7 +329,10 @@ def delete_admin():
 @test.route('/delete/Admin/check_password', methods=['POST'])
 def delete_Admin_check_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         SAID = value['SAID']
         SAPassword = value['SAPassword']
         try:
@@ -324,7 +351,10 @@ def delete_Admin_check_password():
 @test.route('/load_GM_mail', methods=['POST'])
 def load_GM_mail():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMMail = value['GMMail']
         if re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", GMMail) == None:
             return ({"rspCode": "401"})                     #電子郵件格式不符
@@ -355,7 +385,10 @@ def load_GM_mail():
 @test.route('/GM/register', methods=['POST'])
 def GM_register():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMName = value['GMName']
         GMPassword = value['GMPassword']
         GMMail = value['GMMail']
@@ -436,7 +469,10 @@ def GM_register():
 @test.route('/approveGM', methods=['POST'])
 def approve_GM():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMID = value['GMID']
         try:
             query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -455,7 +491,10 @@ def approve_GM():
 @test.route('/rejectGM', methods=['POST'])
 def reject_GM():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMID = value['GMID']
         try:
             query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -474,7 +513,10 @@ def reject_GM():
 @test.route('/Admin/login', methods=['POST'])
 def Admin_login():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -528,7 +570,10 @@ def GM_list():
 @test.route('/delete/GM', methods=['POST'])
 def delete_GM():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMID = value['GMID']
         adminID = value['adminID']
         try:
@@ -559,7 +604,10 @@ def delete_GM():
 @test.route('delete/GM/check_password', methods=['POST'])
 def delete_GM_check_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminID = value['adminID']
         adminPassword = value['adminPassword']
         try:
@@ -576,7 +624,10 @@ def delete_GM_check_password():
 @test.route('/Admin/forgot_password', methods=['POST'])
 def Admin_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         adminMail = value['adminMail']
         print(value)
         if len(adminMail) > 50 or len(adminMail) < 1:
@@ -610,7 +661,10 @@ def Admin_forgot_password():
 @test.route('/Admin/reset_password/<token>', methods=['POST'])
 def Admin_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         try:
@@ -638,7 +692,10 @@ def Admin_reset_password(token):
 @test.route('/GM/forgot_password', methods=['POST'])
 def GM_forgot_password():
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         GMMail = value['GMMail']
         print(value)
         if len(GMMail) > 50 or len(GMMail) < 1:
@@ -671,7 +728,10 @@ def GM_forgot_password():
 @test.route('/GM/reset_password/<token>', methods=['POST'])
 def GM_reset_password(token):
     if request.method == 'POST':
-        value = request.get_json()
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "403"})          #非法字元
         print(value)
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         try:
@@ -788,7 +848,7 @@ def setting_userMail():
         userID = request.get_json()['userID']
         if len(userMail) > 50 or len(userMail) < 1:
             return jsonify({"rspCode": "401"})      #電子郵件長度不符
-        elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", user[3]) == None:
+        elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", userMail) == None:
             return jsonify({"rspCode": "402"})      #電子郵件格式不符
         try:
             existMail = account.query.filter(account.userMail == func.binary(userMail)).first()
@@ -828,7 +888,7 @@ def setting_userPhone():
         return jsonify({"rspCode": "300"})          #method使用錯誤
 
 #設定性別
-@test.route('/setting/userGender')
+@test.route('/setting/userGender', methods=['POST'])
 def setting_userGender():
     if request.method == 'POST':
         userGender = request.get_json()['userGender']
@@ -1049,7 +1109,7 @@ def output_task():
         sortTask(taskWaiting, 0, len(taskWaiting) - 1)
         taskWaitingJson = []
         for task in taskWaiting:
-            taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskPoint": task.taskPoint,\
+            taskWaitingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskPoint": task.taskPoint,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime)})
         return jsonify({"rspCode": "200", "taskWaiting": taskWaitingJson})                                        #成功取得
     else:

@@ -14,7 +14,10 @@ HRManage = Blueprint('HRManage', __name__)
 def create_admin():
     if request.method == 'POST':
         if session.get('userType') == userType['SA']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             print(value)
             adminType = value['adminType']
             if int(adminType) > userType['AG'] or int(adminType) < userType['AS']:
@@ -55,7 +58,10 @@ def create_admin():
 def delete_admin():
     if request.method == 'POST':
         if session.get('userType') == userType['SA']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             adminID = value['adminID']
             SAID = session.get('adminID')
             try:
@@ -87,7 +93,10 @@ def delete_admin():
 def delete_Admin_check_password():
     if request.method == 'POST':
         if session.get('userType') == userType['SA']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             SAID = session.get('adminID')
             SAPassword = value['SAPassword']
             try:
@@ -109,7 +118,10 @@ def delete_Admin_check_password():
 def load_GM_mail():
     if request.method == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             GMMail = value['GMMail']
             if re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", GMMail) == None:
                 return ({"rspCode": "401"})                     #電子郵件格式不符
@@ -181,7 +193,10 @@ def GM_apply_list():
 def approveGM():
     if request.metohd == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             GMID = value['GMID']
             try:
                 query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -203,7 +218,10 @@ def approveGM():
 def reject_GM():
     if request.method == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             GMID = value['GMID']
             try:
                 query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -225,11 +243,16 @@ def reject_GM():
 def delete_GM():
     if request.method == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             GMID = value['GMID']
             adminID = session.get('userID')
             try:
                 Admin_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
+                if Admin_data == None:
+                    return jsonify({"rspCode": "404"})                  #adminID不存在
             except:
                 return jsonify({"rspCode": "400"})                      #資料庫錯誤
             if session.get('AdminConfirm') == Admin_data.adminPassword:
@@ -256,11 +279,14 @@ def delete_GM():
 def delete_GM_check_password():
     if request.method == 'POST':
         if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            value = request.get_json()
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "403"})          #非法字元
             adminID = session.get('adminID')
             adminPassword = value['SAPassword']
             try:
-                Admin_data = adminAccount.query.filter(adminAccount.adminID == AdminID).first()
+                Admin_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
             except:
                 return jsonify({"rspCode": "400"})              #資料庫錯誤
             if check_same(adminPassword, Admin_data.adminPassword, Admin_data.salt):

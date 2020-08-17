@@ -623,7 +623,7 @@ response:
 # API 25 - Setting UserName
 ### POST
 #### 設定使用者名稱
-#### path : /test/setting/UserName
+#### path : /test/setting/userName
 ```
 request:
 

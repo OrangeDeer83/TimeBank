@@ -2378,9 +2378,9 @@ def SP_output_task_can_be_taken():
     task_list=[]
     taskData = db.session.query(task).filter(task.taskStatus.in_([0,1])).all()
     #user = db.session.query(account).filter(account.userID == userID).first()
-    if user == None:
+    '''if user == None:
         #user有問題
-        return jsonify({"rspCode":"400","taskList":""})
+        return jsonify({"rspCode":"400","taskList":""})'''
     for task_ in taskData:
         #flag = 0
         #檢查是不是自己發的

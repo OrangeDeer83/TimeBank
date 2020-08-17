@@ -1079,7 +1079,7 @@ response
 # 4.最新資訊圖片顯示
 ### GET
 ### 傳最新資訊的圖片檔名
-### path:/test/output_news_image/<number>
+### path:/test/output_news_image/number
 ```
 request:
 
@@ -1097,7 +1097,7 @@ response
 # 5.最新資訊內文顯示
 ### GET
 ### 傳最新資訊的內文
-### path:/test/output_news_content/<number>
+### path:/test/output_news_content/number
 ```
 request:
 
@@ -1114,7 +1114,7 @@ request:
 # 6.最新資訊標題顯示
 ### GET
 ### 傳最新資訊的內文
-### path:/test/output_news_title/<number>
+### path:/test/output_news_title/number
 ```
 request:
 
@@ -1132,7 +1132,7 @@ response:
 # 7.編輯最新消息
 ### POST
 ### 編輯網址中指定的news
-### path:test/edit_news/<number>
+### path:test/edit_news/number
 >用form
 ```
 request:
@@ -1152,7 +1152,7 @@ response:
 # 8.刪除最新消息
 ### POST
 ### 刪除網址中指定的news
-### path:/test/delete_news/<number>
+### path:/test/delete_news/number
 
 ```
 request:
@@ -1815,7 +1815,7 @@ response:
 # 32.雇主確定雇員
 ### POST
 #### 確認SP
-#### path : /test/SR/edit_task
+#### path : /test/SR/decide_SP
 ```
 request:
 
@@ -1953,27 +1953,6 @@ response:
 
 <br>
 
-# 37.完成或未完成 
-### POST	
-#### SP、SR共用
-#### path : /test/task_finish_or_not	
-```
-request:
-
-{
-	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
-	taskID:"" 傳要決定的任務
-	status:"" 0(未完成) or 1 (完成)
-}
-
-response:
-
-{
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務結束時間未到|402 任務的status不允許評價
-}
-```
-
-<br>
 
 # 38.評論資料顯示 
 ### POST	

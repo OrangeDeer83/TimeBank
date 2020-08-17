@@ -2421,9 +2421,9 @@ def SR_add_task():
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
-@test.route('/SP/output/task_can_be_taken', methods = ['GET'])
+@test.route('/SP/output/task_can_be_taken', methods = ['POST'])
 def SP_output_task_can_be_taken():
-    if request.method != 'GET':
+    if request.method != 'POST':
            return jsonify({"rspCode":"300","taskList":""})
     #userID = int(session.get('userID'))
     userID = int(request.get_json()['userID'])

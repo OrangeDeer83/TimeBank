@@ -2504,9 +2504,8 @@ def SP_taken_task():
         except:
             return jsonify({"rspCode":"403","taskConflit":""})
         #userID = int(session.get('userID'))
-        userID = int(json('userID'))
-
-        if db.session.query(taskCandidate.userID).filter(taskID_==taskCandidate.taskID ).filter(userID==taskCandidate.taskID ).all() != []:
+        userID = int(json['userID'])
+        if db.session.query(taskCandidate.userID).filter(taskID_==taskCandidate.taskID ).filter(userID==taskCandidate.userID ).all() != []:
             #已經申請此任務
             return jsonify({"rspCode":"401","taskConflit":""})
         if db.session.query(task).filter(task.taskID == taskID_).first() == None:
@@ -2516,6 +2515,9 @@ def SP_taken_task():
         if task_ == None:
             #此任務已有SP
             return jsonify({"rspCode":"402","taskConflit":""})
+        if task_.SR[0].userID == userID:
+            #自己的
+            return({"rspCode":"405","taskConflit":""})
         user = db.session.query(account).filter(account.userID == userID).first()
         userTaskSR =user.taskSR
         if userTaskSR != []:

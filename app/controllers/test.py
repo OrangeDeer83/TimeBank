@@ -2367,7 +2367,6 @@ def SP_output_task_can_be_taken():
            #return jsonify({"rspCode":"300","taskList":""})
     #userID = int(session.get('userID'))
     #userID = int(request.get_json()['userID'])
-    userID=7
     taskName = []
     taskStartTime = []
     taskEndTime = []
@@ -2378,12 +2377,12 @@ def SP_output_task_can_be_taken():
     taskID = []
     task_list=[]
     taskData = db.session.query(task).filter(task.taskStatus.in_([0,1])).all()
-    user = db.session.query(account).filter(account.userID == userID).first()
+    #user = db.session.query(account).filter(account.userID == userID).first()
     if user == None:
         #user有問題
         return jsonify({"rspCode":"400","taskList":""})
     for task_ in taskData:
-        flag = 0
+        #flag = 0
         #檢查是不是自己發的
         if task_.SR[0].userID == userID:
             continue
@@ -2392,7 +2391,7 @@ def SP_output_task_can_be_taken():
             for source in db.session.query(taskCandidate.userID).filter(task_.taskID==taskCandidate.taskID).all():
                 if source[0] == userID:
                     continue
-        #檢查有沒有卡到時間
+ '''       #檢查有沒有卡到時間
         userTaskSR =user.taskSR
         if userTaskSR != []:
             for userTaskSR_ in userTaskSR:
@@ -2426,7 +2425,7 @@ def SP_output_task_can_be_taken():
                 break
         if flag == 1:
             flag = 0
-            continue
+            continue'''
         task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),\
                           "taskEndTime":str(task_.taskEndTime),"taskPoint":str(task_.taskPoint),"SRName":task_.SR[0].userName,\
                           "taskLocation":task_.taskLocation,"taskContent":task_.taskContent})

@@ -214,4 +214,4 @@ def task_status_4_dead_line(task_ID,newTaskStartTime):
     return "CREATE EVENT `task_status_4_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '4' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 0 OR `task`.`taskStatus` = 1)".format(task_ID,newTaskStartTime,task_ID)
 
 def task_status_5_dead_line(task_ID,newTaskEndTime):
-    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2".format(task_ID,newTaskEndTime,task_ID)
+    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9".format(task_ID,newTaskEndTime,task_ID)

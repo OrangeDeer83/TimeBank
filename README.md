@@ -1296,9 +1296,9 @@ response:
 <br>
 
 # 15.根據所選的class回復可申請的period和其quota 
-### GET
+### POST
 #### 
-#### path : 
+#### path : test/output_quota_conditionID
 ```
 request:
 
@@ -1317,9 +1317,9 @@ response:
 <br>
 
 # 16. 新增與更新申請條件
-### 
+### POST
 #### 用於更新與新增
-#### path : 
+#### path : test/update_add_apply_quota
 ```
 request:
 
@@ -1340,7 +1340,7 @@ response:
 # 17.刪除申請類別 
 ### POST
 #### 會一次刪光所有此類型的可申請項目
-#### path : 
+#### path : test/delete_apply_class
 ```
 request:
 
@@ -1358,7 +1358,7 @@ response:
 <br>
 
 # 18.回傳要求的quota和condition id 
-### GET
+### POST
 #### 可以只查個別的quota和condition ID
 #### path : /test/output_quota_conditionID
 ```
@@ -1397,7 +1397,7 @@ response:
 
 {
 	rspCode:""	200 OK| 300 method wrong | 400 未知 |401 找不到conditionID | 402 其他要填原因 | 403 有輸入不符合格式 | 404 pdf上傳錯誤
-	notAllow:"" 有哪些輸入有問題(只檢查格式)(list)
+	notAllow:"" 會把有問題的輸入的request名傳回
 }
 ```
 
@@ -1405,7 +1405,7 @@ response:
 <br>
 
 # 20.未審核申請資料顯示 
-### GET
+### POST
 #### 列出未審核的資料
 #### path : /test/show_apply_status_0
 ```
@@ -1440,7 +1440,7 @@ response:
 <br>
 
 # 21.審核申請頁面中的簡略紀錄 
-### GET
+### POST
 #### 滑到申請人身上會跑出來的
 #### path : /test/simple_personal_apply_history
 ```
@@ -1476,7 +1476,7 @@ response:
 <br>
 
 # 22.申請附件下載 
-### GET
+### POST
 #### 使用此api理論上會直接跳出下載的視窗
 #### path : /test/apply_pdf_download
 ```
@@ -1512,7 +1512,7 @@ response:
 
 {
 	200 OK | 300 method wrong | 400 有非法輸入
-	notAllow (list)(有哪些東西不符合格式)
+	notAllow 會把有問題的輸入的request名傳回
 }
 ```
 
@@ -1590,7 +1590,7 @@ response:
 
 {
 	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在
-	notAllow:"" (list)
+	notAllow:"" 會把有問題的輸入的request名傳回
 
 }
 ```
@@ -1614,10 +1614,10 @@ response:
 {
 	200 OK | 300 method wrong | 400 userID有問題	
 	以下是list
-	period:"" 
-	frequency:"" 
-	quota:"" 
-	time:""
+	period:[] 
+	frequency:[]
+	quota:
+	time:[]
 
 }
 ```
@@ -1639,13 +1639,443 @@ response:
 
 {
 	200 OK | 300 method wrong | 400 未知
-	以下是list
-	period:"" 
-	frequency:"" 
-	quota:"" 
-	time:""
-	userID:"" 
-	name:""
+	period:[]
+	frequency:[] 
+	quota:[] 
+	time:[]
+	userID:[] 
+	name:[]
+}
+```
+
+<br>
+
+# 28.新增任務
+### POST
+#### SR新增任務
+#### path : /test/SR/add_task
+```
+request:
+
+{
+	taskName:"" 不為空,小於20個字
+	taskStartTime:"" 格式 yyyy-mm-dd hh:mm:ss 
+	taskStartTime:"" 格式 yyyy-mm-dd hh:mm:ss 
+	taskPoint:"" (0~99999)
+	taskLocation:"" 不限制
+	taskContent:"" 不限制
+	userID:"" 測試用，正式從sessions拿
+}
+
+response:
+
+{
+	rspCode:""  200 OK |300 method wrong| 400 輸入有問題|401 taskContent有符號出問題
+	notAllow:[] 輸入格式有問題的會在這裡
+	taskConflit:[
+		{
+            "taskID": "",
+            "taskName": ""
+        }
+	]			
+	pointConflit:"" 會顯示user缺多少錢 like: -100
+
+}
+```
+
+<br>
+
+# 29.顯示可接任務
+### POST(正式時不傳東西應該是GET)
+#### SP顯示可接任務
+#### path : /test/SP/output/task_can_be_taken
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 userID 有問題
+	taskList:[
+		taskID:"",
+		taskName:"",
+		taskStartTime"",(yy-mm-dd hh:mm:ss)
+		taskEndTime:"",(yy-mm-dd hh:mm:ss)
+		taskPoint:"",
+		SRName:"",
+		taskLocation:"",
+		taskContent:""
+	]
+}
+```
+
+<br>
+
+# 30.承接任務
+### POST
+#### SP承接任務的動作
+#### path : /test/SP/taken_task
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID_:"" 要接的那一個
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 u未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
+	"taskConflit": 
+        {
+            "taskID": "",
+            "taskName": ""
+        }
+}
+```
+
+<br>
+
+# 30.顯示雇主已發布任務
+### POST
+#### 雇主已發布頁面用
+#### path : /test/SR/output/release
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID_:"" 要接的那一個
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
+	taskAmount:""
+	taskList: [
+        {
+            "CandidateList": [
+				userName,
+				userID (int)
+				],
+            "cadidateAmount": "",
+            "taskContent": "",
+            "taskEndTime": "",
+            "taskID": "",
+            "taskLocation": "",
+            "taskName": "",
+            "taskPoint": "",
+            "taskStartTime": "",
+            "taskStatus": ""
+        }
+	}
+}
+```
+<br>
+
+# 31.編輯任務
+### POST
+#### 只能編輯自己的且沒有候選人的
+#### path : /test/SR/edit_task
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸,
+	taskContent: "" 不限制,
+    "taskEndTime": "", (yy-mm-dd hh:mm:ss)
+    "taskID": "",    改哪個就輸入哪個
+    "taskLocation": "" 不限制,
+    "taskName": "" 20個字內,
+    "taskPoint": "" 0~99999,
+    "taskStartTime": "" (yy-mm-dd hh:mm:ss)
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許| 403 taskContent符號有問題
+	notAllow:[], 會把有問題的輸入的request名傳回
+	taskConflit:{
+		taskID:"",
+		taskName:""
+	},
+	pointConflit:""	會顯示user缺多少錢 like: -100
+}
+```
+
+<br>
+
+# 32.雇主確定雇員
+### POST
+#### 確認SP
+#### path : /test/SR/edit_task
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸,
+	candidateID:"" 傳送SP的userID
+	taskID:""	
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 未知| 401 cadidateID不再候選人名單| 402 userID 非本任務SR
+	
+}
+```
+<br>
+
+# 32.雇主已接受頁面
+### POST	
+#### 顯示雇主已接受的任務
+#### path : /test/SR/output/accept
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 user不存在
+    taskAmount: "", 有幾個task
+    taskList: [
+        {
+            taskConten: "",
+            taskEndTime: "",
+            taskID: "",
+            taskLocation: "",
+            taskName: "",
+            taskPoint: "",
+            taskSPName: "",
+            taskStartTime: ""
+       }
+    ]
+	
+}
+```
+
+<br>
+
+# 33.雇主刪除任務
+### POST	
+#### 雇主可刪除還沒有SP的任務
+#### path : /test/SR/output/accept
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能刪除|402 已經有SP| 403 userID 有問題
+}
+```
+
+<br>
+
+# 34.雇主取消
+### POST	
+#### 發出取消申請和接受都是這支，不接受不需要使用
+#### path : /test/SR/cancel_task
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要取消的任務
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能取消|402 任務不可取消
+}
+```
+
+
+<br>
+
+# 35.雇員取消
+### POST	
+#### 發出取消申請和接受都是這支，不接受不需要使用
+#### path : /test/SP/cancel_task
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要取消的任務
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務執行人不是你不能取消|402 任務不可取消
+}
+```
+
+<br>
+
+# 36.完成或未完成 
+### POST	
+#### SP、SR共用
+#### path : /test/task_finish_or_not	
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要取消的任務
+	status:"" 0(未完成) or 1 (完成)
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務結束時間未到|402 任務的status不允許評價
+}
+```
+
+<br>
+
+# 37.完成或未完成 
+### POST	
+#### SP、SR共用
+#### path : /test/task_finish_or_not	
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要決定的任務
+	status:"" 0(未完成) or 1 (完成)
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務結束時間未到|402 任務的status不允許評價
+}
+```
+
+<br>
+
+# 38.評論資料顯示 
+### POST	
+#### SP、SR共用 顯示用戶評論時需要看到的資料
+#### path : /test/output/notice_comment	
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要評論的任務
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  userID錯誤|402 userID不是此任務SR或SP |403 還不可評論
+}
+```
+
+<br>
+
+# 39.評論動作 
+### POST	
+#### SP、SR共用 
+#### path : /test/comment_action
+```
+request:
+
+{
+	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 傳要評論的任務
+	comment:"" 無限制,
+	star:"" 1,2,3,4,5
+}
+
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在 | 401  userID不是此任務SR或SP|402  此任務還不可評論| 403 star 不合法| 404 已經評論過
+}
+```
+
+<br>
+
+# 40.GM審核評論頁面 
+### GET	
+#### 不須傳值
+#### path : /test/GM/output/judge_comment_page
+```
+request:
+
+{
+	NULL
+}
+	
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 userType不是GM | 401  未知
+	commentAmount: "",
+    commentList": [
+        {
+            SPComment: "",
+            SPID: "",
+            "SPName": "",
+            "SPPhone": "",
+            "SPStar": "",
+            "SRComment": "",
+            "SRID": "",
+            "SRName": "",
+            "SRPhone": "",
+            "SRStar": "",
+            "taskConent": "",
+            "taskEndTime": "",
+            "taskID": "",
+            "taskName": "",
+            "taskStartTime": ""
+        }
+    ]
+}
+```
+
+<br>
+
+# 41.GM審核評論動作 
+### GET	
+#### 不須傳值
+#### path : /test/GM/judge_commentaction
+```
+request:
+
+{	
+	adminID:"" 正式時從session拿，必須是數字且存在，不燃會炸
+	taskID:"" 目標ID
+	status:"" 0(不核准),1(核准)
+}
+	
+response:
+
+{
+	rspCode:"" 200 OK |300 method wrong|400 commeny不存在 | 401  status不合法| 402 adminID不合法
 }
 ```
 

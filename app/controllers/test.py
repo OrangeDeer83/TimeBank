@@ -1654,10 +1654,10 @@ def return_period_by_class():
                         dbData2 = db.engine.execute(show_quota_conditionID_by_class_period(className,period[0])).fetchone()
                         periodList.append(str(period[0]))
                         quotaList.append(dbData2[1])
-                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspCoide":"200"})
+                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspcode":"200"})
                 else:
                     #rspCode 201:此class沒有可被申請的週期
-                    return jsonify({"periodList":"","quotaList":"","rspCoide":"201"})
+                    return jsonify({"periodList":"","quotaList":"","rspcode":"201"})
         else:
             return jsonify({"periodList":"","quotaList":"","rspCode":"300"})
     except:

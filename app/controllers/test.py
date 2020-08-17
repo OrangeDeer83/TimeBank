@@ -2423,7 +2423,7 @@ def SR_add_task():
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
 @test.route('/SP/output/task_can_be_taken', methods = ['POST'])
 def SP_output_task_can_be_taken():
-    if method != 'POST':
+    if request.method != 'POST':
            return jsonify({"rspCode":"300","taskList":""})
     #userID = int(session.get('userID'))
     userID = int(request.get_json()['userID'])

@@ -17,7 +17,10 @@ def reset_password(token):
 #登入頁面
 @GM.route('/login')
 def login():
-   return render_template('loginGM.html')
+   if session.get('userType') == userType['GM']:
+      return redirect(url_for('GM.update_grade'))
+   else:
+      return render_template('loginGM.html')
 
 #註冊頁面
 @GM.route('/register')
@@ -50,7 +53,7 @@ def verify(result):
 
 #審核評論
 @GM.route('/updateGrade')
-def updateGrade():
+def update_grade():
    if session.get('userType') == userType['GM']:
       return render_template('updateGrade.html')
    else:

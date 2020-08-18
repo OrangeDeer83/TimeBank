@@ -6,7 +6,7 @@ USER = Blueprint('USER', __name__)
 
 #點數紀錄
 @USER.route('/pointRecord')
-def record():
+def point_record():
     if session.get('userType') == userType['USER']:
         return render_template('point.html')
     else:
@@ -161,7 +161,7 @@ def create_task():
     else:
         return redirect(url_for('USER.index'))
 
-#個人頁面 - 已發任務
+#個人頁面
 @USER.route('/info/<userID>')
 def info(userID):
     if session.get('userType') == userType['USER']:

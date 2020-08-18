@@ -1236,7 +1236,7 @@ def upload_news():
                 #設定filename = newsID.jpg
                 filename = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.jpg'
                 #儲存檔案到指定位置
-                fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage/' , filename))
+                fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsImage/' , filename))
             except:
                 #rspCode 402:圖片上傳錯誤
                 return jsonify({"rspCode":"402"})
@@ -1285,10 +1285,11 @@ def output_news_content(number):
 
         try:
             filename = number + '.txt'
+            print(filename)
             file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
-            content = jsonify({"rspCode": "200","content":file.read()})
+            content = file.read()
             file.close()
-            return content
+            return jsonify({"rspCode": "200", "content": content})
         except:
             #內文顯示錯誤
             return jsonify({"rspCode" : "400","content":""})
@@ -1699,10 +1700,10 @@ def return_period_by_class():
                         dbData2 = db.engine.execute(show_quota_conditionID_by_class_period(className,period[0])).fetchone()
                         periodList.append(str(period[0]))
                         quotaList.append(dbData2[1])
-                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspcode":"200"})
+                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspCode":"200"})
                 else:
                     #rspCode 201:此class沒有可被申請的週期
-                    return jsonify({"periodList":"","quotaList":"","rspcode":"201"})
+                    return jsonify({"periodList":"","quotaList":"","rspCode":"201"})
         else:
             return jsonify({"periodList":"","quotaList":"","rspCode":"300"})
     except:
@@ -1724,9 +1725,7 @@ def updateConditionSA():
 #回傳rspCode,notAllow
 @test.route("/USER/add_apply", methods = ['POST'])
 def user_add_apply():
-    #print(request.values['applyFrequency'], request.values['applyPeriod'], request.values['applyReason'], request.values['class'])
     try:
-        
         if request.method == 'POST':
             notAllow = []
             userID = session.get('userID')
@@ -1792,7 +1791,7 @@ def user_add_apply():
                         originFileName = '{}'.format(file.filename)
                         num = str(db.engine.execute(find_max_applyId_by_user_ID(userID)).fetchone()[0])
                         os.makedirs(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num))
-                        fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(num,num),'w',encoding="utf-8")
+                        fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(num,num), 'w', encoding="utf-8")
                         fileTxt.write(file.filename)
                         fileTxt.close()
                         #儲存檔案到指定位置

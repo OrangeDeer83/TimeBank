@@ -1,5 +1,9 @@
-#python快取
+﻿#python快取
 __pycache__/
 
 #密碼
 config.py
+
+*.pdf
+
+*.txt

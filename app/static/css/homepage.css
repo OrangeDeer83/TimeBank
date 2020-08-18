@@ -1,0 +1,221 @@
+@charset "utf-8";
+/* homepage, portal除了carousel的外觀 */
+
+/* 按鈕-最新消息及網站介紹 */
+
+.formButton
+{
+    margin-top: 50px;
+}
+
+.formButton button
+{
+    margin: auto;
+    height: 50px;
+    font-size: 20px;
+    background-color: #B8D8BA;
+    border-radius: 1px;
+    border: 1px solid #84A98C;
+    color: white;
+    padding: 10px 24px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.formButton button:not(:last-child)        /* 防止雙重border */
+{
+    border-right: none;
+}
+
+.formButton button:hover
+{
+    background-color: #5E86C1;
+    color: #CBF3F0;
+}
+
+.newsDiv
+{
+    margin: auto;
+    height: 500px;
+    background-color: #D0EDE2;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    padding: 20px;
+}
+
+.formContainer
+{
+    margin: auto;
+    width: 80vw;
+    display: block;
+}
+
+.formTitle
+{
+    padding: 10px 0 20px;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.formNewsTitle, .newsImgDiv, .formNewsContent
+{
+    background-color: white;
+    border: 1px solid #CCCCCC;
+}
+
+.newsTitle
+{
+    margin: 0 0 1px;
+    width: 100%;
+    word-wrap: break-word; 
+    word-break: normal;
+    overflow: auto;
+    border: 1px solid #CCCCCC;
+    padding: 2px;
+}
+
+.newsDetail
+{
+    width: 100%;
+    height: 200px;
+}
+
+.formNewsImg
+{
+    width: 24vw;
+    height: 200px;
+    display: inline-block;
+}
+
+.newsImgDiv
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#newsImg
+{
+    max-width: 100%;
+    max-height: 100%;
+    display: flex;
+}
+
+.formNewsContent
+{
+    width: 56vw;
+    height: 200px;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word; 
+    word-break: normal;
+    overflow: auto;
+}
+
+.newsContent
+{
+    padding: 10px;
+    width: 100%;
+    height: 193px;
+    background-color: white;
+    font-size: 18px;
+    resize: none;
+    border: none;
+}
+
+#introductionContainer
+{
+    display: none;
+}
+
+.introduction
+{
+    padding: 10px;
+    width: 100%;
+    height: 347px;
+    background-color: white;
+    font-size: 18px;
+    resize: none;
+    border: none;
+}
+
+.formPage
+{
+    margin-top: 10px;
+    width: 80vw;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton
+{
+    margin: auto;
+    height: 30px;
+    color: black;
+    background-color: #D0EDE2;
+    border-color: white;
+    border: 1px solid #D0EDE2;
+    padding: 5px;
+}
+
+#footerDiv
+{
+    padding: 10px 0;
+    background-color: #293F66;
+    color: white;
+}
+
+#footerDiv
+{
+    text-align: center;
+}
+
+.footerLinks
+{
+    list-style: none;
+}
+
+.footerLinks > li
+{
+    display: inline;
+}
+
+#time, #address
+{
+    display: inline;
+}
+
+.footerA
+{
+    color: rgb(253, 179, 179);
+}
+
+@media(min-width: 900px)
+{
+    .formButton button
+    {
+        width: 17%;
+    }
+
+}
+
+@media(max-width: 899px)
+{
+    .formButton button
+    {
+        width: 150px;
+    }
+
+}
+
+@media(max-width: 500px)
+{
+    .formButton button
+    {
+        width: 50%;
+    }
+}

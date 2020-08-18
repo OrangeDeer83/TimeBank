@@ -42,3 +42,34 @@ function clickToSpan(name)
         console.log("Hide.");
     }
 }
+
+// Function for logout
+const logoutButton = document.getElementById("logout");
+logoutButton.addEventListener("click", logout);
+function logout()
+{
+    var request;
+    if (window.XMLHttpRequest)
+            request = new XMLHttpRequest();
+    else // Old IE browser.
+        request = new ActiveXObject("Microsoft.XMLHTTP");
+
+    request.open("GET", "http://192.168.1.146:5000/logout");
+
+    if (request.readyState == 4 && request.status == 200)
+    {
+        console.log(request.responseText);
+        rst = JSON.parse(request.responseText);
+
+        if (rst.rspCode == "200" || rst.rspCode == 200)
+        {
+            console.log("Logout success");
+
+        }
+        else
+        {
+            alert("Error! Logout failed!");
+        }
+    }
+    return false;
+}

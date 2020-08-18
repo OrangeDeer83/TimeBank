@@ -1,0 +1,218 @@
+@charset "utf-8";
+
+/* 個人頁面介面 */
+
+/*個人簡介*/
+.myselfBackground
+{
+	 background-color: white;
+}
+.personal
+{
+	overflow: auto;
+	line-height:20px;	
+	background-color: white;
+}
+.picturePart
+{
+	margin-top:10px;
+}
+#profilePicture
+{
+	width: 85%;
+	border-radius: 50%;
+	display:table-cell;
+	margin: auto;
+}
+.introduce
+{
+	margin-top:20px; 
+}
+
+/*頁面轉換按鈕*/
+.tabs,.tabs .tabOne
+{
+	list-style-type:none;
+ 	float:left;
+}
+.tabPartMyself
+{
+	overflow: auto;
+}
+.tabs
+{
+	padding-left: 0;
+	margin-bottom: 0;
+	font-size: 1.2rem;
+}
+.tabOne
+{
+	padding:5px;
+	margin-bottom: 4px;
+}
+.tabOne a:hover
+{
+	color: #05439e;
+	border-bottom: 2px solid #a92c07;
+}
+
+/*資訊表格*/
+#task,#SR,#SP
+{
+	background-color: #787f86;
+}
+
+#task td, #task th ,#SR td,#SR th,#SP td,#SP th
+{
+	border: 1px ridge #ddd;
+	padding: 10px;
+}
+#task td, #SR td,#SP td
+{
+	background-color: #787f86;
+	color: white;
+}
+.bottonTask
+{
+	border: 2px solid white;
+	text-align: center;
+	border-radius: 5px;
+}
+.bottonTask:hover
+{
+	border: 2px solid #787f86;
+	background-color: white;
+	color:#787f86;
+}
+.point
+{
+	float: left;
+}
+.bottonTask
+{
+	float: right;
+	cursor: pointer;
+	padding: 2px;
+	width: 60px;
+}
+
+
+.bodyContainer
+{
+	margin-top: 50px;
+	position: relative;
+}
+
+.formPage
+{
+    margin: auto;
+    margin-top: 10px;
+    width: 80vw;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton
+{
+    margin: auto;
+    height: 30px;
+    color: black;
+    background-color: #ADADC1;
+    border-color: white;
+    border: 1px solid #DEE2FF;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/*RWD*/
+@media (max-width: 399px)
+{
+	/*寬度*/
+	.tabPartMyself,#task,#SP,#SR
+	{
+		width: 100%;
+	}
+
+	/*個人簡介*/
+	.picturePart
+	{
+		width: 40%;
+		padding: 10px;
+		position: relative;
+		top: calc(50% - 64px);
+	}
+	.introduce
+	{
+		width: 60%;
+		line-height:22px;
+	}
+	.name,.sex,.age,.inform
+	{
+		font-size: 1.1rem;
+		margin-bottom: 2px;
+	}
+	.text
+	{
+		font-size: 0.9rem;
+	}
+
+	/*頁面轉換按鈕*/
+	.tabPartMyself
+	{
+		margin-bottom: 3px;
+		border-bottom: 1.5px solid #736d6d;
+	}
+}
+@media (min-width: 400px)
+{
+	/*寬度*/
+	.tabPartMyself,#task,#SP,#SR
+	{
+		width: 75%;
+		margin: auto;
+	}
+
+	/*個人簡介*/
+	.personal
+	{
+		width: 85%;
+		margin: auto;
+		padding: 8px;
+	}
+	.picturePart
+	{
+		width: 20%;
+		padding: 10px;
+		position: relative;
+		top: calc(50%+64px);
+	}
+	.introduce
+	{
+		width: 70%;
+		padding-left: 15px;
+		line-height:50px;
+	}
+	.name,.sex,.age,.inform
+	{
+		font-size: 1.8rem;
+		margin-bottom: 2px;
+	}
+	.text
+	{
+		font-size: 1.6rem;
+	}
+
+	/*頁面轉換按鈕*/
+	.tabs
+	{
+		margin-top:40px;
+		font-size: 1.3rem;
+	}
+	.tabPartMyself
+	{
+		margin-bottom: 6px;
+		border-bottom: 2px solid #736d6d;
+	}
+}

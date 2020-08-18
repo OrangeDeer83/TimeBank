@@ -49,52 +49,44 @@ function forgotPasswordEmail()
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
     request.open("POST", "http://192.168.1.146:5000/test/USER/forgot_password");
-    request.onreadystatechange = function()
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send(JSON.stringify({"userMail": userEmail.value}));
+    request.onload = function()
     {
-        if (request.readyState == 4 && request.status == 200)
+        console.log(request.responseText);
+        rst = JSON.parse(request.responseText);
+        switch (rst.rspCode)
         {
-            request.setRequestHeader("Content-Type", "application/json");
-            request.send(JSON.stringify({"userMail": userEmail.value}));
-            console.log(request.responseText);
-            rst = JSON.parse(request.responseText);
-
-            request.onload = function()
-            {
-                switch (rst.rspCode)
-                {
-                    case "200": case 200: // Email send success.
-                        console.log("Email send success!");
-                        window.location.assign("");
-                        return true;
-                    case "300": case 300: // Method wrong.
-                    case "400": case 400: // Database wrong.
-                        systemError1.style.display = "block";
-                        return false;
-                    case "401": case 401: // Length of email is illegal.
-                        userEmail.style.border = "1px solid red";
-                        emailError1.style.display = "block";
-                        userEmail.focus();
-                        return false;
-                    case "402": case 402: // Format of email os illegal.
-                        userEmail.style.border = "1px solid red";
-                        emailError2.style.display = "block";
-                        userEmail.focus();
-                        return false;
-                    case "403": case 403: // Didn't find the user of this email.
-                        userEmail.style.border = "1px solid red";
-                        emailError3.style.display = "block";
-                        userEmail.focus();
-                        return false;
-                    case "404": case 404: // Reset mail send failed.
-                        systemError2.style.display = "block";
-                        return false;
-                    default:
-                        systemError1.style.display = "block";
-                        return false;
-                }
-            }
+            case "200": case 200: // Email send success.
+                console.log("Email send success!");
+                window.location.assign("");
+                return true;
+            case "300": case 300: // Method wrong.
+            case "400": case 400: // Database wrong.
+                systemError1.style.display = "block";
+                return false;
+            case "401": case 401: // Length of email is illegal.
+                userEmail.style.border = "1px solid red";
+                emailError1.style.display = "block";
+                userEmail.focus();
+                return false;
+            case "402": case 402: // Format of email os illegal.
+                userEmail.style.border = "1px solid red";
+                emailError2.style.display = "block";
+                userEmail.focus();
+                return false;
+            case "403": case 403: // Didn't find the user of this email.
+                userEmail.style.border = "1px solid red";
+                emailError3.style.display = "block";
+                userEmail.focus();
+                return false;
+            case "404": case 404: // Reset mail send failed.
+                systemError2.style.display = "block";
+                return false;
+            default:
+                systemError1.style.display = "block";
+                return false;
         }
     }
-    systemError1.style.display = "block";
     return false;
 }

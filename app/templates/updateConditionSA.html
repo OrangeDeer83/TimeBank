@@ -11,12 +11,9 @@
             <meta name="dcterms.dateCopyrighted" content="2020" />
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-            <!-- <link rel="stylesheet" href="../static/css/common.css" type="text/css"> -->
-            <!-- <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css"> -->
-            <!-- <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css"> -->
-            <!-- <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css"> -->
-            <!-- <link rel="stylesheet" href="../static/css/updateCondition.css" type="text/css"> -->
-            <!-- <link rel="stylesheet" href="{{url_for('static', filename='css/updateCondition.css')}}" type="text/css"> -->
+            <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+            <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
+            <link rel="stylesheet" href="../static/css/updateCondition.css" type="text/css">
     </head>
 
     <body>
@@ -42,8 +39,7 @@
                     </div>
                     <div class="navbarCenter">
                         <div class="navbarBrand">
-                            <!-- <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="../static/img/SAWhite.png" /> -->
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="../static/img/SAWhite.png" />
                             <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="../static/img/SAColor.png" />
                         </div>
                     </div>
@@ -60,7 +56,7 @@
                     <div class="formLine">
                         <div class="formLine1">
                             <div class="formLabelDiv"><label for="group" class="formLabel">申請對象：</label></div>
-                            <input type="text" class="formText" id="group" name="group" placeholder="無生活能力之特殊需求族群">
+                            <input type="text" class="formText" id="group" name="group" placeholder="請輸入申請對象，如：無生活能力之特殊需求族群">
                         </div>
                         <div class="formLine1">
                             <input type="button" class="formSave" id="formSave1" onclick="updateGroup()" value="儲存" />
@@ -87,13 +83,7 @@
                         <div class="formLine4" id="oldClassDiv">
                             <select class="quota" id="userClass">
                                 <option value="classify" disabled selected hidden>請選擇類別</option>
-                            </select>
-                            <!-- <select class="quota" id="userClass">
-                                <option value="classify" disabled selected hidden>選擇類別</option>
-                                <option value="slight">輕度</option>
-                                <option value="mild">中度</option>
-                                <option value="severe">重度</option>
-                            </select>    -->
+                            </select>   
                             <input type="button" class="formSave" onclick="deleteClass()" value="刪除類別" />
                             <input type="button" class="formSave" onclick="showAddClass()" value="新增類別" />
                         </div>
@@ -145,11 +135,8 @@
                 </form>
             </div>
         </div>
-        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <!-- <script src="../static/js/clickToSpan.js"></script> -->
-        <script src="{{url_for('static', filename='js/updateCondition.js')}}"></script>
-        <!-- <script src="../static/js/updateCondition.js"></script> -->
-        
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/updateCondition.js"></script>
     </body>
 
 </html>

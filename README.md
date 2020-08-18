@@ -821,6 +821,10 @@ response:
 			taskStatus: "",
 			taskSP: "",			(name需要ID再跟我說)
 			taskSR: ""			(name需要ID再跟我說)
+			SPScore, ""
+			SPComment: "",
+			SRScore, ""
+			SRComment: "",
 		}
 	]
 }
@@ -864,7 +868,7 @@ response:
 # API 35 - Output SP Task Checking
 ### POST
 #### 取得SP審核中的任務
-#### path : /test/Sp/output/Checking
+#### path : /test/SP/output/Checking
 ```
 request:
 
@@ -953,6 +957,10 @@ response:
 			taskStatus: "",
 			taskSP: "",			(name需要ID再跟我說)
 			taskSR: ""			(name需要ID再跟我說)
+			SPScore, ""
+			SPComment: "",
+			SRScore, ""
+			SRComment: "",
 		}
 	]
 }

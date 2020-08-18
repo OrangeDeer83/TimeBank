@@ -978,10 +978,15 @@ def SR_output_record():
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
+            SPScore = task.db_task_comment[0].SPComment[0]
+            SPComment = task.db_task_comment[0].SPComment[2:]
+            SRScore = task.db_task_comment[0].SRComment[0]
+            SRComment = task.db_task_comment[0].SRComment[2:]
             taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                    "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
         return jsonify({"rspCode": "200", "taskRecord": taskRecordJson})                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskRecord": ""})                                        #method使用錯誤
@@ -1071,22 +1076,28 @@ def SP_output_record():
     if request.method == 'POST':
         userID = request.get_json()['userID']
         try:
-            query_data = taskCandidate.query.filter_by(userID = userID).order_by(taskCandidate.taskID).all()
+            query_data = account.query.filter_by(userID = userID).first()
             if query_data == None:
-                return jsonify({"rspCode": "401", "taskRefused": ""})                                              #userID錯誤
+                return jsonify({"rspCode": "401", "taskRecord": ""})                                              #userID錯誤
         except:
-            return jsonify({"rspCode": "400", "taskRefused": ""})                                                  #資料庫錯誤
+            return jsonify({"rspCode": "400", "taskRecord": ""})                                                  #資料庫錯誤
+        
         taskRecord = []
-        for candidate in query_data:
-            if candidate.task.taskStatus >= 2 and candidate.task.SP[0].userID == userID:
-                taskRecord.append(candidate.task)
+        for task in query_data.taskSP:
+            if task.taskStatus  not in [0, 1, 2]:
+                taskRecord.append(task)
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
+            SPScore = task.db_task_comment[0].SPComment[0]
+            SPComment = task.db_task_comment[0].SPComment[2:]
+            SRScore = task.db_task_comment[0].SRComment[0]
+            SRComment = task.db_task_comment[0].SRComment[2:]
             taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                    "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
         return jsonify({"rpsCode": "200", "taskRecord": taskRecordJson})                                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskRecord": ""})                                                     #method使用錯誤
@@ -1114,68 +1125,18 @@ def output_task():
         return jsonify({"rspCode": "200", "taskWaiting": taskWaitingJson})                                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskWaiting": ""})                                                    #method使用錯誤
-
-
-@test.route('/sql_test')
-def sql_test():
-    query = adminAccount.query.filter(adminAccount.adminName == 'Tom').first()
-    print(query.adminType)
-
-@test.route('/USER/mail', methods=['POST'])
-def delete():
-    
-    return 'ok'
-
-@test.route('/login_USER_page')
-def login_USER_page():
-    if not (session.get('userID')):
-        return render_template('navbarVisitor.html')
-    else:
-        return redirect('/info/' + session.get('userID'))
-
-@test.route('/register_page')
-def register_page():
-    return render_template('registerUser.html')
-
-@test.route('/')
-def directory():
-    return render_template('test/directory.html')
-
-@test.route('/info')
-def info():
-    userName =session.get('userName') 
-    if not userName:   
-        return redirect(url_for('login_USER_page'))
-    else:
-        return render_template('test/directory.html', welcome = '歡迎' + userName)
-
-@test.route('/upload_js_page')
-def upload_js_page():
-    return render_template('test/upload_js.html')
-
-@test.route('/upload_html_page')
-def upload_html_page():
-    return render_template('test/upload_html.html')
-
-@test.route('/upload_css_page')
-def upload_css_page():
-    return render_template('test/upload_css.html')
-
-@test.route('/upload_img_page')
-def upload_img_page():
-    return render_template('test/upload_img.html')
-
-@test.route('/forget_password_page')
-def forget_password_page():
-    return render_template('forgotPasswordUser.html')
-
-@test.route('/USER/reset_password_page/<token>')
-def reset_password_page(token):
-    print(token)
-    if validate_token(current_app.config['SECRET_KEY'], token):
-        return render_template('resetPassword.html')
-    else:
-        return "該網頁已過期"
+'''
+#取得個人頁面雇主評分
+@test.route('/output/SRComment', methods=['POST'])
+def output_SR_comment():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "401"})                                      #非法字元
+        userID = value['userID']
+        try:
+            query_data = account.query.filter_by()'''
 
 
 ######################################################

@@ -1,0 +1,99 @@
+@charset "utf-8";
+/* 入口網站之滑動式圖片外觀設計 */
+
+.carousel
+{
+    position: relative;
+    height: 53vw;
+    width: 80vw;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.carouselImg
+{
+    max-width: 80vw;
+    margin: auto;
+    object-fit: cover;
+}
+
+.carouselContainer
+{
+    height: 100%;
+    overflow: hidden;
+}
+
+.carouselTrack
+{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    position: relative;
+    height: 100%;
+    transition: transform 250ms linear;
+}
+
+.carouselSlide
+{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.carouselButtonDiv
+{
+    position: absolute;
+    transform: translateY(-50%);
+    background: transparent;
+    height: 100%;
+}
+
+.carouselButtonDivLeft
+{
+    left: -50px;
+}
+
+.carouselButtonDivRight
+{
+    right: -50px;
+}
+
+.carouselButton
+{
+    top: 50%;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    border-radius: 5px;
+    font-size: 40px;
+    color: white;
+}
+
+.carouselButton:hover
+{
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.carouselNav
+{
+    z-index:50;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.carouselIndicator
+{
+    border: 0;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    background: rgba(0, 0, 0, .3);
+    margin: 0 10px;
+}
+
+.carouselIndicator.currentSlide
+{
+    background: rgba(0, 0, 0, .7);
+}

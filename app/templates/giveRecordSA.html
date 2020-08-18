@@ -1,0 +1,442 @@
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>配發紀錄</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        
+        <link rel="stylesheet" href="../static/css/givePoint.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
+
+    </head>
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown">
+                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
+                                <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                    <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
+                                    <div class="unspanned" id="HRSpan">
+                                        <div class="dropdownMenuItem HRSpanItem"><a href="humanResourceManagementSystem.html">系統管理員</a></div>
+                                        <div class="dropdownMenuItem HRSpanItem"><a href="humanResourceManagementGM.html">評論管理員</a></div>
+                                    </div>
+                                    <li><a href="sendPointSystem.html" class="dropdownMenuItem">配發系統</a></li>
+                                    <li><a href="approveSystem.html" class="dropdownMenuItem">核准系統</a></li>
+                                    <li><a href="updateCondition.html" class="dropdownMenuItem">更新申請條件</a></li>
+                                    <li><a href="updateWeb.html" class="dropdownMenuItem">更新入口網站</a></li>
+                                    <li><a href="settingManager.html" class="dropdownMenuItem">設定</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <div class="navbarBrand">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="../static/img/SAWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="../static/img/SAColor.png" />
+                        </div>
+                    </div>
+                    <div class="navbarRight">
+                        <div class="navbarUl" id="logout">登出</div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="bodyContainer">
+            <div class="tabsPart">
+                <ul class="tabs">
+                        <li class="tabOne"><a href="givePointSA.html" target="_self" >配發點數</a></li>
+                        <li class="tabOne" id="tabTwo"><a href="giveRecordSA.html" target="_self" class="thisPage">配發紀錄</a></li>
+                </ul>
+            </div>
+            <div class="searchPart"></div>
+            <div class="tablePart">
+                <table id="giveTable">
+                    <tr><td> 
+                        <div id="searchImg">&#128269</div>
+                        <select id="searchType">
+                            <option value="userName">使用者名稱</option>
+                            <option value="name">名稱</option>
+                        </select>
+                        <div class="enterName" id="searchText"><input type="text" placeholder="輸入名稱或使用者名稱"></div>
+                        <div class="search"><input type="submit" value="搜尋" onclick="search()"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="title1">使用者名稱：</div>
+                                <div class="word" id="userName0">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="title1">雇主評分：</div>
+                                <div class="word" id="scoreSR0">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="title1">雇員評分：</div>
+                                <div class="word" id="scoreSP0">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota0">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date0">2020/07/31</div>
+                                <div class="time" id="time0">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period0">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times0">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name"  id="userName1">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR1">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP1">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota1">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date1">2020/07/31</div>
+                                <div class="time" id="time1">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period1">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times1">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName2">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR2">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP2">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota2">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date2">2020/07/31</div>
+                                <div class="time" id="time2">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period2">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times2">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName3">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR3">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP3">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota3">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date3">2020/07/31</div>
+                                <div class="time" id="time3">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period3">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times3">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName4">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR4">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP4">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota4">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date4">2020/07/31</div>
+                                <div class="time" id="time4">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period4">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times4">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName5">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR5">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP5">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota5">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date5">2020/07/31</div>
+                                <div class="time" id="time5">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period5">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times5">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName6">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR6">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP6">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota6">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date6">2020/07/31</div>
+                                <div class="time" id="time6">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period6">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times6">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName7">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR7">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP7">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota7">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date7">2020/07/31</div>
+                                <div class="time" id="time7">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period7">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times7">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName8">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR8">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP8">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota8">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date8">2020/07/31</div>
+                                <div class="time" id="time8">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period8">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times8">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                    <tr><td>
+                        <div class="introductionLeft">
+                            <div class="total">
+                                <div class="nameTitle">使用者名稱：</div>
+                                <div class="name" id="userName9">jason917</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSRTitle">雇主評分：</div>
+                                <div class="scoreSR" id="scoreSR9">4.3</div>
+                            </div>
+                            <div class="total">
+                                <div class="scoreSPTitle">雇員評分：</div>
+                                <div class="scoreSP" id="scoreSP9">4.7</div>
+                            </div>
+                        </div>
+                        <div class="introductionRight">
+                            <div class="total">
+                                <div class="title">配發額度：</div>
+                                <div class="context" id="quota9">2點</div>
+                            </div>
+                            <div class="total">
+                                <div class="timeTitle">配發時間：</div>
+                                <div class="date" id="date9">2020/07/31</div>
+                                <div class="time" id="time9">10:21</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發週期：</div>
+                                <div class="context" id="period9">一個月一次</div>
+                            </div>
+                            <div class="total">
+                                <div class="title">配發次數：</div>
+                                <div class="context" id="times9">12次</div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </td></tr>
+                </table>
+            </div>
+            <div class="formPage">
+                <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                <span class="formPageNumber" id="pageNumber">1/1</span>
+                <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+            </div>
+        </div>
+        <script src="../static/js/givePoint.js"></script>
+        <script src="../static/js/clickToSpan.js"></script>
+    </body>
+</html>

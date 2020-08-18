@@ -1,0 +1,146 @@
+@charset "utf-8";
+
+/* User/GM註冊介面 */
+
+.registerDiv
+{
+    padding: 30px 0;
+}
+
+#formTitle
+{
+    margin: 10px 0;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.formColumn
+{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.formLine
+{
+    padding-top: 20px;
+}
+
+.formText
+{
+    vertical-align: middle;
+    text-align: left;
+    height: 30px;
+    width: 300px;
+    outline: none;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+}
+
+.formRadios
+{
+    vertical-align: middle;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.radioText
+{
+    margin: 0 30px 0 10px;
+}
+
+.formButton
+{
+    margin: 0px 10px;
+    width: 80px;
+    height: 30px;
+    background-color: #293F66;
+    color: white;
+    border-radius: 3px;
+    transition: .5s;
+}
+
+.formButton:hover
+{
+    background-color: #5E86C1;
+}
+
+.error
+{
+    top: 100%;
+    padding: 5px 0;
+    color: #c62828;
+    background-color: rgba(255,0,0,0.1);
+    text-align: center;
+    font-size: 14px;
+    display: none;
+}
+
+@media (min-width: 800px)
+{
+    .registerDiv
+    {
+        width: 500px;
+        background-color: #293F66;
+        color: white;
+        margin: auto;
+        border-radius: 12px;
+    }
+    .formLabelDiv, .formTextDiv
+    {
+        display: inline-block;
+    }
+    .formLabelDiv
+    {
+        width: 85px;
+        margin-right: 15px;
+        text-align: right;
+    }
+    .formText
+    {
+        padding-left: 5px;
+    }
+    .formRadios
+    {
+        display: inline-block;
+        text-align: left;
+        width: 300px;
+    }
+    .formButton
+    {
+        border: 1px solid #5E86C1;
+    }
+    .error
+    {
+        margin: 0 50px 0 150px;
+    }
+}
+
+@media (min-height: 580px)
+{
+    .registerDiv
+    {
+        margin-top: calc(50vh - 300px);
+    }
+}
+
+@media (max-width: 799px)
+{
+    .registerDiv
+    {
+        margin: 50px 0 0;
+        border: 0px;
+    }
+    .formText
+    {
+        text-align: center;
+    }
+    .formRadios
+    {
+        padding-top: 10px;
+    }
+    .error
+    {
+        margin: 0 calc(50vw - 150px);
+    }
+}

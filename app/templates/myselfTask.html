@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>個人頁面</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link rel="stylesheet" href="../static/css/myself.css" type="text/css">
+    <link rel="stylesheet" href="../static/css/navbarUser.css">
+    <link rel="stylesheet" href="../static/css/common.css">
+</head>
+<body>
+    <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown menuIconBack">
+                            <a href="#"><div class="menuIcon"></div></a>
+                            <ul class="dropdownMenu dropdownMenuLeft">
+                                <li class="hiddenLarge">
+                                    <a class="point" href="point.html">
+                                        <img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />
+                                        目前沒有點數
+                                    </a>
+                                </li>
+                                <li><a href="allTask.html">所有任務</a></li>
+                                <li><a href="createTask.html">新增任務</a></li>
+                                <li><a href="schedule.html">行事曆</a></li>
+                                <li><a href="application.html">點數申請</a></li>
+                                <li><a href="setting.html">設定</a></li>
+                                <li><a href="#">登出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <a class="navbarBrand" href="homepage.html"> <!--"portal.html":before login-->
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
+                        </a>
+                    </div>
+                    <div class="navbarRight">
+                        <ul class="nav navbarUl">
+                            <li class="dropdown">
+                                <a href="">通知</a>
+                                <ul class="dropdownMenu dropdownMenuRight">
+                                    <li><a href="#"><div>First</div></a></li>
+                                    <li><a href="#"><div>Second</div></a></li>
+                                    <li><a href="#"><div>Third</div></a></li>
+                                    <li><a href="#"><div>Fourth</div></a></li>
+                                    <li><a href="#"><div>Fifth</div></a></li>
+                                    <li><a href="#"><div>Sixth</div></a></li>
+                                    <li><a href="#"><div>Seventh</div></a></li>
+                                    <li><a href="#"><div>Eighth</div></a></li>
+                                    <li><a href="#"><div>Nineth</div></a></li>
+                                    <li><a href="#"><div>Tenth</div></a></li>
+                                </ul>
+                            </li>
+                            <li class="hiddenSmall">
+                                <a class="point" href="point.html">
+                                    <img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />
+                                    目前沒有點數
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="navbarPortrait" href="personal.html">
+                            <img class="navbarPortraitImg" alt="Portrait" src="../static/img/portrait1.jpg" />
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="bodyContainer">
+            <div class="myselfBackground">
+                <div class="personal">
+                    <div style class="picturePart"><img id="profilePicture" src="../static/img/sheep.jpg" alt="個人照片" /></div>
+                    <div class="introduce">
+                        <div class="name" id="name">名稱：Jason</div>
+                        <div class="sex" id="gender">性別：男</div>
+                        <div class="age" id="age">年齡：21</div>
+                        <div class="inform">個人簡介：
+                            <div class="text" id="profile">
+                                我叫Jason，今年大四，喜歡修電腦，請多多指教。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" tabPartMyself">
+                <ul class="tabs">
+                    <li class="tabOne"><a href="myselfTask.html" target="_self">已發任務</a></li>
+                    <li class="tabOne"><a href="myselfSR.html" target="_self">雇主評分</a></li>
+                    <li class="tabOne"><a href="myselfSP.html" target="_self">雇員評分</a></li>
+                </ul>
+            </div>
+
+            <div class="taskPart">
+                <table id="task">
+                    <tr id="taskList0"><td>
+                        <div id="taskName0">任務名稱：</div>
+                        <div id="taskTime0">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota0">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(0)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList1"><td>
+                        <div id="taskName1">任務名稱：</div>
+                        <div id="taskTime1">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota1">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(1)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList2"><td>
+                        <div id="taskName2">任務名稱：</div>
+                        <div id="taskTime2">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota2">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(2)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList3"><td>
+                        <div id="taskName3">任務名稱：</div>
+                        <div id="taskTime3">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota3">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(3)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList4"><td>
+                        <div id="taskName4">任務名稱：</div>
+                        <div id="taskTime4">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota4">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(4)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList5"><td>
+                        <div id="taskName5">任務名稱：</div>
+                        <div id="taskTime5">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota5">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(5)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList6"><td>
+                        <div id="taskName6">任務名稱：</div>
+                        <div id="taskTime6">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota6">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(6)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList7"><td>
+                        <div id="taskName7">任務名稱：</div>
+                        <div id="taskTime7">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota7">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(7)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList8"><td>
+                        <div id="taskName8">任務名稱：</div>
+                        <div id="taskTime8">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota8">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(8)">接任務</div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList9"><td>
+                        <div id="taskName9">任務名稱：</div>
+                        <div id="taskTime9">任務時間：</div>
+                        <div class="taskBottom">
+                            <div class="point" id="taskQuota9">任務點數：</div>
+                            <div class="bottonTask" onclick="takeTask(9)">接任務</div>
+                        </div>
+                    </td></tr>
+                </table>
+            </div>
+            <div class="formPage">
+                <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                <span class="formPageNumber" id="pageNumber">1/1</span>
+                <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+            </div>
+        </div>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/myself.js"></script>
+    </body>
+</html>

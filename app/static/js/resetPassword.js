@@ -20,7 +20,7 @@ function getToken()
     var i = 0;
     while (i != location.length)
     {
-        if (location[i] != "/" || location != "?")
+        if (location[i] != "/" && location != "?")
             token += location[i];
         else
             token = "";
@@ -96,38 +96,31 @@ function resetPassword()
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
     request.open("POST", "http://192.168.1.146:5000/test/USER/reset_password/" + getToken());
-    request.onreadystatechange = function()
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send(JSON.stringify({"userPassword": newPassword.value}));
+    request.onload = function()
     {
-        if (request.readyState == 4 && request.status == 200)
+        console.log(request.responseText);
+        rst = JSON.parse(request.responseText);
+        switch (rst.rspCpde)
         {
-            request.setRequestHeader("Content-Type", "application/json");
-            request.send(JSON.stringify({"userPassword": newPassword.value}));
-            console.log(request.responseText);
-            rst = JSON.parse(request.responseText);
-
-            request.onload = function()
-            {
-                switch (rst.rspCpde)
-                {
-                    case "200": case 200: // Reset password success.
-                        console.log("Reset password success.");
-                        window.location.assign("");
-                        return true;
-                    case "300": case 300: // Method wrong.
-                    case "400": case 400: // Database wrong.
-                    case "401": case 401: // Token wrong.
-                        systemError.style.display = "block";
-                        return false;
-                    case "402": case 402: // Format of password is illegal.
-                        newPassword.style.border = "1px solid red";
-                        passwordError1.style.display = "block";
-                        newPassword.focus();
-                        return false;
-                    default: return false;
-                }
-            }
+            case "200": case 200: // Reset password success.
+                console.log("Reset password success.");
+                alert("密碼更新成功");
+                window.location.assign("");
+                return true;
+            case "300": case 300: // Method wrong.
+            case "400": case 400: // Database wrong.
+            case "401": case 401: // Token wrong.
+                systemError.style.display = "block";
+                return false;
+            case "402": case 402: // Format of password is illegal.
+                newPassword.style.border = "1px solid red";
+                passwordError1.style.display = "block";
+                newPassword.focus();
+                return false;
+            default: return false;
         }
     }
-    systemError.style.display = "block";
     return false;
 }

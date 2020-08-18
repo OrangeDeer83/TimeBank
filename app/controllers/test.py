@@ -2404,11 +2404,15 @@ def SR_add_task():
     addTask.SR=[SR]
     db.session.add(addTask) 
     db.session.commit()
+    comment_ = comment(taskID = addTask.taskID, SRComment = None, SPComment = None, commentStatus = -3, adminID = None)
+    db.session.add(comment_)
+    db.session.commit()
     task_ID = addTask.taskID
     db.engine.execute(task_status_4_dead_line(task_ID,newTaskStartTime))
     db.engine.execute(task_status_5_dead_line(task_ID,newTaskEndTime))
+    EndTime = str(addTask.taskEndTime + datetime.timedelta(days=1))
+    db.engine.execute(commeny_status_0(task_ID,EndTime))
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
-
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
 @test.route('/SP/output/task_can_be_taken', methods = ['POST'])

@@ -1871,7 +1871,7 @@ response:
 # 33.雇主刪除任務
 ### POST	
 #### 雇主可刪除還沒有SP的任務
-#### path : /test/SR/output/accept
+#### path : /test/SR/delete_task
 ```
 request:
 
@@ -1934,7 +1934,7 @@ response:
 # 36.完成或未完成 
 ### POST	
 #### SP、SR共用
-#### path : /test/task_finish_or_not	
+#### path : /test/task_finish_or_not
 ```
 request:
 
@@ -1957,7 +1957,7 @@ response:
 # 38.評論資料顯示 
 ### POST	
 #### SP、SR共用 顯示用戶評論時需要看到的資料
-#### path : /test/output/notice_comment	
+#### path : /test/output/notice_comment
 ```
 request:
 
@@ -2041,7 +2041,7 @@ response:
 # 41.GM審核評論動作 
 ### GET	
 #### 不須傳值
-#### path : /test/GM/judge_commentaction
+#### path : /test/judge_commentaction
 ```
 request:
 

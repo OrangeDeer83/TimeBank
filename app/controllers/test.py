@@ -1218,17 +1218,21 @@ def upload_news():
         #檢查values是否為空
         if title == '' or content == '' or fileImage.filename == '':
             #rspCode 400:標題,內文,圖片有空值
-            return jsonify({"rspCode" : "400"})
+            #return jsonify({"rspCode" : "400"})
+            return redirect(url_for('Admin.SA_update_web'))
+            
         #檢查tittle有沒有太大
         if len(title) > 30:
             #rspCode 405:title太長
-            return ({"rspCode":"405"})
+            #return ({"rspCode":"405"})
+            return redirect(url_for('Admin.SA_update_web'))
         time = str(datetime.datetime.now()).rsplit('.',1)[0]
         try:
             db.engine.execute(insert_news(title,time))
         except:
             #rspCode 404:標題上傳錯誤
-            return jsonify({"rspCode":"404"})
+            #return jsonify({"rspCode":"404"})
+            return redirect(url_for('Admin.SA_update_web'))
         #目前預設傳來的圖片叫做file,允許jpg,gpeg,png
         #檢查fileImage
         if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
@@ -1239,23 +1243,29 @@ def upload_news():
                 fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsImage/' , filename))
             except:
                 #rspCode 402:圖片上傳錯誤
-                return jsonify({"rspCode":"402"})
+                #return jsonify({"rspCode":"402"})
+                return redirect(url_for('Admin.SA_update_web'))
+             
         else:   
             #rspCode 401:圖片檔名錯誤
-            return jsonify({"rspCode" : "401"})
+            #return jsonify({"rspCode" : "401"})
+            return redirect(url_for('Admin.SA_update_web'))
         try:    
             #內文上傳
-            fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt'
-            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w', encoding="utf-8")
+            fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
+            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w')
             fileContent.write(content)
             fileContent.close()
-            return jsonify({"rspCode":"200"})
+            #return jsonify({"rspCode":"200"})
+            return redirect(url_for('Admin.SA_update_web'))
         except:
             file.close()
             #rspCode 403:內文上傳錯誤
-            return jsonify({"rspCode":"403"})
+            #return jsonify({"rspCode":"403"})
+            return redirect(url_for('Admin.SA_update_web'))
     else:
-        return jsonify({"repCode":"300"})
+        #return jsonify({"repCode":"300"})
+        return redirect(url_for('Admin.SA_update_web'))
 
 #最新資訊圖片顯示
 #在網址帶入要顯示的編號
@@ -1321,9 +1331,10 @@ def edit_news(number):
         content = request.values['content']
         if len(title) > 30:
             #rspCode 404:title太長
-            return jsonify({"rspCode":"404"})
+            #return jsonify({"rspCode":"404"})
+            return redirect(url_for('Admin.SA_update_web'))
         if fileImage.filename != '':
-            #允許jpg,jpeg,png
+            #允許jpg,gpeg,png
             if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
                 try:
                     #設定filename = newsID.jpg
@@ -1333,33 +1344,42 @@ def edit_news(number):
                     fileImage.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'newsImage', filename))
                 except:
                     #rspCode 401:圖片更新失敗
-                    return jsonify({"rspCode":"401"})
+                    #return jsonify({"rspCode":"401"})
+                    return redirect(url_for('Admin.SA_update_web'))
             else:
                 #rspCode 400:圖片檔名錯誤
-                return jsonify({"rspCode" : "400"})
+                #return jsonify({"rspCode" : "400"})
+                return redirect(url_for('Admin.SA_update_web'))
+            
         if title != '':
             try:
                if db.engine.execute(select_title(number)).fetchone() != None:
                     db.engine.execute(update_title(title,number))
                else:
-                    return jsonify({"rspCode":"402"})
+                    #return jsonify({"rspCode":"402"})
+                    return redirect(url_for('Admin.SA_update_web'))
             except:
                 #rspCode 402:標題更新失敗
-                return jsonify({"rspCode":"402"})
+                #return jsonify({"rspCode":"402"})
+                return redirect(url_for('Admin.SA_update_web'))
         if content != '':
             try:
                 if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number)):
-                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding="utf-8")
+                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w')
                     file.write(content)
                     file.close()
                 else:
-                    return jsonify({"rspCode":"403"})
+                    #return jsonify({"rspCode":"403"})
+                    return redirect(url_for('Admin.SA_update_web'))
             except:
                 #rspCode 403:內文更新失敗
-                return jsonify({"rspCode":"403"})
-        return jsonify({"rspCode":"200"})
+                #return jsonify({"rspCode":"403"})
+                return redirect(url_for('Admin.SA_update_web'))
+        #return jsonify({"rspCode":"200"})
+        return redirect(url_for('Admin.SA_update_web'))
     else:
-        return jsonify({"rspCode":"300"})
+        #return jsonify({"rspCode":"300"})
+        return redirect(url_for('Admin.SA_update_web'))
         
 #刪除最新消息
 #在網址帶上要刪除的編號
@@ -1412,15 +1432,6 @@ def useful_numbers():
         return jsonify({"rspCode":"200","numberList":number_list,"max":number_list[len(number_list)-1]})
     except:
         return jsonify({"rspCode":"400","numberList":"","max":""})
-
-    #前往更新入口網站
-@test.route("/SA/updateWeb")
-def updateWebSA():
-    return render_template("updateWebSA.html")
-
-@test.route("/AU/updateWeb")
-def updateWebAU():
-    return render_template("updateWebAU.html")
  
 #點數申請相關
 #更新申請對象
@@ -1557,31 +1568,31 @@ def update_add_apply_quota():
                 notAllow.append("once")
             elif int(once) < 0:
                 notAllow.append("once")
-            elif len(once) > 5:
+            elif len(once) > 2:
                 notAllow.append("once")
             if one.isdigit() == False:
                 notAllow.append("one")
             elif int(one) < 0:
                 notAllow.append("one")
-            elif len(one) > 5:
+            elif len(one) > 2:
                 notAllow.append("one")
             if three.isdigit() == False:
                 notAllow.append("three")
             elif int(three) < 0:
                 notAllow.append("three")
-            elif len(three) > 5:
+            elif len(three) > 2:
                 notAllow.append("three")
             if six.isdigit() == False:
                 notAllow.append("six")
             elif int(six) < 0:
                 notAllow.append("six")
-            elif len(six) > 5:
+            elif len(six) > 2:
                 notAllow.append("six")
             if year.isdigit() == False:
                 notAllow.append("year")
             elif int(year) < 0:
                 notAllow.append("year")
-            elif len(year) > 5:
+            elif len(year) > 2:
                 notAllow.append("year")
             if notAllow != []:
                 #rspCode 401:輸入不合法
@@ -1646,7 +1657,6 @@ def update_add_apply_quota():
                 if db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone() != None:
                      db.engine.execute(let_apply_condition_die_class_period(className,365))
             return jsonify({"rspCode":"200","notAllow":""})
-
         else:
             return jsonify({"rspCode":"300","notAllow":""})
     except:
@@ -1679,46 +1689,44 @@ def output_quota_conditionID():
     else:
         return jsonify({"conditionID":"","quota":"","rspCode":"300"})
 
-#根據所選的class回復period
+#根據所選的class回復period##注意
 #要json傳class
 #回傳rspCode,periodList
-@test.route("/output_allow_period", methods = ['POST'])
+@test.route("/output_allow_period", methods = ['GET'])
 def return_period_by_class():
     try:
-        if request.method == 'POST':
+        if request.method == 'GET':
             json = request.get_json()
             className = json['class']
             if className == '其他':
                 return jsonify({"periodList":"0,30,90,180,365","quotaList":"","rspCode":"200"})
             else:
                 dbData = db.engine.execute(out_put_allow_period(className)).fetchall()
-                quotaList = []
+                quotaList = [0,0,0,0,0]
                 periodList = []
                 conditionIDList = []
                 if dbData != []:
                     for period in dbData:
                         dbData2 = db.engine.execute(show_quota_conditionID_by_class_period(className,period[0])).fetchone()
-                        periodList.append(str(period[0]))
-                        quotaList.append(dbData2[1])
-                    return jsonify({"periodList":periodList,"quotaList":quotaList,"rspCode":"200"})
+                        if period[0] == 0:
+                            quotaList[0] = dbData2[1]
+                        elif period[0] == 30:
+                            quotaList[1] = dbData2[1]
+                        elif period[0] == 90:
+                            quotaList[2] = dbData2[1]
+                        elif period[0] == 180:
+                            quotaList[3] = dbData2[1]
+                        elif period[0] == 365:
+                            quotaList[4] = dbData2[1]
+                    return jsonify({"quotaList":quotaList,"rspCoide":"200"})
                 else:
                     #rspCode 201:此class沒有可被申請的週期
-                    return jsonify({"periodList":"","quotaList":"","rspCode":"201"})
+                    return jsonify({"quotaList":"","rspCoide":"201"})
         else:
-            return jsonify({"periodList":"","quotaList":"","rspCode":"300"})
+            return jsonify({"quotaList":"","rspCode":"300"})
     except:
             #rspCode 400:某個地方爆掉
             return jsonify({"periodList":"","rspCode":"400"})
-
-#前往更新申請條件 AA
-@test.route("/AA/updateCondition")
-def updateConditionAA():
-    return render_template("updateConditionAA.html")
-
-#前往更新申請條件 SA
-@test.route("/SA/updateCondition")
-def updateConditionSA():
-    return render_template("updateConditionSA.html")
 
 #使用者新增申請
 #要form傳frequency,period,result,class,quota,file(pdf)
@@ -1752,15 +1760,18 @@ def user_add_apply():
                 try:
                     if notAllow != []:
                         #rspCode 403:有輸入不符合格式
-                        return jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
+                        #return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                        return redirect(url_for('USER.application'))
+                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['period'])).fetchone()[0]
                 except:
                     #rspCode 401:找不到conditionID
-                    return jsonify({"rspCode":"401","notALlow":""})
+                    #return jsonify({"rspCode":"401","notALlow":""})
+                    return redirect(url_for('USER.application'))
             else:
                 if result == '':
                     #rspCode 402:其他要填原因
-                    return jsonify({"rspCode":"402","notALlow":""})
+                    #return jsonify({"rspCode":"402","notALlow":""})
+                    return redirect(url_for('USER.application'))
                 #檢查其他的quota
                 if request.values['applyQuota'].isdigit():
                     if int(request.values['applyQuota']) > 0 and len(request.values['applyQuota']) < 6:
@@ -1771,7 +1782,8 @@ def user_add_apply():
                     notAllow.append('applyQuota')
                 if notAllow != []:
                     #rspCode 403:有輸入不符合格式
-                    return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                    #return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                    return redirect(url_for('USER.application'))
                 #檢查有沒有一樣的其他了
                 if db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone() != None:
                     conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
@@ -1799,13 +1811,17 @@ def user_add_apply():
                         file.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num),filename))
                 except:
                     #rspCode 404:pdf上傳錯誤
-                    return jsonify({"rspCode":"404","notALlow":""})
-            return jsonify({"rspCode":"200","notALlow":""})
+                    #return jsonify({"rspCode":"404","notALlow":""})
+                    return redirect(url_for('USER.application'))
+            #return jsonify({"rspCode":"200","notALlow":""})
+            return redirect(url_for('USER.application'))
         else:
-            return jsonify({"rspCode":"300","notALlow":""})
+            #return jsonify({"rspCode":"300","notALlow":""})
+            return redirect(url_for('USER.application'))
     except:
         #rspCode 400:某個地方爆掉但不知道哪裡
-        return jsonify({"rspCode":"400","notALlow":""})
+        #return jsonify({"rspCode":"400","notALlow":""})
+        return redirect(url_for('USER.application'))
 
 
 #審核申請資料顯示
@@ -1868,7 +1884,7 @@ def show_apply_status_0():
                applyQuota.append(conditionData[2])
                applyPeriod.append(conditionData[0])
                applyFrequency.append(oneData[5])
-               applyTime.append(oneData[3])
+               applyTime.append((str(oneData[3]))
                applyResult.append(oneData[4])
            return jsonify({"rspCode":"200","name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
         except:
@@ -1913,11 +1929,11 @@ def simple_personal_apply_history():
     for apply in dbApplyData:
         #`period`,`class`,`quota` 
         condition = db.engine.execute(show_old_condition_data(apply[0])).fetchone()
-        applyTime.append(apply[1])
+        applyTime.append(str(apply[1]))
         frequency.append(apply[2])
         result.append(apply[3])
         status.append(apply[4])
-        judgeTime.append(apply[6])
+        judgeTime.append(str(apply[6]))
         period.append(condition[0])
         className.append(condition[1])
         if apply[4] == 1:
@@ -1966,8 +1982,8 @@ def apply_judge():
     quotaChange = json['quotaChange']
     notAllow = []
     adminID = session.get('adminID')
-    adminID = 4
-    ####adminID = json['adminID']
+    ###adminID = 4
+    adminID = json['adminID']
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
     if applyID == "":
@@ -2110,26 +2126,6 @@ def judgement_history():
     except:
         return jsonify({"rspCode":"400","userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
 
-#AA-核准紀錄
-@test.route('Admin/AA/approveRecord')
-def admin_AA_approveRecord():
-    return render_template('approveRecordAA.html')
-
-#SA-核准紀錄
-@test.route('Admin/SA/approveRecord')
-def admin_SA_approveRecord():
-    return render_template('approveRecordSA.html')
-
-#AA-核准申請
-@test.route('Admin/AA/approveSystem')
-def admin_AA_approveSystem():
-    return render_template('approveSystem.html')
-
-#SA-核准申請
-@test.route('Admin/SA/approveSystem')
-def admin_SA_approveSystem():
-    return render_template('approveSystem.html')
-
 #顯示user名單
 #要json傳target(搜尋目標，沒有就傳空值)
 #回傳rspCode, userName, userID, userSRRate, userSPRate
@@ -2195,7 +2191,7 @@ def alloment():
         notAllow.append('quota')
     elif int(quota) < 1:
         notAllow.append("quota")
-    elif len(quota) > 5:
+    elif len(quota) > 2:
         notAllow.append("quota")
     if notAllow != []:
         #rspCode 401:有違法輸入
@@ -2403,11 +2399,15 @@ def SR_add_task():
     addTask.SR=[SR]
     db.session.add(addTask) 
     db.session.commit()
+    comment_ = comment(taskID = addTask.taskID, SRComment = None, SPComment = None, commentStatus = -3, adminID = None)
+    db.session.add(comment_)
+    db.session.commit()
     task_ID = addTask.taskID
     db.engine.execute(task_status_4_dead_line(task_ID,newTaskStartTime))
     db.engine.execute(task_status_5_dead_line(task_ID,newTaskEndTime))
+    EndTime = str(addTask.taskEndTime + datetime.timedelta(days=1))
+    db.engine.execute(commeny_status_0(task_ID,EndTime))
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
-
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
 @test.route('/SP/output/task_can_be_taken', methods = ['POST'])
@@ -2701,9 +2701,10 @@ def SR_accept():
         taskList = []
         for task_ in task_list:
             if task_.taskStatus in  [2,3,6,7,8,9,10,13,14]:
-                taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
-                                 "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
-                                 "taskContent":task_.taskContent,"taskID":str(task_.taskID)})
+                if task_.taskEndTime + datetime.timedelta(hours=24) > datetime.datetime.now():
+                    taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
+                                     "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
+                                     "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus)})
         return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
     except:
         return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
@@ -2762,7 +2763,9 @@ def SR_cancel_task():
         task_.status = 9
         return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 10:
-        task_.taskStatus = 11       
+        task_.taskStatus = 11
+        comment_ = task_.db_task_comment[0]
+        comment_.delete()
         return jsonify({"rspCode":"200"})
     #任務不可取消
     return jsonify({"rspCode":"402"})
@@ -2781,7 +2784,7 @@ def SP_cancel_task():
     json = request.get_json()
     taskID_ = json['taskID']
     userID_ =json['userID']
-    task_ = db.session.query(task).filter(task.taskID == taskID_).first()
+    task_ = db.session.query(task).filter(task.taskID == taskID_).first()   
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
@@ -2792,14 +2795,22 @@ def SP_cancel_task():
                 target = db.session.query(taskCandidate).filter(taskCandidate.userID == int(userID_)).filter(taskCandidate.taskID == taskID_)
                 target.delete()
                 db.session.commit()
+                if task_.db_task_taskCandidate == []:
+                    task_.taskStatus = 0
+                    db.session.commit()
+                db.session.commit()
                 return jsonify({"rspCode":"200"})
     elif task_.SP[0].userID != int(userID_):
-        return jsonify({"rspCode":"401"})
+        return jsonify({"rspCode":"401"})   
     elif task_status == 2:
         task_.status =10
+        db.session.commit()
         return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 9:
-        task_.taskStatus = 11       
+        task_.taskStatus = 11
+        comment_ = task_.db_task_comment[0]
+        comment_.delete()
+        db.session.commit()
         return jsonify({"rspCode":"200"})
     #任務不可取消
     return jsonify({"rspCode":"402"})
@@ -2829,7 +2840,7 @@ def task_finish_or_not():
     if not(status in ['0','1']):
         #status 只能是 0 or 1
         return jsonify({"rspCode":"403"})
-    if task_.SR[0].userID == userID_ :
+    if task_.SR[0].userID == int(userID_) :
         if task_.taskStatus in [2,7,8,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2839,7 +2850,10 @@ def task_finish_or_not():
                 elif task_.taskStatus == 8:
                     task_.taskStatus = 6
                 task_.SR[0].userPoint -= task_.taskPoint
-                task_.SP[0].userPoint += task_.taskPoint                
+                task_.SP[0].userPoint += task_.taskPoint
+                pointList = db.session.query(point).filter(point.ownerID == int(userID_)).limit(task_.taskPoint).all()
+                for p in pointList:
+                    p.ownerID = task_.SP[0]
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
             elif status == '0':
@@ -2850,7 +2864,7 @@ def task_finish_or_not():
         else:
             #不能這樣做
             return jsonify({"rspCode":"402"})
-    elif task_.SP[0].userID == userID_ :
+    elif task_.SP[0].userID == int(userID_) :
         if task_.taskStatus in [2,6,8,9]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2859,6 +2873,7 @@ def task_finish_or_not():
                     task_.taskStatus = 3
                 elif task_.taskStatus == 8:
                     task_.taskStatus = 7
+                db.session.commit()
                 return jsonify({"rspCode":"200"})
             elif status == '0':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2871,6 +2886,7 @@ def task_finish_or_not():
     else:
         #不是SP或SR
         return jsonify({"rspCode":"404"})
+
 
 #評論資料顯示 SP、SR共用
 #傳taskID
@@ -2929,7 +2945,6 @@ def comment_action():
         #star不合法
         return jsonify({"rspCode":"403"})
     user_comment =json['star'] + "," + json['comment']
-    
     try:
         task_= db.session.query(task).filter(taskID_ == task.taskID).first()
         if task_ == None:
@@ -2937,37 +2952,40 @@ def comment_action():
     except:
         #taskID錯誤
         return jsonify({"rspCode":"400"})
-    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskEndTime:
+    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(days=1) or datetime.datetime.now() < task_.taskEndTime:
         #不在可評價時間
-        return jsonify({"rspCode":"403"})
+        return jsonify({"rspCode":"405"})
     if task_.taskStatus in [3,6,7,8,13,14]: 
         if task_.SR[0].userID == int(userID_):   
                 if task_.taskStatus == 14:
                     task_.taskStatus = 15
                     comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                     comment_.SRComment = user_comment
+                    comment_.commentStatus = 0
                 elif task_.taskStatus == 13:
                     #已經評論過
                     return jsonify({"rspCode":"404"})
                 else:
                     task_.taskStatus = 13
-                    comment_ = comment(taskID = int(taskID_), SRComment = user_comment, SPComment = None, commentStatus = 0, adminID = None)
-                    db.session.add(comment_) 
-                db.session.commit()
+                    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
+                    comment_.SRComment = user_comment
+                    comment_.commentStatus = -1
+                    db.session.comit()
                 return jsonify({"rspCode":"200"})
         if task_.SP[0].userID == int(userID_):    
             if task_.taskStatus == 13:
                 task_.taskStatus = 15
                 comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                 comment_.SPComment = user_comment
+                comment_.commentStatus = 0
             elif task_.taskStatus == 14:
                 #已經評論過
                 return jsonify({"rspCode":"404"})
             else:
-                task_.taskStatus = 14
-                comment_ = comment(taskID = int(taskID_), SPComment = user_comment, SRComment = None, commentStatus = 0, adminID = None)
-                db.session.add(comment_) 
-            db.session.commit()
+                comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
+                comment_.SPComment = user_comment
+                comment_.commentStatus = -2
+            db.session.comit()
             return jsonify({"rspCode":"200"})
         elif task_.SP[0].userID != userID_:
                     #不是此task的SR或SP
@@ -2990,10 +3008,11 @@ def GM_output_judge_comment_page():
     try:
         for comment_ in comment_list:
             task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
-            commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
-                ,"taskConent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
-                ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
-                , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SRComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
+            if task_.taskStatus == 15:
+                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
+                    ,"taskConent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
+                    ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                    , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
     except:
         return jsonify({"commentList":"","rspCode":"401"})
@@ -3011,10 +3030,9 @@ def judge_commentaction():
     json = request.get_json()
     taskID_ = json['taskID']
     status = json['status']
-    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
-
+    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).filter(comment.commentStatus == 0).first()
     if comment_ == None:
-        #comment不存在
+        #comment不存在或還不可檢查
         return jsonify({"rspCode":"400"})
     if status == '0':
         comment_.commentStatus = 2
@@ -3022,16 +3040,20 @@ def judge_commentaction():
         comment_.commentStatus = 1
         SR_user = db.session.query(task).filter(task.taskID == taskID_).first().SR[0]
         SP_user = db.session.query(task).filter(task.taskID == taskID_).first().SP[0]
-        if SR_user.SRRate != None:
-            SR_user.SRRate += int(comment_.SRComment.split(',')[0])
-        else:
-            SR_user.SRRate = int(comment_.SRComment.split(',')[0])
-        if SP_user.SPRate != None:
-            SP_user.SPRate += int(comment_.SPComment.split(',')[0])
-        else:
-            SP_user.SPRate = int(comment_.SPComment.split(',')[0])
-        SR_user.SRRateTimes +=1
-        SP_user.SPRateTimes +=1
+        if comment_.SRComment != None:
+            if SR_user.SRRate != None:
+                SR_user.SRRate += int(comment_.SRComment.split(',')[0])
+                SR_user.SRRateTimes +=1
+            else:
+                SR_user.SRRate = int(comment_.SRComment.split(',')[0])
+                SR_user.SRRateTimes +=1
+        if comment_.SPComment != None:
+            if SP_user.SPRate != None:
+                SP_user.SPRate += int(comment_.SPComment.split(',')[0])
+                SP_user.SPRateTimes +=1
+            else:
+                SP_user.SPRate = int(comment_.SPComment.split(',')[0])
+                SP_user.SPRateTimes +=1
     else:
         #status 只能0、1
         return jsonify({"rspCode":"401"})
@@ -3043,42 +3065,6 @@ def judge_commentaction():
         return jsonify({"rspCode":"402"})
     return jsonify({"rspCode":"200"})
 
-@test.route("/USER/createTask")
-def USER_createTask():
-    return render_template("createTask.html")
-
-@test.route("/USER/allTask")
-def USER_allTask():
-    return render_template("allTask.html")
-
-@test.route("/USER/SR/allTaskPassed")
-def USER_SR_allTaskPassed():
-    return render_template("allTaskSPPassed.html")
-
-@test.route("/USER/SP/allTaskChecking")
-def USER_SR_allTaskChecking():
-    return render_template("allTaskSPChecking.html")
-
-@test.route("/USER/SP/allTaskRecord")
-def USER_SP_allTaskRecord():
-    return render_template("allTaskSPChecking.html")
-
-@test.route("/USER/SP/allTaskRefused")
-def USER_SP_allTaskRefused():
-    return render_template("allTaskSPRefused.html")
-
-@test.route("/USER/SR/allTaskAccepted")
-def USER_SR_allTaskAccepted():
-    return render_template("allTaskSRAccepted.html")
-
-@test.route("/USER/SR/allTaskRecord")
-def USER_SR_allTaskRecord():
-    return render_template("allTaskSRRecord.html")
-
-
-@test.route("/GM/updateGrade")
-def GM_updateGrade():
-    return render_template("updateGrade.html")
 
 
  

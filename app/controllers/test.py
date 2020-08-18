@@ -2991,10 +2991,11 @@ def GM_output_judge_comment_page():
     try:
         for comment_ in comment_list:
             task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
-            commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
-                ,"taskConent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
-                ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
-                , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SRComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
+            if task_.taskStatus == 15:
+                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
+                    ,"taskConent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
+                    ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                    , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
     except:
         return jsonify({"commentList":"","rspCode":"401"})

@@ -261,13 +261,6 @@ function previewImg()
     {   newsImg.src = this.result; }
 }
 
-// Display old image.
-function oldImg(index, imgResult)
-{
-    var newsImg = document.getElementById("newsImg" + index);
-    newsImg.src = imgResult;
-}
-
 // Click edit or add news, will span its newsInput.
 function changeSpan(newIndex)
 {

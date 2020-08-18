@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+/* SA/AA/AG/AS/AU登入 */
+
 .loginDiv
 {
     padding: 30px 0;
@@ -80,6 +82,14 @@
     {
         display: inline-block;
     }
+    .formColumn
+    {   
+        text-align: right;
+    }   
+    #formLine2
+    {
+        text-align: center;
+    }
     .formLabelDiv
     {
         margin-right: 15px;
@@ -95,7 +105,7 @@
     }
     .error
     {
-        margin: 0 75px 0 125px;
+        margin: 0 0 0 120px;
     }
 }
 
@@ -120,6 +130,6 @@
     }
     .error
     {
-        margin: 0 calc(50vw - 150px);
+        margin: 0 calc(50vw - 190px);
     }
 }

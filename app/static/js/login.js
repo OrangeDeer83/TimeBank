@@ -1,5 +1,5 @@
 // Validtion Code for Inputs
-var userID = document.getElementById("userID");
+var userName = document.getElementById("userName");
 var userPassword = document.getElementById("userPassword");
 
 var idError = document.getElementById("idError");
@@ -9,18 +9,18 @@ var loginError2 = document.getElementById("loginError2");
 
 var request;
 
-userID.addEventListener("input", userIDVerify);
+userName.addEventListener("input", userNameVerify);
 userPassword.addEventListener("input", userPasswordVerify);
 
 /* If user didn't fill the input element, and clicked submit button directly. */
 function validated()
 {
-    /* userId must more than 1 char. */
-    if (userID.value.length < 1 || userID.value.length > 20)
+    /* userName must more than 1 char. */
+    if (userName.value.length < 1 || userName.value.length > 20)
     {
-        userID.style.border = "1px solid red";
+        userName.style.border = "1px solid red";
         idError.style.display = "block";
-        userID.focus();
+        userName.focus();
         console.log("Wrong user id.");
         return false;
     }
@@ -37,13 +37,13 @@ function validated()
 }
 
 /* If user input right format of ID and password, hide error div. */
-function userIDVerify()
+function userNameVerify()
 {
     loginError1.style.display = "none";
     loginError2.style.display = "none";
-    if (userID.value.length >= 1 && userID.value.length <= 20)
+    if (userName.value.length >= 1 && userName.value.length <= 20)
     {
-        userID.style.border = "1px solid #CCCCCC";
+        userName.style.border = "1px solid #CCCCCC";
         idError.style.display = "none";
         console.log("Avalible user id.");
         return true;
@@ -67,7 +67,7 @@ function userPasswordVerify()
 function showLoginError1()
 {
     loginError1.style.display = "block";
-    userID.focus();
+    userName.focus();
 }
 
 /* Server wrong. */
@@ -77,7 +77,7 @@ function showLoginError2()
 }
 
 // Main function of login.
-function login(num)
+function login()
 {
     console.log("Submit id and password.");
     if (validated())
@@ -88,29 +88,24 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.1.146:5000/test/USER/login", true);
+        request.open("POST", "/test/USER/login", true);
         console.log("XMLHttpRequest opened.");
 
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({"userID": userID.value, "userPassword": userPassword.value, "type": num}));
+        request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value}));
         console.log("JSON sent.");
         console.log(request.responseText);
-        rst = JSON.parse(request.responseText);
+        
 
         setTimeout(function(){}, 300);
         request.onload = function()
         {
+            rst = JSON.parse(request.responseText);
             switch (rst.rspCode)
             {
                 case "200": case 200:
                     console.log("Login success!");
-                    // Different identity.
-                    if (num == 1) // USER
-                        window.location.assign("");
-                    else if (num == 2) // SA, AA, AG, AS, AU
-                        windows.location.assign("");
-                    else if (num == 3) // GM
-                        windows.location.assign("");
+                    windows.location.assign("/USER/myselfTask");
                     return true;
                 case "400": case 400:
                     console.log("Login failed!");

@@ -1,0 +1,84 @@
+<!--GM設定-->
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>設定</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarManager.css" type="text/css">
+         <link rel="stylesheet" href="../static/css/settingSAGM.css" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown">
+                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
+                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                <li><a href="approveReport.html" class="dropdownMenuItem">檢舉審核</a></li>
+                                <li><a href="updateGrade.html" class="dropdownMenuItem">評論審核</a></li>
+                                <li><a href="settingManager.html" class="dropdownMenuItem">設定</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <div class="navbarBrand">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="GM" src="../static/img/GMWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="GM" src="../static/img/GMColor.png" />
+                        </div>
+                    </div>
+                    <div class="navbarRight">
+                        <div class="navbarUl" id="logout">登出</div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        
+        <div class="settingDiv">
+            <div id="formTitleDiv"><h3 id="formTitle">設定</h3><div>
+            <div class="formColumn">
+                <form class="settingSA" id="settingSA" name="settingSA" onsubmit="return setting()">
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="userEmail" class="formLabel">電子郵件</label></div>
+                        <input type="email" class="formText"  id="userEmail" name="userEmail" placeholder="example@taipay.tw">
+                    </div>
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="userPhone" class="formLabel">手機號碼</label></div>
+                        <input type="tel" class="formText" id="userPhone" name="userPhone" placeholder="0912345678">
+                    </div>
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="userPassword" class="formLabel">舊密碼</label></div>
+                        <input type="password" class="formText" id="userPassword" name="userPassword" placeholder="輸入舊密碼以驗證身份">
+                    </div>
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="newPassword" class="formLabel">新密碼</label></div>
+                        <input type="password" class="formText" id="newPassword" name="newPassword"  placeholder="請輸入8-30字元(包含數字、大小寫字母及特殊符號)" maxlength="30">
+                        <div id="passwordError1" class="error">請輸入密碼，至多30字元</div>
+                        <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
+                    </div>
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="checknewPassword">確認新密碼</label></div>
+                        <input type="password" class="formText" id="checknewPassword" name="checknewPassword" placeholder="確認新密碼" maxlength="30">
+                        <div id="passwordError3" class="error">請再次輸入您的密碼</div>
+                            <div id="passwordError4" class="error">密碼不相符，請再試一次</div>
+                        
+                    </div>
+                    <div class="formLine">
+                        <input type="submit" class="formButton" value="確認修改">
+                    </div>
+                </form>
+                <script src="../static/js/clickToSpan.js"></script>
+            </div>  
+        </div>  
+    </body>
+
+</html>

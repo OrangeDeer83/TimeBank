@@ -7,7 +7,7 @@ window.onload = function()
 
 const error = document.getElementById("error");
 const userClass = document.getElementById("userClass");
-var classQuota = [];
+var classList = [];
 
 // Show all error.
 function showError(rspCode)
@@ -139,13 +139,13 @@ function showClass(allClass)
     userClass.options.length = 1;
     for (var i = 0; i < allClass.length; i++)
     {
-        var classQuotaLength = classQuota.length;
+        var classQuotaLength = classList.length;
         userClass.add(new Option(allClass[i], allClass[i]));
-        classQuota[classQuotaLength] = [];
-        classQuota[classQuotaLength][0] = allClass[i];
+        classList[classQuotaLength] = [];
+        classList[classQuotaLength][0] = allClass[i];
     }
     getAllPeriodQuota();
-    console.log(classQuota);
+    console.log(classList);
 }
 // When user click 新增類別, show input text and button on the html.
 function showAddClass()
@@ -167,11 +167,11 @@ function addClass(index)
     {
         userClass.add(new Option(newClass, newClass));
         userClass.options[userClass.options.length - 1].selected = true;
-        var classQuotaLength = classQuota.length;
-        classQuota[classQuotaLength] = [];
-        classQuota[classQuotaLength][0] = newClass;
+        var classQuotaLength = classList.length;
+        classList[classQuotaLength] = [];
+        classList[classQuotaLength][0] = newClass;
         for ( var i = 1; i <= 5; i++)
-            classQuota[classQuotaLength][i] = 0;
+            classList[classQuotaLength][i] = 0;
         showQuota();
     }
     document.getElementById("oldClassDiv").style.display = "inline-block";
@@ -181,7 +181,7 @@ function addClass(index)
 // Get period and quota of each class.
 function getAllPeriodQuota()
 {
-    for (var i = 0; i < classQuota.length; i++)
+    for (var i = 0; i < classList.length; i++)
         getPeriodQuota(i);
 }
 function getPeriodQuota(index)
@@ -193,8 +193,8 @@ function getPeriodQuota(index)
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
     getApplierRequest.open("POST", "http://192.168.1.146:5000/test/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(classQuota[index][0]);
-    getApplierRequest.send(JSON.stringify({"class": classQuota[index][0]}));
+    console.log(classList[index][0]);
+    getApplierRequest.send(JSON.stringify({"class": classList[index][0]}));
     getApplierRequest.onload = function()
     {
         showError(200);
@@ -246,11 +246,11 @@ function computeQuota(index, periodList, quotaList)
         }
         else i = 6;
     }
-    classQuota[index][1] = once;
-    classQuota[index][2] = one;
-    classQuota[index][3] = three;
-    classQuota[index][4] = six;
-    classQuota[index][5] = year;
+    classList[index][1] = once;
+    classList[index][2] = one;
+    classList[index][3] = three;
+    classList[index][4] = six;
+    classList[index][5] = year;
 }
 // Show quota when user select a class.
 userClass.addEventListener("change", showQuota);
@@ -259,8 +259,8 @@ function showQuota()
     index = userClass.selectedIndex - 1;
     for (var i = 0; i < 5; i++)
     {
-        document.getElementById("period" + i).value = classQuota[index][i + 1];
-        if (classQuota[index][i + 1] != 0)
+        document.getElementById("period" + i).value = classList[index][i + 1];
+        if (classList[index][i + 1] != 0)
             document.getElementsByName("period")[i].checked = true;
         else
             document.getElementsByName("period")[i].checked = false;
@@ -312,16 +312,16 @@ function editQuota(index)
         var newQuota = (document.getElementById("period" + index).value) * 1;
         if(0 <= index && index < 100000)
         {
-            classQuota[userClass.selectedIndex - 1][index + 1] = newQuota;
+            classList[userClass.selectedIndex - 1][index + 1] = newQuota;
             showQuota();
         }
         else error.innerHTML = "請輸入位於0~99999之間的數值";
     }
-    console.log(classQuota[userClass.selectedIndex - 1]);
+    console.log(classList[userClass.selectedIndex - 1]);
 }
 function updateClassPeriodQuota()
 {
-    for (var i = 0; i < classQuota.length; i++)
+    for (var i = 0; i < classList.length; i++)
         updateOneClassPeriodQuota(i);
 }
 function updateOneClassPeriodQuota(index)
@@ -333,8 +333,8 @@ function updateOneClassPeriodQuota(index)
         updateCPQRequest = new ActiveXObject("Microsoft.XMLHTTP");
     updateCPQRequest.open("POST", "http://192.168.1.146:5000/test/update_add_apply_quota");
     updateCPQRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(JSON.stringify({"class": classQuota[index][0], "once": classQuota[index][1], "one": classQuota[index][2], "three": classQuota[index][3], "six": classQuota[index][4], "year": classQuota[index][5]}));
-    updateCPQRequest.send(JSON.stringify({"class": classQuota[index][0], "once": classQuota[index][1]+"", "one": classQuota[index][2]+"", "three": classQuota[index][3]+"", "six": classQuota[index][4]+"", "year": classQuota[index][5]+""}));
+    console.log(JSON.stringify({"class": classList[index][0], "once": classList[index][1], "one": classList[index][2], "three": classList[index][3], "six": classList[index][4], "year": classList[index][5]}));
+    updateCPQRequest.send(JSON.stringify({"class": classList[index][0], "once": classList[index][1]+"", "one": classList[index][2]+"", "three": classList[index][3]+"", "six": classList[index][4]+"", "year": classList[index][5]+""}));
     updateCPQRequest.onload = function()
     {
         showError(200);
@@ -349,10 +349,10 @@ function updateOneClassPeriodQuota(index)
             case "300": case 300:
                 showError(300); return ;
             case "400": case 400:
-                alert("系統錯誤，申請條件更新失敗：" + classQuota[index][0]);
+                alert("系統錯誤，申請條件更新失敗：" + classList[index][0]);
                 showError(40016); return ;
             case "401": case 401:
-                alert("請檢查輸入值，須介於0~99999之間：" + classQuota[index][0]);
+                alert("請檢查輸入值，須介於0~99999之間：" + classList[index][0]);
                 showError(40116); return ;
         }
     }
@@ -370,7 +370,7 @@ function deleteClass()
         deleteClassRequest = new ActiveXObject("Microsoft.XMLHTTP");
     deleteClassRequest.open("POST", "http://192.168.1.146:5000/test/delete_apply_class");
     deleteClassRequest.setRequestHeader("Content-Type", "application/json");
-    deleteClassRequest.send(JSON.stringify({"class": classQuota[index][0]}));
+    deleteClassRequest.send(JSON.stringify({"class": classList[index][0]}));
     deleteClassRequest.onload = function()
     {
         showError(200);

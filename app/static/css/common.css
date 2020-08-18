@@ -1,16 +1,36 @@
 @charset "utf-8";
 
+/* 所有網頁的css基礎架構 */
 * { box-sizing: border-box; }
+
+@font-face
+{
+    font-family: custom-serif;
+    src: local("STHeiti"), local("Microsoft JhengHei"), local("PMingLiU");
+    unicode-range: U+4E00-9FFF;
+}
+
+@font-face
+{
+    font-family: custom-serif;
+    src: local("Comic Sans MS"), local("Times New Roman");
+    unicode-range: U+00-024F;
+}
 
 body
 {
-    font-family: "Comic Sans MS", "黑體", "STHeiti", "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    font-family: custom-serif;
     font-size: 16px;
     line-height: 1.4;
     color: #323232;
     background-color: #E6E6FA;
     margin: 0;
     display: block;
+}
+
+input:focus
+{
+    outline: none;
 }
 
 a

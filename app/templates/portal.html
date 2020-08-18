@@ -13,10 +13,10 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/navbarVisitor.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/carousel2.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/homepage.css" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarVisitor.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/carousel2.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/homepage.css')}}" type="text/css" />
     </head>
 
     <body>
@@ -26,9 +26,9 @@
                     <div class="navbarLeft">
                     </div>
                     <div class="navbarCenter">
-                        <a class="navbarBrand" href="portal.html">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
+                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
                         </a>
                     </div>
                     <div class="navbarRight">
@@ -50,9 +50,9 @@
                                             <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
                                             <div id="loginError3" class="error">等待伺服器回應中...</div>
                                         </div>
-                                        <a href="forgotPasswordUser.html"><div id="loginForgot">忘記密碼？</div></a>
+                                        <a href="{{url_for('USER.forgot_password')}}"><div id="loginForgot">忘記密碼？</div></a>
                                         <input class="loginItem loginButton" type="submit" value="登入" onclick="login(1)" />
-                                        <a href="registerUser.html"><span class="loginItem loginButton">註冊</span></a>
+                                        <a href="{{url_for('USER.register')}}"><span class="loginItem loginButton">註冊</span></a>
                                     </div>
                                 </div>
                             </li>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="newsDetail" id="newsDetail">
                         <div class="formNewsImg" id="formNewsImg">
-                            <div class="newsImgDiv"><img src="../static/img/photo1.jpg" alt="news photo" id="newsImg"></div>
+                            <div class="newsImgDiv"><img src="{{url_for('static', filename='img/photo1.jpg')}}" alt="news photo" id="newsImg"></div>
                         </div><!--
                      --><div class="formNewsContent" id="newsContentBlock">
                             <textarea class="newsContent" id="newsContent" readonly>最新消息內容</textarea>
@@ -148,9 +148,9 @@
                 國立臺南大學 <a href="mailto:NUTN@gmail.com" class="footerA">&nbspTimebank 網頁製作小組 監製@2020</a>
             </div>
         </footer>
-        <script src="../static/js/login.js"></script>
-        <script src="../static/js/carousel.js"></script>
-        <script src="../static/js/homepage.js"></script>
+        <script src="{{url_for('static', filename='js/login.js')}}"></script>
+        <script src="{{url_for('static', filename='js/carousel.js')}}"></script>
+        <script src="{{url_for('static', filename='js/homepage.js')}}"></script>
     </body>
 
 </html>

@@ -973,7 +973,7 @@ def SR_output_record():
             return jsonify({"rspCode": "400", "taskRecord": ""})                                                  #資料庫錯誤
         taskRecord = []
         for task in query_data.taskSR:
-            if task.taskStatus not in [0, 1, 2]:
+            if task.taskStatus in [4, 5, 12, 15]:
                 taskRecord.append(task)
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
@@ -1004,7 +1004,7 @@ def SP_output_passed():
             return jsonify({"rspCode": "400", "taskPassed": ""})                                                  #資料庫錯誤
         taskPassed = []
         for task in query_data.taskSP:
-            if task.taskStatus == 2:
+            if task.taskStatus in [2, 3, 6, 7, 8, 9, 10, 13, 14]:
                 taskPassed.append(task)
         sortTask(taskPassed, 0, len(taskPassed) - 1)
         taskPassedJson = []
@@ -1084,7 +1084,7 @@ def SP_output_record():
         
         taskRecord = []
         for task in query_data.taskSP:
-            if task.taskStatus  not in [0, 1, 2]:
+            if task.taskStatus  not in [5, 11, 15]:
                 taskRecord.append(task)
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []

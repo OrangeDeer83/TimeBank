@@ -69,20 +69,23 @@
                                 <button class="button newsButton" id="edit0" onclick="changeSpan(0)">新 增</button>
                                 新增訊息
                             </div>
-                            <div class="newsSpan currentSpannedNews" id="newsSpan0">
-                                <div class="uploadImgDiv" id="uploadImgDiv0">
-                                    <label for="uploadImg0">
-                                        &#10133上傳照片
-                                        <input class="uploadImg" id="uploadImg0" type="file" accept="image/*" onchange="previewImg()" />
-                                        <img class="newsImg" id="newsImg0" alt="news image" />
-                                    </label>
-                                </div><!--
-                            ---><div class="newsInput">
-                                    <input type="text" class="newsTitle" id="newsTitle0" placeholder="請輸入標題..." />
-                                    <textarea class="newsText" id="newsText0" placeholder="輸入最新消息..."></textarea>
+                            <form action="{{url_for('test.upload_news')}}" method="POST"  enctype="multipart/form-data">
+                                <div class="newsSpan currentSpannedNews" id="newsSpan0">
+                                    <div class="uploadImgDiv" id="uploadImgDiv0">
+                                        <label for="uploadImg0">
+                                            &#10133上傳照片
+                                            <input class="uploadImg" id="uploadImg0" type="file" name="file" accept="image/*" onchange="previewImg()" />
+                                            <img class="newsImg" id="newsImg0" alt="news image" />
+                                        </label>
+                                    </div><!--
+                                ---><div class="newsInput">
+                                        <input type="text" name="title" class="newsTitle" id="newsTitle0" placeholder="請輸入標題..." />
+                                        <textarea class="newsText" name="content" id="newsText0" placeholder="輸入最新消息..."></textarea>
+                                    </div>
+                                    <input type="submit" class="button newsButton newsStore" id="store0" value="儲 存"></input>
                                 </div>
-                                <button class="button newsButton newsStore" id="store0" onclick="addNews()">儲 存</button>
-                            </div>
+                            <form>
+
                         </div>
                         <div class="news" id="news1">
                             <div class="newsBar">

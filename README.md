@@ -809,6 +809,7 @@ request:
 response:
 
 {
+	rspCode: ""					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
 	taskRecord: [
 		{
 			taskID: "",
@@ -846,7 +847,8 @@ request:
 response:
 
 {
-	taskRecord: [
+	rspCode: ""					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
+	taskPassed: [
 		{
 			taskID: "",
 			taskName: "",
@@ -868,7 +870,7 @@ response:
 # API 35 - Output SP Task Checking
 ### POST
 #### 取得SP審核中的任務
-#### path : /test/SP/output/Checking
+#### path : /test/SP/output/checking
 ```
 request:
 
@@ -879,7 +881,8 @@ request:
 response:
 
 {
-	taskRecord: [
+	rspCode: ""					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
+	taskChecking: [
 		{
 			taskID: "",
 			taskName: "",
@@ -912,7 +915,8 @@ request:
 response:
 
 {
-	taskRecord: [
+	rspCode:					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
+	taskRefused: [
 		{
 			taskID: "",
 			taskName: "",
@@ -945,6 +949,7 @@ request:
 response:
 
 {
+	rspCode: ""					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
 	taskRecord: [
 		{
 			taskID: "",
@@ -982,7 +987,8 @@ request:
 response:
 
 {
-	taskRecord: [
+	rspCode: ""					200:成功取得 | 300:method使用錯誤 | 400:資料錯誤 | 401:userID錯誤
+	taskWaiting: [
 		{
 			taskID: "",
 			taskName: "",

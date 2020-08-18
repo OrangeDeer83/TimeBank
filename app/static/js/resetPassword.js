@@ -100,19 +100,20 @@ function resetPassword()
     request.send(JSON.stringify({"userPassword": newPassword.value}));
     request.onload = function()
     {
+        systemError2.style.display = "none";
         console.log(request.responseText);
         rst = JSON.parse(request.responseText);
         switch (rst.rspCpde)
         {
             case "200": case 200: // Reset password success.
                 console.log("Reset password success.");
-                alert("密碼更新成功");
-                window.location.assign("");
+                alert("密碼更新成功，請回到首頁登入");
+                window.location.assign("{{url_for('USER.index')}}");
                 return true;
             case "300": case 300: // Method wrong.
             case "400": case 400: // Database wrong.
             case "401": case 401: // Token wrong.
-                systemError.style.display = "block";
+                systemError1.style.display = "block";
                 return false;
             case "402": case 402: // Format of password is illegal.
                 newPassword.style.border = "1px solid red";
@@ -122,5 +123,5 @@ function resetPassword()
             default: return false;
         }
     }
-    return false;
+    systemError2.style.display = "block";
 }

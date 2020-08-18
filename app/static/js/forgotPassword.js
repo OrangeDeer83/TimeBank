@@ -53,12 +53,13 @@ function forgotPasswordEmail()
     request.send(JSON.stringify({"userMail": userEmail.value}));
     request.onload = function()
     {
+        systemError3.style.display = "none";
         console.log(request.responseText);
         rst = JSON.parse(request.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200: // Email send success.
-                console.log("Email send success!");
+                alert("確認信已寄出，請前往電子信箱查閱以更改密碼");
                 window.location.assign("");
                 return true;
             case "300": case 300: // Method wrong.
@@ -88,5 +89,5 @@ function forgotPasswordEmail()
                 return false;
         }
     }
-    return false;
+    systemError3.style.display = "block";
 }

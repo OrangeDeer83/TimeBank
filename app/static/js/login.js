@@ -9,7 +9,7 @@ var loginError2 = document.getElementById("loginError2");
 
 var request;
 
-userName.addEventListener("input", userNameVerify);
+userName.addEventListener("input", userIDVerify);
 userPassword.addEventListener("input", userPasswordVerify);
 
 /* If user didn't fill the input element, and clicked submit button directly. */
@@ -37,7 +37,7 @@ function validated()
 }
 
 /* If user input right format of ID and password, hide error div. */
-function userNameVerify()
+function userIDVerify()
 {
     loginError1.style.display = "none";
     loginError2.style.display = "none";
@@ -54,7 +54,7 @@ function userPasswordVerify()
 {
     loginError1.style.display = "none";
     loginError2.style.display = "none";
-    if (userPassword.value.length >= 7)
+    if (userPassword.value.length > 7)
     {
         userPassword.style.border = "1px solid #CCCCCC";
         passwordError.style.display = "none";
@@ -77,7 +77,7 @@ function showLoginError2()
 }
 
 // Main function of login.
-function login()
+function login(num)
 {
     console.log("Submit id and password.");
     if (validated())
@@ -88,37 +88,31 @@ function login()
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "/test/USER/login", true);
+        request.open("POST", "http://192.168.1.146:5000/test/USER/login");
         console.log("XMLHttpRequest opened.");
 
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value}));
+        request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value, "type": num}));
         console.log("JSON sent.");
-        console.log(request.responseText);
-        
-
-        setTimeout(function(){}, 300);
         request.onload = function()
         {
+            console.log(request.responseText);
             rst = JSON.parse(request.responseText);
             switch (rst.rspCode)
             {
                 case "200": case 200:
-                    console.log("Login success!");
-                    windows.location.assign("/USER/myselfTask");
-                    return true;
+                    alert("Login success!");
+                    window.location.assign("");
                 case "400": case 400:
                     console.log("Login failed!");
                     showLoginError1();
-                    return false;
+                    break;
                 default:
                     console.log("Login failed! Unknow response text code.");
                     showLoginError2();
-                    return false;
             }
         }
-        showLoginError2();
-        return false;
+        showLoginError3();
     }
     else
     {

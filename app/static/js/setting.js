@@ -1,5 +1,33 @@
-// UserId in JSON is for test, it will be remove in final.
-const userID = "7";
+var userID;
+
+window.onload = function()
+{
+    var getIDRequest;
+    if (window.XMLHttpRequest)
+        getIDRequest = new XMLHttpRequest();
+    else
+        getIDRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getIDRequest.open("GET", "http://192.168.1.146:5000/test/getID");
+    getIDRequest.setRequestHeader("Content-Type", "application/json");
+    getIDRequest.send();
+    getIDRequest.onload = function()
+    {
+        console.log(getIDRequest.responseText);
+        rst = JSON.parse(getIDRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                userID = rst.ID;
+                document.getElementById("userIDFile").value = userID;
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("無法取得userID");
+                userID = "10";
+                break;
+        }
+    }
+}
 
 function upload(index)
 {

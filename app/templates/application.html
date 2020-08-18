@@ -70,7 +70,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <a class="navbarPortrait" href="personal.html">
+                        <a class="navbarPortrait" href="myselfTask.html">
                             <img class="navbarPortraitImg" alt="Portrait" src="../static/img/portrait1.jpg" />
                         </a>                           
                     </div>
@@ -78,68 +78,68 @@
             </nav>
         </header>
         <div class="pointApplication">
-             <div class="pointDiv">
-                <div id="formTitleDiv"><h3 id="formTitle">點數申請系統</h3></div>
-                <div class="formColumn">
-                    <form class="pointApplicatedSystem" id="pointApplicatedSystem" name="pointApplicatedSystem" action="{{url_for('test.user_add_apply')}}" method="POST" enctype="multipart/form-data">
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label class="formLabel">申請類別</label></div>
-                            <div class="formRadios">
-                                <span id="group"></span>
-                                <select class="quota" id="userClass" name="class">
-                                    <option value="classify" disabled selected hidden>請選擇類別</option>
-                                </select>  
-                            </div>
-                        </div>
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label for="applyReason" class="formLabel">申請原因</label></div>
-                            <input type="text" class="formText" name="applyReason" id="applyReason" placeholder="選擇其他請輸入原因" />
-                        </div>
+            <div class="pointDiv">
+               <div id="formTitleDiv"><h3 id="formTitle">點數申請系統</h3></div>
+               <div class="formColumn">
+                   <form class="pointApplicatedSystem" id="pointApplicatedSystem" name="pointApplicatedSystem" action="{{url_for('test.user_add_apply')}}" method="POST" enctype="multipart/form-data">
+                       <div class="formLine">
+                           <div class="formLabelDiv"><label class="formLabel">申請類別</label></div>
+                           <div class="formRadios">
+                               <span id="group"></span>
+                               <select class="quota" id="userClass" name="class">
+                                   <option value="classify" disabled selected hidden>請選擇類別</option>
+                               </select>  
+                           </div>
+                       </div>
+                       <div class="formLine">
+                           <div class="formLabelDiv"><label for="applyReason" class="formLabel">申請原因</label></div>
+                           <input type="text" class="formText" name="applyReason" id="applyReason" placeholder="選擇其他請輸入原因" />
+                       </div>
 
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label class="formLabel">申請週期</label></div>
-                            <div class="formRadios">
-                                <input type="radio" class="formRadio" id="period0" name="applyPeriod" value="0" onclick="showQuota(0)" />
-                                <label for="period0" class="radioText" id="periodLabel0">一次性</label>
-                                <input type="radio" class="formRadio" id="period1" name="applyPeriod" value="30" onclick="showQuota(1)" />
-                                <label for="period1" class="radioText" id="periodLabel1">一個月</label>
-                                <input type="radio" class="formRadio" id="period2" name="applyPeriod" value="90" onclick="showQuota(2)" />
-                                <label for="period2" class="radioText" id="periodLabel2">三個月</label>
-                                <input type="radio" class="formRadio" id="period3" name="applyPeriod" value="180" onclick="showQuota(3)" />
-                                <label for="period3" class="radioText" id="periodLabel3">半年</label>
-                                <input type="radio" class="formRadio" id="period4" name="applyPeriod" value="365" onclick="showQuota(4)" />
-                                <label for="period4" class="radioText" id="periodLabel4">一年</label>
-                            </div>
-                        </div>
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label for="applyQuoda" class="formLabel">申請額度</label></div>
-                            <input type="text" class="formText" id="applyQuota" name="applyQuota" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
-                        </div>
-                        <div class="formLine" id="applyFrequencyDiv">
-                            <div class="formLabelDiv"><label for="applyFrequency" class="formLabel">領取次數</label></div>
-                            <input type="text" class="formText" id="applyFrequency" name="applyFrequency" placeholder="請輸入領取次數"/>
-                        </div>
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label for="applyDocument" class="formLabel">證明文件</label></div>
-                            <span class="formText" id="uploadFile">
-                                <span>限PDF檔</span>
-                                <input type="file" id="applyDocument" name="applyDocument" accept="application/pdf" />
-                            </span>
-                        </div>
-                        <div class="formLine">
-                            <span>系統狀態：</span><span id="error"></span>
-                        </div>
-                        <div class="formLine">
-                            <input type="submit" class="formButton" value="送出申請" />
-                            <input type="reset" class="formButton" value="重新填寫" />
-                        </div>
-                        <div class="formLine" id="download">
-                            <a class="conditionDescription" id="conditionDescription" href="{{url_for('static', filename='uploadFile/apply_condition.pdf')}}">下載申請條件說明</a>
-                        </div>
-                    </form>
-                </div>  
-            </div>  
-        </div>
+                       <div class="formLine">
+                           <div class="formLabelDiv"><label class="formLabel">申請週期</label></div>
+                           <div class="formRadios">
+                               <input type="radio" class="formRadio" id="period0" name="applyPeriod" value="0" onclick="showQuota(0)" />
+                               <label for="period0" class="radioText" id="periodLabel0">一次性</label>
+                               <input type="radio" class="formRadio" id="period1" name="applyPeriod" value="30" onclick="showQuota(1)" />
+                               <label for="period1" class="radioText" id="periodLabel1">一個月</label>
+                               <input type="radio" class="formRadio" id="period2" name="applyPeriod" value="90" onclick="showQuota(2)" />
+                               <label for="period2" class="radioText" id="periodLabel2">三個月</label>
+                               <input type="radio" class="formRadio" id="period3" name="applyPeriod" value="180" onclick="showQuota(3)" />
+                               <label for="period3" class="radioText" id="periodLabel3">半年</label>
+                               <input type="radio" class="formRadio" id="period4" name="applyPeriod" value="365" onclick="showQuota(4)" />
+                               <label for="period4" class="radioText" id="periodLabel4">一年</label>
+                           </div>
+                       </div>
+                       <div class="formLine">
+                           <div class="formLabelDiv"><label for="applyQuoda" class="formLabel">申請額度</label></div>
+                           <input type="text" class="formText" id="applyQuota" name="applyQuota" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
+                       </div>
+                       <div class="formLine" id="applyFrequencyDiv">
+                           <div class="formLabelDiv"><label for="applyFrequency" class="formLabel">領取次數</label></div>
+                           <input type="text" class="formText" id="applyFrequency" name="applyFrequency" placeholder="請輸入領取次數"/>
+                       </div>
+                       <div class="formLine">
+                           <div class="formLabelDiv"><label for="applyDocument" class="formLabel">證明文件</label></div>
+                           <span class="formText" id="uploadFile">
+                               <span>限PDF檔</span>
+                               <input type="file" id="applyDocument" name="applyDocument" accept="application/pdf" />
+                           </span>
+                       </div>
+                       <div class="formLine">
+                           <span>系統狀態：</span><span id="error"></span>
+                       </div>
+                       <div class="formLine">
+                           <input type="submit" class="formButton" value="送出申請" />
+                           <input type="reset" class="formButton" value="重新填寫" />
+                       </div>
+                       <div class="formLine" id="download">
+                           <a class="conditionDescription" id="conditionDescription" href="{{url_for('static', filename='uploadFile/apply_condition.pdf')}}">下載申請條件說明</a>
+                       </div>
+                   </form>
+               </div>  
+           </div>  
+       </div>
         <script src="../static/js/clickToSpan.js"></script>
         <script src="../static/js/application.js"></script>
     </body>

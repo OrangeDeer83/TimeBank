@@ -1,3 +1,5 @@
+const userID = "10"; // Only for beta.
+
 const taskName = document.getElementById("taskName");
 const taskStartTime = document.getElementById("taskStartTime");
 const taskEndTime = document.getElementById("taskEndTime");
@@ -46,7 +48,7 @@ function displayError(inputElement, index, type)
                 error3.innerHTML = "結束時間請勿在起始時間之前";
                 error3.style.display = "block"; break;
             case 41:
-                error4.innerHTML = "請輸入任務額度，介於0~99999";
+                error4.innerHTML = "請輸入任務額度，介於0~99";
                 error4.style.display = "block"; break;
             case 51:
                 error5.innerHTML = "請輸入任務地點";
@@ -83,7 +85,7 @@ function createTask()
     createTaskRequest.open("POST", "http://192.168.1.146:5000//test/SR/add_task");
     createTaskRequest.setRequestHeader("Content-Type", "application/json");
     // userId is for test.
-    createTaskRequest.send(JSON.stringify({"taskName": taskName.value, "taskStartTime": taskStartTime.value, "taskEndTime": taskEndTime.value, "taskPoint": taskQuota.value, "taskLocation": taskLocation.value, "taskContent": taskContent.value, "userID": "7"}));
+    createTaskRequest.send(JSON.stringify({"taskName": taskName.value, "taskStartTime": taskStartTime.value, "taskEndTime": taskEndTime.value, "taskPoint": taskQuota.value, "taskLocation": taskLocation.value, "taskContent": taskContent.value, "userID": userID}));
     createTaskRequest.onload = function()
     {
         console.log(createTaskRequest.responseText);
@@ -96,7 +98,12 @@ function createTask()
                 break;
             case "300": case 300:
             case "400": case 400:
-                alert("系統錯誤，任務建立失敗，請稍後再試");
+                if (rst.pointConflit < 0)
+                    alert("點數不足，請認真工作，或前往申請補助");
+                else if (rst.taskConflit.length != 0)
+                    alert("與其他任務時間重疊，請再次確認：" + rst.taskConflit[0].taskName);
+                else
+                    alert("系統錯誤，任務建立失敗，請稍後再試");
         }
     }
 }

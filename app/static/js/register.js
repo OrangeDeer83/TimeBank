@@ -1,19 +1,19 @@
 // Validtion Code for Input
-var name = document.getElementById("name");
-var userName = document.getElementById("userName");
-var userPassword = document.getElementById("userPassword");
-var checkPassword = document.getElementById("checkPassword");
-var userEmail = document.getElementById("userEmail");
-var userPhone = document.getElementById("userPhone");
-var gender = document.getElementsByName("gender");
-var userBirthday = document.getElementById("userBirthday");
-var serviceTerms = document.getElementById("serviceTerms");
+const nameOfUser = document.getElementById("name");
+const userName = document.getElementById("userName");
+const userPassword = document.getElementById("userPassword");
+const checkPassword = document.getElementById("checkPassword");
+const userEmail = document.getElementById("userEmail");
+const userPhone = document.getElementById("userPhone");
+const gender = document.getElementsByName("gender");
+const userBirthday = document.getElementById("userBirthday");
+const serviceTerms = document.getElementById("serviceTerms");
 
 // Div of Each Error
 var nameError = document.getElementById("nameError");
-var idError1 = document.getElementById("idError1");
-var idError2 = document.getElementById("idError2");
-var idError3 = document.getElementById("idError3");
+var userNameError1 = document.getElementById("userNameError1");
+var userNameError2 = document.getElementById("userNameError2");
+var userNameError3 = document.getElementById("userNameError3");
 var passwordError1 = document.getElementById("passwordError1");
 var passwordError2 = document.getElementById("passwordError2");
 var passwordError3 = document.getElementById("passwordError3");
@@ -29,7 +29,7 @@ var registerError = document.getElementById("registerError");
 
 var request, checkID;
 
-name.addEventListener("input", nameVerify);
+nameOfUser.addEventListener("input", nameVerify);
 userName.addEventListener("keyup", userNameVerify);
 userPassword.addEventListener("input", userPasswordVerify);
 checkPassword.addEventListener("input", checkPasswordVerify);
@@ -49,6 +49,7 @@ var birthRegexp = /^((18|19|20)[0-9]{2})[-\/.](0?[1-9]|1[012])[-\/.](0?[1-9]|[12
 // Show/Hide error on html
 function showError(inputElement, errorDiv)
 {
+    console.log(inputElement.name + errorDiv)
     inputElement.style.border = "1px solid red";
     errorDiv.style.display = "block";
     inputElement.focus();
@@ -66,7 +67,7 @@ function idTest()
         checkID = new XMLHttpRequest();
     else // Old IE browser.
         checkID = new ActiveXObject("Microsoft.XMLHTTP");
-    checkID.open("POST", "/test/USER/detect_repeated");
+    checkID.open("POST", "http://192.168.1.146:5000/test/USER/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
     checkID.send(JSON.stringify({"userName": userName.value}));
     console.log("CheckID JSON sent.");
@@ -75,30 +76,30 @@ function idTest()
     {
         console.log(checkID.responseText);
         var rst = JSON.parse(checkID.responseText);
-        hideError(userName, idError3);
+        hideError(userName, userNameError3);
         switch (rst.rspCode)
         {
             case "200": // ID no repeat
-                hideError(userName, idError2);
+                hideError(userName, userNameError2);
                 return true;
             case "300": // Database wrong.
-                showError(userName, idError3);
+                showError(userName, userNameError3);
                 return false;
             case "400": // ID repeat
-                showError(userName, idError3);
+                showError(userName, userNameError3);
                 return false;
             case "401": // ID too long
-                showError(userName, idError1);
+                showError(userName, userNameError1);
                 return false;
             case "402": // ID repeat
-                showError(userName, idError2);
+                showError(userName, userNameError2);
                 return false;
             default: // Unkonwn response text
-                showError(userName, idError3);
+                showError(userName, userNameError3);
                 return false;
         }
     }
-    showError(userName, idError3);
+    showError(userName, userNameError3);
     return false;
 }
 
@@ -159,16 +160,16 @@ function checkGender()
 function validated()
 {
     // if: Null input or too long; else if: wrong format.
-    if (name.value.length < 1 || name.value.length > 20)
+    if (nameOfUser.value.length < 1 || nameOfUser.value.length > 20)
     {
-        showError(name, nameError);
+        showError(nameOfUser, nameError);
         console.log("Wrong user name.");
         return false;
     }
     if (userName.value.length < 1 || userName.value.length > 20)
     {
-        showError(userName, idError1);
-        console.log("Wrong user id.");
+        showError(userName, userNameError1);
+        console.log("Wrong userName.");
         return false;
     }
     if (userPassword.value.length < 8 || userPassword.value.length > 30)
@@ -248,17 +249,17 @@ function validated()
 function nameVerify()
 {
     registerError.style.display = "none";
-    if (name.value.length >= 0 && name.value.length <= 20)
-        hideError(name, nameError);
+    if (nameOfUser.value.length >= 0 && nameOfUser.value.length <= 20)
+        hideError(nameOfUser, nameError);
         return true;
 }
 
 function userNameVerify()
 {
-    hideError(userName, idError3);
+    hideError(userName, userNameError3);
     registerError.style.display = "none";
     if (userName.value.length > 0 && userName.value.length <= 20)
-        hideError(userName, idError1);
+        hideError(userName, userNameError1);
     if (idTest(userName)){};
 }
 
@@ -333,21 +334,21 @@ function register()
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
 
-        request.open("POST", "/test/USER/Register");
+        request.open("POST", "http://192.168.1.146:5000/test/USER/register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({"name": name.value, "userName": userName.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
-        console.log("Register JSON sent.");
-        setTimeout(function(){}, 300);
+        request.send(JSON.stringify({"name": nameOfUser.value, "userName": userName.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
         request.onload = function()
         {
+            registerError2.style.display = "none";
             console.log(request.responseText);
             var rst = JSON.parse(request.responseText);
             switch (rst.rspCode)
             {
                 case "200": case 200: // Register success.
                     console.log("Register success!");
-                    window.location.assign("/USER/login");
+                    alert(nameOfUser.value + " 註冊成功!");
+                    window.location.assign("{{url_for('USER')}}");
                     return true;
                 case "300": case 300: // Methods wrong.
                     registerError.style.display = "block";
@@ -356,10 +357,10 @@ function register()
                     registerError.style.display = "block";
                     return false;
                 case "401": case 401: // Length of name is illegal.
-                showError(userName, idError1);
+                    showError(nameOfUser, nameError);
                     return false;
                 case "402": case 402: // Format of userName is illegal?
-                    showError(userName, idError3);
+                    showError(userName, userNameError3);
                     return false;
                 case "403": case 403: // Format of password is illegal.
                     showError(userPassword, passwordError2);
@@ -379,16 +380,14 @@ function register()
                     genderError.style.display = "block";
                     return false;
                 case "410": case 410: // User ID repeat.
-                    showError(userName, idError2);
+                    showError(userName, userNameError2);
                     return false;
                 default:
                     registerError.style.display = "block";
                     return false;
             }
         }
-        console.log("Login failed! not onload.");
-        registerError.style.display = "block";
-        return false;
+        registerError2.style.display = "block";
     }
     else
     {

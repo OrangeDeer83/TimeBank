@@ -32,19 +32,19 @@ function getNewsAmount()
         {
             case "200": case 200:
                 console.log("最新消息數量讀取成功");
+                maxNewsNum = rst.max;
+                existNews = rst.numberList;
+                newsAmount = existNews.length;
+                pageAmount = Math.ceil(newsAmount / 5);
+                computePage(0);
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息數量讀取失敗，請稍後再試");
                 return false;
         }
-        maxNewsNum = rst.max; console.log(maxNewsNum);//
-        existNews = rst.numberList; console.log(existNews);//
-        newsAmount = existNews.length; console.log(newsAmount);//
-        pageAmount = Math.ceil(newsAmount / 5); console.log(pageAmount);//
-        computePage(0);
     }
-    computePage(0);
+    console.log("等待伺服器回應中...");
 }
 
 // Compute and react nextPage button, prePage button and number of pages.
@@ -123,18 +123,18 @@ function getIntroduction()
         {
             case "200": case 200:
                 console.log("網站介紹讀取成功");
+                introduction = rst.webIntro;
+                console.log(introduction);
+                document.getElementById("introduction").innerHTML = introduction;
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
+                document.getElementById("introduction").innerHTML = "伺服器錯誤...網站介紹讀取失敗";
                 break;
         }
-        introduction = rst.webIntro;
-        console.log(introduction);
-        document.getElementById("introduction").innerHTML = introduction;
     }
-    if (introduction == "")
-        console.log("網站介紹載入失敗或尚無資料。");
+    console.log("等待伺服器回應中...");
 }
 
 function getNewsTitle(index)
@@ -155,14 +155,13 @@ function getNewsTitle(index)
         {
             case "200": case 200:
                 console.log("最新消息標題讀取成功");
+                document.getElementById("newsTitle" + index).innerHTML = rst.title;
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息標題讀取失敗，請稍後再試");
                 //return;
         }
-        //thisPageTitles.push(rst.title);
-        document.getElementById("newsTitle" + index).innerHTML = rst.title;
     }
 }
 
@@ -209,13 +208,15 @@ function getNewsContent(index)
         {
             case "200": case 200:
                 console.log("最新消息內容讀取成功");
+                document.getElementById("newsContent").value = rst.content;
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
+                document.getElementById("newsContent").value = "伺服器錯誤...內容讀取失敗";
         }
-        document.getElementById("newsContent").value = rst.content;
     }
+    console.log("等待伺服器回應中...");
 }
 
 // Click to span. Login.

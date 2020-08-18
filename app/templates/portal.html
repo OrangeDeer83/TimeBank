@@ -26,7 +26,7 @@
                     <div class="navbarLeft">
                     </div>
                     <div class="navbarCenter">
-                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
+                        <a class="navbarBrand" href="portal.html">
                             <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
                             <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
                         </a>
@@ -35,25 +35,26 @@
                         <ul class="nav navbarUl">
                             <li id="loginLi">
                                 <div class="unspanned" id="loginMenu" onclick="clickToSpan('loginForm')">登入</div>
-                                <form class="unspanned loginForm" id="loginForm" name="loginForm" onsubmit="return login(1)">
+                                <div class="unspanned loginForm" id="loginForm" name="loginForm">
                                     <div class="loginFormContainer">
                                         <div class="loginItem loginFont">帳號</div>
                                         <div class="loginItem">
-                                            <input class="loginItem loginInput" id="userName" type="text" name="userID" placeholder="輸入您的帳號" maxlength="20" />
+                                            <input class="loginItem loginInput" id="userName" type="text" placeholder="輸入您的帳號" maxlength="20" onkeypress="if(event.keyCode == 13){login(1);}" />
                                             <div id="idError" class="error">請輸入帳號(1至20位字元)</div>
                                         </div>
                                         <div class="loginItem loginFont">密碼</div>
                                         <div class="loginItem">
-                                            <input class="loginItem loginInput" id="userPassword" type="password" name="userPassword" placeholder="輸入您的密碼" maxlength="30" />
+                                            <input class="loginItem loginInput" id="userPassword" type="password" placeholder="輸入您的密碼" maxlength="30" onkeypress="if(event.keyCode == 13){login(1);}" />
                                             <div id="passwordError" class="error">請輸入密碼，8-30字元</div>
                                             <div id="loginError1" class="error">帳號或密碼錯誤，請再試一次</div>
                                             <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
+                                            <div id="loginError3" class="error">等待伺服器回應中...</div>
                                         </div>
                                         <a href="forgotPasswordUser.html"><div id="loginForgot">忘記密碼？</div></a>
-                                        <input class="loginItem loginButton" type="submit" value="登入" />
+                                        <input class="loginItem loginButton" type="submit" value="登入" onclick="login(1)" />
                                         <a href="registerUser.html"><span class="loginItem loginButton">註冊</span></a>
                                     </div>
-                                </form>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -66,19 +67,19 @@
                 <div class="carouselContainer">
                     <ul class="carouselTrack">
                         <li class="carouselSlide currentSlide">
-                            <img src="../static/img/photo1.jpg" alt="photo1" class="carouselImg" id="carouselImg0">
+                            <img alt="photo1" class="carouselImg" id="carouselImg0">
                         </li>
                         <li class="carouselSlide">
-                            <img src="../static/img/photo2.jpg" alt="photo2" class="carouselImg" id="carouselImg1">
+                            <img alt="photo2" class="carouselImg" id="carouselImg1">
                         </li>
                         <li class="carouselSlide">
-                            <img src="../static/img/photo1.jpg" alt="photo3" class="carouselImg" id="carouselImg2">
+                            <img alt="photo3" class="carouselImg" id="carouselImg2">
                         </li>
                         <li class="carouselSlide">
-                            <img src="../static/img/photo2.jpg" alt="photo4" class="carouselImg" id="carouselImg3">
+                            <img alt="photo4" class="carouselImg" id="carouselImg3">
                         </li>
                         <li class="carouselSlide">
-                            <img src="../static/img/photo1.jpg" alt="photo5" class="carouselImg" id="carouselImg4">
+                            <img alt="photo5" class="carouselImg" id="carouselImg4">
                         </li>
                     </ul>
                 </div>

@@ -13,7 +13,6 @@ var currentQuotaList = [5];
 // Show all error.
 function showError(rspCode)
 {
-    console.log(rspCode);
     error.style.color = "red";
     switch (rspCode)
     {
@@ -40,7 +39,7 @@ function getGroup()
         getGroupRequest = new XMLHttpRequest();
     else
         getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "/test/output_apply_group");
+    getGroupRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -71,7 +70,7 @@ function getApplier()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -104,7 +103,7 @@ function getClass()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_class");
+    getApplierRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -137,7 +136,6 @@ function showClass(allClass)
     }
     userClass.add(new Option("其他", "其他"));
     classList[i + 1] = userClass[userClass.length - 1].value;
-    console.log(classList);
 }
 // Show period when user select a class.
 userClass.addEventListener("change", getPeriod);
@@ -150,9 +148,9 @@ function getPeriod()
 // Get period and quota of user's select.
 function getPeriodQuota(index)
 {
-    if (index < 0 || classList.length <= index)
-        return ; // classList.length - 1 -> option of else
-    else  if (index == classList.length - 1)
+    if (index < 0 || classList.length <= index) // Index is out of list.
+        return ;
+    else  if (index == classList.length - 1) // Option of else.
     {
         for (var i = 0; i < 5; i++) currentQuotaList[i] = 0;
         showPeriod();
@@ -164,9 +162,8 @@ function getPeriodQuota(index)
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "/test/output_allow_period");
+    getApplierRequest.open("POST", "http://192.168.1.146:5000/test/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(index + " " + classList[index]);
     getApplierRequest.send(JSON.stringify({"class": classList[index]}));
     getApplierRequest.onload = function()
     {
@@ -302,9 +299,9 @@ function sendApplication()
         sendApplicationRequest = new XMLHttpRequest();
     else
         sendApplicationRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendApplicationRequest.open("POST", "/test/USER/add_apply");
+    sendApplicationRequest.open("POST", "http://192.168.1.146:5000/test/USER/add_apply");
     sendApplicationRequest.setRequestHeader("Content-Type", "application/json");
-    sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""/*document.getElementById("applyDocument").files[0]*/}));
+    sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""}));
     sendApplicationRequest.onload = function()
     {
         showError(200);

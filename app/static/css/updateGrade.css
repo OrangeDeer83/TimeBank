@@ -1,0 +1,375 @@
+@charset "utf-8";
+
+/* GM評論審核介面 */
+
+.auditDiv
+{
+    padding: 30px 0; 
+}
+
+#formTitle
+{
+    margin: 0;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.formColumn
+{
+    margin-top: 0;
+    text-align: center;
+}               
+
+.formLine
+{
+    padding-top: 20px;
+}
+
+/* 按鈕-檢舉審核及評論審核 */
+.auditButton
+{
+    margin: 0;
+}
+
+.auditButton button
+{
+    margin: auto;
+    background-color: #293F66;
+    border: 1px solid #5E86C1;
+    color: white;
+    padding: 10px 24px;
+    cursor: pointer;
+    float: left;                            /* 並排按鈕 */
+}
+
+/* 清除浮動 */
+.auditButton:after
+{
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.auditButton button:not(:last-child)        /* 防止雙重border */
+{
+    border-right: none;
+}
+
+.auditButton button:hover
+{
+    background-color: #5E86C1;
+    color: #DC143C;
+}
+
+.informationDetailText
+{
+    width: 650px;
+    height: 40px;
+    background-color: #E6E6FA;
+    overflow: auto;
+}
+
+/* 審核內容-雇主雇員評分星等 */
+.rating 
+{
+    width: 70%;
+    font-size: 0;
+    display: table;
+}
+
+.rating > label 
+{
+    color: #ddd;
+}
+
+.rating > label:before 
+{
+    padding: 0;
+    font-size: 26px;
+    line-height: 1em;
+    display: inline-block;
+    content: "★";
+}
+
+.rating > input:checked ~ label,
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label 
+{
+    color: #FFD700;
+}
+
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label,
+.rating > input:checked ~ label:hover ~ label 
+{
+    opacity: 0.5;
+}
+
+/* 按鈕-確認及否決 */
+.dealButton
+{
+    width: 100px;
+    height: 30px;
+    margin-top: 5px;
+    background-color: #293F66;
+    color: white;
+    border: 1px solid #5E86C1;
+    border-radius: 3px;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.dealButton:hover, .pageButton button:hover
+{
+    background-color: #87CEFA;
+    color: #DC143C;
+}
+
+/* 按鈕區塊-上一頁及下一頁 */
+
+.formLine1
+{ 
+    padding: 0 10px;
+}
+
+.pageButton
+{
+    float: left;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton button
+{
+    margin-right: 20;
+    width: 60px;
+    height: 30px;
+    background-color: #293F66;
+    color: white;
+    border-color: white;
+    border: 1px solid #5E86C1;
+    transition: .5s;
+}
+
+/* 按鈕-全部確認及全部否決 */
+.formButton
+{
+    width: 80px;
+    height: 30px;
+    margin: 0px 0px 0px 30px;
+    background-color: #293F66;
+    color: white;
+    border: 1px solid #5E86C1;
+    border-radius: 3px;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.formButton:hover
+{
+    background-color: #5E86C1;
+}
+
+@media (min-width: 800px)
+{
+    .auditDiv
+    {
+        width: 800px;
+        height: 670px;
+        background-color: #293F66;
+        color: white;
+        margin: auto;
+        border-radius: 12px;
+    }
+    .formLine
+    {
+        text-align: left;
+    }
+    .auditButton
+    {
+        margin: 0 0 0 20px;
+    }
+
+    /* 審核內容-兩欄式排版的外框架 */
+    #formInformation1
+    {
+        border: 1px solid white;
+        margin: 18px 0 0 20px;
+        width: 760px;
+        height: 80px;
+    }
+
+    #formInformation2
+    {
+        border: 1px solid white;
+        margin: 0 0 0 20px;
+        width: 760px;
+        height: 370px;
+    }
+
+    /* 審核內容-任務編號及評論內容區塊 */
+    .informationTopLeft
+    {
+        width: 70%;
+        height: 60px;
+        float: left;
+    }
+
+    /* 審核內容-任務編號及任務區塊 */
+    .informationDetailLeft, .informationDetailRight
+    {
+        width: 50%;
+        float: left;
+    }
+
+    /* 審核內容-任務編號外觀 */
+    .informationLeft
+    {
+        width: 19.5%;
+        height: 80px;
+        float: left;
+        margin-top: 0;
+        padding: 0;
+        border: 1px solid white;
+    }
+
+    /* 審核內容-任務詳細內容區塊 */
+    .informationDetail
+    {
+        margin: 15px 0 0 5px;
+        padding: 0;
+    } 
+
+    /* 審核內容-評論內容外觀 */
+    .informationRight
+    {
+        width: 80.5%;
+        float: left;
+    }
+
+    /* 審核內容-文字區塊 */
+    .informationDetailText
+    {
+        vertical-align: middle;
+        background-color: #293F66;
+        color: white;
+        border: 1px solid white;
+        margin: 3px;
+    }
+
+    /* 審核內容-雇主雇員評分外觀 */
+    .ratingLabel
+    {
+        width: 40%;
+        float: left;
+    }
+
+    .rating 
+    {
+        width: 60%;
+    }
+
+    /* 審核內容-雇主雇員評分星等 */
+    .rating > label 
+    {
+        float: right;
+    }
+
+    /* 按鈕區塊-確認及否決 */
+    .informationTopRight
+    {
+        width: 30%;
+        height: 60px;
+        float: left;
+    }
+
+    /* 按鈕-確認及否決 */
+    .dealButton
+    {
+        margin-left: 100px;
+    }
+
+    /* 全部確認及全部否決的按鈕 */
+    .allApprove
+    {
+        width: auto;
+        float: left;
+    }
+
+    /* 按鈕區塊-上一頁及下一頁 */
+    .formLine1
+    { 
+        width: 530px;
+        margin: 10px 0 0 280px;
+    }
+
+    /* 按鈕-上一頁及下一頁 */
+    .pageButton
+    {
+        width: 50%;
+        float: left;
+    }
+
+    .pageButton button
+    {
+        margin: 0 0 0 5px;
+    }
+ 
+}
+
+@media (min-height: 580px)
+{
+    .auditDiv
+    {
+        margin-top: calc(50vh - 300px);
+    }
+}
+
+@media (max-width: 799px)
+{
+    .auditDiv
+    {
+        margin: 0;
+        border: 0px;
+    }
+    #formTitle
+    {
+        margin-top: 50px;
+    }
+    .formLine
+    {
+        text-align: center;
+    }
+    .auditButton button
+    {
+        width: 50%;
+    }
+    .informationDetail
+    {
+        width: 100%;
+        margin: auto;
+        text-align: center;
+    }
+    .informationDetailText
+    {
+        width: 100%;
+    }
+
+    /* 審核內容-雇主雇員評分外觀 */
+    .rating
+    {
+        margin: auto;
+    }
+    .ratingLabel, .rating 
+    {
+        width: 100%;
+    }
+
+    /* 按鈕-上一頁及下一頁 */
+    .formLine1
+    {
+        margin: auto;
+        width: 100%;
+    }
+}

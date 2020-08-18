@@ -1,0 +1,301 @@
+@charset "utf-8";
+
+/* SA/AU更新入口網站 */
+
+.containner
+{
+    padding: 10px 0;
+    margin: 10px;
+}
+
+#title
+{
+    width: 100%;
+    font-size: 30px;
+    margin: 0;
+    padding: 20px 0;
+    text-align: center;
+}
+
+#title > h3
+{
+    margin: 0;
+}
+
+.content
+{
+    padding: 20px;
+    vertical-align : top;
+    background-color: #1353A5;
+    color: white;
+    height: calc(100vh - 150px);
+    min-height: 600px;
+    max-height: 850px;
+    font-size: 14px;
+}
+
+.contentTitle
+{
+    margin: 0 0 22px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+#intro
+{
+    width: 100%;
+    height: calc(100% - 96px);
+}
+
+#introduction
+{
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    font-size: 16px;
+}
+
+.introductionEditUser, .newsEditUser
+{
+    font-size: 14px;
+    color: black;
+}
+
+.introductionEditUser:hover, .newsEditUser:hover
+{
+    color: #CCCCCC;
+}
+
+#introductionStore
+{
+    margin-top: 2px;
+    height: 40px;
+    width: 60px;
+}
+
+.newsButton
+{
+    height: 28px;
+    width: 60px;
+}
+
+.newsStore
+{
+    margin: 5px 0 0/* calc(100% - 62px)*/; /* 置左，將右邊留給管理者名稱 */
+}
+
+#changePageDiv
+{
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#changePage
+{
+    line-height: 40px;
+    font-size: 16px;
+}
+
+.changePageButton
+{
+    height: 40px;
+    width: 80px;
+}
+
+.button
+{
+    font-size: 16px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid #2BE1EE;
+    border-radius: 3px;
+}
+
+.button:hover
+{
+    color: black;
+    background-color: #2BE1EE;
+    transition: .5s;
+}
+
+#newsDiv
+{
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 96px);
+}
+
+.news
+{
+    border: 3px solid #F1F1F1;
+    border-top: 0;
+    font-size: 16px;
+    line-height: 29px;
+}
+
+#news0
+{
+    border-top: 3px solid #F1F1F1;
+}
+
+.newsBar
+{
+    padding: 5px;
+}
+
+.newsSpan
+{
+    display: none;
+    padding: 0 5px 5px;
+}
+
+.currentSpannedNews
+{
+    display: block;
+}
+
+.uploadImgDiv
+{
+    background-color: white;
+    color: black;
+}
+
+.uploadImgDiv:hover
+{
+    background-color: #CCCCCC;
+}
+
+.uploadImgDiv > label
+{
+    display: block;
+    text-align: center;
+    cursor: pointer;
+}
+
+#uploadImgDiv0 > label
+{
+    padding: 85px 0;
+}
+
+.uploadImg
+{
+    display: none;
+}
+
+.newsImg
+{
+    display: block;
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin: 0 auto 0;
+}
+
+#newsImg0
+{
+    margin-top: -114px;
+}
+
+.newsInput
+{
+    padding: 0;
+    font-size: 14px;
+}
+
+.newsTitle
+{
+    margin: 0;
+    padding: 5px;
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+}
+
+.newsText
+{
+    margin-top: 5px;
+    padding: 5px;
+    resize: none;
+    width: 100%;
+    height: 165px;
+    font-size: 14px;
+}
+
+@media (min-width: 1000px)
+{
+    .uploadImgDiv, .newsInput
+    {
+        display: inline-block;
+        vertical-align : top;
+        width: calc(50% - 3px);
+        height: 200px;
+    }
+    .uploadImgDiv
+    {
+        margin-right: 5px;
+    }
+}
+
+@media (max-width: 999px)
+{
+    .uploadImgDiv, .newsInput
+    {
+        display: block;
+        margin-top: 5px;
+        width: 100%;
+        height: 200px;
+    }
+}
+
+@media (min-width: 800px)
+{
+    .content
+    {
+        display: inline-block;
+        width: calc(50% - 15px);
+        margin-left: 10px;
+    }
+    /*#introductionStore
+    {
+        margin-left: calc(50vw - 115px);
+    }*/
+}
+
+@media (max-width: 799px)
+{
+    .content
+    {
+        display: block;
+        width: calc(100% - 40px);
+        margin: 0 20px 10px;
+    }
+    /*#introductionStore
+    {
+        margin-left: calc(100vw - 156px);
+    }*/
+    .uploadImgDiv, .newsInput
+    {
+        display: inline-block;
+        vertical-align : top;
+        width: calc(50% - 3px);
+        height: 200px;
+    }
+    .uploadImgDiv
+    {
+        margin-right: 5px;
+    }
+}
+
+@media (max-width: 499px)
+{
+    .uploadImgDiv, .newsInput
+    {
+        display: block;
+        margin-top: 5px;
+        width: 100%;
+        height: 200px;
+    }
+}

@@ -81,12 +81,12 @@
              <div class="pointDiv">
                 <div id="formTitleDiv"><h3 id="formTitle">點數申請系統</h3></div>
                 <div class="formColumn">
-                    <form class="pointApplicatedSystem" id="pointApplicatedSystem" name="pointApplicatedSystem" onsubmit="return register()">
+                    <form class="pointApplicatedSystem" id="pointApplicatedSystem" name="pointApplicatedSystem" action="{{url_for('test.user_add_apply')}}" method="POST" enctype="multipart/form-data">
                         <div class="formLine">
                             <div class="formLabelDiv"><label class="formLabel">申請類別</label></div>
                             <div class="formRadios">
                                 <span id="group"></span>
-                                <select class="quota" id="userClass">
+                                <select class="quota" id="userClass" name="class">
                                     <option value="classify" disabled selected hidden>請選擇類別</option>
                                 </select>  
                             </div>
@@ -113,7 +113,7 @@
                         </div>
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="applyQuoda" class="formLabel">申請額度</label></div>
-                            <input type="text" class="formText" id="applyQuota" name="applyQuoda" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
+                            <input type="text" class="formText" id="applyQuota" name="applyQuota" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
                         </div>
                         <div class="formLine" id="applyFrequencyDiv">
                             <div class="formLabelDiv"><label for="applyFrequency" class="formLabel">領取次數</label></div>
@@ -130,7 +130,7 @@
                             <span>系統狀態：</span><span id="error"></span>
                         </div>
                         <div class="formLine">
-                            <input type="button" class="formButton" value="送出申請" onclick="sendApplication()" />
+                            <input type="submit" class="formButton" value="送出申請" />
                             <input type="reset" class="formButton" value="重新填寫" />
                         </div>
                         <div class="formLine" id="download">

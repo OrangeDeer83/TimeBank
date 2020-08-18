@@ -820,12 +820,12 @@ response:
 			taskStartTime: "",
 			taskEndTime: "",
 			taskStatus: "",
-			taskSP: "",			(name需要ID再跟我說)
+			taskSP: "",			(name需要ID再跟我說)(可能沒有)	
 			taskSR: ""			(name需要ID再跟我說)
-			SPScore, ""
-			SPComment: "",
-			SRScore, ""
-			SRComment: "",
+			SPScore, ""			(可能沒有)
+			SPComment: "",		(可能沒有)
+			SRScore, ""			(可能沒有)
+			SRComment: "",		(可能沒有)
 		}
 	]
 }
@@ -892,7 +892,6 @@ response:
 			taskStartTime: "",
 			taskEndTime: "",
 			taskStatus: "",
-			taskSP: "",			(name需要ID再跟我說)
 			taskSR: ""			(name需要ID再跟我說)
 		}
 	]
@@ -962,10 +961,10 @@ response:
 			taskStatus: "",
 			taskSP: "",			(name需要ID再跟我說)
 			taskSR: ""			(name需要ID再跟我說)
-			SPScore, ""
-			SPComment: "",
-			SRScore, ""
-			SRComment: "",
+			SPScore, ""			(可能沒有)
+			SPComment: "",		(可能沒有)
+			SRScore, ""			(可能沒有)
+			SRComment: "",		(可能沒有)
 		}
 	]
 }
@@ -1399,12 +1398,12 @@ response:
 request:
 
 {
-	frequency:"" 1~999999 一次性填1
-	period:"  	 必須是0,30,90,180,365 對應一次、一個月、三個月、半年、一年
-	result:""    如果class為其他就必填，無長度限制
+	applyFrequency:"" 1~999999 一次性填1
+	applyPeriod:"  	 必須是0,30,90,180,365 對應一次、一個月、三個月、半年、一年
+	applyReason:""    如果class為其他就必填，無長度限制
 	class:""	 如果不在可申請範圍內會回傳錯誤
-	quota:""	 其他自填，正常的留空
-	file(pdf):"" 可有可無
+	applyQuota:""	 其他自填，正常的留空
+	applyDocument(pdf):"" 可有可無
 }
 
 response:

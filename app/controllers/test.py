@@ -978,14 +978,26 @@ def SR_output_record():
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
-            SPScore = task.db_task_comment[0].SPComment[0]
-            SPComment = task.db_task_comment[0].SPComment[2:]
-            SRScore = task.db_task_comment[0].SRComment[0]
-            SRComment = task.db_task_comment[0].SRComment[2:]
+            if len(task.SP) == 0:
+                SPname = ""
+            else:
+                SPname = task.SP[0].name
+            if task.db_task_comment[0].SPComment == None:
+                SPScore = ""
+                SPComment = ""
+            else:
+                SPScore = task.db_task_comment[0].SPComment[0]
+                SPComment = task.db_task_comment[0].SPComment[2:]
+            if task.db_task_comment[0].SRComment == None:
+                SRScore = ""
+                SRComment = ""
+            else:
+                SRScore = task.db_task_comment[0].SRComment[0]
+                SRComment = task.db_task_comment[0].SRComment[2:]
             taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                    "taskStatus": task.taskStatus, "taskSP": SPname, "taskSR": task.SR[0].name,\
                                     "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
         return jsonify({"rspCode": "200", "taskRecord": taskRecordJson})                        #成功取得
     else:
@@ -1039,8 +1051,8 @@ def SP_output_checking():
             taskCheckingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
-        return jsonify({"rpsCode": "200", "taskChecking": taskCheckingJson})                                        #成功取得
+                                    "taskStatus": task.taskStatus, "taskSR": task.SR[0].name})
+        return jsonify({"rspCode": "200", "taskChecking": taskCheckingJson})                                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskChecking": ""})                                                      #method使用錯誤
 
@@ -1066,7 +1078,7 @@ def SP_output_refused():
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
                                     "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
-        return jsonify({"rpsCode": "200", "taskRefused": taskRefusedJson})                                        #成功取得
+        return jsonify({"rspCode": "200", "taskRefused": taskRefusedJson})                                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskRefused": ""})                                                     #method使用錯誤
 
@@ -1089,16 +1101,28 @@ def SP_output_record():
         sortTask(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
-            SPScore = task.db_task_comment[0].SPComment[0]
-            SPComment = task.db_task_comment[0].SPComment[2:]
-            SRScore = task.db_task_comment[0].SRComment[0]
-            SRComment = task.db_task_comment[0].SRComment[2:]
+            if len(task.SP) == 0:
+                SPname = ""
+            else:
+                SPname = task.SP[0].name
+            if task.db_task_comment[0].SPComment == None:
+                SPScore = ""
+                SPComment = ""
+            else:
+                SPScore = task.db_task_comment[0].SPComment[0]
+                SPComment = task.db_task_comment[0].SPComment[2:]
+            if task.db_task_comment[0].SRComment == None:
+                SRScore = ""
+                SRComment = ""
+            else:
+                SRScore = task.db_task_comment[0].SRComment[0]
+                SRComment = task.db_task_comment[0].SRComment[2:]
             taskRecordJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                     "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                     "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                    "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                    "taskStatus": task.taskStatus, "taskSP": SPname, "taskSR": task.SR[0].name,\
                                     "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
-        return jsonify({"rpsCode": "200", "taskRecord": taskRecordJson})                                        #成功取得
+        return jsonify({"rspCode": "200", "taskRecord": taskRecordJson})                                        #成功取得
     else:
         return jsonify({"rspCode": "300", "taskRecord": ""})                                                     #method使用錯誤
 
@@ -1222,7 +1246,7 @@ def upload_news():
         try:    
             #內文上傳
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
-            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w')
+            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w', encoding="utf-8")
             fileContent.write(content)
             fileContent.close()
             return jsonify({"rspCode":"200"})
@@ -1261,7 +1285,7 @@ def output_news_content(number):
 
         try:
             filename = number + '.txt'
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r')
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
             content = jsonify({"rspCode": "200","content":file.read()})
             file.close()
             return content
@@ -1700,34 +1724,37 @@ def updateConditionSA():
 #回傳rspCode,notAllow
 @test.route("/USER/add_apply", methods = ['POST'])
 def user_add_apply():
+    #print(request.values['applyFrequency'], request.values['applyPeriod'], request.values['applyReason'], request.values['class'])
     try:
+        
         if request.method == 'POST':
             notAllow = []
             userID = session.get('userID')
-            userID = 1
+            #userID = 1
+            ###userID = int(request.values['userID'])
             time = str(datetime.datetime.now()).rsplit('.',1)[0]
             #檢查各變數與檔案
-            if request.values['frequency'].isdigit():
-                if int(request.values['frequency']) > 0 and len(request.values['frequency']) < 6:
-                    frequency = int(request.values['frequency'])
+            if request.values['applyFrequency'].isdigit():
+                if int(request.values['applyFrequency']) > 0 and len(request.values['applyFrequency']) < 6:
+                    frequency = int(request.values['applyFrequency'])
                 else:
                     frequency = 0
-                    notAllow.append('frequency')
+                    notAllow.append('applyFrequency')
             else:
                 frequency = 0
-                notAllow.append('frequency')
-            if request.values['period'] in ['0','30','90','180','365']:
-                    restTime = int(request.values['period']) * frequency
-                    nextTime = int(request.values['period'])
+                notAllow.append('applyFrequency')
+            if request.values['applyPeriod'] in ['0','30','90','180','365']:
+                restTime = int(request.values['applyPeriod']) * frequency
+                nextTime = int(request.values['applyPeriod'])
             else:
-                notAllow.append('period')
-            result = request.values['result']        
+                notAllow.append('applyPeriod')
+            result = request.values['applyReason']        
             if(request.values['class'] != '其他'):
                 try:
                     if notAllow != []:
                         #rspCode 403:有輸入不符合格式
                         return jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['period'])).fetchone()[0]
+                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
                 except:
                     #rspCode 401:找不到conditionID
                     return jsonify({"rspCode":"401","notALlow":""})
@@ -1736,13 +1763,13 @@ def user_add_apply():
                     #rspCode 402:其他要填原因
                     return jsonify({"rspCode":"402","notALlow":""})
                 #檢查其他的quota
-                if request.values['quota'].isdigit():
-                    if int(request.values['quota']) > 0 and len(request.values['quota']) < 6:
-                        quota = request.values['quota']
+                if request.values['applyQuota'].isdigit():
+                    if int(request.values['applyQuota']) > 0 and len(request.values['applyQuota']) < 6:
+                        quota = request.values['applyQuota']
                     else:
-                        notAllow.append('quota')
+                        notAllow.append('applyQuota')
                 else:
-                    notAllow.append('quota')
+                    notAllow.append('applyQuota')
                 if notAllow != []:
                     #rspCode 403:有輸入不符合格式
                     return jsonify({"notAllow":notAllow,"rdpCode":"403"})
@@ -1753,12 +1780,13 @@ def user_add_apply():
                 else:
                     db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
                     conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]     
-            file = request.files['file']
+            file = request.files['applyDocument']
             #建立apply
             db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
             #檢查有沒有傳檔案
             if file.filename != "":
                 try:
+                    print(file.filename)
                     #檢查fileName
                     if file.mimetype == 'application/pdf':
                         originFileName = '{}'.format(file.filename)
@@ -1773,13 +1801,12 @@ def user_add_apply():
                 except:
                     #rspCode 404:pdf上傳錯誤
                     return jsonify({"rspCode":"404","notALlow":""})
-  
             return jsonify({"rspCode":"200","notALlow":""})
         else:
             return jsonify({"rspCode":"300","notALlow":""})
     except:
         #rspCode 400:某個地方爆掉但不知道哪裡
-        jsonify({"rspCode":"400","notALlow":""})
+        return jsonify({"rspCode":"400","notALlow":""})
 
 
 #審核申請資料顯示
@@ -1941,6 +1968,7 @@ def apply_judge():
     notAllow = []
     adminID = session.get('adminID')
     adminID = 4
+    ####adminID = json['adminID']
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
     if applyID == "":
@@ -2667,7 +2695,6 @@ def SR_accept():
         if request.method != 'POST':
             return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
         #SPID = int(session.get('userID'))
-        SPID = 1
         SPID =int(request.get_json()['userID'])
         task_list = db.session.query(account).filter(account.userID == SPID).first().taskSR
         taskList = []
@@ -2676,7 +2703,7 @@ def SR_accept():
                 continue
             taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
                              "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
-                             "taskConten":task_.taskContent,"taskID":str(task_.taskID)})
+                             "taskContent":task_.taskContent,"taskID":str(task_.taskID)})
         return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
     except:
         return jsonify({"rspCode":"400","taskList":"","taskAmount":""})

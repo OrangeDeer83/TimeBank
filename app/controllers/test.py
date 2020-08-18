@@ -1245,7 +1245,7 @@ def upload_news():
             return jsonify({"rspCode" : "401"})
         try:    
             #內文上傳
-            fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
+            fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt'
             fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w', encoding="utf-8")
             fileContent.write(content)
             fileContent.close()
@@ -1348,7 +1348,7 @@ def edit_news(number):
         if content != '':
             try:
                 if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number)):
-                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w')
+                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding="utf-8")
                     file.write(content)
                     file.close()
                 else:
@@ -2408,6 +2408,7 @@ def SR_add_task():
     db.engine.execute(task_status_4_dead_line(task_ID,newTaskStartTime))
     db.engine.execute(task_status_5_dead_line(task_ID,newTaskEndTime))
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
+
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
 @test.route('/SP/output/task_can_be_taken', methods = ['POST'])
@@ -2551,10 +2552,11 @@ def SR_release():
         task_list = []
         task_list_ = db.session.query(account).filter(account.userID == userID_).first().taskSR
         for task_ in task_list_:
-            candidateList = db.session.query(account.userName,account.userID).join(taskCandidate).filter(taskCandidate.taskID == task_.taskID and taskCandidate.userID == account.userID).all()
-            candidateNum = len(candidateList)
-            task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskStatus":str(task_.taskStatus)\
-                             ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
+            if task_.taskStatus in [0,1]:
+                candidateList = db.session.query(account.userName,account.userID).join(taskCandidate).filter(taskCandidate.taskID == task_.taskID and taskCandidate.userID == account.userID).all()
+                candidateNum = len(candidateList)
+                task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskStatus":str(task_.taskStatus)\
+                                 ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
 
         return jsonify({"rspCode":"200","taskList":task_list,"taskAmount":str(len(task_list))})
     except:
@@ -2694,16 +2696,15 @@ def SR_accept():
     try:
         if request.method != 'POST':
             return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
-        #SPID = int(session.get('userID'))
-        SPID =int(request.get_json()['userID'])
-        task_list = db.session.query(account).filter(account.userID == SPID).first().taskSR
+        #SRID = int(session.get('userID'))
+        SRID =int(request.get_json()['userID'])
+        task_list = db.session.query(account).filter(account.userID == SRID).first().taskSR
         taskList = []
         for task_ in task_list:
-            if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
-                continue
-            taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
-                             "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
-                             "taskContent":task_.taskContent,"taskID":str(task_.taskID)})
+            if task_.taskStatus in  [2,3,6,7,8,9,10,13,14]:
+                taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
+                                 "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
+                                 "taskContent":task_.taskContent,"taskID":str(task_.taskID)})
         return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
     except:
         return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
@@ -2718,7 +2719,7 @@ def delete_task():
     json = request.get_json()
     taskID_ =json['taskID']
     #userID_ = int(session.get('userID'))
-    userID_ = int(json["userID"])
+    userID_ = json["userID"]
     task_ = db.session.query(task).filter(taskID_ == task.taskID).first()
     if task_ == None:
         #任務不存在
@@ -2769,7 +2770,7 @@ def SR_cancel_task():
 #雇員取消
 #傳taskID
 #回傳rspCode
-@test.route("/SP/cancel_task")
+@test.route("/SP/cancel_task", methods = ["POST"])
 def SP_cancel_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -2785,8 +2786,15 @@ def SP_cancel_task():
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
-    elif task_.SP[0].userID != userID_:
-        #你不是任務發布人
+    elif task_.SP == []:
+        candidateList =task_.db_task_taskCandidate
+        for candidate in candidateList:
+            if candidate.userID == int(userID_):
+                target = db.session.query(taskCandidate).filter(taskCandidate.userID == int(userID_)).filter(taskCandidate.taskID == taskID_)
+                target.delete()
+                db.session.commit()
+                return jsonify({"rspCode":"200"})
+    elif task_.SP[0].userID != int(userID_):
         return jsonify({"rspCode":"401"})
     elif task_status == 2:
         task_.status =10
@@ -2822,7 +2830,7 @@ def task_finish_or_not():
     if not(status in ['0','1']):
         #status 只能是 0 or 1
         return jsonify({"rspCode":"403"})
-    if task_.SR[0].userID == int(userID_) :
+    if task_.SR[0].userID == userID_ :
         if task_.taskStatus in [2,7,8,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2843,7 +2851,7 @@ def task_finish_or_not():
         else:
             #不能這樣做
             return jsonify({"rspCode":"402"})
-    elif task_.SP[0].userID == int(userID_) :
+    elif task_.SP[0].userID == userID_ :
         if task_.taskStatus in [2,6,8,9]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
@@ -2933,34 +2941,35 @@ def comment_action():
     if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskEndTime:
         #不在可評價時間
         return jsonify({"rspCode":"403"})
-    if task_.taskStatus in [3,6,7,8]:
-        comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()       
-        if task_.SR[0].userID == int(userID_):    
-            if comment_ == None:
-                comment_ = comment(taskID = int(taskID_), SRComment = user_comment, SPComment = None, commentStatus = 0, adminID = None)
-                db.session.add(comment_) 
-                db.session.commit()
-                return jsonify({"rspCode":"200"})
-            elif comment_.SRComment != None:
-                #已經評論過
-                return jsonify({"rspCode":"404"})
-            else:
-                comment_.SRComment = user_comment
+    if task_.taskStatus in [3,6,7,8,13,14]: 
+        if task_.SR[0].userID == int(userID_):   
+                if task_.taskStatus == 14:
+                    task_.taskStatus = 15
+                    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
+                    comment_.SRComment = user_comment
+                elif task_.taskStatus == 13:
+                    #已經評論過
+                    return jsonify({"rspCode":"404"})
+                else:
+                    task_.taskStatus = 13
+                    comment_ = comment(taskID = int(taskID_), SRComment = user_comment, SPComment = None, commentStatus = 0, adminID = None)
+                    db.session.add(comment_) 
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
         if task_.SP[0].userID == int(userID_):    
-            if comment_ == None:
-                comment_ = comment(taskID = int(taskID_), SPComment = user_comment, SRComment = None, commentStatus = 0, adminID = None)
-                db.session.add(comment_) 
-                db.session.commit()
-                return jsonify({"rspCode":"200"})
-            elif comment_.SPComment != None:
+            if task_.taskStatus == 13:
+                task_.taskStatus = 15
+                comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
+                comment_.SPComment = user_comment
+            elif task_.taskStatus == 14:
                 #已經評論過
                 return jsonify({"rspCode":"404"})
             else:
-                comment_.SPComment = user_comment
-                db.session.commit()
-                return jsonify({"rspCode":"200"})
+                task_.taskStatus = 14
+                comment_ = comment(taskID = int(taskID_), SPComment = user_comment, SRComment = None, commentStatus = 0, adminID = None)
+                db.session.add(comment_) 
+            db.session.commit()
+            return jsonify({"rspCode":"200"})
         elif task_.SP[0].userID != userID_:
                     #不是此task的SR或SP
                     return jsonify({"rspCode":"401"})
@@ -3071,3 +3080,7 @@ def USER_SR_allTaskRecord():
 @test.route("/GM/updateGrade")
 def GM_updateGrade():
     return render_template("updateGrade.html")
+
+
+ 
+

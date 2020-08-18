@@ -1,0 +1,57 @@
+<!--USER評分-->
+<!DOCTYPE html>
+<html>  
+
+<head>
+    <title>評分</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+    <link rel="stylesheet" href="../static/css/rating.css" type="text/css">
+</head>
+
+<body>
+    <div class="ratingDiv">
+        <div class="formTitleDiv"><h3 id="formTitle">評分</h3></div>
+            <div class="formColumn">
+                <form class="ratingUser" id="ratingUser" name="ratingUser" onsubmit="return register()">
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="employee" class="formLabel">雇員:</label></div>
+                    </div>
+                    <div class="formLine">
+                        <div class="formLabelDiv"><label for="taskName" class="formLabel">任務名稱:</label></div>
+                    </div>
+                    <div class="formLine" id="rateStar">
+                        <div class="formLabelDiv" id="rateStar1">
+                            <label for="rate" class="formLabel">評分:</label>
+                        </div>
+                        <div class="rating">
+                            <input type="radio" id="star5" name="rating" value="5" hidden/>
+                            <label for="star5"></label>
+                            <input type="radio" id="star4" name="rating" value="4" hidden/>
+                            <label for="star4"></label>
+                            <input type="radio" id="star3" name="rating" value="3" hidden/>
+                            <label for="star3"></label>
+                            <input type="radio" id="star2" name="rating" value="2" hidden/>
+                            <label for="star2"></label>
+                            <input type="radio" id="star1" name="rating" value="1" hidden/>
+                            <label for="star1"></label>
+                        </div>
+                    </div>
+                    <div class="formLine" id="commentStar">
+                        <div class="formLabelDiv" id="commentStar1"><label for="commemt" class="formLabel">評論:</label></div>
+                        <div class="formLabelDiv" id="commentStar2">
+                            <textarea id="rateDescription">請寫下您的評論..</textarea>
+                        </div>     
+                    </div>
+                    <div class="formLine">
+                        <input type="submit" class="formButton" value="送出評論" onclick="()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -17,156 +17,96 @@ def reset_password(token):
 #登入頁面
 @Admin.route('/login')
 def login():
-   return render_template('loginManger5.html')
+   print(session.get('userType'))
+   if session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['SA']]:
+      return redirect(url_for('Admin.setting'))
+   else:
+      return render_template('loginManager5.html')
 
-#SA - 設定頁面
-@Admin.route('/SA/setting')
-def SA_setting():
+#設定頁面
+@Admin.route('/setting')
+def setting():
+   print(session.get('userType'))
    if session.get('userType') == userType['SA']:
       return render_template('settingSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AA - 設定頁面
-@Admin.route('/AA/setting')
-def AA_setting():
-   if session.get('userType') == userType['AA']:
+   elif session.get('userType') == userType['AA']:
       return render_template('settingAA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AG - 設定頁面
-@Admin.route('/AG/setting')
-def AG_setting():
-   if session.get('userType') == userType['AG']:
+   elif session.get('userType') == userType['AG']:
       return render_template('settingAG.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AS - 設定頁面
-@Admin.route('/AS/setting')
-def AS_setting():
-   if session.get('userType') == userType['AS']:
+   elif session.get('userType') == userType['AS']:
       return render_template('settingAS.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AU - 設定頁面
-@Admin.route('/AU/setting')
-def AU_setting():
-   if session.get('userType') == userType['AS']:
+   elif session.get('userType') == userType['AS']:
       return render_template('settingAU.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 核准紀錄
-@Admin.route('/SA/approveRecord')
-def SA_approveRecord():
+#核准紀錄
+@Admin.route('/approveRecord')
+def approveRecord():
    if session.get('userType') == userType['SA']:
       return render_template('approveRecordSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AA - 核准紀錄
-@Admin.route('/AA/approveRecord')
-def AA_approveRecord():
-   if session.get('userType') == userType['AA']:
+   elif session.get('userType') == userType['AA']:
       return render_template('approveRecordAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 核准申請
-@Admin.route('/SA/approveSystem')
-def SA_approveSystem():
+#核准申請
+@Admin.route('/approveSystem')
+def approveSystem():
    if session.get('userType') == userType['SA']:
       return render_template('approveSystemSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AA - 核准申請
-@Admin.route('/AA/approveSystem')
-def AA_approveSystem():
-   if session.get('userType') == userType['AA']:
+   elif session.get('userType') == userType['AA']:
       return render_template('approveSystemAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 更新申請條件
-@Admin.route('/SA/updateCondition')
-def SA_update_condition():
+#更新申請條件
+@Admin.route('/updateCondition')
+def update_condition():
    if session.get('userType') == userType['SA']:
       return render_template('updateConditionSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AA - 更新申請條件
-@Admin.route('/AA/updateCondition')
-def AA_update_condition():
-   if session.get('userType') == userType['AA']:
+   elif session.get('userType') == userType['AA']:
       return render_template('updateConditionAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 配發點數
-@Admin.route('/SA/givePoint')
-def SA_givePoint():
+#配發點數
+@Admin.route('/givePoint')
+def give_point():
    if session.get('userType') == userType['SA']:
       return render_template('givePointSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AS - 配發點數
-@Admin.route('/AS/givePoint')
-def AS_givePoint():
-   if session.get('userType') == userType['AS']:
+   elif session.get('userType') == userType['AS']:
       return render_template('givePointAS.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 配發紀錄
-@Admin.route('/SA/giveRecord')
-def SA_giveRecord():
+#配發紀錄
+@Admin.route('/giveRecord')
+def give_record():
    if session.get('userType') == userType['SA']:
          return render_template('giveRecordSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AS - 配發紀錄
-@Admin.route('/AS/giveRecord')
-def AS_giveRecord():
-   if session.get('userType') == userType['AS']:
+   elif session.get('userType') == userType['AS']:
       return render_template('giveRecordAS.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 人事管理 - GM申請
-@Admin.route('/SA/GMApplication')
-def SA_hrmGM_application():
+
+#人事管理 - GM申請
+@Admin.route('/GMApplication')
+def hrmGM_application():
    if session.get('userType') == userType['SA']:
       return render_template('hrmGMApplicationSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AG - 人事管理 - GM申請
-@Admin.route('/AG/GMApplication')
-def AG_hrmGM_application():
-   if session.get('userType') == userType['AG']:
+   elif session.get('userType') == userType['AG']:
       return render_template('hrmGMApplicationAG.html')
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 人事管理 - GM列表
-@Admin.route('/SA/GMList')
-def SA_GM_list():
+#人事管理 - GM列表
+@Admin.route('/GMList')
+def GM_list():
    if session.get('userType') == userType['SA']:
       return render_template('hrmGMRecordSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-    
-#AG - 人事管理 - GM列表
-@Admin.route('/AG/GMList')
-def AG_GM_list():
-   if session.get('userType') == userType['AG']:
+   elif session.get('userType') == userType['AG']:
       return render_template('hrmGMRecordAG.html')
    else:
       return redirect(url_for('Admin.login'))
@@ -179,18 +119,12 @@ def SA_list():
    else:
       return redirect(url_for('Admin.login'))
 
-#SA - 更新入口網站
-@Admin.route('/SA/updateWeb')
+#更新入口網站
+@Admin.route('/updateWeb')
 def SA_update_web():
    if session.get('userType') == userType['SA']:
       return render_template('updateWebSA.html')
-   else:
-      return redirect(url_for('Admin.login'))
-
-#AA - 更新入口網站
-@Admin.route('/AU/updateWeb')
-def AU_update_web():
-   if session.get('userType') == userType['AU']:
+   elif session.get('userType') == userType['AU']:
       return render_template('updateWebAU.html')
    else:
       return redirect(url_for('Admin.login'))

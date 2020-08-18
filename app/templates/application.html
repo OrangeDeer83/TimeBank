@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>點數申請</title>
+
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
+        <meta name="description" content="時間銀行以交換服務的時數為概念，不再以金錢，而是以時數衡量工作的價值，人人每日都有平等的24小時，如何善用有限的時間，將成為關鍵。" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/application.css" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown menuIconBack" onclick="clickToSpan('menuIconSpan')">
+                            <div class="menuIcon"></div>
+                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                <li class="hiddenLarge">
+                                    <a class="point" href="point.html">
+                                        <img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />
+                                        目前沒有點數
+                                    </a>
+                                </li>
+                                <li><a href="allTask.html">所有任務</a></li>
+                                <li><a href="createTask.html">新增任務</a></li>
+                                <li><a href="schedule.html">行事曆</a></li>
+                                <li><a href="application.html">點數申請</a></li>
+                                <li><a href="setting.html">設定</a></li>
+                                <li><a id="logout">登出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <a class="navbarBrand" href="homepage.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
+                        </a>
+                    </div>
+                    <div class="navbarRight">
+                        <ul class="nav navbarUl">
+                            <li class="dropdown">
+                                <div class="navbarNotice" onclick="clickToSpan('noticeSpan')">通知</div>
+                                <ul id="noticeSpan" class="dropdownMenu dropdownMenuRight unspanned">
+                                    <li><a href="#"><div>First</div></a></li>
+                                    <li><a href="#"><div>Second</div></a></li>
+                                    <li><a href="#"><div>Third</div></a></li>
+                                    <li><a href="#"><div>Fourth</div></a></li>
+                                    <li><a href="#"><div>Fifth</div></a></li>
+                                    <li><a href="#"><div>Sixth</div></a></li>
+                                    <li><a href="#"><div>Seventh</div></a></li>
+                                    <li><a href="#"><div>Eighth</div></a></li>
+                                    <li><a href="#"><div>Nineth</div></a></li>
+                                    <li><a href="#"><div>Tenth</div></a></li>
+                                </ul>
+                            </li>
+                            <li class="hiddenSmall">
+                                <a class="point" href="point.html">
+                                    <img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />
+                                    目前沒有點數
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="navbarPortrait" href="personal.html">
+                            <img class="navbarPortraitImg" alt="Portrait" src="../static/img/portrait1.jpg" />
+                        </a>                           
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="pointApplication">
+             <div class="pointDiv">
+                <div id="formTitleDiv"><h3 id="formTitle">點數申請系統</h3></div>
+                <div class="formColumn">
+                    <form class="pointApplicatedSystem" id="pointApplicatedSystem" name="pointApplicatedSystem" onsubmit="return register()">
+                        <div class="formLine">
+                            <div class="formLabelDiv"><label class="formLabel">申請類別</label></div>
+                            <div class="formRadios">
+                                <span id="group"></span>
+                                <select class="quota" id="userClass">
+                                    <option value="classify" disabled selected hidden>請選擇類別</option>
+                                </select>  
+                            </div>
+                        </div>
+                        <div class="formLine">
+                            <div class="formLabelDiv"><label for="applyReason" class="formLabel">申請原因</label></div>
+                            <input type="text" class="formText" name="applyReason" id="applyReason" placeholder="選擇其他請輸入原因" />
+                        </div>
+
+                        <div class="formLine">
+                            <div class="formLabelDiv"><label class="formLabel">申請週期</label></div>
+                            <div class="formRadios">
+                                <input type="radio" class="formRadio" id="period0" name="applyPeriod" value="0" onclick="showQuota(0)" />
+                                <label for="period0" class="radioText" id="periodLabel0">一次性</label>
+                                <input type="radio" class="formRadio" id="period1" name="applyPeriod" value="30" onclick="showQuota(1)" />
+                                <label for="period1" class="radioText" id="periodLabel1">一個月</label>
+                                <input type="radio" class="formRadio" id="period2" name="applyPeriod" value="90" onclick="showQuota(2)" />
+                                <label for="period2" class="radioText" id="periodLabel2">三個月</label>
+                                <input type="radio" class="formRadio" id="period3" name="applyPeriod" value="180" onclick="showQuota(3)" />
+                                <label for="period3" class="radioText" id="periodLabel3">半年</label>
+                                <input type="radio" class="formRadio" id="period4" name="applyPeriod" value="365" onclick="showQuota(4)" />
+                                <label for="period4" class="radioText" id="periodLabel4">一年</label>
+                            </div>
+                        </div>
+                        <div class="formLine">
+                            <div class="formLabelDiv"><label for="applyQuoda" class="formLabel">申請額度</label></div>
+                            <input type="text" class="formText" id="applyQuota" name="applyQuoda" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
+                        </div>
+                        <div class="formLine" id="applyFrequencyDiv">
+                            <div class="formLabelDiv"><label for="applyFrequency" class="formLabel">領取次數</label></div>
+                            <input type="text" class="formText" id="applyFrequency" name="applyFrequency" placeholder="請輸入領取次數"/>
+                        </div>
+                        <div class="formLine">
+                            <div class="formLabelDiv"><label for="applyDocument" class="formLabel">證明文件</label></div>
+                            <span class="formText" id="uploadFile">
+                                <span>限PDF檔</span>
+                                <input type="file" id="applyDocument" name="applyDocument" accept="application/pdf" />
+                            </span>
+                        </div>
+                        <div class="formLine">
+                            <span>系統狀態：</span><span id="error"></span>
+                        </div>
+                        <div class="formLine">
+                            <input type="button" class="formButton" value="送出申請" onclick="sendApplication()" />
+                            <input type="reset" class="formButton" value="重新填寫" />
+                        </div>
+                        <div class="formLine" id="download">
+                            <a class="conditionDescription" id="conditionDescription" href="{{url_for('static', filename='uploadFile/apply_condition.pdf')}}">下載申請條件說明</a>
+                        </div>
+                    </form>
+                </div>  
+            </div>  
+        </div>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/application.js"></script>
+    </body>
+
+</html>

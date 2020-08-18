@@ -2313,8 +2313,8 @@ def SR_add_task():
     newTaskPoint = json['taskPoint']
     newTaskLocation = json['taskLocation']
     newTaskContent = json['taskContent']
-    userID_ = session.get('userID')
-    userID_ = 5
+    #userID_ = session.get('userID')
+    userID_ = int(json['userID'])
     notAllow = []
     pointConflict= ''
     taskConflict= []

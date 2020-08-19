@@ -1085,7 +1085,13 @@ request:
 
 response
 {
-	rspCOde:""		200 : OK |300 : methods wrong | 400:title,file,content有空| 401:圖片檔名有問題| 402:圖片上傳錯誤| 403:內文上傳錯誤| 404:標題上傳錯誤| 405:title太長
+	1.導向 Admin.SA_update_web
+	2.標題,內文,圖片有空值
+	3.標題上傳錯誤
+	4.圖片上傳錯誤
+	5.圖片檔名錯誤
+	6.內文上傳錯誤
+	7.method錯誤
 }
 ```
 
@@ -1239,7 +1245,8 @@ request:
 response:
 
 {
-	rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗	groupName:"" (對象名稱)
+	rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗	
+	groupName:"" (對象名稱)
 }
 ```
 
@@ -1262,7 +1269,7 @@ request:
 response:
 
 {
-	rspCOde:"" 200 : OK |300 : methods wrong | 400 : 圖片上傳錯誤 | 401 : 檔案類型不許可 | 402 : 檔案傳輸方式錯誤、或是檔案超過2MB
+	rspCOde:"" 200 : OK |300 : methods wrong | 400 : 圖片上傳錯誤 | 401 : 檔案類型不許可 | 402 : 檔案傳輸方式錯誤、或是檔案超過5MB
 }
 ```
 
@@ -1323,7 +1330,7 @@ response:
 
 {
 	"quotaList":"" (list)
-	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知
+	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知|401 抓取資料失敗 |402 沒有此資料 
 }
 ```
 
@@ -1370,7 +1377,7 @@ response:
 
 <br>
 
-# 18.回傳要求的quota和condition id 
+# 18.根據所選的class回復period
 ### POST
 #### 可以只查個別的quota和condition ID
 #### path : /test/output_quota_conditionID
@@ -1379,13 +1386,13 @@ request:
 
 {
 	class:""(小於10個字)
-	period:""(0~99999)
 }
 
 response:
 
 {
-	rspCode:"" 200 OK | 201 其他沒有quota | 300 method wrong |400 class或是period為空	| 401 抓取資料失敗 | 402 沒有此資料
+	rspCode:"" 200 OK | 201 沒有可被申請的週期 | 300 method wrong |400 未知	
+	periodList:[]
 }
 ```
 
@@ -1409,8 +1416,14 @@ request:
 response:
 
 {
-	rspCode:""	200 OK| 300 method wrong | 400 未知 |401 找不到conditionID | 402 其他要填原因 | 403 有輸入不符合格式 | 404 pdf上傳錯誤
-	notAllow:"" 會把有問題的輸入的request名傳回
+	1.導向USER.application
+	2.未知錯誤
+	3.method不符
+	4.pdf上傳錯誤
+	5.檔案過大
+	6.有輸入不符合規範
+	7.其他請填寫原因
+	8.找不到此種項目
 }
 ```
 
@@ -1549,7 +1562,7 @@ request:
 response:
 
 {
-	200 OK | 300 method wrong | 400 未知
+	200 OK | 300 method wrong | 400 查資料失敗
 
 }
 ```
@@ -1602,7 +1615,7 @@ request:
 response:
 
 {
-	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在
+	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在| 401 kind 錯誤
 	notAllow:"" 會把有問題的輸入的request名傳回
 
 }
@@ -1743,7 +1756,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 u未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
+	rspCode:"" 200 OK |300 method wrong|400 未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突| 任務是自己的
 	"taskConflit": 
         {
             "taskID": "",
@@ -1769,7 +1782,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
+	rspCode:"" 200 OK |300 method wrong|400 userID 不存在
 	taskAmount:""
 	taskList: [
         {
@@ -1813,7 +1826,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許| 403 taskContent符號有問題
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許或輸入有問題	| 403 taskContent符號有問題
 	notAllow:[], 會把有問題的輸入的request名傳回
 	taskConflit:{
 		taskID:"",
@@ -1895,7 +1908,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能刪除|402 已經有SP| 403 userID 有問題
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能刪除|402 已經有SP不可刪除| 403 userID 有問題
 }
 ```
 
@@ -2005,7 +2018,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在 | 401  userID不是此任務SR或SP|402  此任務還不可評論| 403 star 不合法| 404 已經評論過
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在 | 401  userID不是此任務SR或SP|402  此任務還不可評論| 403 star 不合法| 404 已經評論過| 405 不是可評論時間
 }
 ```
 

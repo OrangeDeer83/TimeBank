@@ -94,7 +94,8 @@ def get_all_apply_status_0():
     return "SELECT `applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency` FROM `apply` WHERE `applyStatus` = 0 ORDER BY applyID"
 
 def get_apply_judge_user_info(userID):
-    return "SELECT `userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` WHERE `userID` = '{}'".format(userID)
+    return "SELECT `name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` WHERE `userID` = '{}'".format(userID)
+
 
 def show_condition_data(conditionID):
     return "SELECT `period`,`class`,`quota` FROM `applyCondition` WHERE `conditionID` ='{}'".format(conditionID)
@@ -136,7 +137,7 @@ def update_judge_time_in_apply(judgeTime,applyID):
     return "UPDATE `apply` SET `judgeTime` = '{}' WHERE `apply`.`applyID` = {}".format(judgeTime,applyID)
 
 def select_user_name(userID):
-    return "SELECT userName FROM account WHERE userID = '{}'".format(userID)
+    return "SELECT name FROM account WHERE userID = '{}'".format(userID)
 
 def get_all_apply_status_0_search_user_name(userName):
     return 'SELECT apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency FROM apply JOIN account WHERE apply.applyStatus = 0 AND apply.userID=account.userID AND (account.userName = "{}" OR account.name = "{}") ORDER BY applyID'.format(userName,userName)
@@ -157,10 +158,10 @@ def show_judge_history(userName = "",className = "" , period = "" , status = "")
     return sql
 
 def select_all_user():
-    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint`FROM `account` ORDER BY userID"
+    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint`FROM `account` ORDER BY userID"
 
 def select_search_user(target):
-    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
+    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
 
 def add_allotment(userID,frequency,period,quota,adminID,allotmentTime):
     return "INSERT INTO `allotment` (`allotmentID`, `userID`, `allotmentStatus`, `frequency`, `period`, `restTime`, `nextTime`, `quota`, `adminID`, `allotmentTime`) VALUES (NULL, '{}', '1', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(userID,frequency,period,str(int(period)*int(frequency)),period,quota,adminID,allotmentTime)
@@ -177,12 +178,11 @@ def select_allotment_simple_history_by_userID(userID= ''):
     else:
         return "SELECT allotmentTime, quota, period, frequency FROM allotment ORDER BY allotmentID DESC"
 
-def select_allotment_history_by_userID_userName(userID = '',userName=''):
-    if userID != '' and userName != '':
-        return "SELECT allotmentTime, quota, period, frequency,account.userID,account.userName,SRRate,SRRateTimes,SPRate,SPRateTimes FROM allotment JOIN account WHERE allotment.userID = account.userID AND (allotment.userID = '{}' OR account.userName = '{}') ORDER BY allotmentID DESC".format(userID,userName)
+def select_allotment_history_by_userID_userName(userID = '',name=''):
+    if userID != '' and name != '':
+        return "SELECT allotmentTime, quota, period, frequency,account.userID,account.name,SRRate,SRRateTimes,SPRate,SPRateTimes FROM allotment JOIN account WHERE allotment.userID = account.userID AND (allotment.userID = '{}' OR account.name = '{}') ORDER BY allotmentID DESC".format(userID,name)
     else:
-        return "SELECT allotmentTime, quota, period, frequency, account.userID, account.userName, SRRate, SRRateTimes, SPRate, SPRateTimes FROM allotment JOIN account WHERE allotment.userID = account.userID ORDER BY allotmentID DESC"
-
+        return "SELECT allotmentTime, quota, period, frequency, account.userID, account.name, SRRate, SRRateTimes, SPRate, SPRateTimes FROM allotment JOIN account WHERE allotment.userID = account.userID ORDER BY allotmentID DESC"
 def check_point_ID(pointID):
     return "SELECT pointID FROM point WHERE pointID = '{}'".format(pointID)
 

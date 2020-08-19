@@ -2051,16 +2051,15 @@ response:
 
 <br>
 
-# 43.GM審核評論動作 
-### GET	
-#### 不須傳值
+# 41.GM審核評論動作 
+### POST
+#### 評論的動作
 #### path : /test/judge_commentaction
 ```
 request:
 
 {	
-	adminID:"" 正式時從session拿，必須是數字且存在，不燃會炸
-	taskID:"" 目標ID
+	commentID:"" 目標ID
 	status:"" 0(不核准),1(核准)
 }
 	
@@ -2073,19 +2072,22 @@ response:
 
 <br>
 
-# 44.下載申請說明文件
-### GET 
+
+# 42.下載申請說明文件
+### GET	
 #### 不須傳值
 #### path : /test/download/申請說明文件
+```
 request:
 
-{ 
- NULL
+{	
+	NULL
 }
- 
+	
 response:
 
 {
- rspCode:""  |300 method wrong|400 失敗
- 成功會直接下載
+	rspCode:""  |300 method wrong|400 失敗
+	成功會直接下載
 }
+```

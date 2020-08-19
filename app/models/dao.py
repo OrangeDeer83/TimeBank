@@ -157,10 +157,10 @@ def show_judge_history(userName = "",className = "" , period = "" , status = "")
     return sql
 
 def select_all_user():
-    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` ORDER BY userID"
+    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint`FROM `account` ORDER BY userID"
 
 def select_search_user(target):
-    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
+    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`,`userPoint` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
 
 def add_allotment(userID,frequency,period,quota,adminID,allotmentTime):
     return "INSERT INTO `allotment` (`allotmentID`, `userID`, `allotmentStatus`, `frequency`, `period`, `restTime`, `nextTime`, `quota`, `adminID`, `allotmentTime`) VALUES (NULL, '{}', '1', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(userID,frequency,period,str(int(period)*int(frequency)),period,quota,adminID,allotmentTime)
@@ -215,6 +215,5 @@ def task_status_4_dead_line(task_ID,newTaskStartTime):
 
 def task_status_5_dead_line(task_ID,newTaskEndTime):
     return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9".format(task_ID,newTaskEndTime,task_ID)
-
 def commeny_status_0(task_ID,EndTime):
     return "CREATE EVENT `commeny_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND (`comment`.`commentStatus` = -2 OR `comment`.`commentStatus` = -1)".format(task_ID,EndTime,task_ID)

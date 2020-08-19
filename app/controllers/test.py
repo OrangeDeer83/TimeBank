@@ -1994,8 +1994,7 @@ def apply_judge():
     quotaChange = json['quotaChange']
     notAllow = []
     adminID = session.get('adminID')
-    ###adminID = 4
-    adminID = json['adminID']
+    adminID = 4
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
     if applyID == "":
@@ -2021,8 +2020,9 @@ def apply_judge():
             db.engine.execute(alter_apply_rest_time(applyID,rest))
         db.engine.execute(plus_user_point(plus,userID))
         for x in range(quota):
-            pointID = make_point()+"_{}".format(str(db.session.query(point).count()))
+            pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
             db.engine.execute(make_point_sql(pointID,adminID,userID))
+            db.session.commit()
     else:
         #有輸入新的quota才檢查quota
         if not(quotaChange.isdigit()):
@@ -2053,8 +2053,9 @@ def apply_judge():
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
                 db.engine.execute(alter_apply_rest_time(applyID,rest))
             for x in range(quota):
-                pointID = make_point()+"_{}".format(str(db.session.query(point).count()))
+                pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
+                db.session.commit()
         else:
             #不是1就只改status和adminID
             db.engine.execute(alter_apply_status(applyStatus,applyID))
@@ -2205,6 +2206,7 @@ def alloment():
         notAllow.append("quota")
     elif len(quota) > 2:
         notAllow.append("quota")
+    print(len(quota))
     if notAllow != []:
         #rspCode 401:有違法輸入
         return jsonify({"rspCode":"400","notAllow":notAllow})
@@ -2228,10 +2230,9 @@ def alloment():
                 db.engine.execute(alter_allotment_rest_time(allotmentID,str(int(rest) - int(period))))
             db.engine.execute(plus_user_point(plus,userID))
             for num in range(int(quota)):
-                pointID = make_point()
-                while None != db.engine.execute(check_point_ID(pointID)).fetchone():
-                    pointID = make_point()
+                pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
+                db.session.commit()
             return jsonify({"rspCode":"200"})
         except:
             #可能是userID不存在或是adminID不存在
@@ -2241,7 +2242,7 @@ def alloment():
         try:
             for user in userData:
                 userID = user[0]
-                db.engine.execute(add_allotment(userID,frequency,period,quota,adminID,allotmentTime))  
+                db.engine.execute(add_allotment(userID,frequency,period,quota,adminID,allotmentTime))
                 allotmentID = db.engine.execute(find_max_allotmentID_by_adminID(adminID)).fetchone()[0]
                 userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
                 plus = userPoint + int(quota)
@@ -2250,10 +2251,9 @@ def alloment():
                     db.engine.execute(alter_allotment_rest_time(allotmentID,str(int(rest) - int(period))))
                 db.engine.execute(plus_user_point(plus,userID))
                 for num in range(int(quota)):
-                    pointID = make_point()
-                    while None != db.engine.execute(check_point_ID(pointID)).fetchone():
-                        pointID = make_point()
+                    pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                     db.engine.execute(make_point_sql(pointID,adminID,userID))
+                    db.session.commit()
             return jsonify({"rspCode":"200","notAllow":""})
         except:
             return jsonify({"rspCode":"400","notAllow":"userID or adminID"})

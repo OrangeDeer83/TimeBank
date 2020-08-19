@@ -1,5 +1,5 @@
 #coding: utf-8
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app,send_from_directory
 import re, datetime, smtplib
 from sqlalchemy.sql import func
 from math import floor
@@ -10,6 +10,7 @@ from ..models.token import *
 from ..models.mail import *
 from ..models import db, userType
 from email.mime.text import MIMEText
+from ..models.makePoint import *
 import os
 import datetime
 test = Blueprint('test', __name__)
@@ -1524,7 +1525,7 @@ def upload_apply_condition_pdf():
         if filePdf.mimetype == 'application/pdf':
             try:
                 #儲存檔案到指定位置
-                filePdf.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' , 'apply_condition.pdf'))
+                filePdf.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' , '申請說明文件.pdf'))
                 return jsonify({"rspCode":"200"})
             except:
                 #rspCode 400:圖片上傳錯誤
@@ -1541,8 +1542,8 @@ def ouput_apply_condition_pdf():
     if request.method == 'GET':
         #try:
             
-            if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/'+'apply_condition.pdf'):
-                return jsonify({"rspCode":"200","fileName":"apply_condition.pdf"})
+            if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/'+'申請說明文件.pdf'):
+                return jsonify({"rspCode":"200","fileName":"申請說明文件.pdf"})
             else:
                 #檔案不存在
                 return jsonify({"rspCode":"401","fileName":""})
@@ -1698,10 +1699,10 @@ def output_quota_conditionID():
 #根據所選的class回復period##注意
 #要json傳class
 #回傳rspCode,periodList
-@test.route("/output_allow_period", methods = ['GET'])
+@test.route("/output_allow_period", methods = ['POST'])
 def return_period_by_class():
     try:
-        if request.method == 'GET':
+        if request.method == 'POST':
             json = request.get_json()
             className = json['class']
             if className == '其他':
@@ -1744,7 +1745,7 @@ def user_add_apply():
             notAllow = []
             userID = session.get('userID')
             #userID = 1
-            ###userID = int(request.values['userID'])
+            userID = int(request.values['userID'])
             time = str(datetime.datetime.now()).rsplit('.',1)[0]
             #檢查各變數與檔案
             if request.values['applyFrequency'].isdigit():
@@ -1896,7 +1897,7 @@ def show_apply_status_0():
                applyQuota.append(conditionData[2])
                applyPeriod.append(conditionData[0])
                applyFrequency.append(oneData[5])
-               applyTime.append((str(oneData[3]))
+               applyTime.append(str(oneData[3]))
                applyResult.append(oneData[4])
            return jsonify({"rspCode":"200","name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
         except:
@@ -1975,8 +1976,7 @@ def apply_pdf_download():
         json = request.get_json()
         applyID = json['applyID']
         filename = os.listdir(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID))[1]
-        send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),filename,as_attachment=True)
-        return jsonify({"rspCode":"200"})
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),filename,as_attachment=True)
     except:
         #rspCode 400:檔案不存在
         return jsonify({"rspCode":"400"})
@@ -2153,6 +2153,7 @@ def show_user():
     userSRRate = []
     userSPRate = []
     userName = [] 
+    userPoint= []
     try:
         if target == '':        
             #`userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`
@@ -2174,7 +2175,8 @@ def show_user():
             userSPRate.append(float(user[4]) / float(user[5]))
         except:
             userSPRate.append(0)
-    return jsonify({"rspCode":"200","userID":userID,"name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate})
+        userPoint.append(user[6])
+    return jsonify({"rspCode":"200","userID":userID,"name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate,"userPoint":userPoint})
 
 #配發按鍵
 #要json傳kind(one or all), receiver(one時是目標的ID all是搜尋了什麼), period,
@@ -3077,7 +3079,15 @@ def judge_commentaction():
         return jsonify({"rspCode":"402"})
     return jsonify({"rspCode":"200"})
 
-
+#下載申請說明文件
+@test.route("/download/申請說明文件",methods = ['GET'])
+def download_apply_description():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300"})
+    try:
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/','申請說明文件.pdf',as_attachment=True)
+    except:
+        return jsonify({"rspCode":"400"})
 
  
 

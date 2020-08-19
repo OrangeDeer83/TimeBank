@@ -87,7 +87,7 @@ request:
 response:
 
 {
-	rspCode: ""		200:success | 300:method使用錯誤 | 400:資料庫錯誤 | 401:名稱長度不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:電子郵件長度不符 | 405:電子郵件格式不符 | 406:手機號碼格式不符 | 407:性別異常 | 408:生日格式不符 | 409:未來人錯誤 | 410:帳號重複 | 411:電子郵件重複
+	rspCode: ""		200:註冊成功 | 300:method使用錯誤 | 400:資料庫錯誤 | 401:名稱長度不符 | 402:帳號格式不符 | 403:密碼格式不符 | 404:電子郵件長度不符 | 405:電子郵件格式不符 | 406:手機號碼格式不符 | 407:性別異常 | 408:生日格式不符 | 409:未來人錯誤 | 410:帳號重複 | 411:電子郵件重複
 }
 ```
 
@@ -101,7 +101,6 @@ response:
 request:
 
 {
-	type: "",			0:no login | 1:USER | 2:AS | 3:AA | 4:AU | 5:AG | 6:GM | 7:SA
 	userName: "",			(max length 20)
 	userPassword: ""	(max length 30)
 }
@@ -135,7 +134,7 @@ response:
 
 <br>
 
-# API 5 - USER forgot Password
+# API 5 - USER Forgot Password
 ### POST 
 #### 供一般使用者申請重設密碼信
 #### path : /test/USER/forgot_password
@@ -335,7 +334,7 @@ response:
 # API 14 - Admin Login
 ### POST
 #### 所有管理員登入
-#### path : /Admin/login
+#### path : /test/Admin/login
 ```
 request:
 
@@ -377,7 +376,7 @@ response:
 # API 16 - GM Apply List
 ### GET
 #### 取得GM申請列表
-#### path : /GM_apply_list
+#### path : /test/GM_apply_list
 ```
 request:
 
@@ -405,7 +404,7 @@ response:
 # API 17 - GM List
 ### GET
 #### 取得現有GM列表
-#### path : /GM_list
+#### path : /test/GM_list
 ```
 request:
 
@@ -474,7 +473,7 @@ response:
 
 # API 19 - Admin Reset Password
 ### POST
-#### 在驗證token後一般使用者能夠重設密碼
+#### 在驗證token後管理員能夠重設密碼
 #### path : /test/Admin/reset_password/\<token\>
 >tip:需要將網址中最後段的token擷取下來並放在API路徑中
 ```
@@ -553,10 +552,10 @@ response:
 
 <br>
 
-# API 22 - Delete Admin Check Password
+# API 22 - Delete GM Check Password
 ### POST
-#### 刪除管理員前驗證密碼
-#### path : /test/delete/Admin/check_password
+#### 刪除GM前驗證密碼
+#### path : /test/delete/GM	/check_password
 ```
 request:
 

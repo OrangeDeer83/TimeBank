@@ -1910,7 +1910,7 @@ def show_apply_status_0():
 #要json傳applyID
 #回傳rspCode, applyTime, frequency, result, status, judgeTime, period, className,
 #quota, oldQuota, applyPdfName, applyID, userID, userName
-@test.route('/simple_personal_apply_history/',methods =['POST'])
+@test.route('/simple_personal_apply_history',methods =['POST'])
 def simple_personal_apply_history():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})

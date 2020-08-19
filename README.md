@@ -451,7 +451,7 @@ response:
 
 <br>
 
-# API 18 - Admin forgot Password
+# API 19 - Admin forgot Password
 ### POST 
 #### 供管理員申請重設密碼信
 #### path : /test/Admin/forgot_password
@@ -471,7 +471,7 @@ response:
 
 <br>
 
-# API 19 - Admin Reset Password
+# API 20 - Admin Reset Password
 ### POST
 #### 在驗證token後管理員能夠重設密碼
 #### path : /test/Admin/reset_password/\<token\>
@@ -490,7 +490,7 @@ response:
 }
 ```
 
-# API 20 - GM forgot Password
+# API 21 - GM forgot Password
 ### POST 
 #### 供GM申請重設密碼信
 #### path : /test/USER/forgot_password
@@ -510,7 +510,7 @@ response:
 
 <br>
 
-# API 21 - GM Reset Password
+# API 22 - GM Reset Password
 ### POST
 #### 在驗證token後一般使用者能夠重設密碼
 #### path : /test/GM/reset_password/\<token\>
@@ -531,7 +531,7 @@ response:
 
 <br>
 
-# API 22 - Delete Admin Check Password
+# API 23 - Delete Admin Check Password
 ### POST
 #### 刪除管理員前驗證密碼
 #### path : /test/delete/Admin/check_password
@@ -552,10 +552,10 @@ response:
 
 <br>
 
-# API 22 - Delete GM Check Password
+# API 24 - Delete GM Check Password
 ### POST
 #### 刪除GM前驗證密碼
-#### path : /test/delete/GM	/check_password
+#### path : /test/delete/GM/check_password
 ```
 request:
 
@@ -577,7 +577,7 @@ response:
 
 <br>
 
-# API 23 - Setting UserInfo
+# API 25 - Setting UserInfo
 ### POST
 #### 設定使用者介紹內容
 #### path : /test/setting/userInfo
@@ -598,7 +598,7 @@ response:
 
 <br>
 
-# API 24 - Setting Name
+# API 26 - Setting Name
 ### POST
 #### 設定名稱
 #### path : /test/setting/name
@@ -619,7 +619,7 @@ response:
 
 <br>
 
-# API 25 - Setting UserName
+# API 27 - Setting UserName
 ### POST
 #### 設定使用者名稱
 #### path : /test/setting/userName
@@ -640,7 +640,7 @@ response:
 
 <br>
 
-# API 26 - Setting UserPassword
+# API 28 - Setting UserPassword
 ### POST
 #### 設定密碼
 #### path : /test/setting/uesrPassword
@@ -662,7 +662,7 @@ response:
 
 <br>
 
-# API 27 - Setting UserMail
+# API 29 - Setting UserMail
 ### POST
 #### 設定電子郵件
 #### path : /test/setting/userMail
@@ -683,7 +683,7 @@ response:
 
 <br>
 
-# API 28 - Setting UserPhone
+# API 30 - Setting UserPhone
 ### POST
 #### 設定手機號碼
 #### path : /test/setting/userPhone
@@ -704,7 +704,7 @@ response:
 
 <br>
 
-# API 29 - Setting UserGender
+# API 31 - Setting UserGender
 ### POST
 #### 設定性別
 #### path : /test/setting/userGender
@@ -725,7 +725,7 @@ response:
 
 <br>
 
-# API 30 - Setting UserBirthday
+# API 32 - Setting UserBirthday
 ### POST
 #### 設定生日
 #### path : /test/setting/userBirthday
@@ -746,7 +746,7 @@ response:
 
 <br>
 
-# API 31 - Setting Propic
+# API 33 - Setting Propic
 ### POST
 #### 設定個人照片
 #### path : /test/setting/propic
@@ -768,7 +768,7 @@ response:
 
 <br>
 
-# API 32 - Profile Output
+# API 34 - Profile Output
 ### POST
 #### 顯示個人資料
 #### path : /test/output
@@ -794,7 +794,7 @@ response:
 
 <br>
 
-# API 33 - Output SR Task Record
+# API 35 - Output SR Task Record
 ### POST
 #### 取得SR歷史的任務
 #### path : /test/SR/output/record
@@ -832,7 +832,7 @@ response:
 
 <br>
 
-# API 34 - Output SP Task Passed
+# API 36 - Output SP Task Passed
 ### POST
 #### 取得SP已通過的任務
 #### path : /test/SP/output/passed
@@ -866,7 +866,7 @@ response:
 
 <br>
 
-# API 35 - Output SP Task Checking
+# API 37 - Output SP Task Checking
 ### POST
 #### 取得SP審核中的任務
 #### path : /test/SP/output/checking
@@ -899,10 +899,10 @@ response:
 
 <br>
 
-# API 36 - Output SP Task Refused
+# API 38 - Output SP Task Refused
 ### POST
 #### 取得SP遭拒絕的任務
-#### path : /test/SR/output/refused
+#### path : /test/SP/output/refused
 ```
 request:
 
@@ -933,10 +933,10 @@ response:
 
 <br>
 
-# API 37 - Output SP Task Record
+# API 39 - Output SP Task Record
 ### POST
 #### 取得SP歷史的任務
-#### path : /test/SR/output/record
+#### path : /test/SP/output/record
 ```
 request:
 
@@ -971,7 +971,7 @@ response:
 
 <br>
 
-# API 38 - Output Profile Task
+# API 40 - Output Profile Task
 ### POST
 #### 取得個人頁面已發任務
 #### path : /test/output/task
@@ -1070,7 +1070,7 @@ response:
 # 3.最新消息上傳
 ### POST
 ### 上傳title,img,content
-### path:test/upload_news
+### path:/test/upload_news
 >用form
 ```
 request:
@@ -1084,19 +1084,13 @@ request:
 
 response
 {
-	1.導向 Admin.SA_update_web
-	2.標題,內文,圖片有空值
-	3.標題上傳錯誤
-	4.圖片上傳錯誤
-	5.圖片檔名錯誤
-	6.內文上傳錯誤
-	7.method錯誤
+	rspCOde:""		200 : OK |300 : methods wrong | 400:title,file,content有空| 401:圖片檔名有問題| 402:圖片上傳錯誤| 403:內文上傳錯誤| 404:標題上傳錯誤| 405:title太長
 }
 ```
 
-# 4.最新資訊圖片顯示
+# 4.最新消息圖片顯示
 ### GET
-### 傳最新資訊的圖片檔名
+### 傳最新消息的圖片檔名
 ### path:/test/output_news_image/number
 ```
 request:
@@ -1112,9 +1106,9 @@ response
 }
 ```
 
-# 5.最新資訊內文顯示
+# 5.最新消息內文顯示
 ### GET
-### 傳最新資訊的內文
+### 傳最新消息的內文
 ### path:/test/output_news_content/number
 ```
 request:
@@ -1129,9 +1123,9 @@ request:
 }
 ```
 
-# 6.最新資訊標題顯示
+# 6.最新消息標題顯示
 ### GET
-### 傳最新資訊的內文
+### 傳最新消息的標題
 ### path:/test/output_news_title/number
 ```
 request:
@@ -1150,7 +1144,7 @@ response:
 # 7.編輯最新消息
 ### POST
 ### 編輯網址中指定的news
-### path:test/edit_news/number
+### path:/test/edit_news/number
 >用form
 ```
 request:
@@ -1189,7 +1183,7 @@ response:
 # 9.顯示可用的news number
 ### GET
 ### 傳可用的number和其中的最大值
-### path:test/useful_numbers
+### path:/test/useful_numbers
 
 ``` 
 request:
@@ -1215,7 +1209,7 @@ response:
 # 10.更新申請對象
 ### POST
 ### 更新申請對象
-### path:test/update_apply_group
+### path:/test/update_apply_group
 
 ```
 request:
@@ -1233,7 +1227,7 @@ response:
 # 11.顯示申請對象
 ### GET
 ### 傳現在的申請對象是什麼
-### path:test/output_apply_group
+### path:/test/output_apply_group
 
 ```
 request:
@@ -1244,8 +1238,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗	
-	groupName:"" (對象名稱)
+	rspCode:"" 200 : OK |300 : methods wrong | 400讀取失敗	groupName:"" (對象名稱)
 }
 ```
 
@@ -1256,7 +1249,7 @@ response:
 # 12.更新申請文件
 ### POST
 #### 上傳申請文件
-#### path : test/upload_apply_condition_pdf
+#### path : /test/upload_apply_condition_pdf
 > 用form
 ```
 request:
@@ -1268,7 +1261,7 @@ request:
 response:
 
 {
-	rspCOde:"" 200 : OK |300 : methods wrong | 400 : 圖片上傳錯誤 | 401 : 檔案類型不許可 | 402 : 檔案傳輸方式錯誤、或是檔案超過5MB
+	rspCOde:"" 200 : OK |300 : methods wrong | 400 : 圖片上傳錯誤 | 401 : 檔案類型不許可 | 402 : 檔案傳輸方式錯誤、或是檔案超過2MB
 }
 ```
 
@@ -1277,7 +1270,7 @@ response:
 # 13.檢查申請文件是否存在
 ### GET
 #### 檢查檔案是否存在
-#### path : test/output_apply_condition_pdf
+#### path : /test/output_apply_condition_pdf
 ```
 request:
 
@@ -1296,7 +1289,7 @@ response:
 # 14.顯示可申請類別
 ### GET
 #### 把可申請的類別列出來
-#### path : test/output_apply_class
+#### path : /test/output_apply_class
 ```
 request:
 
@@ -1317,7 +1310,7 @@ response:
 # 15.根據所選的class回復可申請的period和其quota 
 ### POST
 #### 
-#### path : test/output_quota_conditionID
+#### path : /test/output_allow_period
 ```
 request:
 
@@ -1328,8 +1321,8 @@ request:
 response:
 
 {
-	"quotaList":"" (list)
-	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知|401 抓取資料失敗 |402 沒有此資料 
+	quotaList: "",
+	"rspCode":"200" OK | 201此class沒有可被申請的項目 | 300 method wrong | 400 未知
 }
 ```
 
@@ -1338,7 +1331,7 @@ response:
 # 16. 新增與更新申請條件
 ### POST
 #### 用於更新與新增
-#### path : test/update_add_apply_quota
+#### path : /test/update_add_apply_quota
 ```
 request:
 
@@ -1359,7 +1352,7 @@ response:
 # 17.刪除申請類別 
 ### POST
 #### 會一次刪光所有此類型的可申請項目
-#### path : test/delete_apply_class
+#### path : /test/delete_apply_class
 ```
 request:
 
@@ -1376,7 +1369,7 @@ response:
 
 <br>
 
-# 18.根據所選的class回復period
+# 18.回傳要求的quota和condition id 
 ### POST
 #### 可以只查個別的quota和condition ID
 #### path : /test/output_quota_conditionID
@@ -1385,20 +1378,22 @@ request:
 
 {
 	class:""(小於10個字)
+	period:""(0~99999)
 }
 
 response:
 
 {
-	rspCode:"" 200 OK | 201 沒有可被申請的週期 | 300 method wrong |400 未知	
-	periodList:[]
+	conditioID: "",
+	quota: "",
+	rspCode:"" 200 OK | 201 其他沒有quota | 300 method wrong |400 class或是period為空	| 401 抓取資料失敗 | 402 沒有此資料
 }
 ```
 
 # 19.使用者新增申請
 ### POST
 #### 使用者按下送出申請的動作
-#### path : test/USER/add_apply
+#### path : /test/USER/add_apply
 > 用form
 ```
 request:
@@ -1415,14 +1410,8 @@ request:
 response:
 
 {
-	1.導向USER.application
-	2.未知錯誤
-	3.method不符
-	4.pdf上傳錯誤
-	5.檔案過大
-	6.有輸入不符合規範
-	7.其他請填寫原因
-	8.找不到此種項目
+	rspCode:""	200 OK| 300 method wrong | 400 未知 |401 找不到conditionID | 402 其他要填原因 | 403 有輸入不符合格式 | 404 pdf上傳錯誤
+	notAllow:"" 會把有問題的輸入的request名傳回
 }
 ```
 
@@ -1446,7 +1435,7 @@ response:
 	rspCode:"" 200 OK | 300 method wrong | 400 未知 | 401 target太長
 
 	以下是list
-	userNam:""
+	name:""
 	userSRRate:""
 	userSPRate:""
 	applyPdfName:""
@@ -1508,13 +1497,13 @@ response:
 request:
 
 {
-	applyID 要幾號傳幾號
+	applyID: "" 要幾號傳幾號
 }
 
 response:
 
 {
-	200 OK | 300 method wrong | 400 檔案不存在
+	300 method wrong | 400 檔案不存在
 }
 ```
 
@@ -1523,7 +1512,7 @@ response:
 # 23.決定申請是否通過 
 ### POST
 #### 審核apply用
-#### path : /test/apply_pdf_download
+#### path : /test/apply_judge
 ```
 request:
 
@@ -1561,8 +1550,8 @@ request:
 response:
 
 {
-	200 OK | 300 method wrong | 400 查資料失敗
 
+	200 OK | 300 method wrong | 400 未知
 }
 ```
 
@@ -1614,7 +1603,7 @@ request:
 response:
 
 {
-	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在| 401 kind 錯誤
+	200 OK | 300 method wrong | 400  #可能是userID不存在  測試版還可能是adminID不存在
 	notAllow:"" 會把有問題的輸入的request名傳回
 
 }
@@ -1649,10 +1638,10 @@ response:
 
 <br>
 
-# 27.主動配發紀錄
+# 28.主動配發紀錄
 ### POST
 #### 要哪個人就會顯示哪個人的
-#### path : /test/simple_allotment_history
+#### path : /test/allotment_history
 ```
 request:
 
@@ -1675,7 +1664,7 @@ response:
 
 <br>
 
-# 28.新增任務
+# 29.新增任務
 ### POST
 #### SR新增任務
 #### path : /test/SR/add_task
@@ -1697,7 +1686,7 @@ response:
 {
 	rspCode:""  200 OK |300 method wrong| 400 輸入有問題|401 taskContent有符號出問題
 	notAllow:[] 輸入格式有問題的會在這裡
-	taskConflit:[
+	taskConflict:[
 		{
             "taskID": "",
             "taskName": ""
@@ -1710,7 +1699,7 @@ response:
 
 <br>
 
-# 29.顯示可接任務
+# 30.顯示可接任務
 ### POST(正式時不傳東西應該是GET)
 #### SP顯示可接任務
 #### path : /test/SP/output/task_can_be_taken
@@ -1740,7 +1729,7 @@ response:
 
 <br>
 
-# 30.承接任務
+# 31.承接任務
 ### POST
 #### SP承接任務的動作
 #### path : /test/SP/taken_task
@@ -1749,13 +1738,13 @@ request:
 
 {
 	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
-	taskID_:"" 要接的那一個
+	taskID:"" 要接的那一個
 }
 
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突| 任務是自己的
+	rspCode:"" 200 OK |300 method wrong|400 u未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
 	"taskConflit": 
         {
             "taskID": "",
@@ -1766,7 +1755,7 @@ response:
 
 <br>
 
-# 30.顯示雇主已發布任務
+# 32.顯示雇主已發布任務
 ### POST
 #### 雇主已發布頁面用
 #### path : /test/SR/output/release
@@ -1775,18 +1764,17 @@ request:
 
 {
 	userID:"" 正式時從session拿，必須是數字且存在，不燃會炸
-	taskID_:"" 要接的那一個
 }
 
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 userID 不存在
+	rspCode:"" 200 OK |300 method wrong|400 未知| 401 已申請過此任務| 402 此任務已有SP| 403 任務不存在| 404 時間有衝突
 	taskAmount:""
 	taskList: [
         {
             "CandidateList": [
-				userName,
+				name,
 				userID (int)
 				],
             "cadidateAmount": "",
@@ -1804,7 +1792,7 @@ response:
 ```
 <br>
 
-# 31.編輯任務
+# 33.編輯任務
 ### POST
 #### 只能編輯自己的且沒有候選人的
 #### path : /test/SR/edit_task
@@ -1825,7 +1813,7 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許或輸入有問題	| 403 taskContent符號有問題
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401 任務已有人申請| 402 任務點數或是時間不允許| 403 taskContent符號有問題
 	notAllow:[], 會把有問題的輸入的request名傳回
 	taskConflit:{
 		taskID:"",
@@ -1837,7 +1825,7 @@ response:
 
 <br>
 
-# 32.雇主確定雇員
+# 34.雇主確定雇員
 ### POST
 #### 確認SP
 #### path : /test/SR/decide_SP
@@ -1859,7 +1847,7 @@ response:
 ```
 <br>
 
-# 32.雇主已接受頁面
+# 35.雇主已接受頁面
 ### POST	
 #### 顯示雇主已接受的任務
 #### path : /test/SR/output/accept
@@ -1877,7 +1865,7 @@ response:
     taskAmount: "", 有幾個task
     taskList: [
         {
-            taskConten: "",
+            taskContent: "",
             taskEndTime: "",
             taskID: "",
             taskLocation: "",
@@ -1893,7 +1881,7 @@ response:
 
 <br>
 
-# 33.雇主刪除任務
+# 36.雇主刪除任務
 ### POST	
 #### 雇主可刪除還沒有SP的任務
 #### path : /test/SR/delete_task
@@ -1907,13 +1895,13 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能刪除|402 已經有SP不可刪除| 403 userID 有問題
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在| 401  任務發放人不是你不能刪除|402 已經有SP| 403 userID 有問題
 }
 ```
 
 <br>
 
-# 34.雇主取消
+# 37.雇主取消
 ### POST	
 #### 發出取消申請和接受都是這支，不接受不需要使用
 #### path : /test/SR/cancel_task
@@ -1935,7 +1923,7 @@ response:
 
 <br>
 
-# 35.雇員取消
+# 38.雇員取消
 ### POST	
 #### 發出取消申請和接受都是這支，不接受不需要使用
 #### path : /test/SP/cancel_task
@@ -1956,7 +1944,7 @@ response:
 
 <br>
 
-# 36.完成或未完成 
+# 39.完成或未完成 
 ### POST	
 #### SP、SR共用
 #### path : /test/task_finish_or_not
@@ -1979,7 +1967,7 @@ response:
 <br>
 
 
-# 38.評論資料顯示 
+# 40.評論資料顯示 
 ### POST	
 #### SP、SR共用 顯示用戶評論時需要看到的資料
 #### path : /test/output/notice_comment
@@ -2000,7 +1988,7 @@ response:
 
 <br>
 
-# 39.評論動作 
+# 41.評論動作 
 ### POST	
 #### SP、SR共用 
 #### path : /test/comment_action
@@ -2017,13 +2005,13 @@ request:
 response:
 
 {
-	rspCode:"" 200 OK |300 method wrong|400 任務不存在 | 401  userID不是此任務SR或SP|402  此任務還不可評論| 403 star 不合法| 404 已經評論過| 405 不是可評論時間
+	rspCode:"" 200 OK |300 method wrong|400 任務不存在 | 401  userID不是此任務SR或SP|402  此任務還不可評論| 403 star 不合法| 404 已經評論過
 }
 ```
 
 <br>
 
-# 40.GM審核評論頁面 
+# 42.GM審核評論頁面 
 ### GET	
 #### 不須傳值
 #### path : /test/GM/output/judge_comment_page
@@ -2063,7 +2051,7 @@ response:
 
 <br>
 
-# 41.GM審核評論動作 
+# 43.GM審核評論動作 
 ### GET	
 #### 不須傳值
 #### path : /test/judge_commentaction
@@ -2083,3 +2071,21 @@ response:
 }
 ```
 
+<br>
+
+# 44.下載申請說明文件
+### GET 
+#### 不須傳值
+#### path : /test/download/申請說明文件
+request:
+
+{ 
+ NULL
+}
+ 
+response:
+
+{
+ rspCode:""  |300 method wrong|400 失敗
+ 成功會直接下載
+}

@@ -1,0 +1,217 @@
+@charset "utf-8";
+
+/* User行事曆介面 */
+
+ul{list-style-type: none;}
+
+.bodyContainer
+{
+    margin: auto;
+}
+
+.formLeftBody
+{
+    margin-top: 100px;
+    float: left;
+}
+
+.formRightBody
+{
+    height: 500pxs;
+    margin-top: 100px;
+    float: left;
+    padding: 20px;
+    background-color: #ebbab9;
+}
+
+/*month-div*/
+.formTopCalendar
+{
+    width: 100%;
+    background-color: #87CEEB;
+    text-align: center;
+    padding: 70px 25px;
+}
+
+/*month-ul*/
+.formMonthLine
+{
+    margin: 0;
+    padding: 0;
+}
+
+/*month-li*/
+.formMonth
+{
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+#preMonth
+{
+    float: left;
+    padding-top: 10px;
+    cursor: pointer;
+}
+
+#nextMonth
+{
+    float: right;
+    padding-top: 10px;
+    cursor: pointer;
+}
+
+.formWeekLine
+{
+    margin: 0;
+    height: 50px;
+    padding: 10px 0;
+    background-color: #FFE4B5;
+    cursor: pointer;
+}
+
+.formWeekDay
+{
+    width: 13.6%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+}
+
+.formDayLine
+{
+    margin: 0;
+    height: 350px;
+    padding: 10px 0;
+    background-color: #eee;
+
+}
+
+.formDay
+{
+    width: 13.6%;
+    margin-bottom: 5px;
+    text-align: center;
+    vertical-align: middle;
+    color: #777;
+    display: inline-block;
+    padding: 20px 0;
+}
+
+.formDay:hover
+{
+    color: white;
+    background: #6495ED;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.formToDoList, #formLabelTitle
+{
+    color: white;
+    text-align: center;
+}
+
+.formLine
+{
+    height: 44px;
+}
+
+.formText
+{
+    background-color: #ebbab9;
+    border: 1px solid white;
+    overflow: auto;
+    resize: none;
+}
+
+@media(min-width: 900px)
+{
+    .bodyContainer
+    {
+        width: 900px;
+    }
+    .formLeftBody
+    {
+        width: 70%;
+    }
+    .formRightBody
+    {
+        width: auto;
+        height: 585px;
+    }
+    .formWeekDay, .formDay
+    {
+        width: 13.1%;
+    }
+    .formLine
+    {
+        height: 80px;
+    }
+    .formText
+    {
+        height: 70px;
+    }
+}
+
+@media(max-width: 899px)
+{
+    .formLeftBody
+    {
+        margin-left: 50px;
+        width: 60%;
+    }
+    .formRightBody
+    {
+        width: auto;
+        height: 585px;
+    }
+    .formWeekDay, .formDay
+    {
+        width: 12.5%;
+    }
+    .formLine
+    {
+        height: 80px;
+    }
+    .formText
+    {
+        height: 70px;
+    }
+}
+
+@media(max-width: 650px)
+{
+    .formLeftBody, .formRightBody
+    {
+        margin-left: 0;
+        width: 100%;
+    }
+    .formRightBody
+    {
+        margin-top: 0;
+        height: 600px;
+
+    }
+    .formDayLine
+    {
+        width: 100%;
+    }
+    
+    .formWeekDay, .formDay
+    {
+        width: 11.5%;
+    }
+    .formText
+    {
+        margin: auto;
+        width: 400px;
+    }
+    .formText
+    {
+        width: 600px;
+        height: 50px;
+    }
+}

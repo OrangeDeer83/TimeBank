@@ -1,0 +1,112 @@
+@charset "utf-8";
+
+/* SA的navbar */
+
+#menuIconBack
+{
+    position: relative;
+    padding: 15px;
+}
+
+#menuIconBack:hover
+{
+    cursor: pointer;
+    background-color: #5E86C1;
+}
+
+#menuIcon
+{
+    width: 25px;
+    height: 20px;
+    border-top: 4px solid #AAAAAA;
+    border-bottom: 4px solid #AAAAAA;
+    background-color: #AAAAAA;
+    padding: 4px 0;
+    background-clip: content-box;
+    position: relative;
+}
+
+.dropdownMenuItem
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CCCCCC;
+    cursor: pointer;
+}
+
+#HRSpan
+{
+    display: none;
+}
+
+#logout
+{
+    position: relative;
+    display: inline-block;
+    padding: 14px 15px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+#logout:hover
+{
+    color: #F5FFFA;
+    background-color: #5E86C1;
+}
+
+@media (min-width: 800px)
+{
+    #menuIconBack
+    {
+        float: left;
+    }
+    .dropdownMenuItem
+    {
+        color: black;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: left;
+    }
+    .dropdownMenuItem > a
+    {
+        padding-left: 15px;
+        color: black;
+    }
+    .HRSpanItem
+    {
+        background-color: white;
+    }
+    .HRSpanItem:hover
+    {
+        background-color: #B6DfCA;
+    }
+}
+
+@media (max-width: 799px)
+{
+    .dropdownMenuLeft
+    {
+        color: black;
+        background-color: #293F66;
+    }
+    .dropdownMenuItem
+    {
+        margin-left: 10vw;
+        margin-right: 10vw;
+        color: white;
+        text-align: center;
+    }
+    .dropdownMenuItem > a
+    {
+        color: white;
+    }
+    .HRSpanItem
+    {
+        background-color: #415E52;
+    }
+    .HRSpanItem:hover
+    {
+        background-color: #689b86;
+    }
+}

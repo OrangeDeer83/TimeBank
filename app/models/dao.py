@@ -157,10 +157,10 @@ def show_judge_history(userName = "",className = "" , period = "" , status = "")
     return sql
 
 def select_all_user():
-    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` ORDER BY userID"
+    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` ORDER BY userID"
 
 def select_search_user(target):
-    return "SELECT `userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
+    return "SELECT `userID`,`name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes` FROM `account` WHERE name = '{}' OR userName = '{}' ORDER BY userID".format(target,target)
 
 def add_allotment(userID,frequency,period,quota,adminID,allotmentTime):
     return "INSERT INTO `allotment` (`allotmentID`, `userID`, `allotmentStatus`, `frequency`, `period`, `restTime`, `nextTime`, `quota`, `adminID`, `allotmentTime`) VALUES (NULL, '{}', '1', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(userID,frequency,period,str(int(period)*int(frequency)),period,quota,adminID,allotmentTime)

@@ -1,0 +1,128 @@
+@charset "utf-8";
+
+/* User的navbar */
+
+.menuIconBack
+{
+    position: relative;
+}
+
+.menuIconBack:hover
+{
+    cursor: pointer;
+    background-color: #5E86C1;
+}
+
+.menuIcon
+{
+    width: 25px;
+    height: 20px;
+    border-top: 4px solid #AAAAAA;
+    border-bottom: 4px solid #AAAAAA;
+    background-color: #AAAAAA;
+    margin: 15px;
+    padding: 4px 0;
+    background-clip: content-box;
+    position: relative;
+}
+
+.navbarNotice
+{
+    position: relative;
+    display: inline-block;
+    padding: 15px 15px;
+    color: white;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.navbarNotice:hover
+{
+    color: #F5FFFA;
+    background-color: #5E86C1;
+}
+
+.navbarPointImg
+{
+    margin-left: -10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    height: 30px;
+}
+
+.navbarPortrait
+{
+    color: #777777;
+    height: 50px;
+    padding: 5px 8px;
+    margin-right: 10px;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.navbarPortrait:hover
+{
+    color: #F5FFFA;
+    background-color: #5E86C1;
+}
+
+.navbarPortraitImg
+{
+    height: 40px;
+}
+
+.dropdownMenuLeft > li > a
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.dropdownMenuRight > li > a
+{
+    min-height: 60px;
+    border-bottom: 1px solid #CCCCCC;
+    color: black;
+    text-align: left;
+    margin: 0;
+}
+.dropdownMenuRight > li > a > div
+{
+    margin: 5px;
+}
+
+@media (min-width: 800px)
+{
+    .menuIconBack
+    {
+        float: left;
+    }
+    .dropdownMenuLeft > li > a
+    {
+        color: black;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: left;
+    }
+}
+
+@media (max-width: 799px)
+{
+    .dropdownMenuLeft
+    {
+        background-color: #293F66;
+    }
+    .dropdownMenuLeft > li > a
+    {
+        margin-left: 10vw;
+        margin-right: 10vw;
+        color: white;
+        text-align: center;
+        border-bottom: 1px solid #CCCCCC;
+    }
+    .dropdownMenuRight
+    {
+        right: -66px;
+        background-color: #F5FFFA;
+    }
+}

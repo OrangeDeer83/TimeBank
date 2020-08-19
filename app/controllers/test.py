@@ -1214,7 +1214,10 @@ def upload_news():
         #且文字直接是str
         title = request.values['title']
         content = request.values['content'] 
-        fileImage = request.files['file']
+        try:
+            fileImage = request.files['file']
+        except:
+            return redirect(url_for('Admin.SA_update_web'))
         #檢查values是否為空
         if title == '' or content == '' or fileImage.filename == '':
             #rspCode 400:標題,內文,圖片有空值
@@ -1326,7 +1329,10 @@ def output_news_title(number):
 def edit_news(number):
     if request.method == 'POST':
         #目前預設傳來的圖片叫做file
-        fileImage = request.files['file']
+        try:
+            fileImage = request.files['file']
+        except:
+            return redirect(url_for('Admin.SA_update_web'))
         title = request.values['title']
         content = request.values['content']
         if len(title) > 30:
@@ -1791,7 +1797,13 @@ def user_add_apply():
                 else:
                     db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
                     conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]     
-            file = request.files['applyDocument']
+            try:
+                file = request.files['file']
+            except:
+                apply_condition = db.session.query(applyConditionList).filter(applyConditionList.conditionID == conditionID).first()
+                apply_condition.delete()
+                db.session.commit()
+                return redirect(url_for('USER.application'))
             #建立apply
             db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
             #檢查有沒有傳檔案

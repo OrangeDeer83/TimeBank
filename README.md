@@ -2065,8 +2065,8 @@ response:
 <br>
 
 # 41.GM審核評論動作 
-### GET	
-#### 不須傳值
+### POST
+#### 評論的動作
 #### path : /test/judge_commentaction
 ```
 request:
@@ -2083,4 +2083,26 @@ response:
 	rspCode:"" 200 OK |300 method wrong|400 commeny不存在 | 401  status不合法| 402 adminID不合法
 }
 ```
+
+<br>
+
+# 42.下載申請說明文件
+### GET	
+#### 不須傳值
+#### path : /test/download/申請說明文件
+```
+request:
+
+{	
+	NULL
+}
+	
+response:
+
+{
+	rspCode:""  |300 method wrong|400 失敗
+	成功會直接下載
+}
+```
+
 

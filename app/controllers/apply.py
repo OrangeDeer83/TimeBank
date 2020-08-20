@@ -748,5 +748,15 @@ def judgement_history():
     except:
         return jsonify({"rspCode":"400","userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
 
-
+#下載申請說明文件
+@Apply.route("/download/申請說明文件",methods = ['GET'])
+def download_apply_description():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300"})
+    if session.get('userTypr') != userType['SA'] or session.get('userTypr') != userType['AA']:
+        return jsonify({"rspCode":"500"})
+    try:
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/','申請說明文件.pdf',as_attachment=True)
+    except:
+        return jsonify({"rspCode":"400"})
 

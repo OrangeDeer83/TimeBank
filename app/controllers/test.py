@@ -1998,7 +1998,7 @@ def apply_judge():
     quotaChange = json['quotaChange']
     notAllow = []
     adminID = session.get('adminID')
-    adminID = 4
+    adminID = json['adminID']
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
     if applyID == "":
@@ -2012,21 +2012,22 @@ def apply_judge():
             #rspCode 400:有非法輸入
             return jsonify({"rspCode":"400","notAllow":notAllow})
         db.engine.execute(alter_apply_status(applyStatus,applyID))
-        userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
-        userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
-        ConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
-        conditionData = db.engine.execute(show_old_condition_data(ConditionID)).fetchone()
-        quota = conditionData[2]
-        period = conditionData[0]
-        plus = userPoint + int(quota)
-        if period != 0:
-            rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
-            db.engine.execute(alter_apply_rest_time(applyID,rest))
-        db.engine.execute(plus_user_point(plus,userID))
-        for x in range(quota):
-            pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
-            db.engine.execute(make_point_sql(pointID,adminID,userID))
-            db.session.commit()
+        if applyStatus == 1:
+            userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
+            userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
+            ConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
+            conditionData = db.engine.execute(show_old_condition_data(ConditionID)).fetchone()
+            quota = conditionData[2]
+            period = conditionData[0]
+            plus = userPoint + int(quota)
+            if period != 0:
+                rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
+                db.engine.execute(alter_apply_rest_time(applyID,rest))
+            db.engine.execute(plus_user_point(plus,userID))
+            for x in range(quota):
+                pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
+                db.engine.execute(make_point_sql(pointID,adminID,userID))
+                db.session.commit()
     else:
         #有輸入新的quota才檢查quota
         if not(quotaChange.isdigit()):
@@ -2053,10 +2054,11 @@ def apply_judge():
             userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
             userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
             plus = userPoint + int(conditionData[2])
+            db.engine.execute(plus_user_point(plus,userID))
             if period != 0:
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
                 db.engine.execute(alter_apply_rest_time(applyID,rest))
-            for x in range(quota):
+            for x in range(int(quotaChange)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
                 db.session.commit()
@@ -2067,7 +2069,6 @@ def apply_judge():
     db.engine.execute(upudate_adminID_in_apply(adminID,applyID))
     db.engine.execute(update_judge_time_in_apply(judgeTime,applyID))
     return jsonify({"rspCode":"200","notAllow":""})
-
 
 #核准紀錄
 #要json傳Name(用來搜尋userName和name),class,period,status，以上四個是搜尋條件，沒有就傳空值
@@ -3026,11 +3027,22 @@ def GM_output_judge_comment_page():
     try:
         for comment_ in comment_list:
             task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
-            if task_.taskStatus == 15:
+            if task_.taskStatus == 15 and comment_.commentStatus == 0:
                 commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
                     ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
                     ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
                     , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
+            elif task_.taskStatus == 14 and comment_.commentStatus == 0:
+                x=comment_.SPComment.split(',')
+                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
+                ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":None\
+                ,"SRName":task_.SR[0].name,"SRComment":None, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
+            elif task_.taskStatus == 13 and comment_.commentStatus == 0:
+                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
+                    ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
+                    ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                    , "SPStar":None, "SPComment":None,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
     except:
         return jsonify({"commentList":"","rspCode":"401"})

@@ -202,7 +202,7 @@ def SP_output_record():
 #新增任務
 #要json傳taskName,taskStartTime,taskEndTime,taskPoint,taskLocation,taskContent
 #回傳rspCode,notAllow
-@test.route('/SR/add_task' , methods = ['POST'])
+@Task.route('/SR/add_task' , methods = ['POST'])
 def SR_add_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -294,7 +294,7 @@ def SR_add_task():
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
-@test.route('/SP/output/task_can_be_taken', methods = ['GET'])
+@Task.route('/SP/output/task_can_be_taken', methods = ['GET'])
 def SP_output_task_can_be_taken():
     if request.method != 'GET':
            return jsonify({"rspCode":"300","taskList":""})
@@ -370,7 +370,7 @@ def SP_output_task_can_be_taken():
 #承接接任務
 #用json傳taskID
 #回傳rspCode,taskConflit
-@test.route("/SP/taken_task" , methods = ['POST'])
+@Task.route("/SP/taken_task" , methods = ['POST'])
 def SP_taken_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","taskConflit":""})
@@ -435,7 +435,7 @@ def SP_taken_task():
 #顯示雇主已發布任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, taskCandidate,taskLocation,taskContent, taskID 變get
 #candidate前面是name後面是id
-@test.route("/SR/output/release", methods = ['GET'])
+@Task.route("/SR/output/release", methods = ['GET'])
 def SR_release():
     if request.method != 'GET':
         return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
@@ -462,7 +462,7 @@ def SR_release():
 #編輯任務
 #傳 taskID,taskName,taskStartTime,taskEndTime,taskPoint,taskLocation,taskContent
 #回傳rspCode
-@test.route("/SR/edit_task", methods = ['POST'])
+@Task.route("/SR/edit_task", methods = ['POST'])
 def SR_edit_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","notAllow":"","taskConflit":"","pointConflit":""})
@@ -563,7 +563,7 @@ def SR_edit_task():
 #雇主確定雇員
 #傳cnadidateID,taskID
 #回傳rspCode
-@test.route("/SR/decide_SP", methods = ["POST"])
+@Task.route("/SR/decide_SP", methods = ["POST"])
 def SR_decide_SP():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -598,7 +598,7 @@ def SR_decide_SP():
 
 #雇主已接受
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SPName,taskLocation,taskContent, taskID在taskList,rspCode,taskAmount
-@test.route("/SR/output/accept", methods = ['GET'])
+@Task.route("/SR/output/accept", methods = ['GET'])
 def SR_accept():
     try:
         if request.method != 'GET':
@@ -625,7 +625,7 @@ def SR_accept():
 #雇主刪除任務
 #傳taskID
 #回傳rspCode
-@test.route("/SR/delete_task",methods = ['POST'])
+@Task.route("/SR/delete_task",methods = ['POST'])
 def delete_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -658,7 +658,7 @@ def delete_task():
 #雇主取消
 #傳taskID
 #回傳rspCode
-@test.route("/SR/cancel_task", methods = ['POST'])
+@Task.route("/SR/cancel_task", methods = ['POST'])
 def SR_cancel_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -691,7 +691,7 @@ def SR_cancel_task():
 #雇員取消
 #傳taskID
 #回傳rspCode
-@test.route("/SP/cancel_task", methods = ["POST"])
+@Task.route("/SP/cancel_task", methods = ["POST"])
 def SP_cancel_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
@@ -738,7 +738,7 @@ def SP_cancel_task():
 #完成或未完成 SP、SR共用
 #傳taskID,status
 #回傳rspCode
-@test.route("/task_finish_or_not", methods =['POST'])
+@Task.route("/task_finish_or_not", methods =['POST'])
 def task_finish_or_not():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})

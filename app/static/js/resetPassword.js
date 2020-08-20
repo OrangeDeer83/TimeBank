@@ -95,7 +95,7 @@ function resetPassword()
     else // Old IE browser.
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
-    request.open("POST", "http://192.168.1.146:5000/test/USER/reset_password/" + getToken());
+    request.open("POST", "/test/USER/reset_password/" + getToken());
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify({"userPassword": newPassword.value}));
     request.onload = function()

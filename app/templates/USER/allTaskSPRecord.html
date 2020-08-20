@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>歷史紀錄</title>
+
+    <meta charset="utf-8" />
+    <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
+    <meta name="description" content="時間銀行以交換服務的時數為概念，不再以金錢，而是以時數衡量工作的價值，人人每日都有平等的24小時，如何善用有限的時間，將成為關鍵。" />
+    <meta name="author" content="Ariel Damian Ellen" />
+    <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+    <meta name="dcterms.rightHolder" content="TaiPay" />
+    <meta name="dcterms.dateCopyrighted" content="2020" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/allTask.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+</head>
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown menuIconBack" onclick="clickToSpan('menuIconSpan')">
+                            <div class="menuIcon"></div>
+                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                <li class="hiddenLarge">
+                                    <a class="point" href="{{url_for('USER.point_record')}}">
+                                        <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
+                                        目前沒有點數
+                                    </a>
+                                </li>
+                                <li><a href="{{url_for('USER.all_task')}}">所有任務</a></li>
+                                <li><a href="{{url_for('USER.create_task')}}">新增任務</a></li>
+                                <li><a href="{{url_for('USER.schedule')}}">行事曆</a></li>
+                                <li><a href="{{url_for('USER.application')}}">點數申請</a></li>
+                                <li><a href="{{url_for('USER.setting')}}">設定</a></li>
+                                <li><a id="logout" href="{{url_for('account.logout')}}">登出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
+                        </a>
+                    </div>
+                    <div class="navbarRight">
+                        <ul class="nav navbarUl">
+                            <li class="dropdown">
+                                <div class="navbarNotice" onclick="clickToSpan('noticeSpan')">通知</div>
+                                <ul id="noticeSpan" class="dropdownMenu dropdownMenuRight unspanned">
+                                    <li><a><div>此功能尚未完成</div></a></li>
+                                </ul>
+                            </li>
+                            <li class="hiddenSmall">
+                                <a class="point" href="{{url_for('USER.point_record')}}">
+                                    <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
+                                    目前沒有點數
+                                </a>
+                            </li>
+                        </ul>
+                        <a class="navbarPortrait" id="navbarUserID">
+                            <img class="navbarPortraitImg" alt="Portrait" src="{{url_for('static', filename='img/portrait1.jpg')}}" />
+                        </a>                           
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="bodyContain">
+            <div class="tabPart">
+                <div class="tabs" id="tabsFirst">
+                    <ul>
+                        <li id="notThisPage"><a href="{{url_for('USER.SR_all_task_passed')}}">雇主</a></li>
+                        <li id="thisPage">雇員</li>
+                    </ul>
+                </div>
+                <div class="addTask">
+                    <a href="{{url_for('USER.create_task')}}">新增任務</a>
+                </div>
+                <div class="takeTask">
+                    <a href="{{url_for('USER.all_task')}}">承接任務</a>
+                </div>
+            </div>
+            <div class="tabPart">
+                <div class="tabs" id="tabsThird">
+                    <ul>
+                        <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_passed')}}">已通過</a></li>
+                        <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_checking')}}">審核中</a></li>
+                        <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_refused')}}">遭拒絕</a></li>
+                        <li id="thisPage2">歷史紀錄</li>
+                    </ul>
+                </div>
+            </div>
+            <div  class="allTable" id="employeeRecord">
+                <table id="eRecord">
+                    <tr id="taskList0"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName0"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime0"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota0"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(0)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR0"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation0"></span></div>
+                                <div class="context">任務內容：<span id="taskContent0"></span></div>
+                            </div>
+                            <div class="scorePart0">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate00" name="rating" value="5" hidden/>
+                                            <label id="RLabel00" for="star5"></label>
+                                            <input type="radio" id="SRRate10" name="rating" value="4" hidden/>
+                                            <label id="RLabel10" for="star4"></label>
+                                            <input type="radio" id="SRRate20" name="rating" value="3" hidden/>
+                                            <label id="RLabel20" for="star3"></label>
+                                            <input type="radio" id="SRRate30" name="rating" value="2" hidden/>
+                                            <label id="RLabel30" for="star2"></label>
+                                            <input type="radio" id="SRRate40" name="rating" value="1" hidden/>
+                                            <label id="RLabel40" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment0"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate00" name="rating" value="5" hidden/>
+                                            <label id="PLabel00" for="star5"></label>
+                                            <input type="radio" id="SPRate10" name="rating" value="4" hidden/>
+                                            <label id="PLabel10" for="star4"></label>
+                                            <input type="radio" id="SPRate20" name="rating" value="3" hidden/>
+                                            <label id="PLabel20" for="star3"></label>
+                                            <input type="radio" id="SPRate30" name="rating" value="2" hidden/>
+                                            <label id="PLabel30" for="star2"></label>
+                                            <input type="radio" id="SPRate40" name="rating" value="1" hidden/>
+                                            <label id="PLabel40" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment0"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(0)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList1"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName1"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime1"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota1"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(1)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR1"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation1"></span></div>
+                                <div class="context">任務內容：<span id="taskContent1"></span></div>
+                            </div>
+                            <div class="scorePart1">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate01" name="rating" value="5" hidden/>
+                                            <label id="RLabel01" for="star5"></label>
+                                            <input type="radio" id="SRRate11" name="rating" value="4" hidden/>
+                                            <label id="RLabel11" for="star4"></label>
+                                            <input type="radio" id="SRRate21" name="rating" value="3" hidden/>
+                                            <label id="RLabel21" for="star3"></label>
+                                            <input type="radio" id="SRRate31" name="rating" value="2" hidden/>
+                                            <label id="RLabel31" for="star2"></label>
+                                            <input type="radio" id="SRRate41" name="rating" value="1" hidden/>
+                                            <label id="RLabel41" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment1"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate01" name="rating" value="5" hidden/>
+                                            <label id="PLabel01" for="star5"></label>
+                                            <input type="radio" id="SPRate11" name="rating" value="4" hidden/>
+                                            <label id="PLabel11" for="star4"></label>
+                                            <input type="radio" id="SPRate21" name="rating" value="3" hidden/>
+                                            <label id="PLabel21" for="star3"></label>
+                                            <input type="radio" id="SPRate31" name="rating" value="2" hidden/>
+                                            <label id="PLabel31" for="star2"></label>
+                                            <input type="radio" id="SPRate41" name="rating" value="1" hidden/>
+                                            <label id="PLabel41" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment1"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(1)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList2"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName2"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime2"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota2"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(2)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR2"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation2"></span></div>
+                                <div class="context">任務內容：<span id="taskContent2"></span></div>
+                            </div>
+                            <div class="scorePart2">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate02" name="rating" value="5" hidden/>
+                                            <label id="RLabel02" for="star5"></label>
+                                            <input type="radio" id="SRRate12" name="rating" value="4" hidden/>
+                                            <label id="RLabel12" for="star4"></label>
+                                            <input type="radio" id="SRRate22" name="rating" value="3" hidden/>
+                                            <label id="RLabel22" for="star3"></label>
+                                            <input type="radio" id="SRRate32" name="rating" value="2" hidden/>
+                                            <label id="RLabel32" for="star2"></label>
+                                            <input type="radio" id="SRRate42" name="rating" value="1" hidden/>
+                                            <label id="RLabel42" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment2"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate02" name="rating" value="5" hidden/>
+                                            <label id="PLabel02" for="star5"></label>
+                                            <input type="radio" id="SPRate12" name="rating" value="4" hidden/>
+                                            <label id="PLabel12" for="star4"></label>
+                                            <input type="radio" id="SPRate22" name="rating" value="3" hidden/>
+                                            <label id="PLabel22" for="star3"></label>
+                                            <input type="radio" id="SPRate32" name="rating" value="2" hidden/>
+                                            <label id="PLabel32" for="star2"></label>
+                                            <input type="radio" id="SPRate42" name="rating" value="1" hidden/>
+                                            <label id="PLabel42" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment2"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(2)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList3"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName3"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime3"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota3"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(3)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR3"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation3"></span></div>
+                                <div class="context">任務內容：<span id="taskContent3"></span></div>
+                            </div>
+                            <div class="scorePart3">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate03" name="rating" value="5" hidden/>
+                                            <label id="RLabel03" for="star5"></label>
+                                            <input type="radio" id="SRRate13" name="rating" value="4" hidden/>
+                                            <label id="RLabel13" for="star4"></label>
+                                            <input type="radio" id="SRRate23" name="rating" value="3" hidden/>
+                                            <label id="RLabel23" for="star3"></label>
+                                            <input type="radio" id="SRRate33" name="rating" value="2" hidden/>
+                                            <label id="RLabel33" for="star2"></label>
+                                            <input type="radio" id="SRRate43" name="rating" value="1" hidden/>
+                                            <label id="RLabel43" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment3"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate03" name="rating" value="5" hidden/>
+                                            <label id="PLabel03" for="star5"></label>
+                                            <input type="radio" id="SPRate13" name="rating" value="4" hidden/>
+                                            <label id="PLabel13" for="star4"></label>
+                                            <input type="radio" id="SPRate23" name="rating" value="3" hidden/>
+                                            <label id="PLabel23" for="star3"></label>
+                                            <input type="radio" id="SPRate33" name="rating" value="2" hidden/>
+                                            <label id="PLabel33" for="star2"></label>
+                                            <input type="radio" id="SPRate43" name="rating" value="1" hidden/>
+                                            <label id="PLabel43" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment3"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(3)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList4"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName4"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime4"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota4"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(4)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR4"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation4"></span></div>
+                                <div class="context">任務內容：<span id="taskContent4"></span></div>
+                            </div>
+                            <div class="scorePart4">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate04" name="rating" value="5" hidden/>
+                                            <label id="RLabel04" for="star5"></label>
+                                            <input type="radio" id="SRRate14" name="rating" value="4" hidden/>
+                                            <label id="RLabel14" for="star4"></label>
+                                            <input type="radio" id="SRRate24" name="rating" value="3" hidden/>
+                                            <label id="RLabel24" for="star3"></label>
+                                            <input type="radio" id="SRRate34" name="rating" value="2" hidden/>
+                                            <label id="RLabel34" for="star2"></label>
+                                            <input type="radio" id="SRRate44" name="rating" value="1" hidden/>
+                                            <label id="RLabel44" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment4"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate04" name="rating" value="5" hidden/>
+                                            <label id="PLabel04" for="star5"></label>
+                                            <input type="radio" id="SPRate14" name="rating" value="4" hidden/>
+                                            <label id="PLabel14" for="star4"></label>
+                                            <input type="radio" id="SPRate24" name="rating" value="3" hidden/>
+                                            <label id="PLabel24" for="star3"></label>
+                                            <input type="radio" id="SPRate34" name="rating" value="2" hidden/>
+                                            <label id="PLabel34" for="star2"></label>
+                                            <input type="radio" id="SPRate44" name="rating" value="1" hidden/>
+                                            <label id="PLabel44" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment4"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(4)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList5"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName5"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime5"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota5"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(5)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR5"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation5"></span></div>
+                                <div class="context">任務內容：<span id="taskContent5"></span></div>
+                            </div>
+                            <div class="scorePart5">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate05" name="rating" value="5" hidden/>
+                                            <label id="RLabel05" for="star5"></label>
+                                            <input type="radio" id="SRRate15" name="rating" value="4" hidden/>
+                                            <label id="RLabel15" for="star4"></label>
+                                            <input type="radio" id="SRRate25" name="rating" value="3" hidden/>
+                                            <label id="RLabel25" for="star3"></label>
+                                            <input type="radio" id="SRRate35" name="rating" value="2" hidden/>
+                                            <label id="RLabel35" for="star2"></label>
+                                            <input type="radio" id="SRRate45" name="rating" value="1" hidden/>
+                                            <label id="RLabel45" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment5"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate05" name="rating" value="5" hidden/>
+                                            <label id="PLabel05" for="star5"></label>
+                                            <input type="radio" id="SPRate15" name="rating" value="4" hidden/>
+                                            <label id="PLabel15" for="star4"></label>
+                                            <input type="radio" id="SPRate25" name="rating" value="3" hidden/>
+                                            <label id="PLabel25" for="star3"></label>
+                                            <input type="radio" id="SPRate35" name="rating" value="2" hidden/>
+                                            <label id="PLabel35" for="star2"></label>
+                                            <input type="radio" id="SPRate45" name="rating" value="1" hidden/>
+                                            <label id="PLabel45" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment5"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(5)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList6"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName6"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime6"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota6"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(6)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR6"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation6"></span></div>
+                                <div class="context">任務內容：<span id="taskContent6"></span></div>
+                            </div>
+                            <div class="scorePart6">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate06" name="rating" value="5" hidden/>
+                                            <label id="RLabel06" for="star5"></label>
+                                            <input type="radio" id="SRRate16" name="rating" value="4" hidden/>
+                                            <label id="RLabel16" for="star4"></label>
+                                            <input type="radio" id="SRRate26" name="rating" value="3" hidden/>
+                                            <label id="RLabel26" for="star3"></label>
+                                            <input type="radio" id="SRRate36" name="rating" value="2" hidden/>
+                                            <label id="RLabel36" for="star2"></label>
+                                            <input type="radio" id="SRRate46" name="rating" value="1" hidden/>
+                                            <label id="RLabel46" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment6"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate06" name="rating" value="5" hidden/>
+                                            <label id="PLabel06" for="star5"></label>
+                                            <input type="radio" id="SPRate16" name="rating" value="4" hidden/>
+                                            <label id="PLabel16" for="star4"></label>
+                                            <input type="radio" id="SPRate26" name="rating" value="3" hidden/>
+                                            <label id="PLabel26" for="star3"></label>
+                                            <input type="radio" id="SPRate36" name="rating" value="2" hidden/>
+                                            <label id="PLabel36" for="star2"></label>
+                                            <input type="radio" id="SPRate46" name="rating" value="1" hidden/>
+                                            <label id="PLabel46" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment6"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(6)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList7"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName7"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime7"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota7"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(7)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR7"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation7"></span></div>
+                                <div class="context">任務內容：<span id="taskContent7"></span></div>
+                            </div>
+                            <div class="scorePart7">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate07" name="rating" value="5" hidden/>
+                                            <label id="RLabel07" for="star5"></label>
+                                            <input type="radio" id="SRRate17" name="rating" value="4" hidden/>
+                                            <label id="RLabel17" for="star4"></label>
+                                            <input type="radio" id="SRRate27" name="rating" value="3" hidden/>
+                                            <label id="RLabel27" for="star3"></label>
+                                            <input type="radio" id="SRRate37" name="rating" value="2" hidden/>
+                                            <label id="RLabel37" for="star2"></label>
+                                            <input type="radio" id="SRRate47" name="rating" value="1" hidden/>
+                                            <label id="RLabel47" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment7"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate07" name="rating" value="5" hidden/>
+                                            <label id="PLabel07" for="star5"></label>
+                                            <input type="radio" id="SPRate17" name="rating" value="4" hidden/>
+                                            <label id="PLabel17" for="star4"></label>
+                                            <input type="radio" id="SPRate27" name="rating" value="3" hidden/>
+                                            <label id="PLabel27" for="star3"></label>
+                                            <input type="radio" id="SPRate37" name="rating" value="2" hidden/>
+                                            <label id="PLabel37" for="star2"></label>
+                                            <input type="radio" id="SPRate47" name="rating" value="1" hidden/>
+                                            <label id="PLabel47" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment7"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(7)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList8"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName8"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime8"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota8"></span>點</div>
+                            <div class="taskReport taskReport1"  onclick="report(8)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR8"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation8"></span></div>
+                                <div class="context">任務內容：<span id="taskContent8"></span></div>
+                            </div>
+                            <div class="scorePart8">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate08" name="rating" value="5" hidden/>
+                                            <label id="RLabel08" for="star5"></label>
+                                            <input type="radio" id="SRRate18" name="rating" value="4" hidden/>
+                                            <label id="RLabel18" for="star4"></label>
+                                            <input type="radio" id="SRRate28" name="rating" value="3" hidden/>
+                                            <label id="RLabel28" for="star3"></label>
+                                            <input type="radio" id="SRRate38" name="rating" value="2" hidden/>
+                                            <label id="RLabel38" for="star2"></label>
+                                            <input type="radio" id="SRRate48" name="rating" value="1" hidden/>
+                                            <label id="RLabel48" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment8"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate08" name="rating" value="5" hidden/>
+                                            <label id="PLabel08" for="star5"></label>
+                                            <input type="radio" id="SPRate18" name="rating" value="4" hidden/>
+                                            <label id="PLabel18" for="star4"></label>
+                                            <input type="radio" id="SPRate28" name="rating" value="3" hidden/>
+                                            <label id="PLabel28" for="star3"></label>
+                                            <input type="radio" id="SPRate38" name="rating" value="2" hidden/>
+                                            <label id="PLabel38" for="star2"></label>
+                                            <input type="radio" id="SPRate48" name="rating" value="1" hidden/>
+                                            <label id="PLabel48" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment8"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(8)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                    <tr id="taskList9"><td>
+                        <div class="introduction">
+                            <div class="taskName">任務名稱：<span id="taskName9"></span></div>
+                            <div class="taskTime">任務時間：<span id="taskTime9"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota9"></span>點</div>
+                            <div class="taskReport taskReport1" onclick="report(9)">檢舉</div>
+                        </div>
+                        <div class="detailed">
+                            <div class="taskPlaceContext">
+                                <div class="bossName">雇主：<span id="taskSR9"></span></div>
+                                <div class="place">任務地點：<span id="taskLocation9"></span></div>
+                                <div class="context">任務內容：<span id="taskContent9"></span></div>
+                            </div>
+                            <div class="scorePart9">
+                                <div class="bossScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇主評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SRRate09" name="rating" value="5" hidden/>
+                                            <label id="RLabel09" for="star5"></label>
+                                            <input type="radio" id="SRRate19" name="rating" value="4" hidden/>
+                                            <label id="RLabel19" for="star4"></label>
+                                            <input type="radio" id="SRRate29" name="rating" value="3" hidden/>
+                                            <label id="RLabel29" for="star3"></label>
+                                            <input type="radio" id="SRRate39" name="rating" value="2" hidden/>
+                                            <label id="RLabel39" for="star2"></label>
+                                            <input type="radio" id="SRRate49" name="rating" value="1" hidden/>
+                                            <label id="RLabel49" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="bossComment">雇主評論：<span id="SRComment9"></span></div>
+                                </div>
+                                <div class="employeeScorePart">
+                                    <div class="formLine">
+                                        <div class="formLabelDiv">
+                                            <label for="rate" class="formLabel">雇員評分:</label>        
+                                        </div>
+                                        <div class="rating">
+                                            <input type="radio" id="SPRate09" name="rating" value="5" hidden/>
+                                            <label id="PLabel09" for="star5"></label>
+                                            <input type="radio" id="SPRate19" name="rating" value="4" hidden/>
+                                            <label id="PLabel19" for="star4"></label>
+                                            <input type="radio" id="SPRate29" name="rating" value="3" hidden/>
+                                            <label id="PLabel29" for="star3"></label>
+                                            <input type="radio" id="SPRate39" name="rating" value="2" hidden/>
+                                            <label id="PLabel39" for="star2"></label>
+                                            <input type="radio" id="SPRate49" name="rating" value="1" hidden/>
+                                            <label id="PLabel49" for="star1"></label>
+                                        </div>
+                                    </div>
+                                    <div class="employeeComment">雇員評論：<span id="SPComment9"></span></div>
+                                        <div class="taskReport taskReport2" onclick="report(9)">檢舉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td></tr>
+                </table>
+            </div>
+            <div class="formPage">
+                <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                <span class="formPageNumber" id="pageNumber">1/1</span>
+                <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+            </div>
+         </div>
+         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/allTaskSPRecord.js')}}"></script>
+    </body>
+</html>

@@ -48,7 +48,7 @@ function forgotPasswordEmail()
     else // Old IE browser.
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
-    request.open("POST", "http://192.168.1.146:5000/test/USER/forgot_password");
+    request.open("POST", "/test/USER/forgot_password");
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify({"userMail": userEmail.value}));
     request.onload = function()

@@ -7,12 +7,12 @@ GM = Blueprint('GM', __name__)
 #忘記密碼頁面
 @GM.route('/forgotPassword')
 def forgot_password():
-   return render_template('forgotPasswordGM.html')
+   return render_template('/GM/forgotPasswordGM.html')
 
 #輸入新密碼頁面
 @GM.route('/resetPasswor/<token>')
 def reset_password(token):
-   return render_template('resetPasswordGM.html')
+   return render_template('/GM/resetPasswordGM.html')
 
 #登入頁面
 @GM.route('/login')
@@ -20,12 +20,12 @@ def login():
    if session.get('userType') == userType['GM']:
       return redirect(url_for('GM.update_grade'))
    else:
-      return render_template('loginGM.html')
+      return render_template('/GM/loginGM.html')
 
 #註冊頁面
 @GM.route('/register')
 def register():
-   return render_template('registerGM.html')
+   return render_template('/GM/registerGM.html')
 
 #驗證頁面
 @GM.route('/verify/<result>')
@@ -55,7 +55,7 @@ def verify(result):
 @GM.route('/updateGrade')
 def update_grade():
    if session.get('userType') == userType['GM']:
-      return render_template('updateGrade.html')
+      return render_template('/GM/updateGrade.html')
    else:
       return redirect(url_for('GM.login'))
 
@@ -63,7 +63,7 @@ def update_grade():
 @GM.route('/reportApprove')
 def report_approve():
    if session.get('userType') == userType['GM']:
-      return render_template('reportApprove.html')
+      return render_template('/GM/reportApprove.html')
    else:
       return redirect(url_for('GM.login'))
 
@@ -71,6 +71,6 @@ def report_approve():
 @GM.route('/setting')
 def setting():
    if session.get('userType') == userType['GM']:
-      return render_template('settingGM.html')
+      return render_template('/GM/settingGM.html')
    else:
       return redirect(url_for('GM.login'))

@@ -77,7 +77,7 @@ function showLoginError2()
 }
 
 // Main function of login.
-function login(num)
+function login()
 {
     console.log("Submit id and password.");
     if (validated())
@@ -88,11 +88,11 @@ function login(num)
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
         
-        request.open("POST", "http://192.168.1.146:5000/test/USER/login");
+        request.open("POST", "/test/USER/login");
         console.log("XMLHttpRequest opened.");
 
         request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value, "type": num}));
+        request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value}));
         console.log("JSON sent.");
         request.onload = function()
         {
@@ -102,7 +102,7 @@ function login(num)
             {
                 case "200": case 200:
                     alert("Login success!");
-                    window.location.assign("");
+                    window.location.assign("/USER/");
                 case "400": case 400:
                     console.log("Login failed!");
                     showLoginError1();
@@ -112,7 +112,6 @@ function login(num)
                     showLoginError2();
             }
         }
-        showLoginError3();
     }
     else
     {

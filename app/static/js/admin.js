@@ -75,7 +75,7 @@ function getAdminAmount()
         getAdminAmountRequest = new XMLHttpRequest();
     else
         getAdminAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getAdminAmountRequest.open("GET", "http://192.168.1.146:5000/test/Admin_list");
+    getAdminAmountRequest.open("GET", "/test/Admin_list");
     getAdminAmountRequest.setRequestHeader("Content-Type", "application/json");
     getAdminAmountRequest.send();
     getAdminAmountRequest.onload = function()
@@ -206,7 +206,7 @@ function addAdmin()
         addAdminRequest = new XMLHttpRequest();
     else
         addAdminRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addAdminRequest.open("POST", "http://192.168.1.146:5000/test/create/Admin");
+    addAdminRequest.open("POST", "/test/create/Admin");
     addAdminRequest.setRequestHeader("Content-Type", "application/json");
     console.log(adminType + adminUserName.value + adminPassword.value);
     addAdminRequest.send(JSON.stringify({"adminType": adminType, "adminName": adminUserName.value, "adminPassword": adminPassword.value}));
@@ -265,7 +265,7 @@ function deleteAdmin(index)
         deleteRequest = new XMLHttpRequest();
     else
         deleteRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteRequest.open("POST", "http://192.168.1.146:5000/test/delete/Admin");
+    deleteRequest.open("POST", "/test/delete/Admin");
     deleteRequest.setRequestHeader("Content-Type", "application/json");
     deleteRequest.send(JSON.stringify({"SAID": "5", "adminID": thisPageList[index].adminID}));
     deleteRequest.onload = function()
@@ -303,7 +303,7 @@ function checkPassword()
         checkPasswordRequest = new XMLHttpRequest();
     else
         checkPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkPasswordRequest.open("POST", "http://192.168.1.146:5000/test/delete/Admin/check_password");
+    checkPasswordRequest.open("POST", "/test/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("password").value}));
     checkPasswordRequest.onload = function()
@@ -338,7 +338,7 @@ function checkUserName()
         checkUserNameRequest = new XMLHttpRequest();
     else // Old IE browser.
         checkUserNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkUserNameRequest.open("POST", "http://192.168.1.146:5000/test/Admin/detect_repeated");
+    checkUserNameRequest.open("POST", "/test/Admin/detect_repeated");
     checkUserNameRequest.setRequestHeader("Content-Type", "application/json");
     checkUserNameRequest.send(JSON.stringify({"adminName": adminUserName.value}));
     checkUserNameRequest.onload = function()

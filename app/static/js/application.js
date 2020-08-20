@@ -39,7 +39,7 @@ function getGroup()
         getGroupRequest = new XMLHttpRequest();
     else
         getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_group");
+    getGroupRequest.open("GET", "/test/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -70,7 +70,7 @@ function getApplier()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "/test/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -103,7 +103,7 @@ function getClass()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "http://192.168.1.146:5000/test/output_apply_class");
+    getApplierRequest.open("GET", "/test/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -162,7 +162,7 @@ function getPeriodQuota(index)
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "http://192.168.1.146:5000/test/output_allow_period");
+    getApplierRequest.open("POST", "/test/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send(JSON.stringify({"class": classList[index]}));
     getApplierRequest.onload = function()
@@ -299,7 +299,7 @@ function sendApplication()
         sendApplicationRequest = new XMLHttpRequest();
     else
         sendApplicationRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendApplicationRequest.open("POST", "http://192.168.1.146:5000/test/USER/add_apply");
+    sendApplicationRequest.open("POST", "/test/USER/add_apply");
     sendApplicationRequest.setRequestHeader("Content-Type", "application/json");
     sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""}));
     sendApplicationRequest.onload = function()

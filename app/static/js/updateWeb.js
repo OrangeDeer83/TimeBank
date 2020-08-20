@@ -15,7 +15,7 @@ function getIntroduction()
         getIntroductionRequest = new XMLHttpRequest();
     else // Old IE browser.
         getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "http://192.168.1.146:5000/test/output_webIntro");
+    getIntroductionRequest.open("GET", "/test/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     
@@ -50,7 +50,7 @@ function storeIntroduction()
         sendIntroduction = new XMLHttpRequest();
     else
         sendIntroduction = new ActiveXObject("Microsoft.XMLHTTP");
-    sendIntroduction.open("POST", "http://192.168.1.146:5000/test/upload_web_intro");
+    sendIntroduction.open("POST", "/test/upload_web_intro");
     sendIntroduction.setRequestHeader("Content-Type", "application/json");
     sendIntroduction.send(JSON.stringify({"intro": document.getElementById("introduction").value}));
      
@@ -89,7 +89,7 @@ function getNewsAmount()
         getNewsAmountRequest = new XMLHttpRequest();
     else
         getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "http://192.168.1.146:5000/test/useful_numbers");
+    getNewsAmountRequest.open("GET", "/test/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -123,7 +123,7 @@ function getTitle(i)
         getOldTitleRequest = new XMLHttpRequest();
     else
         getOldTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getOldTitleRequest.open("GET", "http://192.168.1.146:5000/test/output_news_title/" + thisPageList[i]);
+    getOldTitleRequest.open("GET", "/test/output_news_title/" + thisPageList[i]);
     getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
     getOldTitleRequest.send();
     var index = i; console.log(i + "" + index);
@@ -153,7 +153,7 @@ function getText(i)
         getTextRequest = new XMLHttpRequest();
     else
         getTextRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTextRequest.open("GET", "http://192.168.1.146:5000/test/output_news_content/" + thisPageList[i]);
+    getTextRequest.open("GET", "/test/output_news_content/" + thisPageList[i]);
     getTextRequest.setRequestHeader("Content-Type", "application/json");
     getTextRequest.send();
     var index = i;
@@ -291,7 +291,7 @@ function deleteNews(index)
         deleteNewsRequest = new XMLHttpRequest();
     else
         deleteNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteNewsRequest.open("POST", "http://192.168.1.146:5000/test/delete_news/" + thisPageList[index - 1]);
+    deleteNewsRequest.open("POST", "/test/delete_news/" + thisPageList[index - 1]);
     deleteNewsRequest.setRequestHeader("Content-Type", "application/json");
     deleteNewsRequest.send();
     deleteNewsRequest.onload = function()
@@ -324,7 +324,7 @@ function editNews()
         editNewsRequest = new XMLHttpRequest();
     else
         editNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    editNewsRequest.open("POST", "http://192.168.1.146:5000/test/edit_news/" + thisPageList[currentIndex - 1]);
+    editNewsRequest.open("POST", "/test/edit_news/" + thisPageList[currentIndex - 1]);
     editNewsRequest.setRequestHeader("Content-Type", "application/json");
     editNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     editNewsRequest.onload = function()
@@ -371,7 +371,7 @@ function addNews()
         addNewsRequest = new XMLHttpRequest();
     else
         addNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addNewsRequest.open("POST", "http://192.168.1.146:5000/test/upload_news/");
+    addNewsRequest.open("POST", "/test/upload_news/");
     addNewsRequest.setRequestHeader("Content-Type", "application/json");
     addNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     addNewsRequest.onload = function()

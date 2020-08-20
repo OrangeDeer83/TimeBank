@@ -33,7 +33,7 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "http://192.168.1.146:5000/test/SR/output/accept");
+    taskListRequest.open("POST", "/test/SR/output/accept");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send(JSON.stringify({"userID": userID}));
     taskListRequest.onload = function()
@@ -161,7 +161,7 @@ function cancelTask(index)
         cancelTaskRequest = new XMLHttpRequest();
     else
         cancelTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    cancelTaskRequest.open("POST", "http://192.168.1.146:5000/test/SR/cancel_task");
+    cancelTaskRequest.open("POST", "/test/SR/cancel_task");
     cancelTaskRequest.setRequestHeader("Content-Type", "application/json");
     cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "userID": userID}));
     cancelTaskRequest.onload = function()
@@ -190,7 +190,7 @@ function finishTask(index, type)
         finishTaskRequest = new XMLHttpRequest();
     else
         finishTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    finishTaskRequest.open("POST", "http://192.168.1.146:5000/test/task_finish_or_not");
+    finishTaskRequest.open("POST", "/test/task_finish_or_not");
     finishTaskRequest.setRequestHeader("Content-Type", "application/json");
     console.log(type)
     finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + "", "userID": userID}));
@@ -252,7 +252,7 @@ function sendGrade()
         sendGradeRequest = new XMLHttpRequest();
     else
         sendGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendGradeRequest.open("POST", "http://192.168.1.146:5000/test/comment_action");
+    sendGradeRequest.open("POST", "/test/comment_action");
     sendGradeRequest.setRequestHeader("Content-Type", "application/json");
     sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + "", "userID": userID}));
     sendGradeRequest.onload = function()

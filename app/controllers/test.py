@@ -1,5 +1,5 @@
 #coding: utf-8
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app,send_from_directory
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app, send_from_directory
 import re, datetime, smtplib
 from sqlalchemy.sql import func
 from math import floor
@@ -112,6 +112,7 @@ def USER_login():
         try:
             value = request.get_json()
         except:
+            print(403)
             return jsonify({"rspCode": "403"})          #非法字元
         print(value) 
         userName = value['userName']
@@ -121,13 +122,16 @@ def USER_login():
             print(query_data)
         except:
             return jsonify({"rspCode": "400"})   #資料庫錯誤
-        if query_data == None:    
+        if query_data == None:
+            print(401000)
             return jsonify({"rspCode": "401"})   #登入失敗，沒有該帳號
         if check_same(userPassword, query_data.userPassword, query_data.salt):
             session['userID'] = query_data.userID
             session['userType'] = 1
+            print(200)
             return jsonify({"rspCode": "200"}) #登入成功
         else:
+            print(402)
             return jsonify({"rspCode": "402"}) #登入失敗，密碼錯誤
     else:
         return jsonify({"rspCode": "300"})  #methods使用錯誤
@@ -1842,7 +1846,7 @@ def user_add_apply():
 #回傳rspCode, userName, userSRRate, userSPRate, applyPdfName, applyID,
 #applyClass, applyQuota, applyPeriod, applyFrequency, applyTime, applyResult,
 #userID
-@test.route('/show_apply_status_0/', methods = ['POST'])
+@test.route('/show_apply_status_0', methods = ['POST'])
 def show_apply_status_0():
     if request.method == 'POST':
         json = request.get_json()
@@ -2109,14 +2113,14 @@ def judgement_history():
                 applyQuota.append(condition[2])
             else:
                 applyQuota.append(0)
-            applyTime.append(apply[1])
+            applyTime.append(str(apply[1]))
             frequency.append(apply[2])
             result.append(apply[3])
             if apply[5] != None:
                 oldQuota.append(db.engine.execute(show_old_condition_data(apply[5])).fetchone()[2])
             else:
                 oldQuota.append(condition[2])
-            judgeTime.append(apply[6])
+            judgeTime.append(str(apply[6]))
             applyID.append(apply[7])
             try:
                 fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply[7],apply[7]),'r',encoding="utf-8")
@@ -2346,7 +2350,7 @@ def SR_add_task():
         return jsonify({"rspCode":"401","notAllow":"","taskConflit":"","pointConflit":""})
     newTaskName = json['taskName']
     newTaskStartTime = json['taskStartTime']
-    newTaskEndTime = json['taskStartTime']
+    newTaskEndTime = json['taskEndTime']
     newTaskPoint = json['taskPoint']
     newTaskLocation = json['taskLocation']
     newTaskContent = json['taskContent']
@@ -2984,7 +2988,7 @@ def comment_action():
                     comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                     comment_.SRComment = user_comment
                     comment_.commentStatus = -1
-                    db.session.comit()
+                    db.session.commit()
                 return jsonify({"rspCode":"200"})
         if task_.SP[0].userID == int(userID_):    
             if task_.taskStatus == 13:
@@ -2999,7 +3003,7 @@ def comment_action():
                 comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                 comment_.SPComment = user_comment
                 comment_.commentStatus = -2
-            db.session.comit()
+            db.session.commit()
             return jsonify({"rspCode":"200"})
         elif task_.SP[0].userID != userID_:
                     #不是此task的SR或SP
@@ -3009,7 +3013,7 @@ def comment_action():
         return jsonify({"rspCode":"402"})
 
 #GM審核評論頁面
-#回傳commentList(taskStartTime, taskEndTime , taskName, taskConent, taskID, SRID, SRName, SRStar,SRConmment, SRPhone, SPID, SPName, SPStar, SPComment, SRPPhone)
+#回傳commentList(taskStartTime, taskEndTime , taskName, taskContent, taskID, SRID, SRName, SRStar,SRConmment, SRPhone, SPID, SPName, SPStar, SPComment, SRPPhone)
 @test.route("/GM/output/judge_comment_page", methods = ['GET'])
 def GM_output_judge_comment_page():
     if request.method != 'GET':

@@ -33,7 +33,7 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "http://192.168.1.146:5000/test/SP/output/refused");
+    taskListRequest.open("POST", "/test/SP/output/refused");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send(JSON.stringify({"userID": userID}));
     taskListRequest.onload = function()

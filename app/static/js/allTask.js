@@ -1,5 +1,3 @@
-const userID = "10"; // Only for beta.
-
 window.onload = function()
 {
     getTaskList();
@@ -33,9 +31,9 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "http://192.168.1.146:5000/test/SP/output/task_can_be_taken");
+    taskListRequest.open("GET", "/task/SP/output/task_can_be_taken");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
-    taskListRequest.send(JSON.stringify({"userID": userID}));
+    taskListRequest.send();
     taskListRequest.onload = function()
     {
         showError(200);
@@ -124,9 +122,9 @@ function takeTask(index)
         taskTaskRequest = new XMLHttpRequest();
     else
         taskTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskTaskRequest.open("POST", "http://192.168.1.146:5000/test/SP/taken_task");
+    taskTaskRequest.open("POST", "/task/SP/taken_task");
     taskTaskRequest.setRequestHeader("Content-Type", "application/json");
-    taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID,"userID": userID})); // userId only for beta
+    taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     taskTaskRequest.onload = function()
     {
         showError(200);

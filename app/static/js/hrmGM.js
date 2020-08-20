@@ -52,7 +52,7 @@ function addGMEmail()
         addEmailRequest = new XMLHttpRequest();
     else
         addEmailRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addEmailRequest.open("POST", "http://192.168.1.146:5000/test/load_GM_mail");
+    addEmailRequest.open("POST", "/test/load_GM_mail");
     addEmailRequest.setRequestHeader("Content-Type", "application/json");
     addEmailRequest.send(JSON.stringify({"GMMail": newEmail.value}));
     addEmailRequest.onload = function()

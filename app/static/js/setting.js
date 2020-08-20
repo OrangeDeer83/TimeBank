@@ -7,7 +7,7 @@ window.onload = function()
         getIDRequest = new XMLHttpRequest();
     else
         getIDRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIDRequest.open("GET", "http://192.168.1.146:5000/test/getID");
+    getIDRequest.open("GET", "/test/getID");
     getIDRequest.setRequestHeader("Content-Type", "application/json");
     getIDRequest.send();
     getIDRequest.onload = function()
@@ -67,7 +67,7 @@ function uploadProfile()
         uploadFrofileRequest = new XMLHttpRequest();
     else
         uploadFrofileRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadFrofileRequest.open("POST", "http://192.168.1.146:5000/test/setting/userInfo");
+    uploadFrofileRequest.open("POST", "/test/setting/userInfo");
     uploadFrofileRequest.setRequestHeader("Content-Type", "application/json");
     uploadFrofileRequest.send(JSON.stringify({"userInfo": profile.value, "userID": userID}));
     uploadFrofileRequest.onload = function()
@@ -77,7 +77,7 @@ function uploadProfile()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("名稱修改成功");
+                alert("個人簡介修改成功");
                 window.location.reload();
                 break;
             case "300": case 300:
@@ -99,7 +99,7 @@ function uploadName()
         uploadNameRequest = new XMLHttpRequest();
     else
         uploadNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadNameRequest.open("POST", "http://192.168.1.146:5000/test/setting/name");
+    uploadNameRequest.open("POST", "/test/setting/name");
     uploadNameRequest.setRequestHeader("Content-Type", "application/json");
     uploadNameRequest.send(JSON.stringify({"name": name.value, "userID": userID}));
     uploadNameRequest.onload = function()
@@ -138,7 +138,7 @@ function uploadUserName()
         uploadUserNameRequest = new XMLHttpRequest();
     else
         uploadUserNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserNameRequest.open("POST", "http://192.168.1.146:5000/test/setting/userName");
+    uploadUserNameRequest.open("POST", "/test/setting/userName");
     uploadUserNameRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserNameRequest.send(JSON.stringify({"userName": userName.value, "userID": userID}));
     uploadUserNameRequest.onload = function()
@@ -189,7 +189,7 @@ function uploadNewPassword()
         uploadNewPasswordRequest = new XMLHttpRequest();
     else
         uploadNewPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadNewPasswordRequest.open("POST", "http://192.168.1.146:5000/test/setting/userPassword");
+    uploadNewPasswordRequest.open("POST", "/test/setting/userPassword");
     uploadNewPasswordRequest.setRequestHeader("Content-Type", "application/json");
     uploadNewPasswordRequest.send(JSON.stringify({"userPassword": newPassword.value, "userOldPassword": oldPassword.value, "userID": userID}));
     uploadNewPasswordRequest.onload = function()
@@ -232,7 +232,7 @@ function uploadUserEmail()
         uploadUserEmailRequest = new XMLHttpRequest();
     else
         uploadUserEmailRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserEmailRequest.open("POST", "http://192.168.1.146:5000/test/setting/userMail");
+    uploadUserEmailRequest.open("POST", "/test/setting/userMail");
     uploadUserEmailRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserEmailRequest.send(JSON.stringify({"userMail": userEmail.value, "userID": userID}));
     uploadUserEmailRequest.onload = function()
@@ -279,7 +279,7 @@ function uploadUserPhone()
         uploadUserPhoneRequest = new XMLHttpRequest();
     else
         uploadUserPhoneRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserPhoneRequest.open("POST", "http://192.168.1.146:5000/test/setting/userPhone");
+    uploadUserPhoneRequest.open("POST", "/test/setting/userPhone");
     uploadUserPhoneRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserPhoneRequest.send(JSON.stringify({"userPhone": userPhone.value, "userID": userID}));
     uploadUserPhoneRequest.onload = function()
@@ -325,7 +325,7 @@ function uploadGender()
         uploadUserGenderRequest = new XMLHttpRequest();
     else
         uploadUserGenderRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserGenderRequest.open("POST", "http://192.168.1.146:5000/test/setting/userGender");
+    uploadUserGenderRequest.open("POST", "/test/setting/userGender");
     uploadUserGenderRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserGenderRequest.send(JSON.stringify({"userGender": checkGender, "userID": userID}));
     uploadUserGenderRequest.onload = function()
@@ -406,7 +406,7 @@ function uploadUserBirthday()
         uploadUserBirthdayRequest = new XMLHttpRequest();
     else
         uploadUserBirthdayRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserBirthdayRequest.open("POST", "http://192.168.1.146:5000/test/setting/userBirthday");
+    uploadUserBirthdayRequest.open("POST", "/test/setting/userBirthday");
     uploadUserBirthdayRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserBirthdayRequest.send(JSON.stringify({"userBirthday": userBirthday.value, "userID": userID}));
     uploadUserBirthdayRequest.onload = function()

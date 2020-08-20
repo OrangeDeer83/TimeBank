@@ -1,0 +1,316 @@
+<!--更新入口網站-->
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>更新入口網站</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/updateWeb.css')}}" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown">
+                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
+                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
+                                <div class="unspanned" id="HRSpan">
+                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.SA_list')}}">系統管理員</a></div>
+                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.hrmGM_application')}}">評論管理員</a></div>
+                                </div>
+                                <li><a href="{{url_for('Admin.give_point)}}" class="dropdownMenuItem">配發系統</a></li>
+                                <li><a href="{{url_for('Admin.approve_system)}}" class="dropdownMenuItem">核准系統</a></li>
+                                <li><a href="{{url_for('Admin.update_condition')}}" class="dropdownMenuItem">更新申請條件</a></li>
+                                <li><a href="{{url_for('Admin.update_web')}}" class="dropdownMenuItem">更新入口網站</a></li>
+                                <li><a href="{{url_for('Admin.setting')}" class="dropdownMenuItem">設定</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <div class="navbarBrand">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="{{url_for('static', filename='img/SAColor.png')}}" />
+                        </div>
+                    </div>
+                    <div class="navbarRight">
+                        <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="bodyContainer">
+            <div class="container">
+                <div id="title"><h3>更新入口網站</h3></div>
+                <div class="content" id="leftContent">
+                    <h3 class="contentTitle">修改網站介紹</h3>
+                    <div id="intro">
+                        <textarea id="introduction" placeholder="輸入網站介紹..."></textarea>
+                        <button class="button" id="introductionStore" onclick="storeIntroduction()">儲 存</button>
+                        <span class="introductionEditUser" id="introductionEditUser">上次更新的是Damian</span>
+                    </div>
+                </div><!--
+            ---><div class="content" id="rightContent">
+                    <h3 class="contentTitle">新增、修改最新消息</h3>
+                    <div id="newsDiv">
+                        <div class="news" id="news0">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit0" onclick="changeSpan(0)">新 增</button>
+                                新增訊息
+                            </div>
+                            <form action="{{url_for('protal.upload_news')}}" method="POST"  enctype="multipart/form-data">
+                                <div class="newsSpan currentSpannedNews" id="newsSpan0">
+                                    <div class="uploadImgDiv" id="uploadImgDiv0">
+                                        <label for="uploadImg0">
+                                            &#10133上傳照片
+                                            <input class="uploadImg" id="uploadImg0" type="file" name="file" accept="image/*" onchange="previewImg()" />
+                                            <img class="newsImg" id="newsImg0" alt="news image" />
+                                        </label>
+                                    </div><!--
+                                ---><div class="newsInput">
+                                        <input type="text" name="title" class="newsTitle" id="newsTitle0" placeholder="請輸入標題..." />
+                                        <textarea class="newsText" name="content" id="newsText0" placeholder="輸入最新消息..."></textarea>
+                                    </div>
+                                    <input type="submit" class="button newsButton newsStore" id="store0" value="儲 存"></input>
+                                </div>
+                            <form>
+
+                        </div>
+                        <div class="news" id="news1">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit1" onclick="changeSpan(1)">編 輯</button>
+                                <button class="button newsButton" id="delete1" onclick="editNews()">刪除</button>
+                                <span id="newsOldTitle1">這是最新的一則消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan1">
+                                <div class="uploadImgDiv" id="uploadImgDiv1">
+                                    <label for="uploadImg1">
+                                        <input class="uploadImg" id="uploadImg1" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg1" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle1" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText1" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store1" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser1">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news2">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit2" onclick="changeSpan(2)">編 輯</button>
+                                <button class="button newsButton" id="delete2" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle2">這是第二新的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan2">
+                                <div class="uploadImgDiv" id="uploadImgDiv2">
+                                    <label for="uploadImg2">
+                                        <input class="uploadImg" id="uploadImg2" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg2" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle2" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText2" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store2" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser2">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news3">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit3" onclick="changeSpan(3)">編 輯</button>
+                                <button class="button newsButton" id="delete3" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle3">這是第三新的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan3">
+                                <div class="uploadImgDiv" id="uploadImgDiv3">
+                                    <label for="uploadImg3">
+                                        <input class="uploadImg" id="uploadImg3" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg3" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle3" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText3" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store3" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser3">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news4">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit4" onclick="changeSpan(4)">編 輯</button>
+                                <button class="button newsButton" id="delete4" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle4">這是第四新的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan4">
+                                <div class="uploadImgDiv" id="uploadImgDiv4">
+                                    <label for="uploadImg4">
+                                        <input class="uploadImg" id="uploadImg4" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg4" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle4" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText4" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store4" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser4">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news5">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit5" onclick="changeSpan(5)">編 輯</button>
+                                <button class="button newsButton" id="delete5" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle5">這是不新不舊但比較新的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan5">
+                                <div class="uploadImgDiv" id="uploadImgDiv5">
+                                    <label for="uploadImg5">
+                                        <input class="uploadImg" id="uploadImg5" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg5" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle5" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText5" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store5" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser5">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news6">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit6" onclick="changeSpan(6)">編 輯</button>
+                                <button class="button newsButton" id="delete6" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle6">這是不新不舊的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan6">
+                                <div class="uploadImgDiv" id="uploadImgDiv6">
+                                    <label for="uploadImg6">
+                                        <input class="uploadImg" id="uploadImg6" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg6" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle6" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText6" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store6" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser6">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news7">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit7" onclick="changeSpan(7)">編 輯</button>
+                                <button class="button newsButton" id="delete7" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle7">這是第四古老的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan7">
+                                <div class="uploadImgDiv" id="uploadImgDiv7">
+                                    <label for="uploadImg7">
+                                        <input class="uploadImg" id="uploadImg7" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg7" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle7" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText7" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store7" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser7">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news8">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit8" onclick="changeSpan(8)">編 輯</button>
+                                <button class="button newsButton" id="delete8" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle8">這是第三舊的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan8">
+                                <div class="uploadImgDiv" id="uploadImgDiv8">
+                                    <label for="uploadImg8">
+                                        <input class="uploadImg" id="uploadImg8" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg8" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle8" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText8" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store8" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser8">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news9">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit9" onclick="changeSpan(9)">編 輯</button>
+                                <button class="button newsButton" id="delete9" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle9">這是第二舊的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan9">
+                                <div class="uploadImgDiv" id="uploadImgDiv9">
+                                    <label for="uploadImg9">
+                                        <input class="uploadImg" id="uploadImg9" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg9" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle9" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText9" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store9" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser9">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                        <div class="news" id="news10">
+                            <div class="newsBar">
+                                <button class="button newsButton" id="edit10" onclick="changeSpan(10)">編 輯</button>
+                                <button class="button newsButton" id="delete10" onclick="deleteNews()">刪 除</button>
+                                <span id="newsOldTitle10">這是最最舊的消息</span>
+                            </div>
+                            <div class="newsSpan" id="newsSpan10">
+                                <div class="uploadImgDiv" id="uploadImgDiv10">
+                                    <label for="uploadImg10">
+                                        <input class="uploadImg" id="uploadImg10" type="file" accept="image/*" onchange="previewImg()" />
+                                        <img class="newsImg" id="newsImg10" alt="news image" />
+                                    </label>
+                                </div><!--
+                            ---><div class="newsInput">
+                                    <input type="text" class="newsTitle" id="newsTitle10" placeholder="請輸入標題..." />
+                                    <textarea class="newsText" id="newsText10" placeholder="輸入最新消息..."></textarea>
+                                </div>
+                                <button class="button newsButton newsStore" id="store10" onclick="editNews()">儲 存</button>
+                                <span class="newsEditUser" id="newsEditUser10">上次更新的是Damian</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="changePageDiv">
+                        <button class="button changePageButton" id="changePagePrev" onclick="computePage(1)">上 一 頁</button>
+                        <span id="changePage">0/0</span>
+                        <button class="button changePageButton" id="changePageNext" onclick="computePage(2)">下 一 頁</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/updateWeb.js')}}"></script>
+        
+    </body>
+
+</html>
+

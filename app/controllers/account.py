@@ -10,6 +10,31 @@ from ..models import db, userType
 from email.mime.text import MIMEText
 
 Account = Blueprint('account', __name__)
+#取得自己的ID
+@Account.route('/get_ID', methods=['GET'])
+def get_ID():
+    if request .method == 'GET':
+        if session.get('userID'):
+            return jsonify({"rspCode": "200", "ID": session.get('userID')})             #成功取得使用者ID
+        else:
+            return jsonify({"rspCode": "400", "ID": ""})                                #尚未登入
+    else:
+        return jsonify({"rspCode": "300", "ID": ""})                                    #method使用錯誤
+
+#登出
+@Account.route('/logout', methods=['GET'])
+def logout():
+    if request.method == 'GET':
+        if session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['SA']]:
+            session.clear()
+            return redirect(url_for('Admin.login'))
+        elif session.get('userType') == userType['GM']:
+            session.clear()
+            return redirect(url_for('GM.login'))
+        else:
+            session.clear()
+            return redirect(url_for('USER.index'))
+
 
 #偵測一般使用者帳號重複(註冊用)
 @Account.route('/USER/detect_repeated', methods=['POST'])
@@ -150,7 +175,7 @@ def Admin_login():
             return jsonify({"rspCode": "402"})                  #登入失敗，密碼錯誤
     else:
         return jsonify({"rspCode": "300"})                      #method使用錯誤
-
+'''
 #登出
 @Account.route('/logout')
 def logout():
@@ -159,7 +184,7 @@ def logout():
         return jsonify({"rspCode": "200"})  #登出成功
     else:
         return jsonify({"rspCode": "400"})  #登出失敗
-
+'''
 #一般使用者申請重設密碼信
 @Account.route('/USER/forgot_password', methods=['POST'])
 def USER_forgot_password():
@@ -866,11 +891,12 @@ def setting_propic():
             if f and f.filename.rsplit('.', 1)[1] in allowExtention:
                 path = current_app.config['UPLOAD_FOLDER'] + "/app/static/img/propic/{}.jpg".format(userID)
                 f.save(path)
-                return redirect(url_for('USER.setting'))
+                return redirect(url_for('USER.setting'))                #成功修改
             else:
                 print(f.filename)
-                return redirect(url_for('USER.setting'))
+                return redirect(url_for('USER.setting'))                #檔名錯誤
         else:
-            return redirect(url_for('USER.login'))
+            session.clear()
+            return redirect(url_for('USER.index'))                      #權限不符
     else:
-        return redirect(url_for('USER.setting'))
+        return redirect(url_for('USER.setting'))                        #method使用錯誤

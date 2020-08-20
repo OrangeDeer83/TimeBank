@@ -34,7 +34,7 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "http://192.168.1.146:5000/test/SR/output/release");
+    taskListRequest.open("POST", "/test/SR/output/release");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send(JSON.stringify({"userID": userID}));
     taskListRequest.onload = function()
@@ -158,7 +158,7 @@ function selectSP(index)
         selectSPRequest = new XMLHttpRequest();
     else
         selectSPRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    selectSPRequest.open("POST", "http://192.168.1.146:5000/test/SR/decide_SP");
+    selectSPRequest.open("POST", "/test/SR/decide_SP");
     selectSPRequest.setRequestHeader("Content-Type", "application/json");
     selectSPRequest.send(JSON.stringify({"userID": userID, "taskID": thisPageList[index].taskID, "candidateID": candidate.value}));
     selectSPRequest.onload = function()
@@ -194,7 +194,7 @@ function deleteTask(index)
         deleteTaskRequest = new XMLHttpRequest();
     else
         deleteTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteTaskRequest.open("POST", "http://192.168.1.146:5000/test/SR/delete_task");
+    deleteTaskRequest.open("POST", "/test/SR/delete_task");
     deleteTaskRequest.setRequestHeader("Content-Type", "application/json");
     deleteTaskRequest.send(JSON.stringify({"userID": userID, "taskID": thisPageList[index].taskID}));
     deleteTaskRequest.onload = function()

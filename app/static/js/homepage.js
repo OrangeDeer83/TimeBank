@@ -21,7 +21,7 @@ function getNewsAmount()
         getNewsAmountRequest = new XMLHttpRequest();
     else
         getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "http://192.168.1.146:5000/test/useful_numbers");
+    getNewsAmountRequest.open("GET", "/test/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -112,7 +112,7 @@ function getIntroduction()
         getIntroductionRequest = new XMLHttpRequest();
     else
         getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "http://192.168.1.146:5000/test/output_webIntro");
+    getIntroductionRequest.open("GET", "/test/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     getIntroductionRequest.onload = function()
@@ -144,7 +144,7 @@ function getNewsTitle(index)
         getTitleRequest = new XMLHttpRequest();
     else
         getTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTitleRequest.open("GET", "http://192.168.1.146:5000/test/output_news_title/" + thisPageList[index]);
+    getTitleRequest.open("GET", "/test/output_news_title/" + thisPageList[index]);
     getTitleRequest.setRequestHeader("Content-Type", "application/json");
     getTitleRequest.send();
     getTitleRequest.onload = function()
@@ -197,7 +197,7 @@ function getNewsContent(index)
         getContentRequest = new XMLHttpRequest();
     else
         getContentRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getContentRequest.open("GET", "http://192.168.1.146:5000/test/output_news_content/" + thisPageList[index]);
+    getContentRequest.open("GET", "/test/output_news_content/" + thisPageList[index]);
     getContentRequest.setRequestHeader("Content-Type", "application/json");
     getContentRequest.send();
     getContentRequest.onload = function()

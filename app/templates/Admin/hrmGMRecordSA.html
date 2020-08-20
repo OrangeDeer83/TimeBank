@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>人事管理-評論管理員</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/hrmGM.css')}}">
+
+    </head>
+    <body>
+        <header>
+            <nav class="nav navbarBack">
+                <div class="navbarContainer">
+                    <div class="navbarLeft">
+                        <div class="dropdown">
+                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
+                                <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
+                                    <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
+                                    <div class="unspanned" id="HRSpan">
+                                        <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.SA_list')}}">系統管理員</a></div>
+                                        <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.GM_list')}}">評論管理員</a></div>
+                                    </div>
+                                    <li><a href="{{url_for('Admin.give_point)}}}" class="dropdownMenuItem">配發系統</a></li>
+                                    <li><a href="{{url_for('Admin.approve_system')}" class="dropdownMenuItem">核准系統</a></li>
+                                    <li><a href="{{url_for('Admin.update_condition')}" class="dropdownMenuItem">更新申請條件</a></li>
+                                    <li><a href="{{url_for('Admin.update_web')}" class="dropdownMenuItem">更新入口網站</a></li>
+                                    <li><a href="{{url_for('Admin.setting')}" class="dropdownMenuItem">設定</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                    <div class="navbarCenter">
+                        <div class="navbarBrand">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="{{url_for('static', filename='img/SAColor.png')}}" />
+                        </div>
+                    </div>
+                    <div class="navbarRight">
+                        <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="bodyContainer">
+            <div class="addPart">
+                <table id="addTable">
+                    <tr><td>新增評論管理員</td></tr>
+                    <tr><td>
+                        <div class="enterEmail">輸入電子郵件
+                            <input type="text" name="電子郵件" id="newEmail" placeholder="請輸入電子郵件" maxlength="50" onkeypress="if(event.keyCode == 13){addGMEmail();}" autofocus />
+                        </div>
+                        <div class="addButton" onclick="addGMEmail()">新增</div>
+                    </td></tr>
+                    <tr><td>
+                        系統提示：<span id="error"></span>
+                        <div id="checkPassword">
+                            請輸入密碼<input type="password" id="deletePassword" placeholder="輸入密碼以刪除評論管理員" maxlength="30" onkeypress="if(event.keyCode == 13){checkPassword();}" />
+                            <div class="addButton" onclick="checkPassword()">送出</div>
+                        </div>
+                    </td></tr>
+                </table>
+            </div>
+            <div class="tabsPart">
+                <ul class="tabs">
+                    <li class="tabOne"><a class="tabOneA" href="{{url_for('Admin.hrmGM_application)}}" target="_self">申請列表</a></li>
+                    <li class="tabOne currentTabOne"><a class="tabOneA">成員紀錄</a></li>
+                </ul>
+            </div>
+            <div class="tablePart">
+                <table id="applicantTable">
+                    <tr id="list0"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName0"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone0"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail0"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(0)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list1"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName1"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone1"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail1"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(1)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list2"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName2"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone2"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail2"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(2)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list3"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName3"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone3"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail3"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(3)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list4"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName4"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone4"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail4"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(4)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list5"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName5"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone5"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail5"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(5)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list6"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName6"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone6"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail6"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(6)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list7"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName7"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone7"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail7"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(7)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list8"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName8"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone8"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail8"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(8)" value="刪除" /></div>
+                    </td></tr>
+                    <tr id="list9"><td>
+                        <div class="managerName">管理員名稱：<span id="managerName9"></span></div>
+                        <div class="phone">電話號碼：<span id="managerPhone9"></span></div>
+                        <div class="email">電子郵件：<span id="managerEmail9"></span></div>
+                        <div class="button"><input type="button" class="delete" onclick="deleteManager(9)" value="刪除" /></div>
+                    </td></tr>
+                    <tr><td class="pageTr">
+                        <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                            <span class="formPageNumber" id="pageNumber">1/1</span>
+                        <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/hrmGM.js')}}"></script>
+        <script src="{{url_for('static', filename='js/hrmGMRecord.js')}}"></script>
+    </body>
+</html>

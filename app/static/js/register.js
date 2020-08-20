@@ -67,7 +67,7 @@ function idTest()
         checkID = new XMLHttpRequest();
     else // Old IE browser.
         checkID = new ActiveXObject("Microsoft.XMLHTTP");
-    checkID.open("POST", "http://192.168.1.146:5000/test/USER/detect_repeated");
+    checkID.open("POST", "/test/USER/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
     checkID.send(JSON.stringify({"userName": userName.value}));
     console.log("CheckID JSON sent.");
@@ -334,7 +334,7 @@ function register()
         else // Old IE browser.
             request = new ActiveXObject("Microsoft.XMLHTTP");
 
-        request.open("POST", "http://192.168.1.146:5000/test/USER/register");
+        request.open("POST", "/test/USER/register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"name": nameOfUser.value, "userName": userName.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
@@ -348,7 +348,7 @@ function register()
                 case "200": case 200: // Register success.
                     console.log("Register success!");
                     alert(nameOfUser.value + " 註冊成功!");
-                    window.location.assign("{{url_for('USER')}}");
+                    window.location.assign("/USER/");
                     return true;
                 case "300": case 300: // Methods wrong.
                     registerError.style.display = "block";

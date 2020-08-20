@@ -160,7 +160,7 @@
     .approveDiv
     {
         width: 800px;
-        height: 660px;
+        height: 730px;
         background-color: #293F66;
         color: white;
         margin: auto;
@@ -207,7 +207,7 @@
         border: 1px solid white;
         margin: 0 0 0 20px;
         width: 760px;
-        height: 200px;
+        height: 230px;
     }
 
     /* 申請內容-四欄式排版 */
@@ -265,7 +265,7 @@
 {
     .approveDiv
     {
-        margin-top: calc(50vh - 300px);
+        margin-top: calc(50vh - 350px);
     }
 }
 

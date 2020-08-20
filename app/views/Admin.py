@@ -7,12 +7,12 @@ Admin = Blueprint('Admin', __name__)
 #忘記密碼頁面
 @Admin.route('/forgotPassword')
 def forgot_password():
-   return render_template('forgotPasswordManager5.html')
+   return render_template('/Admin/forgotPasswordAdmin.html')
 
 #輸入新密碼
 @Admin.route('/resetPassword/<token>')
 def reset_password(token):
-   return render_template('resetPasswordManager5.html')
+   return render_template('/Admin/resetPasswordAdmin.html')
 
 #登入頁面
 @Admin.route('/login')
@@ -21,42 +21,42 @@ def login():
    if session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['SA']]:
       return redirect(url_for('Admin.setting'))
    else:
-      return render_template('loginManager5.html')
+      return render_template('/Admin/loginAdmin.html')
 
 #設定頁面
 @Admin.route('/setting')
 def setting():
    print(session.get('userType'))
    if session.get('userType') == userType['SA']:
-      return render_template('settingSA.html')
+      return render_template('/Admin/settingSA.html')
    elif session.get('userType') == userType['AA']:
-      return render_template('settingAA.html')
+      return render_template('/Admin/settingAA.html')
    elif session.get('userType') == userType['AG']:
-      return render_template('settingAG.html')
+      return render_template('/Admin/settingAG.html')
    elif session.get('userType') == userType['AS']:
-      return render_template('settingAS.html')
+      return render_template('/Admin/settingAS.html')
    elif session.get('userType') == userType['AS']:
-      return render_template('settingAU.html')
+      return render_template('/Admin/settingAU.html')
    else:
       return redirect(url_for('Admin.login'))
 
 #核准紀錄
 @Admin.route('/approveRecord')
-def approveRecord():
+def approve_record():
    if session.get('userType') == userType['SA']:
-      return render_template('approveRecordSA.html')
+      return render_template('/Admin/approveRecordSA.html')
    elif session.get('userType') == userType['AA']:
-      return render_template('approveRecordAA.html')
+      return render_template('/Admin/approveRecordAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
 #核准申請
 @Admin.route('/approveSystem')
-def approveSystem():
+def approve_system():
    if session.get('userType') == userType['SA']:
-      return render_template('approveSystemSA.html')
+      return render_template('/Admin/approveSystemSA.html')
    elif session.get('userType') == userType['AA']:
-      return render_template('approveSystemAA.html')
+      return render_template('/Admin/approveSystemAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -64,9 +64,9 @@ def approveSystem():
 @Admin.route('/updateCondition')
 def update_condition():
    if session.get('userType') == userType['SA']:
-      return render_template('updateConditionSA.html')
+      return render_template('/Admin/updateConditionSA.html')
    elif session.get('userType') == userType['AA']:
-      return render_template('updateConditionAA.html')
+      return render_template('/Admin/updateConditionAA.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -74,9 +74,9 @@ def update_condition():
 @Admin.route('/givePoint')
 def give_point():
    if session.get('userType') == userType['SA']:
-      return render_template('givePointSA.html')
+      return render_template('/Admin/givePointSA.html')
    elif session.get('userType') == userType['AS']:
-      return render_template('givePointAS.html')
+      return render_template('/Admin/givePointAS.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -84,9 +84,9 @@ def give_point():
 @Admin.route('/giveRecord')
 def give_record():
    if session.get('userType') == userType['SA']:
-         return render_template('giveRecordSA.html')
+         return render_template('/Admin/giveRecordSA.html')
    elif session.get('userType') == userType['AS']:
-      return render_template('giveRecordAS.html')
+      return render_template('/Admin/giveRecordAS.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -95,9 +95,9 @@ def give_record():
 @Admin.route('/GMApplication')
 def hrmGM_application():
    if session.get('userType') == userType['SA']:
-      return render_template('hrmGMApplicationSA.html')
+      return render_template('/Admin/hrmGMApplicationSA.html')
    elif session.get('userType') == userType['AG']:
-      return render_template('hrmGMApplicationAG.html')
+      return render_template('/Admin/hrmGMApplicationAG.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -105,9 +105,9 @@ def hrmGM_application():
 @Admin.route('/GMList')
 def GM_list():
    if session.get('userType') == userType['SA']:
-      return render_template('hrmGMRecordSA.html')
+      return render_template('/Admin/hrmGMRecordSA.html')
    elif session.get('userType') == userType['AG']:
-      return render_template('hrmGMRecordAG.html')
+      return render_template('/Admin/hrmGMRecordAG.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -115,16 +115,16 @@ def GM_list():
 @Admin.route('/SA/AdminList')
 def SA_list():
    if session.get('userType') == userType['SA']:
-      return render_template('hrmManager.html')
+      return render_template('/Admin/hrmManager.html')
    else:
       return redirect(url_for('Admin.login'))
 
 #更新入口網站
 @Admin.route('/updateWeb')
-def SA_update_web():
+def update_web():
    if session.get('userType') == userType['SA']:
-      return render_template('updateWebSA.html')
+      return render_template('/Admin/updateWebSA.html')
    elif session.get('userType') == userType['AU']:
-      return render_template('updateWebAU.html')
+      return render_template('/Admin/updateWebAU.html')
    else:
       return redirect(url_for('Admin.login'))

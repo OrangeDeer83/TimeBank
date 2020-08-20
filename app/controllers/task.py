@@ -206,7 +206,7 @@ def SP_output_record():
 def SR_add_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
-    if session.get('usrType') != userType['USER']:
+    if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","notAllow":"","taskConflit":"","pointConflit":""})
     try:
         json = request.get_json()
@@ -298,7 +298,7 @@ def SR_add_task():
 def SP_output_task_can_be_taken():
     if request.method != 'GET':
            return jsonify({"rspCode":"300","taskList":""})
-    if session.get('usrType') != userType['USER']:
+    if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","taskList":""})
     try:
         userID = int(session.get('userID'))
@@ -374,7 +374,7 @@ def SP_output_task_can_be_taken():
 def SP_taken_task():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","taskConflit":""})
-    if session.get('usrType') != userType['USER']:
+    if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","taskConflit":""})
     try:
         userID = int(session.get('userID'))
@@ -439,7 +439,7 @@ def SP_taken_task():
 def SR_release():
     if request.method != 'GET':
         return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
-    if session.get('usrType') != userType['USER']:
+    if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","taskConflit":""})
     try:
         userID = int(session.get('userID'))

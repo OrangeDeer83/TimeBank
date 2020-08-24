@@ -91,7 +91,7 @@ function gmLogin()
             loginGMRequest = new XMLHttpRequest();
         else
             loginGMRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        loginGMRequest.open("POST", "/test/Admin/login");
+        loginGMRequest.open("POST", "/account/Admin/login");
         loginGMRequest.setRequestHeader("Content-Type", "application/json");
         loginGMRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginGMRequest.onload = function()

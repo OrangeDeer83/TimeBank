@@ -167,8 +167,8 @@ class apply(db.Model):
         self.judgeTime = judgeTime
 
 
-class applyConditionList(db.Model):
-    __tablename__ = 'applyConditionList'
+class applyCondition(db.Model):
+    __tablename__ = 'applyCondition'
     conditionID = db.Column(db.Integer, primary_key=True)
     period = db.Column(db.Integer, nullable=False)
     className = db.Column(db.String(10), nullable=False)

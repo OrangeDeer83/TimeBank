@@ -22,7 +22,7 @@ function getUserList()
         getListRequest = new XMLHttpRequest();
     else
         getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/test/show_apply_status_0");
+    getListRequest.open("POST", "/apply/show_apply_status_0");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"name": searchText}));
     getListRequest.onload = function()
@@ -152,13 +152,14 @@ function downloadPDF(index)
         downloadPDFRequest = new XMLHttpRequest();
     else
         downloadPDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    downloadPDFRequest.open("POST", "/test/apply_pdf_download");
+    downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
     downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
     downloadPDFRequest.onload = function()
     {
         console.log(downloadPDFRequest.responseText);
         rst = JSON.parse(downloadPDFRequest.responseText);
+        console.log(rst.rspCode);
         switch (rst.rspCode)
         {
             case "200": case 200:
@@ -203,7 +204,7 @@ function sendApprove(index, type ,newQuota)
         approvePDFRequest = new XMLHttpRequest();
     else
         approvePDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    approvePDFRequest.open("POST", "/test/apply_judge");
+    approvePDFRequest.open("POST", "/apply/apply_judge");
     approvePDFRequest.setRequestHeader("Content-Type", "application/json");
     approvePDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]], "applyStatus": type, "quotaChange": newQuota, "adminID": "1"}));
     approvePDFRequest.onload = function()

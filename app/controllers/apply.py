@@ -7,15 +7,31 @@ import datetime
 from ..models.makePoint import *
 Apply = Blueprint('apply', __name__)
 
+@Apply.route('/update_apply_group', methods = ['POST'])
+def update_apply_group():
+    if request.method == 'POST':
+        try:
+            json = request.get_json()
+            groupName = json['groupName']
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'/group_name.txt','w')
+            file.write(groupName)
+            file.close()
+            return jsonify({"rspCode":"200"})
+        except:
+            #rspCode 400:申請對象寫入失敗
+            return jsonify({"rspCode":"400"})
+    else:
+        return jsonify({"rspCode":"300"})
+
 #顯示申請對象
 #回復rspCode,groupName
 @Apply.route('/output_apply_group', methods = ['GET'])
 def output_apply_group():
     if request.method == "GET":
-        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == ['USER']):
+        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
            return jsonify({"rspCode":"500","allClass":""})
         try:
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' + '/group_name.txt','r')
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' + '/group_name.txt','r',encoding ='UTF-8')
             groupName = file.read()
             file.close()
             return jsonify({"rspCode":"200","groupName":groupName})
@@ -30,10 +46,10 @@ def output_apply_group():
 @Apply.route("/output_apply_class" ,methods = ['GET'])
 def output_apply_class():
     if request.method == 'GET':
-        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == ['USER']):
+        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
            return jsonify({"rspCode":"500","allClass":""})
         try:
-            dbClassData = db.engine.execute(list_alive_apply_class()).fetchall()
+            dbClassData = db.engine.execute(list_alive_apply_className()).fetchall()
             allClass = []
             for object in dbClassData:
                 allClass.append(object[0])
@@ -100,7 +116,7 @@ def upload_apply_condition_pdf():
 def ouput_apply_condition_pdf():
     if request.method == 'GET':
         try:
-            if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == ['USER']):
+            if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
                 return jsonify({"rspCode":"500","fileName":""})
             if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/'+'申請說明文件.pdf'):
                 return jsonify({"rspCode":"200","fileName":"申請說明文件.pdf"})
@@ -118,7 +134,7 @@ def ouput_apply_condition_pdf():
 #回傳rspCode,notAllow
 @Apply.route('/update_add_apply_quota' ,methods = ['POST'])
 def update_add_apply_quota():
-    try:
+    #try:
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
            return jsonify({"rspCode":"500","notAllow":notAllow})
         if request.method == 'POST':
@@ -169,71 +185,72 @@ def update_add_apply_quota():
             if notAllow != []:
                 #rspCode 401:輸入不合法
                 return jsonify({"rspCode":"401","notAllow":notAllow})
+            
             #一次性
             #檢查是不是0
             if once != '0':
                 #檢查原本有沒有這種一次性
-                if db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone() != None:
+                if db.engine.execute(show_quota_by_period_className_alive(className,0)).fetchone() != None:
                     #檢查和已有的once一不一樣，一樣的話不做事
-                    if int(once) != db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone()[0]:
-                        db.engine.execute(let_apply_condition_die_class_period(className,0))
+                    if int(once) != db.engine.execute(show_quota_by_period_className_alive(className,0)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_className_period(className,0))
                         db.engine.execute(add_apply_condition(0,className,int(once)))                    
                 else:
                     db.engine.execute(add_apply_condition(0,className,int(once)))
             else:
                 #檢查有沒有這種一次性
-                if db.engine.execute(show_quota_by_period_class_alive(className,0)).fetchone() != None:
-                     db.engine.execute(let_apply_condition_die_class_period(className,0))
+                if db.engine.execute(show_quota_by_period_className_alive(className,0)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_className_period(className,0))
             #一個月
             if one != '0':
-                if db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone() != None:
-                    if int(one) != db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone()[0]:
-                        db.engine.execute(let_apply_condition_die_class_period(className,30))
+                if db.engine.execute(show_quota_by_period_className_alive(className,30)).fetchone() != None:
+                    if int(one) != db.engine.execute(show_quota_by_period_className_alive(className,30)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_className_period(className,30))
                         db.engine.execute(add_apply_condition(30,className,int(one)))                    
                 else:
                     db.engine.execute(add_apply_condition(30,className,int(one)))
             else:
-                if db.engine.execute(show_quota_by_period_class_alive(className,30)).fetchone() != None:
-                     db.engine.execute(let_apply_condition_die_class_period(className,30))
+                if db.engine.execute(show_quota_by_period_className_alive(className,30)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_className_period(className,30))
             #三個月
             if three != '0':
-                if db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone() != None:
-                    if int(three) != db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone()[0]:
-                        db.engine.execute(let_apply_condition_die_class_period(className,90))
+                if db.engine.execute(show_quota_by_period_className_alive(className,90)).fetchone() != None:
+                    if int(three) != db.engine.execute(show_quota_by_period_className_alive(className,90)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_className_period(className,90))
                         db.engine.execute(add_apply_condition(90,className,int(three)))                    
                 else:
                     db.engine.execute(add_apply_condition(90,className,int(three)))
             else:
-                if db.engine.execute(show_quota_by_period_class_alive(className,90)).fetchone() != None:
-                     db.engine.execute(let_apply_condition_die_class_period(className,90))
+                if db.engine.execute(show_quota_by_period_className_alive(className,90)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_className_period(className,90))
             #六個月
             if six != '0':
-                if db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone() != None:
-                    if int(six) != db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone()[0]:
-                        db.engine.execute(let_apply_condition_die_class_period(className,180))
+                if db.engine.execute(show_quota_by_period_className_alive(className,180)).fetchone() != None:
+                    if int(six) != db.engine.execute(show_quota_by_period_className_alive(className,180)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_className_period(className,180))
                         db.engine.execute(add_apply_condition(180,className,int(six)))                    
                 else:
                     db.engine.execute(add_apply_condition(180,className,int(six)))
             else:
-                if db.engine.execute(show_quota_by_period_class_alive(className,180)).fetchone() != None:
-                     db.engine.execute(let_apply_condition_die_class_period(className,180))
+                if db.engine.execute(show_quota_by_period_className_alive(className,180)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_className_period(className,180))
             #一年
             if year != '0':
-                if db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone() != None:
-                    if int(year) != db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone()[0]:
-                        db.engine.execute(let_apply_condition_die_class_period(className,365))
+                if db.engine.execute(show_quota_by_period_className_alive(className,365)).fetchone() != None:
+                    if int(year) != db.engine.execute(show_quota_by_period_className_alive(className,365)).fetchone()[0]:
+                        db.engine.execute(let_apply_condition_die_className_period(className,365))
                         db.engine.execute(add_apply_condition(365,className,int(year)))                    
                 else:
                     db.engine.execute(add_apply_condition(365,className,int(year)))
             else:
-                if db.engine.execute(show_quota_by_period_class_alive(className,365)).fetchone() != None:
-                     db.engine.execute(let_apply_condition_die_class_period(className,365))
+                if db.engine.execute(show_quota_by_period_className_alive(className,365)).fetchone() != None:
+                     db.engine.execute(let_apply_condition_die_className_period(className,365))
             return jsonify({"rspCode":"200","notAllow":""})
         else:
             return jsonify({"rspCode":"300","notAllow":""})
-    except:
+    #except:
         #rspCode 400:某個地方爆掉但不知道哪裡
-        return jsonify({"rspCode":"400","notAllow":""})
+        #return jsonify({"rspCode":"400","notAllow":""})
 
 #回傳要求的quota和condition id
 #要json傳class,period
@@ -274,48 +291,51 @@ def return_period_by_class():
     try:
         if request.method == 'POST':
             if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-                return jsonify({"periodList":"","rspCode":"500"})
+                return jsonify({"periodList":"","quotaList":"","rspCode":"500"})
             try:
                 json = request.get_json()
             except:
-                return jsonify({"periodList":"","rspCode":"410"}) 
+                return jsonify({"periodList":"","quotaList":"","rspCode":"410"}) 
             className = json['class']
             if className == '其他':
                 return jsonify({"periodList":"0,30,90,180,365","quotaList":"","rspCode":"200"})
             else:
                 dbData = db.engine.execute(out_put_allow_period(className)).fetchall()
-                quotaList = [0,0,0,0,0]
+                #quotaList = [0,0,0,0,0]
+                quotaList = []
                 periodList = []
                 conditionIDList = []
+                
                 if dbData != []:
                     for period in dbData:
-                        dbData2 = db.engine.execute(show_quota_conditionID_by_class_period(className,period[0])).fetchone()
+                        periodList.append(str(period[0]))
+                        dbData2 = db.engine.execute(show_quota_conditionID_by_className_period(className,period[0])).fetchone()
                         if period[0] == 0:
-                            quotaList[0] = dbData2[1]
+                            quotaList.append(str(dbData2[1]))
                         elif period[0] == 30:
-                            quotaList[1] = dbData2[1]
+                            quotaList.append(str(dbData2[1]))
                         elif period[0] == 90:
-                            quotaList[2] = dbData2[1]
+                            quotaList.append(str(dbData2[1]))
                         elif period[0] == 180:
-                            quotaList[3] = dbData2[1]
+                            quotaList.append(str(dbData2[1]))
                         elif period[0] == 365:
-                            quotaList[4] = dbData2[1]
-                    return jsonify({"quotaList":quotaList,"rspCoide":"200"})
+                            quotaList.append(str(dbData2[1]))
+                    return jsonify({"quotaList":quotaList,"periodList":periodList,"rspCode":"200"})
                 else:
                     #rspCode 201:此class沒有可被申請的週期
-                    return jsonify({"quotaList":"","rspCoide":"201"})
+                    return jsonify({"quotaList":"","periodList":"","rspCode":"201"})
         else:
-            return jsonify({"quotaList":"","rspCode":"300"})
+            return jsonify({"quotaList":"","periodList":"","rspCode":"300"})
     except:
             #rspCode 400:某個地方爆掉
-            return jsonify({"periodList":"","rspCode":"400"})
+            return jsonify({"periodList":"","quotaList":"","rspCode":"400"})
 
 #使用者新增申請
 #要form傳frequency,period,result,class,quota,file(pdf)
 #回傳rspCode,notAllow
 @Apply.route("/USER/add_apply", methods = ['POST'])
 def user_add_apply():
-    try:
+    #try:
         if request.method == 'POST':
             if not(session.get('userType') == userType['USER']):
                 session.clear()
@@ -347,9 +367,9 @@ def user_add_apply():
                 try:
                     if notAllow != []:
                         #rspCode 403:有輸入不符合格式
-                        #return jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                        return redirect(url_for('USER.application'))
-                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['period'])).fetchone()[0]
+                        return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                        #return redirect(url_for('USER.application'))
+                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
                 except:
                     #rspCode 401:找不到conditionID
                     #return jsonify({"rspCode":"401","notALlow":""})
@@ -377,13 +397,15 @@ def user_add_apply():
                 #沒有才建新的
                 else:
                     db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
-                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]     
+                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
+ 
             try:
-                file = request.files['file']
+                file = request.files['applyDocument']
             except:
-                apply_condition = db.session.query(applyConditionList).filter(applyConditionList.conditionID == conditionID).first()
-                apply_condition.delete()
+                apply_condition = db.session.query(applyCondition).filter(applyCondition.conditionID == conditionID).first()
+                db.session.delete(apply_condition)
                 db.session.commit()
+                
                 return redirect(url_for('USER.application'))
             #建立apply
             db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
@@ -411,7 +433,7 @@ def user_add_apply():
         else:
             #return jsonify({"rspCode":"300","notALlow":""})
             return redirect(url_for('USER.application'))
-    except:
+    #except:
         #rspCode 400:某個地方爆掉但不知道哪裡
         #return jsonify({"rspCode":"400","notALlow":""})
         return redirect(url_for('USER.application'))
@@ -422,10 +444,10 @@ def user_add_apply():
 #回傳rspCode, userName, userSRRate, userSPRate, applyPdfName, applyID,
 #applyClass, applyQuota, applyPeriod, applyFrequency, applyTime, applyResult,
 #userID
-@Apply.route('/show_apply_status_0/', methods = ['POST'])
+@Apply.route('/show_apply_status_0', methods = ['POST'])
 def show_apply_status_0():
     if request.method == 'POST':
-        if nor(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
+        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
             return jsonify({"rspCode":"500","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
         try:
             json = request.get_json()
@@ -557,19 +579,16 @@ def simple_personal_apply_history():
 #申請附件下載
 #要json傳applyID
 #回傳 rspCode
-@Apply.route('/apply_pdf_download', methods = ['POST'])
-def apply_pdf_download():
-    if request.method != 'POST':
+@Apply.route('/apply_pdf_download/<number>', methods = ['GET'])
+def apply_pdf_download(number):
+    if request.method != 'GET':
         return jsonify({"rspCode":"300"})
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
         return jsonify({"rspCode":"500"})
     try:
-        try:
-            json = request.get_json()
-        except:
-            return jsonify({"rspCode":"410"})
-        applyID = json['applyID']
-        filename = os.listdir(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID))[1]
+        applyID = number
+        filename = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(applyID, applyID), 'r', encoding='utf-8').read()
+        print(filename)
         return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),filename,as_attachment=True)
     except:
         #rspCode 400:檔案不存在
@@ -606,11 +625,13 @@ def apply_judge():
     if not(applyStatus == '1' or applyStatus == '2'):
         notAllow.append('applyStatus')
     if quotaChange == '':
+        
         if notAllow != []:
             #rspCode 400:有非法輸入
             return jsonify({"rspCode":"400","notAllow":notAllow})
         db.engine.execute(alter_apply_status(applyStatus,applyID))
-        if applyStatus == 1:
+        if applyStatus == '1':
+            
             userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
             userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
             ConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
@@ -621,8 +642,10 @@ def apply_judge():
             if period != 0:
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
                 db.engine.execute(alter_apply_rest_time(applyID,rest))
-            db.engine.execute(plus_user_point(plus,userID))
-            for x in range(quota):
+            u = db.session.query(account).filter(account.userID == userID).first()
+            u.userPoint = plus
+            db.session.commit()
+            for x in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
                 db.session.commit()
@@ -637,21 +660,25 @@ def apply_judge():
             return jsonify({"rspCode":"400","notAllow":notAllow})
         if applyStatus == '1':
             #status是1就改變apply的condditionID和status
+            
             oldConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
             conditionData = db.engine.execute(show_old_condition_data(oldConditionID)).fetchone()
+            
             className = conditionData[1]
             period = conditionData[0]
+            
             if db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone() == None:
-                newConditionID = db.engine.execute(set_up_special_apply_condition(className,period,quotaChange)).fetchone()[0]
+                db.engine.execute(set_up_special_apply_condition(className,period,quotaChange))
+                newConditionID = db.session.query(applyCondition.conditionID).filter(applyCondition.className == className).filter(applyCondition.period == period).filter(applyCondition.quota == quotaChange).first()[0]
+                
             else:
                 newConditionID = db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone()[0]
             db.engine.execute(alter_oldConditionID(oldConditionID,applyID))
             db.engine.execute(alter_conditionID_in_apply(newConditionID,applyID))
             db.engine.execute(alter_apply_status(applyStatus,applyID))
-
             userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
             userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
-            plus = userPoint + int(conditionData[2])
+            plus = userPoint + int(quotaChange)
             db.engine.execute(plus_user_point(plus,userID))
             if period != 0:
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
@@ -743,7 +770,8 @@ def judgement_history():
                 userSPRate.append(float(userData[3] / float(userData[4])))
             except:
                 userSPRate.append(0)
-            userName.append(apply[0])
+
+            userName.append(userData[0])
         return jsonify({"rspCode":"200","userID":userID,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":userName,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
     except:
         return jsonify({"rspCode":"400","userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
@@ -753,7 +781,7 @@ def judgement_history():
 def download_apply_description():
     if request.method != 'GET':
         return jsonify({"rspCode":"300"})
-    if session.get('userTypr') != userType['SA'] or session.get('userTypr') != userType['AA']:
+    if session.get('userType') != userType['SA'] or session.get('userType') != userType['AA']  or session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500"})
     try:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/','申請說明文件.pdf',as_attachment=True)

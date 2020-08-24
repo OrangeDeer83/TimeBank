@@ -27,7 +27,7 @@
                                 <li class="hiddenLarge">
                                     <a class="point" href="{{url_for('USER.point_record')}}">
                                         <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                        目前沒有點數
+                                        <span id="navbarPoint1">0</span>
                                     </a>
                                 </li>
                                 <li><a href="{{url_for('USER.all_task')}}">所有任務</a></li>
@@ -56,12 +56,12 @@
                             <li class="hiddenSmall">
                                 <a class="point" href="{{url_for('USER.point_record')}}">
                                     <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                    目前沒有點數
+                                    <span id="navbarPoint">0</span>
                                 </a>
                             </li>
                         </ul>
                         <a class="navbarPortrait" id="navbarUserID">
-                            <img class="navbarPortraitImg" alt="Portrait" src="{{url_for('static', filename='img/portrait1.jpg')}}" />
+                            <img class="navbarPortraitImg" alt="Portrait" />
                         </a>                           
                     </div>
                 </div>

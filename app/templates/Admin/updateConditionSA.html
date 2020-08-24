@@ -26,14 +26,14 @@
                             <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
                                 <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
                                 <div class="unspanned" id="HRSpan">
-                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.SA_list')}}">系統管理員</a></div>
+                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.Admin_list')}}">系統管理員</a></div>
                                     <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.hrmGM_application')}}">評論管理員</a></div>
                                 </div>
-                                <li><a href="{{url_for('Admin.give_point)}}" class="dropdownMenuItem">配發系統</a></li>
-                                <li><a href="{{url_for('Admin.approve_system)}}" class="dropdownMenuItem">核准系統</a></li>
+                                <li><a href="{{url_for('Admin.give_point')}}" class="dropdownMenuItem">配發系統</a></li>
+                                <li><a href="{{url_for('Admin.approve_system')}}" class="dropdownMenuItem">核准系統</a></li>
                                 <li><a href="{{url_for('Admin.update_condition')}}" class="dropdownMenuItem">更新申請條件</a></li>
                                 <li><a href="{{url_for('Admin.update_web')}}" class="dropdownMenuItem">更新入口網站</a></li>
-                                <li><a href="{{url_for('Admin.setting')}" class="dropdownMenuItem">設定</a></li>
+                                <li><a href="{{url_for('Admin.setting')}}" class="dropdownMenuItem">設定</a></li>
                             </ul>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                                 <label for="applier" class="formLabel">
                                     <span class="uploadFile">申請條件說明：&#128100上傳檔案</span>
                                 </label>
-                                <span><a id="oldFileDownload" href="{{url_for('static', filename='uploadFile/apply_condition.pdf')}}">下載原申請條件說明</a></span>
+                                <span><a id="oldFileDownload" href="{{url_for('apply.download_apply_description')}}">下載原申請條件說明</a></span>
                             </div>
                             <input type="file" id="applier" name="file">
                         </div>   

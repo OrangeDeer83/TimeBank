@@ -1,5 +1,3 @@
-const userID = "8"; // Only for beta.
-
 window.onload = function()
 {
     getTaskList();
@@ -33,9 +31,9 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "/test/SP/output/passed");
+    taskListRequest.open("GET", "/task/SP/output/passed");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
-    taskListRequest.send(JSON.stringify({"userID": userID}));
+    taskListRequest.send();
     taskListRequest.onload = function()
     {
         showError(200);
@@ -76,7 +74,7 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無以通過的任務";
+        pageNumber.innerHTML = "尚無已通過的任務";
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -118,7 +116,7 @@ function putDetail(index)
     document.getElementById("Location" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("content" + index).innerHTML = currentTask.taskContent;
 
-    if (currentTask.taskStatus == 2)
+    if (currentTask.taskStatus == 2 || currentTask.taskStatus == 9 || currentTask.taskStatus == 10)
     {
         // Time up or not will be finished later.
         document.getElementById("done1" + index).removeAttribute("style"); // time up
@@ -127,6 +125,17 @@ function putDetail(index)
         document.getElementById("undone2" + index).removeAttribute("style");
         document.getElementById("cancel1" + index).removeAttribute("style"); // befortime up
         document.getElementById("cancel2" + index).removeAttribute("style");
+        document.getElementById("comment1" + index).style.display = "none";
+        document.getElementById("comment2" + index).style.display = "none";
+    }
+    else if (currentTask.taskStatus == 6 || currentTask.taskStatus == 7 || currentTask.taskStatus == 8)
+    {
+        document.getElementById("done1" + index).removeAttribute("style");
+        document.getElementById("done2" + index).removeAttribute("style");
+        document.getElementById("undone1" + index).removeAttribute("style");
+        document.getElementById("undone2" + index).removeAttribute("style");
+        document.getElementById("cancel1" + index).style.display = "none";
+        document.getElementById("cancel2" + index).style.display = "none";
         document.getElementById("comment1" + index).style.display = "none";
         document.getElementById("comment2" + index).style.display = "none";
     }
@@ -161,9 +170,9 @@ function cancelTask(index)
         cancelTaskRequest = new XMLHttpRequest();
     else
         cancelTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    cancelTaskRequest.open("POST", "/test/SP/cancel_task");
+    cancelTaskRequest.open("POST", "/task/SP/cancel_task");
     cancelTaskRequest.setRequestHeader("Content-Type", "application/json");
-    cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "userID": userID}));
+    cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     cancelTaskRequest.onload = function()
     {
         showError(200);
@@ -190,10 +199,10 @@ function finishTask(index, type)
         finishTaskRequest = new XMLHttpRequest();
     else
         finishTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    finishTaskRequest.open("POST", "/test/task_finish_or_not");
+    finishTaskRequest.open("POST", "/task/task_finish_or_not");
     finishTaskRequest.setRequestHeader("Content-Type", "application/json");
     console.log(type)
-    finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + "", "userID": userID}));
+    finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + ""}));
     finishTaskRequest.onload = function()
     {
         showError(200);
@@ -252,9 +261,9 @@ function sendGrade()
         sendGradeRequest = new XMLHttpRequest();
     else
         sendGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendGradeRequest.open("POST", "/test/comment_action");
+    sendGradeRequest.open("POST", "/comment/comment_action");
     sendGradeRequest.setRequestHeader("Content-Type", "application/json");
-    sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + "", "userID": userID}));
+    sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + ""}));
     sendGradeRequest.onload = function()
     {
         showError(200);

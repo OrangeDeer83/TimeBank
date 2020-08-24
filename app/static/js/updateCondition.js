@@ -44,7 +44,7 @@ function getGroup()
         getGroupRequest = new XMLHttpRequest();
     else
         getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "/test/output_apply_group");
+    getGroupRequest.open("GET", "/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -75,7 +75,7 @@ function getApplier()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -109,7 +109,7 @@ function getClass()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_class");
+    getApplierRequest.open("GET", "/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -135,6 +135,7 @@ function getClass()
 }
 function showClass(allClass)
 {
+    console.log(allClass)
     allClass.reverse();
     userClass.options.length = 1;
     for (var i = 0; i < allClass.length; i++)
@@ -191,7 +192,7 @@ function getPeriodQuota(index)
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "/test/output_allow_period");
+    getApplierRequest.open("POST", "/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     console.log(classList[index][0]);
     getApplierRequest.send(JSON.stringify({"class": classList[index][0]}));
@@ -275,7 +276,7 @@ function updateGroup()
         updateGroupRequest = new XMLHttpRequest();
     else
         updateGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGroupRequest.open("POST", "/test/update_apply_group");
+    updateGroupRequest.open("POST", "/apply/update_apply_group");
     updateGroupRequest.setRequestHeader("Content-Type", "application/json");
     updateGroupRequest.send(JSON.stringify({"groupName": document.getElementById("group").value}));
     updateGroupRequest.onload = function()
@@ -331,7 +332,7 @@ function updateOneClassPeriodQuota(index)
         updateCPQRequest = new XMLHttpRequest();
     else
         updateCPQRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateCPQRequest.open("POST", "/test/update_add_apply_quota");
+    updateCPQRequest.open("POST", "/apply/update_add_apply_quota");
     updateCPQRequest.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({"class": classList[index][0], "once": classList[index][1], "one": classList[index][2], "three": classList[index][3], "six": classList[index][4], "year": classList[index][5]}));
     updateCPQRequest.send(JSON.stringify({"class": classList[index][0], "once": classList[index][1]+"", "one": classList[index][2]+"", "three": classList[index][3]+"", "six": classList[index][4]+"", "year": classList[index][5]+""}));
@@ -368,7 +369,7 @@ function deleteClass()
         deleteClassRequest = new XMLHttpRequest();
     else
         deleteClassRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteClassRequest.open("POST", "/test/delete_apply_class");
+    deleteClassRequest.open("POST", "/apply/delete_apply_class");
     deleteClassRequest.setRequestHeader("Content-Type", "application/json");
     deleteClassRequest.send(JSON.stringify({"class": classList[index][0]}));
     deleteClassRequest.onload = function()

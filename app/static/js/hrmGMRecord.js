@@ -37,7 +37,7 @@ function getGMList()
         getALRequest = new XMLHttpRequest();
     else
         getALRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getALRequest.open("GET", "/test/GM_list");
+    getALRequest.open("GET", "/HRManage/GM_list");
     getALRequest.setRequestHeader("Content-Type", "application/json");
     getALRequest.send();
     getALRequest.onload = function()
@@ -120,7 +120,7 @@ function deleteManager(index)
         deleteManagerRequest = new XMLHttpRequest();
     else
         deleteManagerRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteManagerRequest.open("POST", "/test/delete/GM");
+    deleteManagerRequest.open("POST", "/HRManage/delete/GM");
     deleteManagerRequest.setRequestHeader("Content-Type", "application/json");
     deleteManagerRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID, "adminID": "39"}));
     deleteManagerRequest.onload = function()
@@ -155,7 +155,7 @@ function checkPassword()
         checkPasswordRequest = new XMLHttpRequest();
     else
         checkPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkPasswordRequest.open("POST", "/test/delete/Admin/check_password");
+    checkPasswordRequest.open("POST", "/HRManage/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("deletePassword").value}));
     checkPasswordRequest.onload = function()

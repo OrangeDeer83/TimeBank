@@ -23,7 +23,7 @@ function getUserList()
         getListRequest = new XMLHttpRequest();
     else
         getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/test/judgement_history");
+    getListRequest.open("POST", "/apply/judgement_history");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"name": searchText, "status": "", "class": "", "period":""}));
     getListRequest.onload = function()
@@ -160,7 +160,7 @@ function downloadPDF(index)
         downloadPDFRequest = new XMLHttpRequest();
     else
         downloadPDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    downloadPDFRequest.open("POST", "/test/apply_pdf_download");
+    downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
     downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
     downloadPDFRequest.onload = function()

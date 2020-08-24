@@ -4,6 +4,14 @@ from ..models import userType
 
 Admin = Blueprint('Admin', __name__)
 
+#Admin的根目錄
+@Admin.route('/')
+def index():
+   if session.get('userType') == userType['SA']:
+      return redirect(url_for('Admin.Admin_list'))
+   else:
+      return redirect(url_for('Admin.login'))
+
 #忘記密碼頁面
 @Admin.route('/forgotPassword')
 def forgot_password():
@@ -18,6 +26,8 @@ def reset_password(token):
 @Admin.route('/login')
 def login():
    print(session.get('userType'))
+   if session.get('userType') == userType['SA']:
+      return redirect(url_for('Admin.Admin_list'))
    if session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['SA']]:
       return redirect(url_for('Admin.setting'))
    else:
@@ -26,7 +36,7 @@ def login():
 #設定頁面
 @Admin.route('/setting')
 def setting():
-   print(session.get('userType'))
+   return "此功能未完成"
    if session.get('userType') == userType['SA']:
       return render_template('/Admin/settingSA.html')
    elif session.get('userType') == userType['AA']:
@@ -112,8 +122,8 @@ def GM_list():
       return redirect(url_for('Admin.login'))
 
 #SA - 人事管理 - Admin列表
-@Admin.route('/SA/AdminList')
-def SA_list():
+@Admin.route('/AdminList')
+def Admin_list():
    if session.get('userType') == userType['SA']:
       return render_template('/Admin/hrmManager.html')
    else:

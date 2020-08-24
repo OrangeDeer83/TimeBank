@@ -1,6 +1,9 @@
 window.onload = function()
 {
     getUserID();
+    getProfile();
+    getTaskList();
+    getPropicMyself();
 }
 
 // For all myself.
@@ -12,9 +15,9 @@ function getUserID()
         getIDRequest = new XMLHttpRequest();
     else
         getIDRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIDRequest.open("GET", "/test/getID");
+    getIDRequest.open("GET", "/account/get_ID");
     getIDRequest.setRequestHeader("Content-Type", "application/json");
-    getIDRequest.send();
+    getIDRequest.send();console.log(1);
     getIDRequest.onload = function()
     {
         console.log(getIDRequest.responseText);
@@ -23,17 +26,11 @@ function getUserID()
         {
             case "200": case 200:
                 userID = rst.ID;
-                document.getElementById("userIDFile").value = userID;
-                getProfile();
-                getTaskList();
+                document.getElementById("navbarUserID").href = "/USER/info/" + rst.ID;
                 break;
             case "300": case 300:
             case "400": case 400:
-            default:
                 console.log("無法取得userID");
-                /*userID = "10"; // for beta
-                getProfile();
-                getTaskList();*/
                 break;
         }
     }
@@ -46,9 +43,9 @@ function getProfile()
         getProfileRequest = new XMLHttpRequest();
     else
         getProfileRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getProfileRequest.open("POST", "/test/output");
+    getProfileRequest.open("POST", "/profile/output/info");
     getProfileRequest.setRequestHeader("Content-Type", "application/json");
-    getProfileRequest.send(JSON.stringify({"userID": userID}));
+    getProfileRequest.send(JSON.stringify({"userID": getToken()}));
     getProfileRequest.onload = function()
     {
         console.log(getProfileRequest.responseText);
@@ -77,7 +74,6 @@ function showProfile(profile)
     }
     document.getElementById("age").innerHTML = profile.userAge;
     document.getElementById("profile").innerHTML = profile.userInfo;
-    document.getElementById("profilePicture").src = "../static/img/propic/" + userID + ".jpg";
 }
 
 var taskList = [];
@@ -95,9 +91,9 @@ function getTaskList()
         getTaskRequest = new XMLHttpRequest();
     else
         getTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTaskRequest.open("POST", "/test/output/task");
+    getTaskRequest.open("POST", "/profile/output/task");
     getTaskRequest.setRequestHeader("Content-Type", "application/json");
-    getTaskRequest.send(JSON.stringify({"userID": userID}));
+    getTaskRequest.send(JSON.stringify({"userID": getToken()}));
     getTaskRequest.onload = function()
     {
         console.log(getTaskRequest.responseText);
@@ -221,5 +217,54 @@ function takeTask(index)
             default:
                 alert("系統錯誤，請稍後再試");
             }
+    }
+}
+
+function getPropicMyself()
+{
+    var propicID = getToken();
+    var getPropicRequest;
+    if (window.XMLHttpRequest)
+        getPropicRequest = new XMLHttpRequest();
+    else
+        getPropicRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getPropicRequest.open("POST", "/account/propic_exist");
+    getPropicRequest.setRequestHeader("Content-Type", "application/json");
+    getPropicRequest.send(JSON.stringify({"userID": propicID}));
+    getPropicRequest.onload = function()
+    {
+        console.log(getPropicRequest.responseText);
+        rst = JSON.parse(getPropicRequest.responseText);
+        var d = new Date();
+		var time = "";
+		if (d.getHours() < 10) {
+			time += "0" + d.getHours();
+		}
+		else{
+			time += d.getHours();
+		}
+		if (d.getMinutes() < 10) {
+			time += "0" + d.getMinutes();
+		}
+		else{
+			time += d.getMinutes();
+		}
+		if (d.getSeconds() < 10) {
+			time += "0" +d.getSeconds();
+		}
+		else{
+			time += d.getSeconds();
+		}
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                if (rst.exist == "1") document.getElementById("profilePicture").src = "/static/img/propic/" + propicID + ".jpg?v=" + time;
+                else document.getElementById("profilePicture").src = "/static/img/propic/default.jpg";
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("無法取得照片存在");
+                break;
+        }
     }
 }

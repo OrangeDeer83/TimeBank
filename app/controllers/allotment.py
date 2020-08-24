@@ -4,13 +4,13 @@ from ..models.dao import *
 from ..models import db, userType
 from ..models.makePoint import *
 import datetime
-Alloment = Blueprint('alloment', __name__)
+Allotment = Blueprint('allotment', __name__)
 
 
 #顯示user名單
 #要json傳target(搜尋目標，沒有就傳空值)
 #回傳rspCode, userName, userID, userSRRate, userSPRate
-@Alloment.route('/show_user', methods = ['POST'])
+@Allotment.route('/show_user', methods = ['POST'])
 def show_user():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","name":"","userID":"","userSRRate":"","userSPRate":""})
@@ -55,8 +55,8 @@ def show_user():
 #要json傳kind(one or all), receiver(one時是目標的ID all是搜尋了什麼), period,
 #frequency(一次性傳1), quota
 #回傳rspCode 和 notAllow
-@Alloment.route("/allotment" , methods = ['POST'])
-def alloment():
+@Allotment.route("/allotment" , methods = ['POST'])
+def allotment():
     try:
         json = request.get_json()
     except:
@@ -68,6 +68,7 @@ def alloment():
     except:
         return jsonify({"rspCode":"500","notAllow":""}) 
     #only all or one
+    
     kind = json['kind']
     #這裡的receiver如果kind不是all請給要配發的userID，all的話請給SA搜尋了什麼
     receiver = json['receiver']
@@ -89,7 +90,6 @@ def alloment():
         notAllow.append("quota")
     elif len(quota) > 2:
         notAllow.append("quota")
-    print(len(quota))
     if notAllow != []:
         #rspCode 401:有違法輸入
         return jsonify({"rspCode":"400","notAllow":notAllow})
@@ -143,7 +143,7 @@ def alloment():
 #簡易個人配發紀錄
 #要json傳userID
 #回傳rspCode, period, frequency, quota, time
-@Alloment.route("/simple_allotment_history", methods = ['POST'])
+@Allotment.route("/simple_allotment_history", methods = ['POST'])
 def simple_allotment_history():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","period":"","frequency":"","quota":"","time":""})
@@ -178,7 +178,7 @@ def simple_allotment_history():
 #要json傳target(搜尋了什麼，沒有就傳空值)
 #回傳rspCode, period, frequency, quota, time, userID, name
 #userSRRate, userSPRate
-@Alloment.route('/allotment_history', methods = ['POST'])
+@Allotment.route('/allotment_history', methods = ['POST'])
 def allotment_history():
     if request.method != 'POST':
         return jsonify({"rspCode":"300","time":"","quota":"","period":"","frequency":"","userID":"","name":"","userSRRate":"","userSPRate":""})

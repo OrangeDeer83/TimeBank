@@ -39,7 +39,7 @@ function getGroup()
         getGroupRequest = new XMLHttpRequest();
     else
         getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "/test/output_apply_group");
+    getGroupRequest.open("GET", "/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -70,7 +70,7 @@ function getApplier()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -103,7 +103,7 @@ function getClass()
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/test/output_apply_class");
+    getApplierRequest.open("GET", "/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -162,7 +162,7 @@ function getPeriodQuota(index)
         getApplierRequest = new XMLHttpRequest();
     else
         getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "/test/output_allow_period");
+    getApplierRequest.open("POST", "/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send(JSON.stringify({"class": classList[index]}));
     getApplierRequest.onload = function()
@@ -191,8 +191,14 @@ function computeQuota(periodList, quotaList)
     var once = 0, one = 0, three = 0, six = 0, year = 0;
     for (var i = 0; i < 5; i++)
     {
-        if (periodList[0])
+        console.log(quotaList[0]+" "+periodList[0])
+        if (periodList[0] === "")
         {
+            i = 6;
+        }
+        else
+        {
+            console.log(123);
             switch (periodList.shift())
             {
                 case "0": case 0:
@@ -212,7 +218,6 @@ function computeQuota(periodList, quotaList)
                     break;
             }
         }
-        else i = 6;
     }
     currentQuotaList[0] = once;
     currentQuotaList[1] = one;
@@ -299,7 +304,7 @@ function sendApplication()
         sendApplicationRequest = new XMLHttpRequest();
     else
         sendApplicationRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendApplicationRequest.open("POST", "/test/USER/add_apply");
+    sendApplicationRequest.open("POST", "/apply/USER/add_apply");
     sendApplicationRequest.setRequestHeader("Content-Type", "application/json");
     sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""}));
     sendApplicationRequest.onload = function()

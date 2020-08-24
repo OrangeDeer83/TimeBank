@@ -35,7 +35,7 @@ function getGMList()
         getALRequest = new XMLHttpRequest();
     else
         getALRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getALRequest.open("GET", "/test/GM_apply_list");
+    getALRequest.open("GET", "/HRManage/GM_apply_list");
     getALRequest.setRequestHeader("Content-Type", "application/json");
     getALRequest.send();
     getALRequest.onload = function()
@@ -118,7 +118,7 @@ function approve(index)
         approveRequest = new XMLHttpRequest();
     else
         approveRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    approveRequest.open("POST", "/test/approveGM");
+    approveRequest.open("POST", "/HRManage/approveGM");
     approveRequest.setRequestHeader("Content-Type", "application/json");
     approveRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID}));
     approveRequest.onload = function()
@@ -149,7 +149,7 @@ function reject(index)
         rejectRequest = new XMLHttpRequest();
     else
         rejectRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    rejectRequest.open("POST", "/test/rejectGM");
+    rejectRequest.open("POST", "/HRManage/rejectGM");
     rejectRequest.setRequestHeader("Content-Type", "application/json");
     rejectRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID}));
     rejectRequest.onload = function()

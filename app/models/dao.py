@@ -55,34 +55,34 @@ def delete_news_(number):
     return "DELETE FROM `news` WHERE `news`.`newsID` = {}".format(number)
 
 def add_apply_condition(period,className,quota):
-    return "INSERT INTO `applyCondition` (`period`, `class`, `quota`,`available`) VALUES ('{}', '{}', '{}',1)".format(period,className,quota)
+    return "INSERT INTO `applyCondition` (`period`, `className`, `quota`,`available`) VALUES ('{}', '{}', '{}',1)".format(period,className,quota)
 
-def list_alive_apply_class():
-    return "SELECT DISTINCT class FROM `applyCondition` WHERE `class` != '其他' AND `available` != 0 ORDER BY class "
+def list_alive_apply_className():
+    return "SELECT DISTINCT className FROM `applyCondition` WHERE `className` != '其他' AND `available` != 0 ORDER BY className "
 
-def show_quota_by_period_class_alive(className,period):
-    return "SELECT quota FROM `applyCondition` WHERE `class` LIKE '{}' AND `available` != 0 AND `period` = {}".format(className,period)
+def show_quota_by_period_className_alive(className,period):
+    return "SELECT quota FROM `applyCondition` WHERE `className` LIKE '{}' AND `available` != 0 AND `period` = {}".format(className,period)
 
 def let_apply_condition_die(className):
-    return "UPDATE `applyCondition` SET available = 0 WHERE class = '{}'".format(className)
+    return "UPDATE `applyCondition` SET available = 0 WHERE className = '{}'".format(className)
 
-def let_apply_condition_die_class_period(className,period):
-    return "UPDATE `applyCondition` SET available = 0 WHERE class ='{}' AND period ={}".format(className,period)
+def let_apply_condition_die_className_period(className,period):
+    return "UPDATE `applyCondition` SET available = 0 WHERE className ='{}' AND period ={}".format(className,period)
 
-def show_quota_conditionID_by_class_period(className,period):
-    return "SELECT `conditionID`, `quota` FROM `applyCondition` WHERE `class` = '{}' AND `period` ={} AND `available` = 1".format(className,period)
+def show_quota_conditionID_by_className_period(className,period):
+    return "SELECT `conditionID`, `quota` FROM `applyCondition` WHERE `className` = '{}' AND `period` ={} AND `available` = 1".format(className,period)
 
 def out_put_allow_period(className):#
-    return "SELECT `period` FROM `applyCondition` WHERE `class` = '{}' AND `available` = 1 ORDER BY period".format(className)
+    return "SELECT `period` FROM `applyCondition` WHERE `className` = '{}' AND `available` = 1 ORDER BY period".format(className)
 
 def show_conditionID(className,period):#
-    return "SELECT `conditionID` FROM `applyCondition` WHERE `class` = '{}' AND `period` ={} AND `available` = 1".format(className,period)
+    return "SELECT `conditionID` FROM `applyCondition` WHERE `className` = '{}' AND `period` ={} AND `available` = 1".format(className,period)
 
 def set_up_apply_condition(className,period,quota):#
-    return "INSERT INTO `applyCondition` (`period`, `class`, `quota`, `available`) VALUES ('{}', '{}', '{}', '1')".format(period,className,quota)
+    return "INSERT INTO `applyCondition` (`period`, `className`, `quota`, `available`) VALUES ('{}', '{}', '{}', '1')".format(period,className,quota)
 
 def find_other_apply_condition_id(period,quota):#
-    return "SELECT `conditionID` FROM `applyCondition` where `class` LIKE '其他' AND `period` = {} AND `quota` = {}".format(period,quota)
+    return "SELECT `conditionID` FROM `applyCondition` where `className` LIKE '其他' AND `period` = {} AND `quota` = {}".format(period,quota)
 
 def add_apply(frequency,restTime,nextTime,userID,conditionID,result,time):
     return "INSERT INTO `apply` (`applyID`, `applyStatus`, `frequency`, `restTime`, `nextTime`, `adminID`, `userID`, `conditionID`, `result`, `applyTime`) VALUES (NULL, '0', '{}', '{}', '{}', NULL, '{}', '{}', '{}', '{}')".format(frequency,restTime,nextTime,userID,conditionID,result,time)
@@ -98,19 +98,19 @@ def get_apply_judge_user_info(userID):
 
 
 def show_condition_data(conditionID):
-    return "SELECT `period`,`class`,`quota` FROM `applyCondition` WHERE `conditionID` ='{}'".format(conditionID)
+    return "SELECT `period`,`className`,`quota` FROM `applyCondition` WHERE `conditionID` ='{}'".format(conditionID)
 
 def alter_apply_status(status,applyID):
     return "UPDATE `apply` SET `applyStatus` = '{}' WHERE `apply`.`applyID` = {}".format(status,applyID)
 
 def set_up_special_apply_condition(className,period,quota):
-    return "INSERT INTO `applyCondition` (`period`, `class`, `quota`, `available`) VALUES ('{}', '{}', '{}', '0')".format(period,className,quota)
+    return "INSERT INTO `applyCondition` (`period`, `className`, `quota`, `available`) VALUES ('{}', '{}', '{}', '0')".format(period,className,quota)
 
 def get_conditionID(applyID):
     return "SELECT conditionID FROM apply WHERE applyID = {}".format(applyID)
 
 def find_special_apply_condition(className,period,quota):
-    return "SELECT `conditionID` FROM `applyCondition` where `class` LIKE '{}' AND `period` = {} AND `quota` = {}".format(className,period,quota)
+    return "SELECT `conditionID` FROM `applyCondition` where `className` LIKE '{}' AND `period` = {} AND `quota` = {}".format(className,period,quota)
 
 def alter_conditionID_in_apply(conditionID,applyID):
     return "UPDATE `apply` SET `conditionID` = '{}' WHERE `apply`.`applyID` = {}".format(conditionID,applyID)
@@ -131,7 +131,7 @@ def select_quota_by_conditionID(conditionID):
     return "SELECT quota FROM applyCondition WHERE conditionID = '{}'".format(conditionID)
 
 def show_old_condition_data(conditionID):
-    return "SELECT `period`,`class`,`quota` FROM `applyCondition` WHERE `conditionID` ='{}'".format(conditionID)
+    return "SELECT `period`,`className`,`quota` FROM `applyCondition` WHERE `conditionID` ='{}'".format(conditionID)
 
 def update_judge_time_in_apply(judgeTime,applyID):
     return "UPDATE `apply` SET `judgeTime` = '{}' WHERE `apply`.`applyID` = {}".format(judgeTime,applyID)
@@ -152,7 +152,7 @@ def show_judge_history(userName = "",className = "" , period = "" , status = "")
     if period != "":
         sql += "AND applyCondition.period = '{}'".format(period)
     if className!= "":
-        sql += "AND applyCondition.class = '{}'".format(className)
+        sql += "AND applyCondition.className = '{}'".format(className)
     if userName != "":
         sql += "AND ( account.userName = '{}' OR account.name = '{}')".format(userName,userName)
     return sql
@@ -214,6 +214,8 @@ def task_status_4_dead_line(task_ID,newTaskStartTime):
     return "CREATE EVENT `task_status_4_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '4' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 0 OR `task`.`taskStatus` = 1)".format(task_ID,newTaskStartTime,task_ID)
 
 def task_status_5_dead_line(task_ID,newTaskEndTime):
-    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9".format(task_ID,newTaskEndTime,task_ID)
+    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9)".format(task_ID,newTaskEndTime,task_ID)
 def commeny_status_0(task_ID,EndTime):
     return "CREATE EVENT `commeny_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND (`comment`.`commentStatus` = -2 OR `comment`.`commentStatus` = -1)".format(task_ID,EndTime,task_ID)
+def task_status_15_dead_line(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_15_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '15' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 13 OR `task`.`taskStatus` = 6 OR `task`.`taskStatus` = 3 OR `task`.`taskStatus` = 7 OR `task`.`taskStatus` = 8 OR `task`.`taskStatus` = 14 )".format(task_ID,newTaskEndTime,task_ID)

@@ -1,12 +1,8 @@
-window.onload = function()
-{
-    getUserID();
-}
+getUserID();
 
 // For all myself.
 function getUserID()
 {
-    console.log(1);
     var getIDRequest;
     if (window.XMLHttpRequest)
         getIDRequest = new XMLHttpRequest();
@@ -24,10 +20,91 @@ function getUserID()
             case "200": case 200:
                 console.log(rst.ID);
                 document.getElementById("navbarUserID").href = "/USER/info/" + rst.ID;
+                getPropic(rst.ID);
+                getCurrentPointAmount();
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("無法取得userID");
+                break;
+        }
+    }
+}
+
+function getPropic(navbarUserId)
+{
+    var getPropicRequest;
+    if (window.XMLHttpRequest)
+        getPropicRequest = new XMLHttpRequest();
+    else
+        getPropicRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getPropicRequest.open("POST", "/account/propic_exist");
+    getPropicRequest.setRequestHeader("Content-Type", "application/json");
+    getPropicRequest.send(JSON.stringify({"userID": navbarUserId}));
+    getPropicRequest.onload = function()
+    {
+        console.log(getPropicRequest.responseText);
+        rst = JSON.parse(getPropicRequest.responseText);
+        var d = new Date();
+		var time = "";
+		if (d.getHours() < 10) {
+			time += "0" + d.getHours();
+		}
+		else{
+			time += d.getHours();
+		}
+		if (d.getMinutes() < 10) {
+			time += "0" + d.getMinutes();
+		}
+		else{
+			time += d.getMinutes();
+		}
+		if (d.getSeconds() < 10) {
+			time += "0" +d.getSeconds();
+		}
+		else{
+			time += d.getSeconds();
+		}
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                if (rst.exist == "1") document.getElementsByClassName("navbarPortraitImg")[0].src = "/static/img/propic/" + navbarUserId + ".jpg?v=" + time;
+                else document.getElementsByClassName("navbarPortraitImg")[0].src = "/static/img/propic/default.jpg";
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            default:
+                document.getElementsByClassName("navbarPortraitImg")[0].src = "/static/img/propic/default.jpg";
+                console.log("無法取得照片存在");
+                break;
+        }
+    }
+}
+
+function getCurrentPointAmount()
+{
+    var getCurrentPointAmountRequest;
+    if (window.XMLHttpRequest)
+        getCurrentPointAmountRequest = new XMLHttpRequest();
+    else
+        getCurrentPointAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getCurrentPointAmountRequest.open("GET", "/point/total");
+    getCurrentPointAmountRequest.setRequestHeader("Content-Type", "application/json");
+    getCurrentPointAmountRequest.send();
+    getCurrentPointAmountRequest.onload = function()
+    {
+        console.log(getCurrentPointAmountRequest.responseText);
+        rst = JSON.parse(getCurrentPointAmountRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                document.getElementById("navbarPoint1").innerHTML = rst.point;
+                document.getElementById("navbarPoint").innerHTML = rst.point;
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            default:
+                console.log("系統錯誤，無法取得點數數量")
                 break;
         }
     }
@@ -79,7 +156,7 @@ function clickToSpan(name)
 }
 
 // Function for logout
-const logoutButton = document.getElementById("logout");
+/*const logoutButton = document.getElementById("logout");
 logoutButton.addEventListener("click", logout);
 function logout()
 {
@@ -107,4 +184,4 @@ function logout()
         }
     }
     return false;
-}
+}*/

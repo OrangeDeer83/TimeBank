@@ -91,7 +91,7 @@ function adminLogin()
             loginAdminRequest = new XMLHttpRequest();
         else
             loginAdminRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        loginAdminRequest.open("POST", "/test/Admin/login");
+        loginAdminRequest.open("POST", "/account/Admin/login");
         loginAdminRequest.setRequestHeader("Content-Type", "application/json");
         loginAdminRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginAdminRequest.onload = function()
@@ -103,7 +103,7 @@ function adminLogin()
             {
                 case "200": case 200:
                     alert("登入成功");
-                    window.location.assign("/Admin/setting");
+                    window.location.assign("/Admin/AdminList");
                     break;
                 case "300": case 300:
                 case "400": case 400:

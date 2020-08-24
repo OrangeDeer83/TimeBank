@@ -21,7 +21,7 @@ function getNewsAmount()
         getNewsAmountRequest = new XMLHttpRequest();
     else
         getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "/test/useful_numbers");
+    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -32,10 +32,10 @@ function getNewsAmount()
         {
             case "200": case 200:
                 console.log("最新消息數量讀取成功");
-                maxNewsNum = rst.max;
-                existNews = rst.numberList;
-                newsAmount = existNews.length;
-                pageAmount = Math.ceil(newsAmount / 5);
+                maxNewsNum = rst.max; console.log(maxNewsNum)
+                existNews = rst.numberList; console.log(existNews)
+                newsAmount = existNews.length; console.log(newsAmount)
+                pageAmount = Math.ceil(newsAmount / 5);console.log(pageAmount+typeof(pageAmount))
                 computePage(0);
                 break;
             case "300": case 300:
@@ -77,8 +77,14 @@ function computePageNews()
         for (var i = 0; i < 5; i++)
             thisPageList.push(existNews[newsAmount - 5 * (currentPage - 1) - i - 1]);
     else
-        for (var i = 0; i < (newsAmount % 5); i++)
-            thisPageList.push(existNews[newsAmount - 5 * (currentPage - 1) - i - 1]);
+    {
+        if (newsAmount % 5 != 0)
+            for (var i = 0; i < (newsAmount % 5); i++)
+                thisPageList.push(existNews[newsAmount - 5 * (currentPage - 1) - i - 1]);
+        else
+            for (var i = 0; i < 5; i++)
+                thisPageList.push(existNews[newsAmount - 5 * (currentPage - 1) - i - 1]);
+    }
 
     getCarouselImg();
     getNewestNewsTitle();
@@ -94,7 +100,27 @@ function getCarouselImg()
 {
     for (var i = 0; i < thisPageList.length && i < 5; i++)
     {
-        document.getElementById("carouselImg" + i).src = "../static/uploadFile/newsImage/" + thisPageList[i] + ".jpg";
+        var d = new Date();
+		var time = "";
+		if (d.getHours() < 10) {
+			time += "0" + d.getHours();
+		}
+		else{
+			time += d.getHours();
+		}
+		if (d.getMinutes() < 10) {
+			time += "0" + d.getMinutes();
+		}
+		else{
+			time += d.getMinutes();
+		}
+		if (d.getSeconds() < 10) {
+			time += "0" +d.getSeconds();
+		}
+		else{
+			time += d.getSeconds();
+		}
+        document.getElementById("carouselImg" + i).src = "../static/uploadFile/newsImage/" + thisPageList[i] + ".jpg?v=" + time;
     }
 }
 
@@ -112,7 +138,7 @@ function getIntroduction()
         getIntroductionRequest = new XMLHttpRequest();
     else
         getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "/test/output_webIntro");
+    getIntroductionRequest.open("GET", "/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     getIntroductionRequest.onload = function()
@@ -144,7 +170,7 @@ function getNewsTitle(index)
         getTitleRequest = new XMLHttpRequest();
     else
         getTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTitleRequest.open("GET", "/test/output_news_title/" + thisPageList[index]);
+    getTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[index]);
     getTitleRequest.setRequestHeader("Content-Type", "application/json");
     getTitleRequest.send();
     getTitleRequest.onload = function()
@@ -197,7 +223,7 @@ function getNewsContent(index)
         getContentRequest = new XMLHttpRequest();
     else
         getContentRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getContentRequest.open("GET", "/test/output_news_content/" + thisPageList[index]);
+    getContentRequest.open("GET", "/portal/output_news_content/" + thisPageList[index]);
     getContentRequest.setRequestHeader("Content-Type", "application/json");
     getContentRequest.send();
     getContentRequest.onload = function()

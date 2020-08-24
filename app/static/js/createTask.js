@@ -82,7 +82,7 @@ function createTask()
         createTaskRequest = new XMLHttpRequest();
     else
         createTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    createTaskRequest.open("POST", "//test/SR/add_task");
+    createTaskRequest.open("POST", "/task/SR/add_task");
     createTaskRequest.setRequestHeader("Content-Type", "application/json");
     // userId is for test.
     createTaskRequest.send(JSON.stringify({"taskName": taskName.value, "taskStartTime": taskStartTime.value, "taskEndTime": taskEndTime.value, "taskPoint": taskQuota.value, "taskLocation": taskLocation.value, "taskContent": taskContent.value, "userID": userID}));

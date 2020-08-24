@@ -48,9 +48,9 @@ function forgotPasswordEmail()
     else // Old IE browser.
         request = new ActiveXObject("Microsoft.XMLHTTP");
 
-    request.open("POST", "/account/USER/forgot_password");
+    request.open("POST", "/account/GM/forgot_password");
     request.setRequestHeader("Content-Type", "application/json");
-    request.send(JSON.stringify({"userMail": userEmail.value}));
+    request.send(JSON.stringify({"GMMail": userEmail.value}));
     request.onload = function()
     {
         systemError3.style.display = "none";
@@ -60,7 +60,7 @@ function forgotPasswordEmail()
         {
             case "200": case 200: // Email send success.
                 alert("確認信已寄出，請前往電子信箱查閱以更改密碼");
-                window.location.assign("/USER/");
+                window.location.assign("/GM/");
                 return true;
             case "300": case 300: // Method wrong.
             case "400": case 400: // Database wrong.

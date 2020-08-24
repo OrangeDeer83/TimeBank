@@ -980,7 +980,7 @@ def SR_output_record():
         for task in query_data.taskSR:
             if task.taskStatus in [4, 5, 12, 15]:
                 taskRecord.append(task)
-        sortTask(taskRecord, 0, len(taskRecord) - 1)
+        sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
             if len(task.SP) == 0:
@@ -1023,7 +1023,7 @@ def SP_output_passed():
         for task in query_data.taskSP:
             if task.taskStatus in [2, 3, 6, 7, 8, 9, 10, 13, 14]:
                 taskPassed.append(task)
-        sortTask(taskPassed, 0, len(taskPassed) - 1)
+        sortTaskByTaskID(taskPassed, 0, len(taskPassed) - 1)
         taskPassedJson = []
         for task in taskPassed:
             taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
@@ -1050,7 +1050,7 @@ def SP_output_checking():
             print(candidate.task.taskStatus)
             if candidate.task.taskStatus == 1:
                 taskChecking.append(candidate.task)
-        sortTask(taskChecking, 0, len(taskChecking) - 1)
+        sortTaskByTaskID(taskChecking, 0, len(taskChecking) - 1)
         taskCheckingJson = []
         for task in taskChecking:
             taskCheckingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
@@ -1076,7 +1076,7 @@ def SP_output_refused():
         for candidate in query_data:
             if candidate.task.taskStatus >= 2 and candidate.task.SP[0].userID != userID:
                 taskRefused.append(candidate.task)
-        sortTask(taskRefused, 0, len(taskRefused) - 1)
+        sortTaskByTaskID(taskRefused, 0, len(taskRefused) - 1)
         taskRefusedJson = []
         for task in taskRefused:
             taskRefusedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
@@ -1103,7 +1103,7 @@ def SP_output_record():
         for task in query_data.taskSP:
             if task.taskStatus  not in [5, 11, 15]:
                 taskRecord.append(task)
-        sortTask(taskRecord, 0, len(taskRecord) - 1)
+        sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
         taskRecordJson = []
         for task in taskRecord:
             if len(task.SP) == 0:
@@ -1146,7 +1146,7 @@ def output_task():
         for task in query_data.taskSR:
             if task.taskStatus in [0, 1]:
                 taskWaiting.append(task)
-        sortTask(taskWaiting, 0, len(taskWaiting) - 1)
+        sortTaskByTaskID(taskWaiting, 0, len(taskWaiting) - 1)
         taskWaitingJson = []
         for task in taskWaiting:
             taskWaitingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskPoint": task.taskPoint,\

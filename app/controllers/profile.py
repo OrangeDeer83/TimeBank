@@ -48,7 +48,7 @@ def output_task():
             for task in query_data.taskSR:
                 if task.taskStatus in [0, 1]:
                     taskWaiting.append(task)
-            sortTask(taskWaiting, 0, len(taskWaiting) - 1)
+            sortTaskByTaskID(taskWaiting, 0, len(taskWaiting) - 1)
             taskWaitingJson = []
             for task in taskWaiting:
                 taskWaitingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskPoint": task.taskPoint,\
@@ -58,3 +58,26 @@ def output_task():
             return jsonify({"rspCode": "500", "taskWaiting": ""})                                                     #權限不符 
     else:
         return jsonify({"rspCode": "300", "taskWaiting": ""})                                                         #method使用錯誤
+
+#取得個人頁面雇員
+@Profile.route('/', methods=['POST'])
+def SP():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "401"})                                                                          #非法文字
+        userID = value['userID']
+        try:
+            query_data = account.query.filter_by(userID = userID).first()
+        except:
+            return jsonify({"rspCode": "400"})                                                                          #資料庫錯誤
+        
+        for task in query_data:
+            pass
+
+
+#取得個人頁面雇主
+@Profile.route('/', methods=['POST'])
+def SR():
+    pass

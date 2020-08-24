@@ -8,7 +8,7 @@ def transferToDatetime(time):
 def transferToDate(time):
     return datetime.date(time.year, time.month, time.day)
 
-def partition(tasks, left, right):
+def partitionByTaskID(tasks, left, right):
     i = 0
     for j in range(right):
         if tasks[j].taskID < tasks[right].taskID:
@@ -18,11 +18,28 @@ def partition(tasks, left, right):
     return i
 
 #將task陣列sort
-def sortTask(tasks, left, right):
+def sortTaskByTaskID(tasks, left, right):
     if left < right:
-        privotLocation = partition(tasks, left, right)
-        sortTask(tasks, left, privotLocation - 1)
-        sortTask(tasks, privotLocation + 1, right)
+        privotLocation = partitionByTaskID(tasks, left, right)
+        sortTaskByTaskID(tasks, left, privotLocation - 1)
+        sortTaskByTaskID(tasks, privotLocation + 1, right)
+
+def partitionByTaskStartTime(tasks, left, right):
+    i = 0
+    for j in range(right):
+        if tasks[j].taskStartTime < tasks[right].taskStartTime:
+            tasks[i], tasks[j] = tasks[j], tasks[i]
+            i = i + 1
+    tasks[right], tasks[i] = tasks[i], tasks[right]
+    return i
+
+#將task陣列sort
+def sortTaskByTaskStartTime(tasks, left, right):
+    if left < right:
+        privotLocation = partitionByTaskStartTime(tasks, left, right)
+        sortTaskByTaskID(tasks, left, privotLocation - 1)
+        sortTaskByTaskID(tasks, privotLocation + 1, right)
+        
 
 taskSP = db.Table('taskSP', db.Column('taskID', db.Integer, db.ForeignKey('task.taskID')), db.Column('SPID', db.String(20), db.ForeignKey('account.userID')))
 

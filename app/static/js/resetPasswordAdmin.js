@@ -1,4 +1,4 @@
-var newPassword = document.getElementById("newPassword");
+var newPassword = document.getElementById("adminPassword");
 var checkPassword = document.getElementById("checkPassword");
 
 var passwordError1 = document.getElementById("passwordError1");
@@ -61,6 +61,7 @@ function checkPasswordVerify()
 
 function resetPassword()
 {
+    console.log("hello");
     if (newPassword.value.length < 8 || newPassword.value.length > 30)
     {
         newPassword.style.border = "1px solid red";
@@ -94,12 +95,14 @@ function resetPassword()
         request = new XMLHttpRequest();
     else // Old IE browser.
         request = new ActiveXObject("Microsoft.XMLHTTP");
-
-    request.open("POST", "/account/USER/reset_password/" + getToken());
+    console.log("hello1");
+    request.open("POST", "/account/Admin/reset_password/" + getToken());
     request.setRequestHeader("Content-Type", "application/json");
-    request.send(JSON.stringify({"userPassword": newPassword.value}));
+    request.send(JSON.stringify({"adminPassword": newPassword.value}));
+    console.log("hello3");
     request.onload = function()
     {
+        console.log("hello2");
         systemError2.style.display = "none";
         console.log(request.responseText);
         rst = JSON.parse(request.responseText);
@@ -108,7 +111,7 @@ function resetPassword()
             case "200": case 200: // Reset password success.
                 console.log("Reset password success.");
                 alert("密碼更新成功，請回到首頁登入");
-                window.location.assign("/USER/");
+                window.location.assign("/Admin/");
                 return true;
             case "300": case 300: // Method wrong.
             case "400": case 400: // Database wrong.

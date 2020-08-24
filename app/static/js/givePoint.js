@@ -20,7 +20,7 @@ function getUserList(type)
         getListRequest = new XMLHttpRequest();
     else
         getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/test/show_user");
+    getListRequest.open("POST", "/allotment/show_user");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"target": searchText}));
     getListRequest.onload = function()
@@ -186,10 +186,10 @@ function sendAllotment(kind, receiver, quota, period, frequency)
         allotmentRequest = new XMLHttpRequest();
     else
         allotmentRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    allotmentRequest.open("POST", "/test/allotment");
+    allotmentRequest.open("POST", "/allotment/allotment");
     allotmentRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency, "adminID": "35"}))
-    allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency, "adminID": "35"}));
+    console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency/*, "adminID": "35"*/}))
+    allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency/*, "adminID": "35"*/}));
     allotmentRequest.onload = function()
     {
         console.log(allotmentRequest.responseText);

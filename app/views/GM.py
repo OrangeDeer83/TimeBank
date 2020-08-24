@@ -4,13 +4,21 @@ from ..models import userType
 
 GM = Blueprint('GM', __name__)
 
+#GM的根目錄
+@GM.route('/')
+def index():
+   if session.get('userType') == userType['GM']:
+      return redirect(url_for('GM.update_grade'))
+   else:
+      return redirect(url_for('GM.login'))
+
 #忘記密碼頁面
 @GM.route('/forgotPassword')
 def forgot_password():
    return render_template('/GM/forgotPasswordGM.html')
 
 #輸入新密碼頁面
-@GM.route('/resetPasswor/<token>')
+@GM.route('/resetPassword/<token>')
 def reset_password(token):
    return render_template('/GM/resetPasswordGM.html')
 
@@ -31,25 +39,26 @@ def register():
 @GM.route('/verify/<result>')
 def verify(result):
    if result == '1':
-      return '資料庫錯誤，請稍後再試'
+      result_msg = '資料庫錯誤，請稍後再試'
    elif result == '2':
-      return '資料庫錯誤，請稍後再試'
+      result_msg = '資料庫錯誤，請稍後再試'
    elif result == '3':
-      return '帳號驗證成功，等待管理員審核'
+      result_msg = '帳號驗證成功，等待管理員審核'
    elif result == '4':
-      return '資料庫錯誤，請稍後再試'
+      result_msg ='資料庫錯誤，請稍後再試'
    elif result == '5':
-      return '帳號驗證成功，歡迎加入我們'
+      result_msg = '帳號驗證成功，歡迎加入我們\n<a href="' + url_for('GM.login') + '">點擊</a>'
    elif result == '6':
-      return '帳號已驗證成功，不需再次驗證'
+      result_msg = '帳號已驗證成功，不需再次驗證'
    elif result == '7':
-      return '帳號不在資料庫中，請重新申請'
+      result_msg = '帳號不在資料庫中，請重新申請'
    elif result == '8':
-      return '帳號驗證失敗'
+      result_msg = '帳號驗證失敗'
    elif result == 'TimeOut':
-      return '網頁已過期，請重寄驗證信'
+      result_msg = '網頁已過期，請重寄驗證信'
    else:
-      return '網頁出現錯誤，請稍後再試'
+      result_msg = '網頁出現錯誤，請稍後再試'
+   return result_msg
 
 #審核評論
 @GM.route('/updateGrade')
@@ -62,6 +71,7 @@ def update_grade():
 #檢舉審核
 @GM.route('/reportApprove')
 def report_approve():
+   return "此功能未完成"
    if session.get('userType') == userType['GM']:
       return render_template('/GM/reportApprove.html')
    else:
@@ -70,6 +80,7 @@ def report_approve():
 #設定頁面
 @GM.route('/setting')
 def setting():
+   return "此功能未完成"
    if session.get('userType') == userType['GM']:
       return render_template('/GM/settingGM.html')
    else:

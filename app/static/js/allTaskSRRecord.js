@@ -1,5 +1,3 @@
-const userID = "10"; // Only for beta.
-
 window.onload = function()
 {
     getTaskList();
@@ -33,9 +31,9 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "/test/SR/output/record");
+    taskListRequest.open("GET", "/task/SR/output/record");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
-    taskListRequest.send(JSON.stringify({"userID": userID}));
+    taskListRequest.send();
     taskListRequest.onload = function()
     {
         showError(200);
@@ -118,25 +116,47 @@ function putDetail(index)
     document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
     document.getElementById("SRComment" + index).innerHTML = currentTask.SRComment;
     document.getElementById("SPComment" + index).innerHTML = currentTask.SPComment;
-    for (var i = 0; i < currentTask.SRScore; i++)
+    if (currentTask.SRScore != "")
     {
-        document.getElementById("SRRate" + i + index).removeAttribute("style");
-        document.getElementById("RLabel" + i + index).removeAttribute("style");
+        for (var i = 0; i < currentTask.SRScore; i++)
+        {
+            document.getElementById("SRRate" + i + index).removeAttribute("style");
+            document.getElementById("RLabel" + i + index).removeAttribute("style");
+        }
+        for (var i = currentTask.SRScore; i < 5; i++)
+        {
+            document.getElementById("SRRate" + i + index).style.display = "none";
+            document.getElementById("RLabel" + i + index).style.display = "none";
+        }
     }
-    for (var i = currentTask.SRScore; i < 5; i++)
+    else
     {
-        document.getElementById("SRRate" + i + index).style.display = "none";
-        document.getElementById("RLabel" + i + index).style.display = "none";
+        for (var i = 0; i < 5; i++)
+        {
+            document.getElementById("SRRate" + i + index).style.display = "none";
+            document.getElementById("RLabel" + i + index).style.display = "none";
+        }
     }
-    for (var i = 0; i < currentTask.SPScore; i++)
+    if (currentTask.SPScore != "")
     {
-        document.getElementById("SPRate" + i + index).removeAttribute("style");
-        document.getElementById("PLabel" + i + index).removeAttribute("style");
+        for (var i = 0; i < currentTask.SPScore; i++)
+        {
+            document.getElementById("SPRate" + i + index).removeAttribute("style");
+            document.getElementById("PLabel" + i + index).removeAttribute("style");
+        }
+        for (var i = currentTask.SPScore; i < 5; i++)
+        {
+            document.getElementById("SPRate" + i + index).style.display = "none";
+            document.getElementById("PLabel" + i + index).style.display = "none";
+        }
     }
-    for (var i = currentTask.SPScore; i < 5; i++)
+    else
     {
-        document.getElementById("SPRate" + i + index).style.display = "none";
-        document.getElementById("PLabel" + i + index).style.display = "none";
+        for (var i = 0; i < 5; i++)
+        {
+            document.getElementById("SPRate" + i + index).style.display = "none";
+            document.getElementById("PLabel" + i + index).style.display = "none";
+        }
     }
 }
 

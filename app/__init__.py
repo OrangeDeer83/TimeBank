@@ -11,6 +11,7 @@ db.init_app(app)
 
 #匯入controllers
 from .controllers.account import Account
+from .controllers.allotment import Allotment
 from .controllers.apply import Apply
 from .controllers.calender import Calender
 from .controllers.comment import Comment
@@ -30,6 +31,7 @@ from .views.USER import USER
 #註冊blueprint設定路徑
 app.register_blueprint(Account, url_prefix='/account')
 app.register_blueprint(Admin, url_prefix='/Admin')
+app.register_blueprint(Allotment, url_prefix='/allotment')
 app.register_blueprint(Apply, url_prefix='/apply')
 app.register_blueprint(Calender, url_prefix='/calender')
 app.register_blueprint(Comment, url_prefix='/comment')

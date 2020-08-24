@@ -229,7 +229,7 @@ function gmRegister()
             gmRegisterRequest = new XMLHttpRequest();
         else
             gmRegisterRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        gmRegisterRequest.open("POST", "/test/GM/register");
+        gmRegisterRequest.open("POST", "/account/GM/register");
         gmRegisterRequest.setRequestHeader("Content-Type", "application/json");
         gmRegisterRequest.send(JSON.stringify({"GMName": gmName.value, "GMPassword": gmPassword.value, "GMMail": gmEmail.value, "GMPhone": gmPhone.value}));
         gmRegisterRequest.onload = function()

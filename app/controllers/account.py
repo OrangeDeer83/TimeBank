@@ -1,6 +1,6 @@
 #coding: utf-8
 from flask import Blueprint, render_template, session, url_for, jsonify, request, current_app, redirect
-import re, datetime, smtplib, random
+import re, datetime, smtplib, random, os
 from sqlalchemy.sql import func
 from ..models.hash import *
 from ..models.token import *
@@ -14,10 +14,13 @@ Account = Blueprint('account', __name__)
 @Account.route('/get_ID', methods=['GET'])
 def get_ID():
     if request .method == 'GET':
-        if session.get('userID'):
-            return jsonify({"rspCode": "200", "ID": session.get('userID')})             #成功取得使用者ID
+        if session.get('userType') == userType['USER']:
+            if session.get('userID'):
+                return jsonify({"rspCode": "200", "ID": session.get('userID')})             #成功取得使用者ID
+            else:
+                return jsonify({"rspCode": "400", "ID": ""})                                #尚未登入
         else:
-            return jsonify({"rspCode": "400", "ID": ""})                                #尚未登入
+            return jsonify({"rspCode" : "500", "ID": ""})                                   #權限不符
     else:
         return jsonify({"rspCode": "300", "ID": ""})                                    #method使用錯誤
 
@@ -157,6 +160,7 @@ def Admin_login():
             value = request.get_json()
         except:
             return jsonify({"rspCode": "403"})          #非法字元
+        print(value)
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -226,6 +230,7 @@ def USER_forgot_password():
 @Account.route('/USER/reset_password/<token>', methods=['POST'])
 def USER_reset_password(token):
     if request.method == 'POST':
+        print(request.get_json())
         try:
             value = request.get_json()
         except:
@@ -426,9 +431,9 @@ def Admin_forgot_password():
         adminMail = value['adminMail']
         print(value)
         if len(adminMail) > 50 or len(adminMail) < 1:
-            return ({"rspCode": "401"})      #電子郵件長度不符
+            return jsonify({"rspCode": "401"})      #電子郵件長度不符
         elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", adminMail) == None:
-            return ({"rspCode": "402"})      #電子郵件格式不符
+            return jsonify({"rspCode": "402"})      #電子郵件格式不符
         else:
             try:
                 query_data = adminAccount.query.filter(adminAccount.adminMail == func.binary(adminMail)).first()
@@ -443,19 +448,21 @@ def Admin_forgot_password():
                 status = Admin_forgot_password_mail(token_cut, adminMail)
                 if status == {}:
                     print("寄信成功\n")
-                    return ({"rspCode": "200"})     #重置信寄送成功
+                    return jsonify({"rspCode": "200"})     #重置信寄送成功
                 else:
                     print("寄信失敗\n"  )
-                    return ({"rspCode": "404"})     #重置信寄送失敗
+                    return jsonify({"rspCode": "404"})     #重置信寄送失敗
             else:
-                return ({"rspCode": "403"})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
+                return jsonify({"rspCode": "403"})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
     else:
-        return ({"rspCode": "300"})         #methods使用錯誤
+        return jsonify({"rspCode": "300"})         #methods使用錯誤
 
 #管理員重設密碼
 @Account.route('/Admin/reset_password/<token>', methods=['POST'])
 def Admin_reset_password(token):
     if request.method == 'POST':
+        print(token)
+        print(request.get_json())
         try:
             value = request.get_json()
         except:
@@ -721,13 +728,14 @@ def setting_accountPassword():
         return jsonify({"rspCode": "300"})          #method使用錯誤
 
 #設定電子郵件
-@Account.route('/setting/accoutMail', methods=['POST'])
-def setting_accoutMail():
+@Account.route('/setting/accountMail', methods=['POST'])
+def setting_accountMail():
     if request.method == 'POST':
         try:
             value = request.get_json()
         except:
             return jsonify({"rspCode": "405"})          #非法字元
+        print(value)
         if session.get('userType') == userType['USER']:
             userMail = value['userMail']
             userID = session.get('userID')
@@ -900,3 +908,43 @@ def setting_propic():
             return redirect(url_for('USER.index'))                      #權限不符
     else:
         return redirect(url_for('USER.setting'))                        #method使用錯誤
+
+#檢查照片是否存在
+@Account.route('/propic_exist', methods=['POST'])
+def propic_exist():
+    if request.method == 'POST':
+        try:
+            value = request.get_json()
+        except:
+            return jsonify({"rspCode": "400", "exist": "0"})            #資料庫錯誤
+        userID = value['userID']
+        if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + "/app/static/img/propic/"+ str(userID) + ".jpg"):
+            return jsonify({"rspCode": "200", "exist": "1"})            #照片存在
+        else:
+            return jsonify({"rspCode": "200", "exist": "0"})            #照片不存在
+    else:
+        return jsonify({"rspCode": "300", "exist": "0"})                #method使用錯誤
+
+#取得設定資料
+@Account.route('/output/setting_info', methods=['GET'])
+def output_setting_info():
+    if request.method == 'GET':
+        if session.get('userType') == userType['USER']:
+            userID = session.get('userID')
+            try:
+                query_data = account.query.filter_by(userID = userID).first()
+                if query_data == None:
+                    return jsonify({"rspCode": "401", "userID": "", "userName": "", "name": "", "userPhone": "",\
+                                    "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})              #ID錯誤
+            except:
+                return jsonify({"rspCode": "400", "userID": "", "userName": "", "name": "", "userPhone": "",\
+                                "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                  #資料庫錯誤
+            return jsonify({"rspCode": "200", "userID": userID, "userName": query_data.userName, "name": query_data.name,\
+                            "userPhone": query_data.userPhone, "userMail": query_data.userMail, "userGender": query_data.userGender,\
+                            "userBirthday": str(query_data.userBirthday), "userInfo": query_data.userInfo})             #成功取得個人資料
+        else:
+            return jsonify({"rspCode": "500", "userID": "", "userName": "", "name": "", "userPhone": "",\
+                            "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                      #權限不符
+    else:
+        return jsonify({"rspCode": "300", "userID": "", "userName": "", "name": "", "userPhone": "",\
+                        "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                          #method使用錯誤

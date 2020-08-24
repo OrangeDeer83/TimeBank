@@ -28,7 +28,7 @@ function getGradeList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/test/GM/output/judge_comment_page");
+    taskListRequest.open("GET", "/comment/GM/output/judge_comment_page");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -95,7 +95,7 @@ function grade(type)
         updateGradeRequest = new XMLHttpRequest();
     else
         updateGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGradeRequest.open("POST", "/test/judge_commentaction");
+    updateGradeRequest.open("POST", "/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[currentGrade].taskID, "status": type, "adminID": "5"})); // adminID only for beta
     updateGradeRequest.onload = function()
@@ -140,7 +140,7 @@ function sendGradeAll(index, type)
         updateGradeRequest = new XMLHttpRequest();
     else
         updateGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGradeRequest.open("POST", "/test/judge_commentaction");
+    updateGradeRequest.open("POST", "/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[index].taskID, "status": type, "adminID": "1"})); // adminID only for beta
     updateGradeRequest.onload = function()

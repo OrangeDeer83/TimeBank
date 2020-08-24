@@ -1,5 +1,3 @@
-const userID = "2"; // Only for beta.
-
 window.onload = function()
 {
     getTaskList();
@@ -33,9 +31,9 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "/test/SP/output/record");
+    taskListRequest.open("GET", "/task/SP/output/record");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
-    taskListRequest.send(JSON.stringify({"userID": userID}));
+    taskListRequest.send();
     taskListRequest.onload = function()
     {
         showError(200);

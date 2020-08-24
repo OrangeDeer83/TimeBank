@@ -18,6 +18,17 @@ test = Blueprint('test', __name__)
 #設定時間格式
 ISOTIMEFORMAT = '%Y-%m-%d %H:%M:%S'
 
+@test.route('/sql', methods = ['POST'])
+def sql():
+    value = request.get_json()
+    sql_str = value['sql']
+    print(sql_str)
+    query = account.query.filter(account.userID == sql).all()
+    print(query)
+    return jsonify({"sql": "1"})
+    
+    
+
 #偵測一般使用者帳號重複(註冊用)
 @test.route('/USER/detect_repeated', methods=['POST'])
 def USER_detect_repeated():
@@ -1178,7 +1189,7 @@ def output_SR_comment():
 def upload_web_intro():
     if request.method == 'POST':    
        #寫在webIntro.txt
-       file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'webIntro.txt' , 'w')
+       file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'webIntro.txt' , 'w',encoding ='UTF-8')
        #目前預設傳來的資訊叫intro
        #且直接是str
        json = request.get_json()
@@ -1200,7 +1211,7 @@ def output_web_intro():
     if request.method == 'GET':
         #開啟webIntro.txt
         try:
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "webIntro.txt", 'r')
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "webIntro.txt", 'r',encoding ='UTF-8')
         except:
             #rspCode 400:webIntro.txt開啟失敗
             return jsonify({"rspCode" : "400","webIntro":''})
@@ -1261,7 +1272,7 @@ def upload_news():
         try:    
             #內文上傳
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
-            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w')
+            fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w',encoding ='UTF-8')
             fileContent.write(content)
             fileContent.close()
             #return jsonify({"rspCode":"200"})
@@ -1376,7 +1387,7 @@ def edit_news(number):
         if content != '':
             try:
                 if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number)):
-                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w')
+                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding ='UTF-8')
                     file.write(content)
                     file.close()
                 else:
@@ -1454,7 +1465,7 @@ def update_apply_group():
         try:
             json = request.get_json()
             groupName = json['groupName']
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'/group_name.txt','w')
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'/group_name.txt','w',encoding ='UTF-8')
             file.write(groupName)
             file.close()
             return jsonify({"rspCode":"200"})
@@ -1469,7 +1480,7 @@ def update_apply_group():
 def output_apply_group():
     if request.method == "GET":
         try:
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' + '/group_name.txt','r')
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' + '/group_name.txt','r',encoding ='UTF-8')
             groupName = file.read()
             file.close()
             return jsonify({"rspCode":"200","groupName":groupName})
@@ -1805,7 +1816,7 @@ def user_add_apply():
             try:
                 file = request.files['file']
             except:
-                apply_condition = db.session.query(applyConditionList).filter(applyConditionList.conditionID == conditionID).first()
+                apply_condition = db.session.query(applyCondition).filter(applyCondition.conditionID == conditionID).first()
                 apply_condition.delete()
                 db.session.commit()
                 return redirect(url_for('USER.application'))

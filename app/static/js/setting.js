@@ -1,32 +1,57 @@
-var userID;
-
 window.onload = function()
 {
-    var getIDRequest;
+    getOldUserInfo();
+}
+
+function getOldUserInfo()
+{
+    var uploadFrofileRequest;
     if (window.XMLHttpRequest)
-        getIDRequest = new XMLHttpRequest();
+        uploadFrofileRequest = new XMLHttpRequest();
     else
-        getIDRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIDRequest.open("GET", "/test/getID");
-    getIDRequest.setRequestHeader("Content-Type", "application/json");
-    getIDRequest.send();
-    getIDRequest.onload = function()
+        uploadFrofileRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    uploadFrofileRequest.open("GET", "/account/output/setting_info");
+    uploadFrofileRequest.setRequestHeader("Content-Type", "application/json");
+    uploadFrofileRequest.send();
+    uploadFrofileRequest.onload = function()
     {
-        console.log(getIDRequest.responseText);
-        rst = JSON.parse(getIDRequest.responseText);
+        console.log(uploadFrofileRequest.responseText);
+        rst = JSON.parse(uploadFrofileRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                userID = rst.ID;
-                document.getElementById("userIDFile").value = userID;
+                console.log("成功讀取舊資料");
+                putOldUserInfo(rst);
                 break;
             case "300": case 300:
             case "400": case 400:
-                console.log("無法取得userID");
-                userID = "10";
+            default:
+                alert("系統錯誤，無法取得舊資料...");
                 break;
         }
     }
+}
+
+function putOldUserInfo(oldInfo)
+{
+    document.getElementById("name").value = oldInfo.name;
+    document.getElementById("userName").value = oldInfo.userName;
+    document.getElementById("userEmail").value = oldInfo.userMail;
+    document.getElementById("userPhone").value = oldInfo.userPhone;
+    document.getElementById("profile").value = oldInfo.userInfo;
+    document.getElementById("userBirthday").value = oldInfo.userBirthday;
+    switch (oldInfo)
+    {
+        case "0":
+            document.getElementById("genderMale").selected = true;
+            break;
+        case "1":
+            document.getElementById("genderFemale").selected = true;
+            break;
+        case "2":
+            document.getElementById("genderElse").selected = true;
+    }
+    getPropicMyself(oldInfo.userID);
 }
 
 function upload(index)
@@ -62,18 +87,18 @@ function upload(index)
 function uploadProfile()
 {
     const profile = document.getElementById("profile");
-    var uploadFrofileRequest;
+    var uploadProfileRequest;
     if (window.XMLHttpRequest)
-        uploadFrofileRequest = new XMLHttpRequest();
+        uploadProfileRequest = new XMLHttpRequest();
     else
-        uploadFrofileRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadFrofileRequest.open("POST", "/test/setting/userInfo");
-    uploadFrofileRequest.setRequestHeader("Content-Type", "application/json");
-    uploadFrofileRequest.send(JSON.stringify({"userInfo": profile.value, "userID": userID}));
-    uploadFrofileRequest.onload = function()
+        uploadProfileRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    uploadProfileRequest.open("POST", "/account/setting/userInfo");
+    uploadProfileRequest.setRequestHeader("Content-Type", "application/json");
+    uploadProfileRequest.send(JSON.stringify({"userInfo": profile.value}));
+    uploadProfileRequest.onload = function()
     {
-        console.log(uploadFrofileRequest.responseText);
-        rst = JSON.parse(uploadFrofileRequest.responseText);
+        console.log(uploadProfileRequest.responseText);
+        rst = JSON.parse(uploadProfileRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
@@ -99,9 +124,9 @@ function uploadName()
         uploadNameRequest = new XMLHttpRequest();
     else
         uploadNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadNameRequest.open("POST", "/test/setting/name");
+    uploadNameRequest.open("POST", "/account/setting/name");
     uploadNameRequest.setRequestHeader("Content-Type", "application/json");
-    uploadNameRequest.send(JSON.stringify({"name": name.value, "userID": userID}));
+    uploadNameRequest.send(JSON.stringify({"name": name.value}));
     uploadNameRequest.onload = function()
     {
         console.log(uploadNameRequest.responseText);
@@ -138,9 +163,9 @@ function uploadUserName()
         uploadUserNameRequest = new XMLHttpRequest();
     else
         uploadUserNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserNameRequest.open("POST", "/test/setting/userName");
+    uploadUserNameRequest.open("POST", "/account/setting/accountName");
     uploadUserNameRequest.setRequestHeader("Content-Type", "application/json");
-    uploadUserNameRequest.send(JSON.stringify({"userName": userName.value, "userID": userID}));
+    uploadUserNameRequest.send(JSON.stringify({"userName": userName.value}));
     uploadUserNameRequest.onload = function()
     {
         console.log(uploadUserNameRequest.responseText);
@@ -189,9 +214,9 @@ function uploadNewPassword()
         uploadNewPasswordRequest = new XMLHttpRequest();
     else
         uploadNewPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadNewPasswordRequest.open("POST", "/test/setting/userPassword");
+    uploadNewPasswordRequest.open("POST", "/account/setting/accountPassword");
     uploadNewPasswordRequest.setRequestHeader("Content-Type", "application/json");
-    uploadNewPasswordRequest.send(JSON.stringify({"userPassword": newPassword.value, "userOldPassword": oldPassword.value, "userID": userID}));
+    uploadNewPasswordRequest.send(JSON.stringify({"userPassword": newPassword.value, "userOldPassword": oldPassword.value}));
     uploadNewPasswordRequest.onload = function()
     {
         console.log(uploadNewPasswordRequest.responseText);
@@ -232,9 +257,9 @@ function uploadUserEmail()
         uploadUserEmailRequest = new XMLHttpRequest();
     else
         uploadUserEmailRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserEmailRequest.open("POST", "/test/setting/userMail");
+    uploadUserEmailRequest.open("POST", "/account/setting/accountMail");
     uploadUserEmailRequest.setRequestHeader("Content-Type", "application/json");
-    uploadUserEmailRequest.send(JSON.stringify({"userMail": userEmail.value, "userID": userID}));
+    uploadUserEmailRequest.send(JSON.stringify({"userMail": userEmail.value}));
     uploadUserEmailRequest.onload = function()
     {
         console.log(uploadUserEmailRequest.responseText);
@@ -279,9 +304,9 @@ function uploadUserPhone()
         uploadUserPhoneRequest = new XMLHttpRequest();
     else
         uploadUserPhoneRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserPhoneRequest.open("POST", "/test/setting/userPhone");
+    uploadUserPhoneRequest.open("POST", "/account/setting/accountPhone");
     uploadUserPhoneRequest.setRequestHeader("Content-Type", "application/json");
-    uploadUserPhoneRequest.send(JSON.stringify({"userPhone": userPhone.value, "userID": userID}));
+    uploadUserPhoneRequest.send(JSON.stringify({"userPhone": userPhone.value}));
     uploadUserPhoneRequest.onload = function()
     {
         console.log(uploadUserPhoneRequest.responseText);
@@ -325,9 +350,9 @@ function uploadGender()
         uploadUserGenderRequest = new XMLHttpRequest();
     else
         uploadUserGenderRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserGenderRequest.open("POST", "/test/setting/userGender");
+    uploadUserGenderRequest.open("POST", "/account/setting/userGender");
     uploadUserGenderRequest.setRequestHeader("Content-Type", "application/json");
-    uploadUserGenderRequest.send(JSON.stringify({"userGender": checkGender, "userID": userID}));
+    uploadUserGenderRequest.send(JSON.stringify({"userGender": checkGender}));
     uploadUserGenderRequest.onload = function()
     {
         console.log(uploadUserGenderRequest.responseText);
@@ -406,9 +431,9 @@ function uploadUserBirthday()
         uploadUserBirthdayRequest = new XMLHttpRequest();
     else
         uploadUserBirthdayRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    uploadUserBirthdayRequest.open("POST", "/test/setting/userBirthday");
+    uploadUserBirthdayRequest.open("POST", "/account/setting/userBirthday");
     uploadUserBirthdayRequest.setRequestHeader("Content-Type", "application/json");
-    uploadUserBirthdayRequest.send(JSON.stringify({"userBirthday": userBirthday.value, "userID": userID}));
+    uploadUserBirthdayRequest.send(JSON.stringify({"userBirthday": userBirthday.value}));
     uploadUserBirthdayRequest.onload = function()
     {
         console.log(uploadUserBirthdayRequest.responseText);
@@ -425,6 +450,54 @@ function uploadUserBirthday()
                 break;
             case "401": case 401:
                 alert("生日格式不符，請再次確認，避免輸入未來或過於古老的日期");
+                break;
+        }
+    }
+}
+
+function getPropicMyself(userID)
+{
+    var getPropicRequest;
+    if (window.XMLHttpRequest)
+        getPropicRequest = new XMLHttpRequest();
+    else
+        getPropicRequest = new ActiveXObject("Microsoft.XMLHTTP");
+    getPropicRequest.open("POST", "/account/propic_exist");
+    getPropicRequest.setRequestHeader("Content-Type", "application/json");
+    getPropicRequest.send(JSON.stringify({"userID": userID}));
+    getPropicRequest.onload = function()
+    {
+        console.log(getPropicRequest.responseText);
+        rst = JSON.parse(getPropicRequest.responseText);
+        var d = new Date();
+		var time = "";
+		if (d.getHours() < 10) {
+			time += "0" + d.getHours();
+		}
+		else{
+			time += d.getHours();
+		}
+		if (d.getMinutes() < 10) {
+			time += "0" + d.getMinutes();
+		}
+		else{
+			time += d.getMinutes();
+		}
+		if (d.getSeconds() < 10) {
+			time += "0" +d.getSeconds();
+		}
+		else{
+			time += d.getSeconds();
+		}
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                if (rst.exist == "1") document.getElementById("profilePicture").src = "/static/img/propic/" + userID + ".jpg?v=" + time;
+                else document.getElementById("profilePicture").src = "/static/img/propic/default.jpg";
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("無法取得照片存在");
                 break;
         }
     }

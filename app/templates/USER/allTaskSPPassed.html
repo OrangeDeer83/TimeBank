@@ -27,7 +27,7 @@
                                 <li class="hiddenLarge">
                                     <a class="point" href="{{url_for('USER.point_record')}}">
                                         <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                        目前沒有點數
+                                        <span id="navbarPoint1">0</span>
                                     </a>
                                 </li>
                                 <li><a href="{{url_for('USER.all_task')}}">所有任務</a></li>
@@ -56,12 +56,12 @@
                             <li class="hiddenSmall">
                                 <a class="point" href="{{url_for('USER.point_record')}}">
                                     <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                    目前沒有點數
+                                    <span id="navbarPoint">0</span>
                                 </a>
                             </li>
                         </ul>
                         <a class="navbarPortrait" id="navbarUserID">
-                            <img class="navbarPortraitImg" alt="Portrait" src="{{url_for('static', filename='img/portrait1.jpg')}}" />
+                            <img class="navbarPortraitImg" alt="Portrait" />
                         </a>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                         <li id="thisPage2">已通過</li>
                         <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_checking')}}">審核中</a></li>
                         <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_refused')}}">遭拒絕</a></li>
-                        <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_record')}}}">歷史紀錄</a></li>
+                        <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_record')}}">歷史紀錄</a></li>
                     </ul>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName0"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime0"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota0"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota0"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment10" onclick="openGradingDiv(0)">評論</div>
                                 <div class="done" id="undone10" onclick="finishTask(0, 0)">未完成</div>
@@ -126,7 +126,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName1"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime1"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota1"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota1"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment11" onclick="openGradingDiv(1)">評論</div>
                                 <div class="done" id="undone11" onclick="finishTask(1, 0)">未完成</div>
@@ -154,7 +154,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName2"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime2"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota2"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota2"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment12" onclick="openGradingDiv(2)">評論</div>
                                 <div class="done" id="undone12" onclick="finishTask(2, 0)">未完成</div>
@@ -182,7 +182,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName3"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime3"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota3"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota3"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment13" onclick="openGradingDiv(3)">評論</div>
                                 <div class="done" id="undone13" onclick="finishTask(3, 0)">未完成</div>
@@ -210,7 +210,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName4"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime4"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota4"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota4"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment14" onclick="openGradingDiv(4)">評論</div>
                                 <div class="done" id="undone14" onclick="finishTask(4, 0)">未完成</div>
@@ -238,7 +238,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName5"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime5"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota5"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota5"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment15" onclick="openGradingDiv(5)">評論</div>
                                 <div class="done" id="undone15" onclick="finishTask(5, 0)">未完成</div>
@@ -266,7 +266,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName6"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime6"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota6"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota6"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment16" onclick="openGradingDiv(6)">評論</div>
                                 <div class="done" id="undone16" onclick="finishTask(6, 0)">未完成</div>
@@ -294,7 +294,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName7"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime7"></span></div>
-                            <div class="taskPoint">任務額度：<span id="taskQuota7"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota7"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment17" onclick="openGradingDiv(7)">評論</div>
                                 <div class="done" id="undone17" onclick="finishTask(7, 0)">未完成</div>
@@ -322,7 +322,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName8"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime8"></span></div>
-                            <div class="taskPoint">任務額度：<span  id="taskQuota8"></span></div>
+                            <div class="taskPoint">任務額度：<span  id="taskQuota8"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment18" onclick="openGradingDiv(8)">評論</div>
                                 <div class="done" id="undone18" onclick="finishTask(8, 0)">未完成</div>
@@ -350,7 +350,7 @@
                         <div class="introduction">
                             <div class="taskName">任務名稱：<span id="taskName9"></span></div>
                             <div class="taskTime">任務時間：<span id="taskTime9"></span></div>
-                            <div class="taskPoint">任務額度：<span id="taskQuota9"></span></div>
+                            <div class="taskPoint">任務額度：<span id="taskQuota9"></span>點</div>
                             <div class="rightBottom rightBottom1">
                                 <div class="done" id="comment19" onclick="openGradingDiv(9)">評論</div>
                                 <div class="done" id="undone19" onclick="finishTask(9, 0)">未完成</div>

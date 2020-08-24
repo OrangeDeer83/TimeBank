@@ -14,6 +14,7 @@ def output_info():
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": "401", "userID": "", "name": "", "userGender": "", "userAge": "", "userInfo": ""})       #非法字元
+            print(value)
             userID = value['userID']
             try:
                 query_data = account.query.filter_by(userID = userID).first()
@@ -37,6 +38,7 @@ def output_task():
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": "402", "taskWaiting": ""})       #非法字元
+            print(value, 123)
             userID = value['userID']
             try:
                 query_data = account.query.filter_by(userID = userID).first()

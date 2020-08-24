@@ -1,5 +1,3 @@
-const userID = "5"; // Only for beta.
-
 window.onload = function()
 {
     console.log(" ")
@@ -34,9 +32,9 @@ function getTaskList()
         taskListRequest = new XMLHttpRequest();
     else
         taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("POST", "/test/SR/output/release");
+    taskListRequest.open("GET", "/task/SR/output/release");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
-    taskListRequest.send(JSON.stringify({"userID": userID}));
+    taskListRequest.send();
     taskListRequest.onload = function()
     {
         showError(200);
@@ -158,9 +156,9 @@ function selectSP(index)
         selectSPRequest = new XMLHttpRequest();
     else
         selectSPRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    selectSPRequest.open("POST", "/test/SR/decide_SP");
+    selectSPRequest.open("POST", "/task/SR/decide_SP");
     selectSPRequest.setRequestHeader("Content-Type", "application/json");
-    selectSPRequest.send(JSON.stringify({"userID": userID, "taskID": thisPageList[index].taskID, "candidateID": candidate.value}));
+    selectSPRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "candidateID": candidate.value}));
     selectSPRequest.onload = function()
     {
         showError(200);
@@ -194,9 +192,9 @@ function deleteTask(index)
         deleteTaskRequest = new XMLHttpRequest();
     else
         deleteTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteTaskRequest.open("POST", "/test/SR/delete_task");
+    deleteTaskRequest.open("POST", "/task/SR/delete_task");
     deleteTaskRequest.setRequestHeader("Content-Type", "application/json");
-    deleteTaskRequest.send(JSON.stringify({"userID": userID, "taskID": thisPageList[index].taskID}));
+    deleteTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     deleteTaskRequest.onload = function()
     {
         showError(200);

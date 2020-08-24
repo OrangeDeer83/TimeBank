@@ -15,7 +15,7 @@ function getIntroduction()
         getIntroductionRequest = new XMLHttpRequest();
     else // Old IE browser.
         getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "/test/output_webIntro");
+    getIntroductionRequest.open("GET", "/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     
@@ -50,7 +50,7 @@ function storeIntroduction()
         sendIntroduction = new XMLHttpRequest();
     else
         sendIntroduction = new ActiveXObject("Microsoft.XMLHTTP");
-    sendIntroduction.open("POST", "/test/upload_web_intro");
+    sendIntroduction.open("POST", "/portal/upload_web_intro");
     sendIntroduction.setRequestHeader("Content-Type", "application/json");
     sendIntroduction.send(JSON.stringify({"intro": document.getElementById("introduction").value}));
      
@@ -89,7 +89,7 @@ function getNewsAmount()
         getNewsAmountRequest = new XMLHttpRequest();
     else
         getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "/test/useful_numbers");
+    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -100,17 +100,17 @@ function getNewsAmount()
         {
             case "200": case 200:
                 console.log("最新消息數量讀取成功");
+                maxNewsNum = rst.max;
+                existNews = rst.numberList;
+                newsAmount = existNews.length;
+                pageAmount = Math.ceil(newsAmount / 10);
+                computePage(0);
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息數量讀取失敗，請稍後再試");
                 return false;
         }
-        maxNewsNum = rst.max; console.log(maxNewsNum);//
-        existNews = rst.numberList; console.log(existNews);//
-        newsAmount = existNews.length; console.log(newsAmount);//
-        pageAmount = Math.ceil(newsAmount / 10); console.log(pageAmount);//
-        computePage(0);
     }
     computePage(0);
 }
@@ -123,7 +123,7 @@ function getTitle(i)
         getOldTitleRequest = new XMLHttpRequest();
     else
         getOldTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getOldTitleRequest.open("GET", "/test/output_news_title/" + thisPageList[i]);
+    getOldTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[i]);
     getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
     getOldTitleRequest.send();
     var index = i; console.log(i + "" + index);
@@ -153,7 +153,7 @@ function getText(i)
         getTextRequest = new XMLHttpRequest();
     else
         getTextRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTextRequest.open("GET", "/test/output_news_content/" + thisPageList[i]);
+    getTextRequest.open("GET", "/portal/output_news_content/" + thisPageList[i]);
     getTextRequest.setRequestHeader("Content-Type", "application/json");
     getTextRequest.send();
     var index = i;
@@ -173,6 +173,8 @@ function getText(i)
         }
         //thisPageText.push(rst.content); console.log(rst.content);
         document.getElementById("newsText" + (index + 1)).value = rst.content;
+        console.log("editNewsForm" + (index + 1));
+        document.getElementById("editNewsForm" + (index + 1)).action = "/portal/edit_news/" + thisPageList[index];
     }
 }
 
@@ -265,7 +267,7 @@ function previewImg()
 function changeSpan(newIndex)
 {
     var currentIndex = getCurrentIndex();
-    if (currentIndex == newIndex); // Didn't change.
+    if (currentIndex == newIndex) console.log("span" + newIndex); // Didn't change.
     else
     {
         var currentSpan = document.getElementsByClassName("currentSpannedNews")[0];
@@ -279,9 +281,32 @@ function changeSpan(newIndex)
         currentSpan.style.display = "none";
         newSpan.style.display = "block";
     }
-    console.log("../static/uploadFile/newsImage/" + thisPageList[newIndex - 1] + ".jpg " + newIndex);
-    if (newIndex != 0) // src="../static/uploadFile/newsImage/<number>.jpg"
-        document.getElementById("newsImg" + newIndex).src = "../static/uploadFile/newsImage/" + thisPageList[newIndex - 1] + ".jpg";
+    
+    if (newIndex != 0 && newIndex != "0") // src="../static/uploadFile/newsImage/<number>.jpg"
+    {
+        var d = new Date();
+        var time = "";
+        if (d.getHours() < 10) {
+            time += "0" + d.getHours();
+        }
+        else{
+            time += d.getHours();
+        }
+        if (d.getMinutes() < 10) {
+            time += "0" + d.getMinutes();
+        }
+        else{
+            time += d.getMinutes();
+        }
+        if (d.getSeconds() < 10) {
+            time += "0" +d.getSeconds();
+        }
+        else{
+            time += d.getSeconds();
+        }
+        document.getElementById("newsImg" + newIndex).src = "/static/uploadFile/newsImage/" + thisPageList[newIndex - 1] + ".jpg?v=" + time;
+        document.getElementById("newsImg" + newIndex).style.display = "block";
+    }
 }
 
 function deleteNews(index)
@@ -291,7 +316,7 @@ function deleteNews(index)
         deleteNewsRequest = new XMLHttpRequest();
     else
         deleteNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteNewsRequest.open("POST", "/test/delete_news/" + thisPageList[index - 1]);
+    deleteNewsRequest.open("GET", "/portal/delete_news/" + thisPageList[index - 1]);
     deleteNewsRequest.setRequestHeader("Content-Type", "application/json");
     deleteNewsRequest.send();
     deleteNewsRequest.onload = function()
@@ -310,7 +335,7 @@ function deleteNews(index)
     }
 }
 
-function editNews()
+/*function editNews()
 {
     var currentIndex = getCurrentIndex();
     var newsTitle = document.getElementById("newsTitle" + currentIndex).value;
@@ -324,7 +349,7 @@ function editNews()
         editNewsRequest = new XMLHttpRequest();
     else
         editNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    editNewsRequest.open("POST", "/test/edit_news/" + thisPageList[currentIndex - 1]);
+    editNewsRequest.open("POST", "/portal/edit_news/" + thisPageList[currentIndex - 1]);
     editNewsRequest.setRequestHeader("Content-Type", "application/json");
     editNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     editNewsRequest.onload = function()
@@ -371,7 +396,7 @@ function addNews()
         addNewsRequest = new XMLHttpRequest();
     else
         addNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addNewsRequest.open("POST", "/test/upload_news/");
+    addNewsRequest.open("POST", "/portal/upload_news/");
     addNewsRequest.setRequestHeader("Content-Type", "application/json");
     addNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     addNewsRequest.onload = function()
@@ -406,4 +431,4 @@ function addNews()
                 return false;
         }
     }
-}
+}*/

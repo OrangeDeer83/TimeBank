@@ -20,7 +20,7 @@ function getUserList(type)
         getListRequest = new XMLHttpRequest();
     else
         getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/test/allotment_history");
+    getListRequest.open("POST", "/allotment/allotment_history");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"target": searchText}));
     getListRequest.onload = function()

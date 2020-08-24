@@ -53,12 +53,12 @@ def output_notice_comment():
 def comment_action():
     if request.method != 'POST':
         return jsonify({"rspCode":"300"})
-    try:
-        userID_ = int(session('userID'))
-    except:
-        return jsonify({"rspCode":"500"})
     if session.get('userType') != userType['USER']:
-        return jsonify({"rspCode":"500"})
+        return jsonify({"rspCode":"500","taskConflit":""})
+    try:
+        userID_ = int(session.get('userID'))
+    except:
+        return jsonify({"rspCode":"500","taskConflit":""})
     json = request.get_json()
     taskID_ = json['taskID']
     if not(json['star'] in ['1','2','3','4','5']):
@@ -90,7 +90,7 @@ def comment_action():
                     comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                     comment_.SRComment = user_comment
                     comment_.commentStatus = -1
-                    db.session.comit()
+                    db.session.commit()
                 return jsonify({"rspCode":"200"})
         if task_.SP[0].userID == int(userID_):    
             if task_.taskStatus == 13:
@@ -98,6 +98,7 @@ def comment_action():
                 comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                 comment_.SPComment = user_comment
                 comment_.commentStatus = 0
+                db.session.commit()
             elif task_.taskStatus == 14:
                 #已經評論過
                 return jsonify({"rspCode":"404"})
@@ -105,7 +106,7 @@ def comment_action():
                 comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                 comment_.SPComment = user_comment
                 comment_.commentStatus = -2
-            db.session.comit()
+            db.session.commit()
             return jsonify({"rspCode":"200"})
         else :
             #不是此task的SR或SP

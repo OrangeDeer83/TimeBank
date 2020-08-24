@@ -22,12 +22,7 @@ def SR_output_record():
                 for task in query_data.taskSR:
                     if task.taskStatus in [4, 5, 11, 12, 15]:
                         taskRecord.append(task)
-<<<<<<< HEAD
                 sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
-=======
-                print(taskRecord)
-                sortTask(taskRecord, 0, len(taskRecord) - 1)
->>>>>>> ec9964d1968e048d73ed9123f90b3c6e8536612b
                 taskRecordJson = []
                 for task in taskRecord:
                     print(task)

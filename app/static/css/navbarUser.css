@@ -126,3 +126,11 @@
         background-color: #F5FFFA;
     }
 }
+
+@media (max-width: 420px)
+{
+    .navbarCenter
+    {
+        display: none!important;
+    }
+}

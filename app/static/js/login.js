@@ -101,7 +101,6 @@ function login()
             switch (rst.rspCode)
             {
                 case "200": case 200:
-                    alert("登入成功!");
                     window.location.assign("/USER/");
                     break;
                 case "400": case 400:

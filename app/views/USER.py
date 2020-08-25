@@ -52,11 +52,11 @@ def application():
 #行事曆
 @USER.route('/schedule')
 def schedule():
-    return "此功能未完成"
-    if session.get('userType') == userType['USER']:
-        return render_template('/USER/schedule.html')
-    else:
-        return redirect(url_for('USER.index'))
+    # return "此功能未完成"
+    #if session.get('userType') == userType['USER']:
+    return render_template('/USER/schedule.html')
+    #else:
+    #    return redirect(url_for('USER.index'))
 
 #SP - 個人介面 - 雇員評分
 @USER.route('/SP/myself')

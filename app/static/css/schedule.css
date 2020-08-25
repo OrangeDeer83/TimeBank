@@ -4,25 +4,26 @@
 
 ul{list-style-type: none;}
 
-.bodyContainer
-{
-    margin: auto;
-}
-
 .formLeftBody
 {
-    margin-top: 100px;
-    float: left;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
 }
 
 .formRightBody
 {
-    height: 500pxs;
-    margin-top: 100px;
-    float: left;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    height: 500px;
     padding: 20px;
     background-color: #ebbab9;
+    overflow: auto;
 }
+
 
 /*month-div*/
 .formTopCalendar
@@ -30,7 +31,7 @@ ul{list-style-type: none;}
     width: 100%;
     background-color: #87CEEB;
     text-align: center;
-    padding: 70px 25px;
+    padding: 64px 25px 65px;
 }
 
 /*month-ul*/
@@ -46,20 +47,29 @@ ul{list-style-type: none;}
     color: white;
     text-transform: uppercase;
     letter-spacing: 3px;
+    font-size: 20px;
+    cursor: default;
 }
 
 #preMonth
 {
     float: left;
-    padding-top: 10px;
+    padding: 14px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 #nextMonth
 {
     float: right;
-    padding-top: 10px;
+    padding: 14px 11px 14px 17px;
     cursor: pointer;
+    border-radius: 5px;
+}
+
+#preMonth:hover, #nextMonth:hover
+{
+    background-color: rgba(9,9,9,5);
 }
 
 .formWeekLine
@@ -68,36 +78,32 @@ ul{list-style-type: none;}
     height: 50px;
     padding: 10px 0;
     background-color: #FFE4B5;
-    cursor: pointer;
+    cursor: default;
 }
 
 .formWeekDay
 {
-    width: 13.6%;
+    width: 14.28%;
     display: inline-block;
     text-align: center;
     vertical-align: middle;
-    color: white;
+    color: #999999;
 }
 
 .formDayLine
 {
     margin: 0;
-    height: 350px;
-    padding: 10px 0;
+    padding: 0;
     background-color: #eee;
-
 }
 
 .formDay
 {
-    width: 13.6%;
-    margin-bottom: 5px;
+    width: 14.28%; /* 100/7 = 14.28 */
     text-align: center;
     vertical-align: middle;
     color: #777;
     display: inline-block;
-    padding: 20px 0;
 }
 
 .formDay:hover
@@ -108,15 +114,11 @@ ul{list-style-type: none;}
     cursor: pointer;
 }
 
-.formToDoList, #formLabelTitle
+.formToDoList
 {
     color: white;
     text-align: center;
-}
-
-.formLine
-{
-    height: 44px;
+    margin: 70px 0;
 }
 
 .formText
@@ -125,26 +127,87 @@ ul{list-style-type: none;}
     border: 1px solid white;
     overflow: auto;
     resize: none;
+    padding: 5px;
+    font-size: 14px;
+    width: 100%;
+    cursor: default;
 }
 
-@media(min-width: 900px)
+.formTextTitle
 {
-    .bodyContainer
+    font-size: 18px;
+    font-weight: 800;
+    text-align: center;
+    border: none;
+}
+
+@media(min-width: 1200px)
+{
+    .scheduleDiv
+    {
+        margin-top: calc(10vh);
+        margin-left: 15%;
+        width: 70%;
+    }
+    .formLeftBody
+    {
+        width: 75%;
+        height: 80vh;
+    }
+    .formDayLine
+    {
+        height: calc(80vh - 235px);
+    }
+    .formDay
+    {
+        padding: calc(8vh - 35px) 0;
+        height: calc(16vh - 47px);
+        font-size: 20px;
+    }
+    .formRightBody
+    {
+        width: 25%;
+        height: 80vh;
+    }
+    .formLine
+    {
+        height: 130px;
+    }
+    .formText
+    {
+        height: 110px;
+        font-size: 18px;
+    }
+}
+
+@media(max-width: 1199px)
+{
+    .scheduleDiv
+    {
+        margin-top: calc(50vh - 265px);
+        margin-left: calc(50vw - 450px);
+    }
+    .scheduleDiv
     {
         width: 900px;
     }
     .formLeftBody
     {
-        width: 70%;
+        width: 75%;
+    }
+    .formDayLine
+    {
+        height: 350px;
+    }
+    .formDay
+    {
+        padding: 24px 0;
+        height: 70px;
     }
     .formRightBody
     {
-        width: auto;
+        width: 25%;
         height: 585px;
-    }
-    .formWeekDay, .formDay
-    {
-        width: 13.1%;
     }
     .formLine
     {
@@ -158,19 +221,23 @@ ul{list-style-type: none;}
 
 @media(max-width: 899px)
 {
+    .scheduleDiv
+    {
+        margin: calc(50vh - 300px) 0;
+    }
+    .scheduleDiv
+    {
+        width: 100vw;
+    }
     .formLeftBody
     {
-        margin-left: 50px;
-        width: 60%;
+        width: calc(100vw - 250px);
+        margin: 0;
     }
     .formRightBody
     {
-        width: auto;
+        width: 250px;
         height: 585px;
-    }
-    .formWeekDay, .formDay
-    {
-        width: 12.5%;
     }
     .formLine
     {
@@ -184,25 +251,27 @@ ul{list-style-type: none;}
 
 @media(max-width: 650px)
 {
+    .scheduleDiv
+    {
+        margin: 0;
+    }
     .formLeftBody, .formRightBody
     {
-        margin-left: 0;
+        margin: 0;
         width: 100%;
     }
     .formRightBody
     {
         margin-top: 0;
-        height: 600px;
-
+        height: auto;
+    }
+    .formTopCalendar
+    {
+        padding: 20px 25px;
     }
     .formDayLine
     {
         width: 100%;
-    }
-    
-    .formWeekDay, .formDay
-    {
-        width: 11.5%;
     }
     .formText
     {
@@ -211,7 +280,55 @@ ul{list-style-type: none;}
     }
     .formText
     {
-        width: 600px;
+        width: 100%;
         height: 50px;
+    }
+    .formToDoList
+    {
+        margin: 10px 0 30px;
+    }
+}
+
+@media(max-height: 585px)
+{
+    .scheduleDiv
+    {
+        margin-top: 0;
+    }
+    .formTopCalendar
+    {
+        padding: 0;
+    }
+    #month, #year
+    {
+        display: inline-block;
+        margin: 13px 0;
+    }
+    #preMonth, #nextMonth
+    {
+        padding: 13px 20px;
+    }
+    .formWeekLine
+    {
+        height: 36px;
+        padding: 7px 0;
+    }
+    .formDayLine
+    {
+        height: calc(100vh - 140px);
+        padding: 0;
+    }
+    .formDay
+    {
+        padding: calc(10vh - 25px) 0;
+        height: calc(20vh - 28px);
+    }
+    .formRightBody
+    {
+        height: calc(100vh - 50px);
+    }
+    .formToDoList
+    {
+        margin: 10px 0 30px;
     }
 }

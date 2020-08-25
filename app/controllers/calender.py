@@ -165,22 +165,24 @@ def one_date_list():
         print(taskList)
         taskListJson = []
         for task in taskList:
+            taskStartTime = task.taskStartTime.strftime("%H:%M:%S")
+            taskEndTime = task.taskEndTime.strftime("%H:%M:%S")
             if task.taskStatus == 0:
-                taskListJson.append({"taskName": task.taskName, "taskStartTime": task.taskStartTime,\
-                                    "taskEndTime": task.taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
+                taskListJson.append({"taskName": task.taskName, "taskStartTime": taskStartTime,\
+                                    "taskEndTime": taskEndTime, "taskContent": (task.taskContent), "taskLocation": task.taskLocation,\
                                     "taskSRName": "", "taskSPName": ""})
             elif task.taskStatus == 1:
-                taskListJson.append({"taskName": task.taskName + "(申請中)", "taskStartTime": task.taskStartTime,\
-                                    "taskEndTime": task.taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
+                taskListJson.append({"taskName": task.taskName + "(申請中)", "taskStartTime": taskStartTime,\
+                                    "taskEndTime": taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
                                     "taskSRName": task.SR[0].userName, "taskSPName": ""})
             elif task.taskStatus > 1 and task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
                 if task.SP[0].userID == userID:
-                    taskListJson.append({"taskName": task.taskName, "taskStartTime": task.taskStartTime,\
-                                    "taskEndTime": task.taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
+                    taskListJson.append({"taskName": task.taskName, "taskStartTime": taskStartTime,\
+                                    "taskEndTime": taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
                                     "taskSRName": "", "taskSPName": task.SP[0].userName})
                 elif task.SR[0].userID == userID:
-                    taskListJson.append({"taskName": task.taskName, "taskStartTime": task.taskStartTime,\
-                                    "taskEndTime": task.taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
+                    taskListJson.append({"taskName": task.taskName, "taskStartTime": taskStartTime,\
+                                    "taskEndTime": taskEndTime, "taskContent": task.taskContent, "taskLocation": task.taskLocation,\
                                     "taskSRName": task.SR[0].userName, "taskSPName": ""})
         return jsonify({"rspCode": "20", "taskList": taskListJson})                                                 #成功取得
     else:

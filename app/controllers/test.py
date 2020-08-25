@@ -969,7 +969,7 @@ def output():
             query_data = account.query.filter_by(userID = userID).first()
         except:
             return jsonify({"rspCode": "400", "userID": "", "name": "", "userGender": "", "userAge": "", "userInfo": ""})      #資料庫錯誤
-        other_day = transferToDate(query_data.userBirthday)
+        other_day = query_data.userBirthday
         userAge = floor((datetime.date.today() - other_day).days/365.25)
         return jsonify({"rspCode": "200", "userID": userID, "name": query_data.name, "userGender": query_data.userGender,\
                         "userAge": userAge, "userInfo": query_data.userInfo})                                                  #成功取得個人資料

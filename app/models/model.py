@@ -1,13 +1,6 @@
 from . import db
 import datetime
 
-#將sql得到的datetime轉成yyyy-mm-dd hh:mm:ss
-def transferToDatetime(time):
-    return datetime.datetime(time.year, time.month, time.day, time.hour, time.minute)
-#將sql得到的datetime轉成yyyy-mm-dd
-def transferToDate(time):
-    return datetime.date(time.year, time.month, time.day)
-
 def partitionByTaskID(tasks, left, right):
     i = 0
     for j in range(right):
@@ -289,4 +282,52 @@ class taskCandidate(db.Model):
 
     def __init__(self, userID, taskID):
         self.userID =userID
-        self.taskID =taskID    
+        self.taskID =taskID
+
+class transferRecord(db.Model):
+    __tablename__ = 'transferRecord'
+    transferRecordID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
+
+    db_transferRecord_transferRecordAllotment = db.relationship('transferRecordAllotment', backref='transferRecord')
+    db_transferRecord_transferRecordApply = db.relationship('transferRecordApply', backref='transferRecord')
+    db_transferRecord_transferRecordTask = db.relationship('transferRecordTask', backref='transferRecord')
+
+    def __init__(self, userID, time):
+        self.userID = userID
+        self.time = time
+
+class transferRecordAllotment(db.Model):
+    __tablename__ = 'transferRecordAllotment'
+    transferRecordAllotmentID = db.Column(db.Integer, primary_key=True)
+    transferRecordID = db.Column(db.Integer, db.ForeignKey('transferRecord.transferRecordID'), nullable=False)
+    allotmentID = db.Column(db.Integer, db.ForeignKey('allotment.allotmentID'), nullable=False)
+    times = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, transferRecordID, allotmentID, times):
+        self.transferRecordID = transferRecordID
+        self.allotmentID = allotmentID
+        self.times = times
+
+class transferRecordApply(db.Model):
+    __tablename__ = 'transferRecordApply'
+    transferRecordApplyID = db.Column(db.Integer, primary_key=True)
+    transferRecordID = db.Column(db.Integer, db.ForeignKey('transferRecord.transferRecordID'), nullable=False)
+    applyID = db.Column(db.Integer, db.ForeignKey('apply.applyID'), nullable=False)
+    times = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, transferRecordID, applyID, times):
+        self.transferRecordID = transferRecordID
+        self.applyID = applyID
+        self.times = times
+
+class transferRecordTask(db.Model):
+    __tablename__ = 'transferRecordTask'
+    transferRecordTaskID = db.Column(db.Integer, primary_key=True)
+    transferRecordID = db.Column(db.Integer, db.ForeignKey('task.taskID'), db.ForeignKey('transferRecord.transferRecordID'), nullable=False)
+    taskID = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, transferRecordID, taskID):
+        self.transferRecordID = transferRecordID
+        self.taskID = taskID

@@ -50,27 +50,24 @@ def application():
         return redirect(url_for('USER.index'))
 
 #行事曆
-@USER.route('/schedule')
-def schedule():
-    return "此功能未完成"
+@USER.route('/calendar')
+def calendar():
     if session.get('userType') == userType['USER']:
-        return render_template('/USER/schedule.html')
+        return render_template('/USER/calendar.html')
     else:
         return redirect(url_for('USER.index'))
 
 #SP - 個人介面 - 雇員評分
-@USER.route('/SP/myself')
-def SP_myself():
-    return "此功能未完成"
+@USER.route('/SP/myself/<userID>')
+def SP_myself(userID):
     if session.get('userType') == userType['USER']:
         return render_template('/USER/myselfSP.html')
     else:
         return redirect(url_for('USER.index'))
 
 #SR - 個人介面 - 雇員評分
-@USER.route('/SR/myself')
-def SR_myself():
-    return "此功能未完成"
+@USER.route('/SR/myself/<userID>')
+def SR_myself(userID):
     if session.get('userType') == userType['USER']:
         return render_template('/USER/myselfSR.html')
     else:

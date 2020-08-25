@@ -876,7 +876,7 @@ def setting_userBirthday():
                     return jsonify({"rspCode": "402"})  #未來人錯誤
             try:
                 query_data = account.query.filter_by(userID = userID).first()
-                if other_day == transferToDate(query_data.userBirthday):
+                if other_day == query_data.userBirthday:
                     return jsonify({"rspCode": "403"})  #生日並未做更動
                 query_data.userBirthday = userBirthday
                 db.session.commit()

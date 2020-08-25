@@ -2,6 +2,7 @@ from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models.dao import *
 from ..models import db, userType
+from sqlalchemy import or_
 import os
 import datetime
 Comment = Blueprint('comment', __name__)
@@ -31,7 +32,7 @@ def output_notice_comment():
         #taskID錯誤
         return jsonify({"rspCode":"400","taskName":"","userName":""})
     taskName = task_.taskName
-    if task_.taskStatus in [3,6,7,8]:
+    if task_.taskStatus in [3,6,7,8,13,14,15,16]:
         if task_.SR[0].userID != userID_:
             if task_.SP[0].userID != userID_:
                     #不是此task的SR或SP
@@ -75,38 +76,27 @@ def comment_action():
     if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(days=1) or datetime.datetime.now() < task_.taskEndTime:
         #不在可評價時間
         return jsonify({"rspCode":"405"})
-    if task_.taskStatus in [3,6,7,8,13,14]: 
+    if task_.taskStatus in [3,6,7,8,13,14,15,16]: 
         if task_.SR[0].userID == int(userID_):   
-                if task_.taskStatus == 14:
-                    task_.taskStatus = 15
+                if task_.db_task_comment[0].commentStatus == -1:
                     comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                     comment_.SRComment = user_comment
-                    comment_.commentStatus = 0
-                elif task_.taskStatus == 13:
-                    #已經評論過
-                    return jsonify({"rspCode":"404"})
+                    if comment_.SPComment != None:
+                        comment_.commentStatus = 0
                 else:
-                    task_.taskStatus = 13
-                    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
-                    comment_.SRComment = user_comment
-                    comment_.commentStatus = -1
-                    db.session.commit()
+                    #已經不可評論
+                    return jsonify({"rspCode":"404"})
                 return jsonify({"rspCode":"200"})
         if task_.SP[0].userID == int(userID_):    
-            if task_.taskStatus == 13:
-                task_.taskStatus = 15
+            if task_.db_task_comment[0].commentStatus == -1:
                 comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
                 comment_.SPComment = user_comment
-                comment_.commentStatus = 0
+                if comment_.SRComment != None:
+                    comment_.commentStatus = 0
                 db.session.commit()
-            elif task_.taskStatus == 14:
-                #已經評論過
-                return jsonify({"rspCode":"404"})
             else:
-                comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
-                comment_.SPComment = user_comment
-                comment_.commentStatus = -2
-            db.session.commit()
+                #已經不可評論
+                return jsonify({"rspCode":"404"})
             return jsonify({"rspCode":"200"})
         else :
             #不是此task的SR或SP
@@ -129,21 +119,23 @@ def GM_output_judge_comment_page():
     try:
         for comment_ in comment_list:
             task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
-            if task_.taskStatus == 15 and comment_.commentStatus == 0:
+            if comment_.commentStatus == 0:
+                try:
+                    SRStar = comment_.SRComment.split(',')[0]
+                    SRComment = comment_.SRComment.split(',')[1]
+                except:
+                    SRStar = ""
+                    SRComment = ""
+                try:
+                    SPStar = comment_.SPComment.split(',')[0]
+                    SPComment = comment_.SPComment.split(',')[1]
+                except:
+                    SPStar = ""
+                    SPComment = ""
                 commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
-                    ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
-                    ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
-                    , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
-            elif task_.taskStatus == 14 and comment_.commentStatus == 0:
-                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
-                ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":None\
-                ,"SRName":task_.SR[0].name,"SRComment":None, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
-                , "SPStar":comment_.SPComment.split(',')[0], "SPComment":comment_.SPComment.split(',')[1],"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
-            elif task_.taskStatus == 13 and comment_.commentStatus == 0:
-                commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
-                    ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":comment_.SRComment.split(',')[0]\
-                    ,"SRName":task_.SR[0].name,"SRComment":comment_.SRComment.split(',')[1], "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
-                    , "SPStar":None, "SPComment":None,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
+                    ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":SRStar\
+                    ,"SRName":task_.SR[0].name,"SRComment":SRComment, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                    , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
     except:
         return jsonify({"commentList":"","rspCode":"401"})
@@ -159,10 +151,10 @@ def judge_commentaction():
         return jsonify({"rspCode":"500"})
     try:
         json = request.get_json()
+        taskID_ = int(json['taskID'])
+        status = json['status']
     except:
         return jsonify({"rspCode":"410"})
-    taskID_ = json['taskID']
-    status = json['status']
     comment_ = db.session.query(comment).filter(comment.taskID == taskID_).filter(comment.commentStatus == 0).first()
     if comment_ == None:
         #comment不存在或還不可檢查
@@ -197,6 +189,62 @@ def judge_commentaction():
         return jsonify({"rspCode":"402"})
     return jsonify({"rspCode":"200"})
 
+#評論歷史紀錄數量   md
+#GET
+#傳回rspCode,taskIDList
+@Comment.route("/rate_history_list_ammount", methods = ['GET'])
+def rate_history_list_ammount():
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300"})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"500"})
+    taskIDList = []
+    list = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
+    for commentID in list:
+        taskIDList.append(commentID[0])
+    return jsonify({"taskIDList":taskIDList})
 
+#評論歷史紀錄 md 十個
+#POST
+#傳taskID
+#傳回commentList(taskStartTime, taskEndTime , taskName, taskConent, taskID, SRID, SRName, SRStar,SRConmment, SRPhone, SPID, SPName, SPStar, SPComment, SRPPhone,gmID,approveResult)
+@Comment.route("/rate_history_list", methods = ['POST'])
+def rate_history_list():
+    if request.method != 'POST':
+        return jsonify({"rspCode":"300"})
+    if session.get('userType') != userType['GM']:
+        #此帳號不是GM
+        return jsonify({"commentList":"","rspCode":"500"})
+    try:
+        json = request.get_json()
+        taskID_ = int(json['taskID'])
+    except:
+        return jsonify({"rspCode":"410"})
+    comment_list = db.session.query(comment).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).filter(comment.taskID >= taskID_).limit(10).all()
+    commentList = []
+    try:
+        for comment_ in comment_list:
+            task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
+            try:
+                SRStar = comment_.SRComment.split(',')[0]
+                SRComment = comment_.SRComment.split(',')[1]
+            except:
+                SRStar = ""
+                SRComment = ""
+            try:
+                SPStar = comment_.SPComment.split(',')[0]
+                SPComment = comment_.SPComment.split(',')[1]
+            except:
+                SPStar = ""
+                SPComment = ""
+            commentList.append({"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskName":task_.taskName\
+                ,"taskContent":task_.taskContent,"taskID":str(task_.taskID),"SRID":str(task_.SR[0].userID),"SRStar":SRStar\
+                ,"SRName":task_.SR[0].name,"SRComment":SRComment, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
+                , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone,"gmID":str(comment_.adminID)\
+                ,"approveResult":str(comment_.commentStatus)})
+        return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
+    except:
+        #資料有問題
+        return jsonify({"commentList":"","rspCode":"401"})
 
 

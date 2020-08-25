@@ -179,8 +179,8 @@ def report_history_list():
 def report_history_list_amount():
     if request.method != 'GET':
         return jsonify({"rspCode":"300","reportList":"","reportAmount":""})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"500","reportList":"","reportAmount":""})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"500","reportList":"","reportAmount":""})
     try:
         report_list = db.session.query(report.reportID).filter(report.reportStatus != 0).all()
         reportList = []

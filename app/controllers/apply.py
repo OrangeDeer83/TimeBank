@@ -648,7 +648,22 @@ def apply_judge():
             for x in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
-                db.session.commit()
+                db.session.commit()     
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
+            db.session.add(transferRecordApply_)
+            db.session.commit()
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
+            db.session.add(transferRecordApply_)
+            db.session.commit()
+        else:
+            #不是1就只改status和adminID
+            db.engine.execute(alter_apply_status(applyStatus,applyID))
     else:
         #有輸入新的quota才檢查quota
         if not(quotaChange.isdigit()):

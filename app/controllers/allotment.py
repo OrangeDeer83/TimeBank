@@ -68,7 +68,6 @@ def allotment():
     except:
         return jsonify({"rspCode":"500","notAllow":""}) 
     #only all or one
-    
     kind = json['kind']
     #這裡的receiver如果kind不是all請給要配發的userID，all的話請給SA搜尋了什麼
     receiver = json['receiver']
@@ -112,6 +111,12 @@ def allotment():
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
                 db.session.commit()
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordAllotment_ = transferRecordAllotment(transferRecordID = transferRecord_.transferRecordID, allotmentID = allotmentID, times = 1)
+            db.session.add(transferRecordAllotment_)
+            db.session.commit()
             return jsonify({"rspCode":"200"})
         except:
             #可能是userID不存在或是adminID不存在
@@ -133,6 +138,12 @@ def allotment():
                     pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                     db.engine.execute(make_point_sql(pointID,adminID,userID))
                     db.session.commit()
+                transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+                db.session.add(transferRecord_)
+                db.session.commit()
+                transferRecordAllotment_ = transferRecordAllotment(transferRecordID = transferRecord_.transferRecordID, allotmentID = allotmentID, times = 1)
+                db.session.add(transferRecordAllotment_)
+                db.session.commit()
             return jsonify({"rspCode":"200","notAllow":""})
         except:
             return jsonify({"rspCode":"400","notAllow":"userID or adminID"})

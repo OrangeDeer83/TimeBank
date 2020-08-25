@@ -710,6 +710,12 @@ def SP_cancel_task():
                     return jsonify({"rspCode":"200"})
         except:
             return jsonify({"rspCode":"402"}) 
+    elif task_.SP[0].userID != int(userID_):
+        return jsonify({"rspCode":"401"})   
+    elif task_.taskStatus == 2:
+        task_.taskStatus =10
+        db.session.commit()
+        return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 9:
         task_.taskStatus = 11
         comment_ = db.session.query(comment).filter(comment.commentID == task_.taskID).first()
@@ -761,6 +767,20 @@ def task_finish_or_not():
                 pointList = db.session.query(point).filter(point.ownerID == int(userID_)).limit(task_.taskPoint).all()                
                 for p in pointList:
                     p.ownerID = task_.SP[0].userID
+                db.session.commit()
+                #SR
+                transferRecord_ = transferRecord(userID = task_.SR[0].userID,time = datetime.datetime.now())
+                db.session.add(transferRecord_)
+                db.session.commit()
+                transferRecordTask_ = transferRecordTask(transferRecordID = transferRecord_.transferRecordID, taskID = taskID_)
+                db.session.add(transferRecordTask_)
+                db.session.commit()
+                #SP
+                transferRecord_2 = transferRecord(userID = task_.SP[0].userID,time = datetime.datetime.now())
+                db.session.add(transferRecord_2)
+                db.session.commit()
+                transferRecordTask_2 = transferRecordTask(transferRecordID = transferRecord_2.transferRecordID, taskID = taskID_)
+                db.session.add(transferRecordTask_2)
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
             elif status == '0':

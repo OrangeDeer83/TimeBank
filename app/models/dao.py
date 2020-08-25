@@ -215,7 +215,21 @@ def task_status_4_dead_line(task_ID,newTaskStartTime):
 
 def task_status_5_dead_line(task_ID,newTaskEndTime):
     return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9)".format(task_ID,newTaskEndTime,task_ID)
-def commeny_status_0(task_ID,EndTime):
-    return "CREATE EVENT `commeny_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND (`comment`.`commentStatus` = -2 OR `comment`.`commentStatus` = -1)".format(task_ID,EndTime,task_ID)
-def task_status_15_dead_line(task_ID,newTaskEndTime):
-    return "CREATE EVENT `task_status_15_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '15' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 13 OR `task`.`taskStatus` = 6 OR `task`.`taskStatus` = 3 OR `task`.`taskStatus` = 7 OR `task`.`taskStatus` = 8 OR `task`.`taskStatus` = 14 )".format(task_ID,newTaskEndTime,task_ID)
+
+def comment_status_0(task_ID,EndTime):
+    return "CREATE EVENT `comment_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND NOT(`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL)".format(task_ID,EndTime,task_ID)
+
+def task_status_15_to_6(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_15_to_6-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '6' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 15".format(task_ID,newTaskEndTime,task_ID)
+
+def task_status_2_to_5(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_15_to_6-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2".format(task_ID,newTaskEndTime,task_ID)
+
+def task_status_16_to_3(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_16_to_3-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '3' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 16".format(task_ID,newTaskEndTime,task_ID)
+
+def task_status_14_to_7(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_14_to_7-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '7' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 14".format(task_ID,newTaskEndTime,task_ID)
+
+def task_status_13_to_3(task_ID,newTaskEndTime):
+    return "CREATE EVENT `task_status_13_to_3-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO UPDATE `task` SET `taskStatus` = '3' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 13".format(task_ID,newTaskEndTime,task_ID)

@@ -641,14 +641,29 @@ def apply_judge():
             plus = userPoint + int(quota)
             if period != 0:
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
-                db.engine.execute(alter_apply_rest_time(applyID,rest))
+                db.engine.execute(alter_apply_rest_time(applyID,rest - period))
             u = db.session.query(account).filter(account.userID == userID).first()
             u.userPoint = plus
             db.session.commit()
             for x in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
-                db.session.commit()
+                db.session.commit()     
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
+            db.session.add(transferRecordApply_)
+            db.session.commit()
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
+            db.session.add(transferRecordApply_)
+            db.session.commit()
+        else:
+            #不是1就只改status和adminID
+            db.engine.execute(alter_apply_status(applyStatus,applyID))
     else:
         #有輸入新的quota才檢查quota
         if not(quotaChange.isdigit()):
@@ -682,7 +697,7 @@ def apply_judge():
             db.engine.execute(plus_user_point(plus,userID))
             if period != 0:
                 rest = db.engine.execute(show_rest_time_by_applyID(applyID)).fetchone()[0]
-                db.engine.execute(alter_apply_rest_time(applyID,rest))
+                db.engine.execute(alter_apply_rest_time(applyID,rest - period))
             for x in range(int(quotaChange)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))

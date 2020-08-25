@@ -195,14 +195,17 @@ def judge_commentaction():
 @Comment.route("/rate_history_list_ammount", methods = ['GET'])
 def rate_history_list_ammount():
     if request.method != 'GET':
-        return jsonify({"rspCode":"300"})
+        return jsonify({"rspCode":"30","taskIDList":""})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":"500"})
-    taskIDList = []
-    list = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
-    for commentID in list:
-        taskIDList.append(commentID[0])
-    return jsonify({"taskIDList":taskIDList})
+        return jsonify({"rspCode":"31","taskIDList":""})
+    try:
+        taskIDList = []
+        list = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
+        for commentID in list:
+            taskIDList.append(commentID[0])
+        return jsonify({"rspCode":"20","taskIDList":taskIDList})
+    except:
+        return jsonify({"rspCode":"48","taskIDList":""})
 
 #評論歷史紀錄 md 十個
 #POST
@@ -211,15 +214,15 @@ def rate_history_list_ammount():
 @Comment.route("/rate_history_list", methods = ['POST'])
 def rate_history_list():
     if request.method != 'POST':
-        return jsonify({"rspCode":"300"})
+        return jsonify({"commentList":"","rspCode":"30","commentAmount":""})
     if session.get('userType') != userType['GM']:
         #此帳號不是GM
-        return jsonify({"commentList":"","rspCode":"500"})
+        return jsonify({"commentList":"","rspCode":"50","commentAmount":""})
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])
     except:
-        return jsonify({"rspCode":"410"})
+        return jsonify({"commentList":"","rspCode":"49","commentAmount":""})
     comment_list = db.session.query(comment).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).filter(comment.taskID >= taskID_).limit(10).all()
     commentList = []
     try:
@@ -242,9 +245,9 @@ def rate_history_list():
                 ,"SRName":task_.SR[0].name,"SRComment":SRComment, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
                 , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone,"gmID":str(comment_.adminID)\
                 ,"approveResult":str(comment_.commentStatus)})
-        return jsonify({"commentList":commentList,"rspCode":"200","commentAmount":str(len(commentList))})
+        return jsonify({"commentList":commentList,"rspCode":"20","commentAmount":str(len(commentList))})
     except:
         #資料有問題
-        return jsonify({"commentList":"","rspCode":"401"})
+        return jsonify({"commentList":"","rspCode":"41","commentAmount":""})
 
 

@@ -253,7 +253,7 @@ def SR_add_task():
         notAllow.append("taskEndTime")
     if not(newTaskPoint.isdigit()):
         notAllow.append("taskPoint")
-    elif len(newTaskPoint) > 5:
+    elif len(newTaskPoint) > 2:
         notAllow.append("taskPoint")
     elif int(newTaskPoint) < 0:
         notAllow.append("taskPoint")
@@ -492,7 +492,7 @@ def SR_edit_task():
         notAllow.append("taskEndTime")
     if not(newTaskPoint.isdigit()):
         notAllow.append("taskPoint")
-    elif len(newTaskPoint) > 5:
+    elif len(newTaskPoint) > 2:
         notAllow.append("taskPoint")
     elif int(newTaskPoint) < 0:
         notAllow.append("taskPoint")

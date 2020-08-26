@@ -713,7 +713,6 @@ def setting_accountPassword():
                 return jsonify({"rspCode": "402"})      #密碼並未做更動
             if re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
                 return jsonify({"rspCode": "403"})      #密碼格式不符
-            userID = request.get_json()['userID']
             try:
                 salt = generate_salt()
                 query_data.adminPassword = encrypt(adminPassword, salt)

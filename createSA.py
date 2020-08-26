@@ -7,12 +7,12 @@ def empty(data):
     return True
 
 def create_account():
-    db = pymysql.connect("192.168.1.147", "root", "root", "testTimeBank")
+    db = pymysql.connect("192.168.1.147", "root", "root", "timeBank")
     cursor = db.cursor()
 
-    cursor.execute("SELECT adminID FROM adminAccount WHERE adminType = '7'")
+    cursor.execute("SELECT adminName FROM adminAccount WHERE adminType = '7'")
     data = cursor.fetchone()
-
+    print(data)
     if empty(data):
         adminID = account_repeat(cursor)
         sql = enter_info(adminID)
@@ -27,7 +27,7 @@ def create_account():
         os.system("PAUSE")
         exit()
     else:
-        choose = input("已經存在一個超級管理者帳號'{}'請問是否要將他刪除並建立新帳號(yes/no): ".format(data[0]))
+        choose = input("已經存在一個超級管理者帳號"{}"請問是否要將他刪除並建立新帳號(yes/no): ".format(data[0]))
         while choose != "yes" and choose != "no":
             choose = input("請輸入yes或no來確認是否建立新帳號: ")
         if choose == "yes":
@@ -75,14 +75,8 @@ def enter_info(adminID):
     adminPassword = input("請輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、1個數字、1個符號）: ")
     while re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
         adminPassword = input("密碼不符合規範！\n請重新輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、一個數字、一個符號）:")
-    adminPhone = input("請輸入您的手機號碼: ")
-    while re.search(r"^[0-9]+$", adminPhone) == None:
-        adminPhone = input("手機號碼請輸入數字！\t/請重新輸入手機號碼: ")
-    adminMail = input("請輸入您的電子郵件: ")
-    while re.search(r"^[\w\d_\-\.]+\@[\w\d_\-\.]+\.[\w]$", adminMail):
-        adminMail = input("電子郵件有誤，請重新輸入正確的電子郵件: ")
     salt = hash.generate_salt()
-    sql = "INSERT INTO adminAccount(adminID, adminName, adminPassword, adminType, adminPhone, adminMail, salt) "
+    sql = "INSERT INTO adminAccount(adminID, adminName, adminPassword, adminType, salt) "
     sql += "VALUES('" + str(adminID) + "', '" + str(adminName) + "', '" + str(hash.encrypt(adminPassword, salt)) + "', '7', '" + str(adminPhone) + "', '" + str(adminMail) + "', '" + str(salt) + "')"
     print(sql)
     return sql

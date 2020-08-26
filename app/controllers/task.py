@@ -754,7 +754,7 @@ def task_finish_or_not():
         return jsonify({"rspCode":"403"})
     
     if task_.SR[0].userID == int(userID_) :
-         if task_.taskStatus in [2,16,15,9,10]:
+        if task_.taskStatus in [2,16,15,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
                     task_.taskStatus = 13

@@ -118,6 +118,8 @@ class allotment(db.Model):
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=False)
     allotmentTime = db.Column(db.DateTime, nullable = False)
 
+    db_allotment_transferRecordAllotment = db.relationship('transferRecordAllotment', backref='allotment')
+
     def __init__(self, userID, allotmentStatus, frequency, period, restTime, nextTime, quota, adminID, allotmentTime):
         self.userID = userID
         self.allotmentStatus = allotmentStatus
@@ -140,11 +142,13 @@ class apply(db.Model):
     nextTime = db.Column(db.Integer, nullable=True)
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=True)
     userID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=True)
-    conditionID = db.Column(db.Integer, nullable=False)
+    conditionID = db.Column(db.Integer, db.ForeignKey('applyCondition.conditionID'), nullable=False)
     result = db.Column(db.String, nullable=True)
     applyTime = db.Column(db.DateTime, nullable=False)
     oldConditionID = db.Column(db.Integer, nullable=True)
     judgeTime = db.Column(db.DateTime, nullable=True)
+
+    db_apply_transferRecordApply = db.relationship('transferRecordApply', backref='apply')
 
     def __init__(self, applyStatus, frequency, restTime, nextTime, adminID, userID, conditionID, result, applyTime, oldConditionID, judgeTime):
         self.applyStatus = applyStatus
@@ -167,6 +171,8 @@ class applyCondition(db.Model):
     className = db.Column(db.String(10), nullable=False)
     quota = db.Column(db.Integer, nullable=False)
     available = db.Column(db.Integer, nullable=False)
+
+    db_applyCondition_apply = db.relationship('apply', backref='applyCondition')
 
     def __init__(self, period, className, quota, available):
         self.period = period
@@ -263,6 +269,7 @@ class task(db.Model):
     db_task_comment = db.relationship('comment', backref='task')
     db_task_report = db.relationship('report', backref='task')
     db_task_taskCandidate = db.relationship('taskCandidate', backref='task')
+    db_task_transferRecordTask = db.relationship('transferRecordTask', backref='task')
 
     def __init__(self, taskName, taskContent, taskPoint, taskLocation, taskStartTime, taskEndTime, taskStatus):
         self.taskName = taskName
@@ -325,8 +332,8 @@ class transferRecordApply(db.Model):
 class transferRecordTask(db.Model):
     __tablename__ = 'transferRecordTask'
     transferRecordTaskID = db.Column(db.Integer, primary_key=True)
-    transferRecordID = db.Column(db.Integer, db.ForeignKey('task.taskID'), db.ForeignKey('transferRecord.transferRecordID'), nullable=False)
-    taskID = db.Column(db.Integer, nullable=False)
+    transferRecordID = db.Column(db.Integer, db.ForeignKey('transferRecord.transferRecordID'), nullable=False)
+    taskID = db.Column(db.Integer, db.ForeignKey('task.taskID'), nullable=False)
 
     def __init__(self, transferRecordID, taskID):
         self.transferRecordID = transferRecordID

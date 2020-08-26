@@ -480,15 +480,11 @@ def SR_edit_task():
     notAllow = []
     pointConflict= ''
     taskConflict= []
-    if newTaskName == '' or len(newTaskName) > 20:
+    if len(newTaskName) > 20:
         notAllow.append("taskName")
-    if newTaskStartTime == '':
+    if newTaskStartTime < str(datetime.datetime.now()):
         notAllow.append("taskStartTime")
-    elif newTaskStartTime < str(datetime.datetime.now()):
-        notAllow.append("taskStartTime")
-    if newTaskEndTime == '':
-        notAllow,append("taskEndTime")
-    elif newTaskStartTime > newTaskEndTime:
+    if newTaskStartTime > newTaskEndTime:
         notAllow.append("taskEndTime")
     if not(newTaskPoint.isdigit()):
         notAllow.append("taskPoint")
@@ -496,8 +492,6 @@ def SR_edit_task():
         notAllow.append("taskPoint")
     elif int(newTaskPoint) < 0:
         notAllow.append("taskPoint")
-    if newTaskLocation == '':
-        notAllow.append("taskLocation")
     if userID_ == '':
         notAllow.append("userID")
     elif userID_ != oldTask.SR[0].userID:
@@ -534,13 +528,18 @@ def SR_edit_task():
         pointConflict = ("-{}".format(str(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0])))
     if notAllow != [] or pointConflict != '' or taskConflict != []:
         return jsonify({"rspCode":"402","notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
-    newTask = task(taskContent= newTaskContent,taskName=newTaskName ,taskStartTime= newTaskStartTime,taskEndTime = newTaskEndTime,taskPoint = newTaskPoint,taskLocation = newTaskLocation ,taskStatus = 0)
-    oldTask.taskContent = newTaskContent
-    oldTask.taskName = newTaskName
-    oldTask.taskStartTime = newTaskStartTime
-    oldTask.taskStartTime = newTaskEndTime
-    oldTask.taskLocation = newTaskLocation
-    oldTask.taskPoint = int(newTaskPoint)
+    if newTaskContent != "":
+        oldTask.taskContent = newTaskContent
+    if newTaskName != "":
+        oldTask.taskName = newTaskName
+    if newTaskStartTime != ""
+        oldTask.taskStartTime = newTaskStartTime
+    if newTaskEndTime != ""
+        oldTask.taskStartTime = newTaskEndTime
+    if newTaskLocation != ""
+        oldTask.taskLocation = newTaskLocation
+    if newTaskPoint != ""
+        oldTask.taskPoint = int(newTaskPoint)
     db.session.commit()
     return jsonify({"rspCode":"200"})
 

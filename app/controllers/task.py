@@ -449,27 +449,28 @@ def SR_release():
 @Task.route("/SR/edit_task", methods = ['POST'])
 def SR_edit_task():
     if request.method != 'POST':
-        return jsonify({"rspCode":"300","notAllow":"","taskConflit":"","pointConflit":""})
-    try:
-        userID_ = int(session.get('userID'))
-    except:
+        return jsonify({"rspCode":"30","notAllow":"","taskConflit":"","pointConflit":""})
+    #try:
+    #    userID_ = int(session.get('userID'))
+    #except:
         #尚未登入
-        return jsonify({"rspCode":"500","notAllow":"","taskConflit":"","pointConflit":""})
-    if session.get('userType') != userType['USER']:
-        return jsonify({"rspCode":"500","notAllow":"","taskConflit":"","pointConflit":""})
+    #    return jsonify({"rspCode":"31","notAllow":"","taskConflit":"","pointConflit":""})
+    #if session.get('userType') != userType['USER']:
+    #    return jsonify({"rspCode":"31","notAllow":"","taskConflit":"","pointConflit":""})
     try:
         json = request.get_json()
+        userID_ = int(json['userID'])
     except:
-        return jsonify({"rspCode":"410","notAllow":"","taskConflit":"","pointConflit":""})
+        return jsonify({"rspCode":"49","notAllow":"","taskConflit":"","pointConflit":""})
     taskID_ = json['taskID']
     task_taeget = db.session.query(task).filter(task.taskID == int(taskID_),task.taskStatus == 0).first()
     if db.session.query(task).filter(task.taskID == int(taskID_)).first() == None:
         #此任務不存在
-        return jsonify({"rspCode":"400","notAllow":"","taskConflit":"","pointConflit":""})
+        return jsonify({"rspCode":"40","notAllow":"","taskConflit":"","pointConflit":""})
     oldTask = db.session.query(task).filter(task.taskID == int(taskID_),task.taskStatus == 0).first()
     if oldTask == None:
         #任務已有人申請
-        return ({"rspCode":"401","notAllow":"","taskConflit":"","pointConflit":""})
+        return ({"rspCode":"41","notAllow":"","taskConflit":"","pointConflit":""})
     json = request.get_json()
     newTaskName = json['taskName']
     newTaskStartTime = json['taskStartTime']
@@ -527,7 +528,7 @@ def SR_edit_task():
     if userAllPoint+ int(newTaskPoint) > db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]:
         pointConflict = ("-{}".format(str(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0])))
     if notAllow != [] or pointConflict != '' or taskConflict != []:
-        return jsonify({"rspCode":"402","notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
+        return jsonify({"rspCode":"42","notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
     if newTaskContent != "":
         oldTask.taskContent = newTaskContent
     if newTaskName != "":
@@ -541,8 +542,7 @@ def SR_edit_task():
     if newTaskPoint != ""
         oldTask.taskPoint = int(newTaskPoint)
     db.session.commit()
-    return jsonify({"rspCode":"200"})
-
+    return jsonify({"rspCode":"20"})
 #雇主確定雇員
 #傳cnadidateID,taskID
 #回傳rspCode

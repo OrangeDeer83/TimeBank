@@ -179,16 +179,7 @@ def Admin_login():
             return jsonify({"rspCode": "402"})                  #登入失敗，密碼錯誤
     else:
         return jsonify({"rspCode": "300"})                      #method使用錯誤
-'''
-#登出
-@Account.route('/logout')
-def logout():
-    if session.get('userID'):
-        session.clear()
-        return jsonify({"rspCode": "200"})  #登出成功
-    else:
-        return jsonify({"rspCode": "400"})  #登出失敗
-'''
+
 #一般使用者申請重設密碼信
 @Account.route('/USER/forgot_password', methods=['POST'])
 def USER_forgot_password():

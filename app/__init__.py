@@ -16,6 +16,7 @@ from .controllers.apply import Apply
 from .controllers.calendar import Calendar
 from .controllers.comment import Comment
 from .controllers.HRManage import HRManage
+from .controllers.notice import Notice
 from .controllers.point import Point
 from .controllers.portal import Portal
 from .controllers.profile import Profile
@@ -37,6 +38,7 @@ app.register_blueprint(Calendar, url_prefix='/calendar')
 app.register_blueprint(Comment, url_prefix='/comment')
 app.register_blueprint(GM, url_prefix='/GM')
 app.register_blueprint(HRManage, url_prefix='/HRManage')
+app.register_blueprint(Notice, url_prefix='/notice')
 app.register_blueprint(Point, url_prefix='/point')
 app.register_blueprint(Portal, url_prefix='/portal')
 app.register_blueprint(Profile, url_prefix='/profile')

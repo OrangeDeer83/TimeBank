@@ -132,7 +132,6 @@ class allotment(db.Model):
         self.allotmentTime = allotmentTime
 
 
-
 class apply(db.Model):
     __tablename__ = 'apply'
     applyID = db.Column(db.Integer, primary_key=True)
@@ -148,6 +147,7 @@ class apply(db.Model):
     oldConditionID = db.Column(db.Integer, nullable=True)
     judgeTime = db.Column(db.DateTime, nullable=True)
 
+    db_apply_noticeApply = db.relationship('noticeApply', backref='apply')
     db_apply_transferRecordApply = db.relationship('transferRecordApply', backref='apply')
 
     def __init__(self, applyStatus, frequency, restTime, nextTime, adminID, userID, conditionID, result, applyTime, oldConditionID, judgeTime):
@@ -209,6 +209,77 @@ class news(db.Model):
         self.newsTime = newsTime
 
 
+class notice(db.Model):
+    __tablename__ = 'notice'
+    ID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, db.ForeignKey('account.userID'), nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.Integer, nullable=False)
+    haveRead = db.Column(db.Integer, nullable=False)
+
+    db_notice_noticeApply = db.relationship('noticeApply', backref='notice')
+    db_notice_noticeCandidate = db.relationship('noticeCandidate', backref='notice')
+    db_notice_noticeTask = db.relationship('noticeTask', backref='notice')
+    db_notice_noticeReport = db.relationship('noticeReport', backref='notice')
+    db_notice_noticeAllotment = db.relationship('noticeAllotment', backref='notice')
+
+    def __init__(self, userID, time, status, haveRead):
+        self.userID = userID
+        self.time = time
+        self.status = status
+        self.haveRead = haveRead
+
+
+class noticeApply(db.Model):
+    __tablename__ = 'noticeApply'
+    ID = db.Column(db.Integer, primary_key=True)
+    noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
+    applyID = db.Column(db.Integer, db.ForeignKey('apply.applyID'), nullable=False)
+
+class noticeCandidate(db.Model):
+    __tablename__ = 'noticeCandidate'
+    ID = db.Column(db.Integer, primary_key=True)
+    noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
+    candidateID = db.Column(db.Integer, db.ForeignKey('taskCandidate.rejectID'), nullable=False)
+
+    def __init__(self, noticeID, candidateID):
+        self.noticeID = noticeID
+        self.candidateID = candidateID
+
+
+class noticeAllotment(db.Model):
+    __tablename__ = 'noticeAllotment'
+    ID = db.Column(db.Integer, primary_key=True)
+    noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
+    transferRecordAllotmentID = db.Column(db.Integer, db.ForeignKey('transferRecordAllotment.transferRecordAllotmentID'), nullable=False)
+
+    def __init__(self, noticeID, transferRecordID):
+        self.noticeID = noticeID
+        self.transferRecordID = transferRecordID
+
+
+class noticeReport(db.Model):
+    __tablename__ = 'noticeReport'
+    ID = db.Column(db.Integer, primary_key=True)
+    noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
+    reportID = db.Column(db.Integer, db.ForeignKey('report.reportID'), nullable=False)
+
+    def __init__(self, noticeID, reportID):
+        self.noticeID = noticeID
+        self.reportID = reportID
+
+
+class noticeTask(db.Model):
+    __tablename__ = 'noticeTask'
+    ID = db.Column(db.Integer, primary_key=True)
+    noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
+    taskID = db.Column(db.Integer, db.ForeignKey('task.taskID'), nullable=False)
+    
+    def __init__(self, noticeID, taskID):
+        self.noticeID = noticeID
+        self.taskID = taskID
+
+
 class point(db.Model):
     __tablename__ = 'point'
     pointID = db.Column(db.String(50), primary_key=True)
@@ -245,6 +316,8 @@ class report(db.Model):
     reportStatus = db.Column(db.Integer, nullable=False)
     reportUserID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=False)
     
+    db_report_noticeReport = db.relationship('noticeReport', backref='report')
+
     def __init__(self, taskID, adminID, reason, reportStatus, reportUserID):
         self.taskID = taskID
         self.adminID = adminID
@@ -270,6 +343,7 @@ class task(db.Model):
     db_task_report = db.relationship('report', backref='task')
     db_task_taskCandidate = db.relationship('taskCandidate', backref='task')
     db_task_transferRecordTask = db.relationship('transferRecordTask', backref='task')
+    db_task_noticeTask = db.relationship('noticeTask', backref='task')
 
     def __init__(self, taskName, taskContent, taskPoint, taskLocation, taskStartTime, taskEndTime, taskStatus):
         self.taskName = taskName
@@ -287,6 +361,8 @@ class taskCandidate(db.Model):
     userID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=False)
     taskID = db.Column(db.Integer, db.ForeignKey('task.taskID'), nullable=False)
 
+    db_taskCandidate_noticeCandidate = db.relationship('noticeCandidate', backref='taskCandidate')
+
     def __init__(self, userID, taskID):
         self.userID =userID
         self.taskID =taskID
@@ -294,7 +370,7 @@ class taskCandidate(db.Model):
 class transferRecord(db.Model):
     __tablename__ = 'transferRecord'
     transferRecordID = db.Column(db.Integer, primary_key=True)
-    userID = db.Column(db.Integer, nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('account.userID'), nullable=False)
     time = db.Column(db.DateTime, nullable=False)
 
     db_transferRecord_transferRecordAllotment = db.relationship('transferRecordAllotment', backref='transferRecord')
@@ -305,6 +381,7 @@ class transferRecord(db.Model):
         self.userID = userID
         self.time = time
 
+
 class transferRecordAllotment(db.Model):
     __tablename__ = 'transferRecordAllotment'
     transferRecordAllotmentID = db.Column(db.Integer, primary_key=True)
@@ -312,10 +389,13 @@ class transferRecordAllotment(db.Model):
     allotmentID = db.Column(db.Integer, db.ForeignKey('allotment.allotmentID'), nullable=False)
     times = db.Column(db.Integer, nullable=False)
 
+    db_transferRecordAllotment_noticeAllotment = db.relationship('noticeAllotment', backref='transferRecordAllotment')
+
     def __init__(self, transferRecordID, allotmentID, times):
         self.transferRecordID = transferRecordID
         self.allotmentID = allotmentID
         self.times = times
+
 
 class transferRecordApply(db.Model):
     __tablename__ = 'transferRecordApply'
@@ -328,6 +408,7 @@ class transferRecordApply(db.Model):
         self.transferRecordID = transferRecordID
         self.applyID = applyID
         self.times = times
+
 
 class transferRecordTask(db.Model):
     __tablename__ = 'transferRecordTask'

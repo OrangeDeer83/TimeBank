@@ -27,7 +27,7 @@ def create_account():
         os.system("PAUSE")
         exit()
     else:
-        choose = input("已經存在一個超級管理者帳號"{}"請問是否要將他刪除並建立新帳號(yes/no): ".format(data[0]))
+        choose = input("已經存在一個超級管理者帳號「{}」請問是否要將他刪除並建立新帳號(yes/no): ".format(data[0]))
         while choose != "yes" and choose != "no":
             choose = input("請輸入yes或no來確認是否建立新帳號: ")
         if choose == "yes":

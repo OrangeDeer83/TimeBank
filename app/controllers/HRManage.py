@@ -8,7 +8,6 @@ from ..models import db, userType
 HRManage = Blueprint('HRManage', __name__)
 
 
-
 #新增管理員
 @HRManage.route('/create/Admin', methods=['POST'])
 def create_admin():
@@ -301,3 +300,40 @@ def delete_GM_check_password():
             return jsonify({"rspCode": "500"})                  #權限不符
     else:
         return jsonify({"rspCode": "300"})                      #method使用錯誤
+
+#更改Admin密碼
+@HRManage.route('/changePassword', methods=['POST'])
+def changePassword():
+    if request.method == 'POST':
+        if session.get('userType') == userType['SA']:
+            try:
+                value = request.get_json()
+            except:
+                return jsonify({"rspCode": "40"})          #非法字元
+            adminID = value['adminID']
+            SAID = session.get('adminID')
+            try:
+                SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
+            except:
+                return jsonify({"rspCode": "30"})              #資料庫錯誤
+            if session.get('AdminConfirm') == SA_data.adminPassword:
+                try:
+                    query_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
+                    if query_data == None:
+                        return jsonify({"rspCode": "41"})  #adminID不在資料庫中，前端可能遭到竄改
+                    if query_data.adminType < userType['AS'] and query_data.adminType > userType['AG']:
+                        return jsonify({"rspCode": "42"})      #該帳號目前不是admin
+                    newPassword = value['newPassword']
+                    salt = generate_salt()
+                    query_data.salt = salt
+                    query_data.adminPassword = encrypt(newPassword, salt)
+                    db.session.commit()
+                except:
+                    return jsonify({"rspCode": "30"})          #資料庫錯誤
+                return jsonify({"rspCode": "20"})              #刪除成功
+            else:
+                return ({"rspCode": "18"})                 #尚未輸入第一次密碼
+        else:
+            return jsonify({"rspCode": "50"})                  #權限不符
+    else:
+        return jsonify({"rspCode": "31"})                      #method使用錯誤

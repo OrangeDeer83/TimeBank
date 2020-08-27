@@ -4,6 +4,10 @@
 
 .approveDiv
 {
+    background-color: var(--background-color);
+    color: var(--background-text-color);
+    border: var(--background-border);
+    font-weight: var(--background-font-weight);
     padding: 30px 0;
 }
 
@@ -17,13 +21,13 @@
 
 .formColumn
 {   
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
 }               
 
 .formLine
 {
-    padding-top: 20px;
+    padding-top: 0;
 }
 
 .formText
@@ -47,9 +51,10 @@
 .approveButton button
 {
     margin: auto;
-    background-color: #293F66;
-    border: 1px solid #5E86C1;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    border-bottom: none;
     padding: 10px 24px;
     cursor: pointer;
     float: left;                            
@@ -71,39 +76,43 @@
 
 .approveButton button:hover
 {
-    background-color: #5E86C1;
-    color: #DC143C;
+    background-color: var(--button-hover-background-color);
+    color: white;
 }
 
 /* 搜尋使用者名稱 */
 #searchUser
 {
     float: left;
-    width: 75%;
     height: 30px;
     padding: 10px;
     font-size: 15px;
-    border: 1px solid white;    
-    background: #f1f1f1;
+    background: var(--background-color);
+    border: var(--button-background-border);    
 }
 
 #searchUserButton 
 {
     float: left;
-    width: 20%;
     height: 30px;
-    background: #483D8B;
+    background: var(--button-background-color);
     color: white;
     font-size: 15px;
     padding: 0;
-    border: 1px solid white;
+    border: var(--button-background-border);
     border-left: none;                     /* 避免雙重border */
     cursor: pointer;
 }
 
 #searchUserButton:hover 
 {
-    background: #5E86C1;
+    background: var(--button-hover-background-color);
+}
+
+#formInformation1, #formInformation2
+{
+    border: var(--button-background-border);
+    border-top: none;       
 }
 
 /* 申請內容的文字間格 */
@@ -111,6 +120,13 @@
 {
     padding: 5px;
 }              
+
+.applyDescription
+{      
+    border: 1px solid #CCCCCC;
+    resize: none;
+    background-color: var(--background-color);
+}
 
 .quodaChange
 {
@@ -122,18 +138,19 @@
 .applyButton
 {
     margin: 0 10px;
-    width: 100px;
+    width: 80px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
     transition: .5s;
 }
 
 .applyButton:hover, .page button:hover
 {
-    background-color: #87CEFA;
-    color: #DC143C;
+    background-color: var(--button-hover-background-color);
+    color: white;
 }
 
 /* 上一頁及下一頁按鈕 */
@@ -146,10 +163,11 @@
 
 .page button
 {
+    margin: 0px 5px 5px 5px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
-    border-color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     float: left;
 }
 
@@ -163,6 +181,11 @@
 .allApprove
 {
     float: right;
+}
+
+.allApprove button
+{
+    margin: 0px 0px 5px 0px;
 }
 
 #allApproveButton
@@ -180,8 +203,9 @@
     margin: 0 10px;
     width: 80px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
     transition: .5s;
     cursor: pointer;
@@ -189,22 +213,20 @@
 
 .formButton:hover
 {
-    background-color: #5E86C1;
-}
-
-.applyButton, .formButton, .page button
-{
-    border: 1px solid #5E86C1;
+    background-color: var(--button-hover-background-color);
+    color: white;
 }
 
 @media (min-width: 800px)
 {
+    body
+    {
+        margin-top: 80px;
+    }
     .approveDiv
     {
         width: 800px;
-        height: 730px;
-        background-color: #293F66;
-        color: white;
+        height: 660px;
         margin: auto;
         border-radius: 12px;
     }
@@ -216,25 +238,30 @@
     {
         margin: 0 0 0 20px;
     }
+    #searchUser
+    {
+        width: 75%;
+    }
+    #searchUserButton 
+    {
+        width: 20.3%;
+    }
 
     /* 申請內容-四欄式排版的外框架 */
     #formInformation1
     {
-        border: 1px solid white;
-        margin: 28px 0 0 20px;
+        margin: 0 0 0 20px;
         width: 760px;
-        height: 230px;
+        height: 250px;
     }
     #formInformation2
     {
-        border: 1px solid white;
         margin: 0 0 0 20px;
         width: 760px;
         height: 230px;
     }
 
     /* 申請內容-四欄式排版 */
-
     .Information1
     {
         width: 165px;
@@ -243,36 +270,40 @@
     }
     .Information2
     {
-        width: 165px;
+        width: 255px;
         float: left;
         margin: 20px 0 0 10px;
     }
     .Information3
     {
-        width: 165px;
+        width: 135px;
         float:left;
         margin: 20px 0 0 10px;
     }
     .Information4
     {
-        width: 165px;
+        width: 115px;
         float:left;
         margin: 20px 0 0 20px;
     }
 
     /* 申請原因的外框大小 */
+    #applyReason0
+    {
+        margin-top: 40px;
+    }
     .applyDescription
     {
-        width: 120px;
-        height: 120px;
-        background-color: #293F66;
-        color: white;
-        border: 1px solid white;
-        resize: none;
+        width: 100px;
+        height: 50px;
+        background-color: var(--background-color);
+        color: var(--background-text-color);
+        border: 1px solid #CCCCCC;
+        overflow: auto;
     }
     .applyButton
     {
-        width: 160px;
+        width: 120px;
         margin: 10px 0 0 0;
     }
 
@@ -280,12 +311,11 @@
 
     .formLine1
     { 
-        margin: 10px 0 0 300px;
+        margin: 10px 0 0 310px;
         padding: 0 10px;
     }
 
     /* 上下一頁按鈕 */
-
     .page button
     {
         margin: 0 0 0 10px;
@@ -303,18 +333,97 @@
 
 @media (max-width: 799px)
 {
+    body
+    {
+        margin-top: 50px;
+        height: 100%;
+        background-color: var(--background-color);
+    }
     .approveDiv
     {
         margin: 0;
+        height: 100%;
         border: 0px;
+    }
+     #searchUser
+    {
+        width: 75%;
+    }
+    #searchUserButton 
+    {
+        width: 25%;
     }
     .formText
     {
         text-align: center;
     }
+    .detail
+    {
+        text-align: left;
+    }
+    .applyDescription
+    {
+        width: 80%;
+        vertical-align: middle;
+    }
+    #detail1
+    {
+    	text-align: right;
+    }
+    .formLine1
+    {
+    	margin-top: 10px;
+    }
+    .page
+    {
+    	margin-left: 10px
+    }
 }
 
+@media (max-width: 435px)
+{
+    .approveDiv
+    {
+        height: 1060px;
+    }
+}
+
+@media (max-width: 433px)
+{
+    .approveDiv
+    {
+        height: 1090px;
+    }
+}
+
+@media (max-width: 388px)
+{
+    .approveDiv
+    {
+        height: 1160px;
+    }
+    .page, .allApprove
+    {
+        width: 100%;
+    }
+    .page
+    {
+        margin-left: 0;
+    }
+    .allApprove button
+    {
+        margin: 0;
+    }
+    .formButton
+    {
+        width: 100%;
+    }
+    #allApproveButton, #allVetoButton
+    {
+        margin: 1px 0;
+    }
+}
 .quodaChange
 {
-    width: 50px;
+    width: 55px;
 }

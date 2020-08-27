@@ -26,12 +26,8 @@ function showError() {;}
 
 function getTaskList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/task/SP/output/refused");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/refused");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()

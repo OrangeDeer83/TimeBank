@@ -196,8 +196,8 @@ def judge_commentaction():
 def rate_history_list_ammount():
     if request.method != 'GET':
         return jsonify({"rspCode":"30","taskIDList":""})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"31","taskIDList":""})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"31","taskIDList":""})
     try:
         taskIDList = []
         list = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
@@ -215,9 +215,9 @@ def rate_history_list_ammount():
 def rate_history_list():
     if request.method != 'POST':
         return jsonify({"commentList":"","rspCode":"30","commentAmount":""})
-    #if session.get('userType') != userType['GM']:
+    if session.get('userType') != userType['GM']:
         #此帳號不是GM
-    #    return jsonify({"commentList":"","rspCode":"50","commentAmount":""})
+        return jsonify({"commentList":"","rspCode":"50","commentAmount":""})
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])

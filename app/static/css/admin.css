@@ -2,41 +2,54 @@
 
 /* 新增管理員 */
 
+input[type="submit"]
+{ 
+    -webkit-border-radius: 5px; 
+    background: var(--button-background-color);
+    color: var(--button-background-text-color);
+    font-size: 16px;
+    cursor: pointer;
+    border:var(--button-background-border);
+    padding: 2.5px;
+    border-radius:10px;
+    text-align:center;
+    cursor: pointer;
+    width: 100%;
+}
 .addPart
 {
 	overflow: auto;
-	background-color: #ddd;
-	border: 2px dotted white;	
+	background-color: var(--background-color);
+	border: var(--background-border);	
 	padding: 2%;
 }
 
 #password
 {
 	margin-left: 1vw;
-	width: calc(65vw - 250px);
+	width: calc(65vw - 220px);
 }
 
 .deleteDiv
 {
 	margin: auto;
 	width: 70%;			
-	padding: 1%;
+	padding: 2px;
 	overflow: auto;
-	border: 2px solid white;
-	background-color: #ddd;
+	background-color: var(--background-color);
+	border: var(--background-border);
+	border-top: none;
 }
 
 #deleteDiv
 {
 	display: none;
 }
-
-#error
+.delete
 {
-	color: red;
-	text-align: center;
+	width: 80px;
+	float: right;
 }
-
 .permissionDescription
 {
 	font-size: 15px;
@@ -46,47 +59,47 @@
 }
 
 /* 管理員資訊 */
-.tableTitle
-{
-	background-color: #787f86;
-	text-align: center;
-}
-
 #infoTable td, #infoTable th
 {
-	border: 1px ridge #ddd;
 	padding: 10px;
 }
-
-#infoTable td:hover
-{
-	background-color: #7e8b98;
-}
-
 #infoTable td, .tableTitle
 {
 	padding-top: 8px;
 	padding-bottom: 8px;
-	background-color: #88919a;
+	background-color: var(--background-color);
+}
+.tableTitle
+{
+	background-color: #865c1d;
 	color: white;
+	text-align: center;
+	border: var(--background-border);
+	border-bottom: none;
+}
+#infoTable
+{
+	color: var(--background-text-color);
+	background-color: brown;
 }
 
 /* 增加及刪除按鈕 */
 #addNewButton, .delete, #checkPassword, .pageButton
 {
-	border: 2px solid white;
+	background-color: var(--button-background-color);
+	border: var(--background-border);
+	border: var(--button-background-border);
 	text-align: center;
 	border-radius:10px;
-	background-color: white;
-	color:#787f86;
 	cursor: pointer;
+	color: var(--button-background-text-color);
+	font-size: 16px;
+	padding: 1px;
 }
 
-#addNewButton:hover, .delete:hover, #checkPassword:hover, .pageButton:hover
+#addNewButton:hover, .delete:hover, #checkPassword:hover, .pageButton:hover, input[type="submit"]:hover
 {
-	border: 2px solid #787f86;
-	background-color: #787f86;
-	color:white;
+	background-color: var(--button-hover-background-color);
 }
 
 #changePageDiv
@@ -95,19 +108,43 @@
     display: flex;
     justify-content: space-around;
 }
+#addNewButton,#checkPassword
+{
+	float: right;
+	width: 80px;
+}
+.addButton
+{
+	margin-top: 15px;
+}
+#tablePart
+{
+	margin-bottom: 30px;
+}
 
+#resetButton
+{
+	float: right;
+	width: 80px;
+	margin-right: 6px;
+}
+.authority, .userName, #reset
+{
+	margin: 3px 0;
+}
+.pageButton
+{
+	padding: 5px;
+}
 @media (min-width: 660px) 
 {
 	/* 新增管理員 */
 	.addPart
 	{
-		background-color: #ddd;
 		width: 70%;
 		margin: auto;
 		margin-top: 100px;
-		padding: 1%;
 		overflow: auto;
-		border: 2px dotted white;
 	}
 
 	/* 選擇權限 */
@@ -145,19 +182,6 @@
 		overflow: auto;
 	}
 	
-	/* 新增按鈕 */
-	.addButton
-	{
-		margin-left: 7vw;
-		display: inline-block;
-		padding: 5px;
-	}
-
-	.addButton button
-	{
-		width: 6vw;
-		height: 2vw;
-	}
 
 	/* 管理員資訊 */
 	#infoTable,.tableTitle
@@ -165,31 +189,26 @@
 		margin: auto;
 		width: 70%;
 	}
+}
+
+@media(min-width: 1100px)
+{
 	.authority
 	{
-		width: 12%;
 		float: left;
+		width: 120px;
 	}
 	.userName
 	{
-		width: 25%;
 		float: left;
+		width: 210px;
 	}
-	.email
+	#reset
 	{
-		width: 30%;
 		float: left;
+		width: 230px;
 	}
-	.phone
-	{
-		width: 22%;
-		float: left;
-	}
-	.delete
-	{
-		width: 8%;
-		float: right;
-	}
+
 }
 
 @media(max-width: 970px)
@@ -208,18 +227,6 @@
 	{
 		width: 40vw;
 	}
-	#addNewButton
-	{
-		margin-left: 9.5vw;
-		width: 40vw;
-		height: 3vw;
-		display: inline-block;
-	}
-	.delete
-	{
-		width: 10vw;
-		height: 3.5vw;
-	}
 }
 
 @media (max-width: 659px) 
@@ -235,6 +242,7 @@
 	.choose
 	{
 		width: 100%;
+		margin-bottom: 5px;
 	}
 	.choosePermissionLeft
 	{
@@ -251,38 +259,20 @@
 	#selectPermission, .idText
 	{
 		width: 40vw;
-		height: 30px;
+		height: 25px;
 	}
-	#addNewButton
-	{
-		margin: 3vw 0 0 15vw;
-		width: 60vw;
-		height: 30px;
-		display: inline-block;
-	}
-	
 	/* 管理員資訊 */
 	#infoTable,.tableTitle
 	{
 		margin: auto;
 		width: 100%;
 	}
-	.delete
-	{
-		margin-left: 75vw;
-		width: 15vw;
-		height: 6vw;
-		padding: 1%;
-	}
 }
-
-@media(max-width: 480px)
+@media (max-width: 420px)
 {
-	.delete
+	.choosePermissionLeft
 	{
-		margin-left: 75vw;
-		width: 15vw;
-		height: 8vw;
-		padding: 1%;
+		margin-left: 5vw;
+		width: 27vw;
 	}
 }

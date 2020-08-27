@@ -2,14 +2,23 @@
 
 /* User設定 */
 
-.settingPhotoDiv
+.content
 {
-    float: left;
+    margin: auto;
+    background-color: var(--background-color);
+    color: var(--background-text-color);  
+    font-weight: var(--background-font-weight);
 }
 
 .photo:hover
 {
     opacity: 0.8; 
+}
+
+#profile
+{       
+    background-color: var(--background-color);
+    resize: none;
 }
 
 #upload_img
@@ -25,7 +34,7 @@
 
 .settingDiv
 {
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .formColumn
@@ -43,6 +52,7 @@
     outline: none;
     border: 1px solid #CCCCCC;
     border-radius: 5px;
+    overflow: auto;
 }
 
 .formRadios
@@ -66,8 +76,9 @@
 {
     width: 80px;
     height: 30px;
-    color: white;
-    background-color: #293F66;   
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);   
     border-radius: 3px;
     transition: .5s;
     cursor: pointer;
@@ -75,7 +86,7 @@
 
 .formButton:hover, .formButton2:hover
 {
-    background-color: #5E86C1;
+    background-color: var(--button-hover-background-color);
 }
 
 .error
@@ -91,19 +102,27 @@
 
 @media (min-width: 1000px)
 {
+    body
+    {
+        margin-top: 70px;
+    }
     .content
     {
         margin: auto;
+        margin-bottom: 20px;
         width: 1000px;
-        height: 650px;
-        color: white;
-        background-color: #293F66;        
+        height: 600px;
+        border: var(--background-border);
+    }
+    .settingPhotoDiv
+    {
+        float: left;
     }
     .settingDiv
     {
-        margin: 100px 10px 10px 200px;
+        margin: 50px 10px 10px 200px;
         width: 800px;
-        padding: 40px;        
+        padding: 0;
         border-radius: 12px;
     }
     #formTitle
@@ -130,8 +149,6 @@
         width: 250px;
         height: 200px;
         color: white;
-        background-color: #293F66;        
-        resize: none;
     }
 
     .formLabelDiv, .formTextDiv
@@ -141,14 +158,14 @@
     .formLabelDiv
     {
         margin-right: 15px;
-        width: 85px;        
+        width: 85px;
         text-align: right;
     }
     .formRadios
     {
-        width: 300px;        
+        width: 300px;
         text-align: left;
-        display: inline-block;       
+        display: inline-block;
     }
     .formText
     {
@@ -168,10 +185,7 @@
     {
         margin-left: 80px;
     }
-    .formButton, .formButton1, .formButton2
-    {
-        border: 1px solid #5E86C1;
-    }
+    
     .formLine1
     {
         margin-right: 95px;
@@ -188,149 +202,55 @@
 
 @media (max-width: 999px)
 {
-    .content
-    {
-        margin: auto;
-        width: 90vw;
-        height: 650px;
-        color: white;
-        background-color: #293F66;        
-    }
-    .settingDiv
-    {
-        margin: 5vw 5vw 5vw 0vw;
-        width: 90vw;
-        padding: 40px;        
-        border-radius: 12px;
-    }
-    #formTitle
-    {
-        margin: 10px 0;
-        text-align: center;
-        font-size: 24px;
-        font-weight: 800;
-    }
-    .photo
-    {
-        margin: 50px 0 0 40px; 
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-    #file
-    {
-        margin: 10px 0 0 30px;
-    }
-    #profile
-    {
-        width: 230px;
-        height: 200px;
-        color: white;
-        background-color: #293F66;        
-        resize: none;
-    }
-    .formLabelDiv, .formTextDiv
-    {
-        display: inline-block;
-    }
-    .formLabelDiv
-    {
-        margin-right: 15px;
-        width: 85px;        
-        text-align: right;
-    }
-    .formRadios
-    {
-        width: 20vw;        
-        text-align: left;
-        display: inline-block;       
-    }
-    .formText
-    {
-        width: 20vw;
-    }
-    .formButton
-    {
-        margin-left: 10px;
-    }
-
-    .formButton1
-    {
-        margin-left: 100px;
-    }
-
-    .formButton2
-    {
-        margin-left: 70px;
-    }
-    .formButton, .formButton1, .formButton2
-    {
-        border: 1px solid #5E86C1;
-    }
-    .formLine1
-    {
-        margin-right: 95px;
-    }
-    .formLine, .formLine1
-    {
-        padding-top: 20px;
-    }
-    .error
-    {
-        margin: 0 50px 0 150px;
-    }
-}
-
-@media (min-height: 580px)
-{
-    .settingDiv
-    {
-        margin-top: calc(50vh - 300px);
-    }
-}
-
-@media (max-width: 715px)
-{
     body
     {
-        background-color: #293F66;
+        width: 100%;
+        height: 100%;
+        background-color: var(--background-color);
     }
     .content
     {
+        width: 100%;
         margin-top: 70px
     }
      #formTitle
     {
         display: none;
     }
+    .formLabelDiv
+    {
+        margin-top: 5px;
+    }
     .formPicture
     {
-        margin: 0 0 0 25vw;
-    }
-    .upload
-    {
-        margin-left: 1vw;
         width: 100%;
+        display: inline-block;
     }
-     .photo
+    .photo
     {
+        margin-top: 10px;
+        margin-left: 38%;
         width: 170px;
         height: 170px;
-        padding: 20px;
+        border-radius: 50%;
+    }
+    .formButton1
+    {
+        margin-left: 50%;
+        width: 100%;
     }
     #file
     {
-        margin-left: 15vw;
+        margin-left: 10%;
     }
     #profile
     {
-        width: 100%;
-        height: 100px;
-        background-color: #E6E6FA;
-        color: black;
+        width: 92%;
     }
-
+    .formButton2
+    {
+        width: 22.5%;
+    }
     .settingDiv
     {
         margin: 0;
@@ -338,50 +258,83 @@
     }
     .formText
     {
-        width: 250px;
+        width: 60%;
         text-align: center;
+    }
+    .formLine1
+    {
+        margin-left: 10%;
+        width: 100%;
+        text-align: left;
+    }
+    #formLine2
+    {
+        margin-left: 37.5%;
     }
     .formRadios
     {
-        width: 250px;
-        padding-top: 10px;
+        margin-left: 30%;
+        width: 40%;
+        padding-top: 5px;
+    }
+    .radioText
+    {
+        margin: 0px 10px;
+    }
+    #formButton3
+    {  
+        margin-left: 60%;
+        width: 20%;
+    }
+    .formSave
+    {
+        width: 20%;
     }
     .formButton
     {
         margin-left: 10px;
-    }
-
-    .formButton1
-    {
-        margin-left: 85px;
-    }
-
-    .formButton2
-    {
-        margin-left: 22.5vw;
-    }
-    .formButton, .formButton1, .formButton2
-    {
-        border: 1px solid #5E86C1;
-    }
-    .formSave
-    {
-        margin-top: 10px;
-    }
-    .formSave1
-    {
-        margin: 10px 95px 20px 0px;
-    }
-    .formLine1
-    {
-        margin-left: 17vw;
-    }
-    .formLine, .formLine1
-    {
-        padding-top: 20px;
+        width: 100%;
     }
     .error
     {
         margin: 0 calc(50vw - 150px);
+    }
+}
+
+@media (max-width: 460px)
+{
+    .formText
+    {
+        width: 100%;
+    }
+    .formSave
+    {
+        margin: 0;
+        width: 100%;
+    }
+    .formButton
+    {
+        margin: 5px 0;
+    }
+    .formButton1
+    {
+        margin-left: 0;
+        width: 100%;
+    }
+    .photo
+    {
+        margin-left: 31%;
+    }
+    .formLine1, .formLine2
+    {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 385px)
+{
+    .photo
+    {
+        margin-left: 25%;
     }
 }

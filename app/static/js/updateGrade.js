@@ -23,12 +23,8 @@ const pageNumber = document.getElementById("pageNumber");
 
 function getGradeList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/comment/GM/output/judge_comment_page");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open("GET", "http://192.168.1.144:5000/comment/GM/output/judge_comment_page");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -77,7 +73,7 @@ function showDetail()
     document.getElementById("taskID").innerHTML = gradeList[currentGrade].taskID;
     document.getElementById("taskName").innerHTML = gradeList[currentGrade].taskName;
     document.getElementById("taskTime").innerHTML = gradeList[currentGrade].taskStartTime + " ~ " + gradeList[currentGrade].taskEndTime;
-    document.getElementById("taskContent").innerHTML = gradeList[currentGrade].taskContent;
+    document.getElementById("taskContent").value = gradeList[currentGrade].taskContent;
     document.getElementById("SRName").innerHTML = gradeList[currentGrade].SRName;
     document.getElementById("SRPhone").innerHTML = gradeList[currentGrade].SRPhone;
     document.getElementById("SRRate").innerHTML = gradeList[currentGrade].SRStar;
@@ -90,12 +86,8 @@ function showDetail()
 
 function grade(type)
 {
-    var updateGradeRequest;
-    if (window.XMLHttpRequest)
-        updateGradeRequest = new XMLHttpRequest();
-    else
-        updateGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGradeRequest.open("POST", "/comment/judge_commentaction");
+    var updateGradeRequest = new XMLHttpRequest();
+    updateGradeRequest.open("POST", "http://192.168.1.144:5000/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[currentGrade].taskID, "status": type, "adminID": "5"})); // adminID only for beta
     updateGradeRequest.onload = function()
@@ -135,12 +127,8 @@ function gradeAll(type)
 
 function sendGradeAll(index, type)
 {
-    var updateGradeRequest;
-    if (window.XMLHttpRequest)
-        updateGradeRequest = new XMLHttpRequest();
-    else
-        updateGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGradeRequest.open("POST", "/comment/judge_commentaction");
+    var updateGradeRequest = new XMLHttpRequest();
+    updateGradeRequest.open("POST", "http://192.168.1.144:5000/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[index].taskID, "status": type, "adminID": "1"})); // adminID only for beta
     updateGradeRequest.onload = function()

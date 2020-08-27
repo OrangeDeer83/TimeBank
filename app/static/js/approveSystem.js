@@ -17,12 +17,8 @@ var searchText;
 function getUserList()
 {
     searchText = document.getElementById("searchUser").value
-    var getListRequest;
-    if (window.XMLHttpRequest)
-        getListRequest = new XMLHttpRequest();
-    else
-        getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/apply/show_apply_status_0");
+    var getListRequest = new XMLHttpRequest();
+    getListRequest.open("POST", "http://192.168.1.144:5000/apply/show_apply_status_0");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"name": searchText}));
     getListRequest.onload = function()
@@ -37,7 +33,7 @@ function getUserList()
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;
                 allList[4] = rst.userSPRate;
-                //allList[5] = rst.userPoint;
+                allList[5] = rst.userPoint;
                 allList[6] = rst.applyID;
                 allList[7] = rst.applyClass;
                 allList[8] = rst.applyQuota;
@@ -61,9 +57,9 @@ function computePage(type)
     switch (type)
     {
         case 0: 
-            if (allList[0].length != allList[2].length || /*allList[1].length != allList[2].length ||*/
+            if (allList[0].length != allList[1].length || allList[1].length != allList[2].length ||
                 allList[2].length != allList[3].length || allList[3].length != allList[4].length ||
-                allList[4].length != allList[6].length || /*allList[5].length != allList[6].length ||*/
+                allList[4].length != allList[5].length || allList[5].length != allList[6].length ||
                 allList[6].length != allList[7].length || allList[7].length != allList[8].length ||
                 allList[8].length != allList[9].length || allList[9].length != allList[10].length ||
                 allList[10].length != allList[11].length || allList[11].length != allList[12].length)
@@ -120,8 +116,8 @@ function showDetail()
 function putDetail(index)
 {
     index;
-    document.getElementById("userName" + index).innerHTML = allList[0][thisPageList[index]];
-    //document.getElementById("userName" + index).innerHTML = allList[1][thisPageList[index]];
+    document.getElementById("name" + index).innerHTML = allList[0][thisPageList[index]];
+    document.getElementById("userName" + index).innerHTML = allList[1][thisPageList[index]];
     var SRRate = Math.round(allList[3][thisPageList[index]] * 100) / 100;
     if (SRRate == 0)
         document.getElementById("scoreSR" + index).innerHTML = "無";
@@ -136,6 +132,7 @@ function putDetail(index)
         document.getElementById("scoreSP" + index).innerHTML = SPRate;
     else
         document.getElementById("scoreSP" + index).innerHTML = SPRate + ".0";
+    document.getElementById("userPoint" + index).innerHTML = allList[5][thisPageList[index]];
     document.getElementById("applyClass" + index).innerHTML = allList[7][thisPageList[index]];
     document.getElementById("applyQuota" + index).innerHTML = allList[8][thisPageList[index]];
     document.getElementById("changeQuota" + index).value = allList[8][thisPageList[index]];
@@ -147,12 +144,8 @@ function putDetail(index)
 
 function downloadPDF(index)
 {
-    var downloadPDFRequest;
-    if (window.XMLHttpRequest)
-        downloadPDFRequest = new XMLHttpRequest();
-    else
-        downloadPDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
+    var downloadPDFRequest = new XMLHttpRequest();
+    downloadPDFRequest.open("POST", "http://192.168.1.144:5000/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
     downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
     downloadPDFRequest.onload = function()
@@ -199,12 +192,8 @@ function approve(index, type)
 
 function sendApprove(index, type ,newQuota)
 {
-    var approvePDFRequest;
-    if (window.XMLHttpRequest)
-        approvePDFRequest = new XMLHttpRequest();
-    else
-        approvePDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    approvePDFRequest.open("POST", "/apply/apply_judge");
+    var approvePDFRequest = new XMLHttpRequest();
+    approvePDFRequest.open("POST", "http://192.168.1.144:5000/apply/apply_judge");
     approvePDFRequest.setRequestHeader("Content-Type", "application/json");
     approvePDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]], "applyStatus": type, "quotaChange": newQuota, "adminID": "1"}));
     approvePDFRequest.onload = function()

@@ -26,8 +26,9 @@
 {
     padding: 20px;
     vertical-align : top;
-    background-color: #1353A5;
-    color: white;
+    background-color: var(--background-color); 
+    color: var(--background-text-color);
+    border: var(--background-border);
     height: calc(100vh - 150px);
     min-height: 600px;
     max-height: 850px;
@@ -108,16 +109,16 @@
 .button
 {
     font-size: 16px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
-    border: 1px solid #2BE1EE;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
 }
 
 .button:hover
 {
-    color: black;
-    background-color: #2BE1EE;
+    background-color: var(--button-hover-background-color);
+    color: var(--button-background-text-color);
     transition: .5s;
 }
 
@@ -130,7 +131,7 @@
 
 .news
 {
-    border: 3px solid #F1F1F1;
+    border: 1.5px solid #ca9174;
     border-top: 0;
     font-size: 16px;
     line-height: 29px;
@@ -138,7 +139,7 @@
 
 #news0
 {
-    border-top: 3px solid #F1F1F1;
+    border-top: 1.5px solid #ca9174;
 }
 
 .newsBar

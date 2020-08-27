@@ -30,12 +30,8 @@ function showError(rspCode)
 // Get application list from server.
 function getGMList()
 {
-    var getALRequest;
-    if (window.XMLHttpRequest)
-        getALRequest = new XMLHttpRequest();
-    else
-        getALRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getALRequest.open("GET", "/HRManage/GM_apply_list");
+    var getALRequest = new XMLHttpRequest();
+    getALRequest.open("GET", "http://192.168.1.144:5000/HRManage/GM_apply_list");
     getALRequest.setRequestHeader("Content-Type", "application/json");
     getALRequest.send();
     getALRequest.onload = function()
@@ -113,12 +109,8 @@ function showThisPageList()
 
 function approve(index)
 {
-    var approveRequest;
-    if (window.XMLHttpRequest)
-        approveRequest = new XMLHttpRequest();
-    else
-        approveRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    approveRequest.open("POST", "/HRManage/approveGM");
+    var approveRequest = new XMLHttpRequest();
+    approveRequest.open("POST", "http://192.168.1.144:5000/HRManage/approveGM");
     approveRequest.setRequestHeader("Content-Type", "application/json");
     approveRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID}));
     approveRequest.onload = function()
@@ -144,12 +136,8 @@ function approve(index)
 
 function reject(index)
 {
-    var rejectRequest;
-    if (window.XMLHttpRequest)
-        rejectRequest = new XMLHttpRequest();
-    else
-        rejectRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    rejectRequest.open("POST", "/HRManage/rejectGM");
+    var rejectRequest = new XMLHttpRequest();
+    rejectRequest.open("POST", "http://192.168.1.144:5000/HRManage/rejectGM");
     rejectRequest.setRequestHeader("Content-Type", "application/json");
     rejectRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID}));
     rejectRequest.onload = function()

@@ -3,28 +3,32 @@
 /* 主動配發介面 */
 
 
-#searchType
+#searchPart
 {
-    margin-right: 15px;
-    font-size: 18px;
+    width: 90%;
 }
 /*搜尋*/
 input[type="text"]
 {
     padding:5px 15px; 
-    border:2px #787f86 solid;
+    border:var(--button-background-border);
     -webkit-border-radius: 5px;
     border-radius: 5px; 
     width: 95%;
 }
 input[type="submit"]
-{
-    padding:5px; 
-    border:2px #787f86 solid;
-    -webkit-border-radius: 5px;
-    border-radius: 5px; 
-    width: 100px;
+{ 
+    -webkit-border-radius: 5px; 
+    width: 90px;
+    background: var(--button-background-color);
+    color: var(--button-background-text-color);
     font-size: 14px;
+    cursor: pointer;
+    float: right;
+    border:var(--button-background-border);
+    padding: 8px;
+    border-radius:10px;
+    text-align:center;
     cursor: pointer;
 }
 
@@ -47,35 +51,34 @@ input[type="submit"]
 .tabOne a
 {
     text-decoration:none;
-    color:black;
+    color: #e4b369;
     padding: 4px 8px;
 }
     
-.tabOne a:hover,.thisPage
+.tabOne a:hover,.thisPage a
 {
-    color: #05439e;
-    border-bottom: 2px solid #818C9F;
-    padding-bottom: 4px;
+    color: orange !important;
+    border-bottom: 2px solid #F4D35E !important;
+    padding-bottom: 4px !important;
 }
-
 /*表格*/
 .enterName
 {
     float:left ;
-    width: 70%;
+    width: 69.5%;
 }
 .search
 {
     float: right ;
-    margin-left: 5%;
 }
 #searchImg
 {
     width: 45px;
+    float: left;
 }
 #giveTable
 {
-    border-top: 1.5px solid #736d6d;
+    border-top: 1.5px solid brown;
     width: 80%;
     margin: auto;
     padding:10px 0;
@@ -88,17 +91,20 @@ input[type="submit"]
 }
 
 /*配發介面表格*/
+#giveTable
+{
+   color: var(--background-text-color);
+}
 #giveTable td, #giveTable th
 {
-    border: 1px ridge #ddd;
+    border: var(--background-border);
     padding: 10px;
 }
 #giveTable td 
 {
     padding-top: 8px;
     padding-bottom: 8px;
-    background-color: #787f86;
-    color: white;
+    background-color: var( --background-color);
 }
 #giveTable tr:nth-child(1) td
 {
@@ -112,18 +118,20 @@ input[type="submit"]
 }
 .giveBotton
 {
+    background: var(--button-background-color);
+    color: var(--button-background-text-color);
+    width: 90px;
     float:right;
-    border: 1.5px solid white;
-    padding: 0.5%;
+    border: var(--button-background-border);
+    padding: 8px;
     border-radius:10px;
     text-align:center;
     cursor: pointer;
 }
-.giveBotton:hover
+
+.giveBotton:hover,input[type="submit"]:hover
 {
-    background-color: white;
-    color:#787f86;
-    border: 2px solid #787f86;
+    background-color: var(--button-hover-background-color);
 }
 
 /*配發+紀錄內容*/
@@ -161,11 +169,28 @@ input[type="submit"]
 {
     float: left;
 }
+.title2
+{
+    float: left;
+    width: 85px;
+}
+.title3
+{
+    float: left;
+    width: 100px;
+    margin-left: -5px;
+    margin-right: 20px;
+}
+.part1
+{
+    overflow: auto;
+    margin: 5px 0;
+}
 /* 上下一頁 */
 .formPage
 {
 
-    margin-top: 10px;
+    margin: 10px 0;
     margin: auto;
     width: 80vw;
     color: black;
@@ -179,9 +204,9 @@ input[type="submit"]
     margin: auto;
     height: 30px;
     color: black;
-    background-color: #ADADC1;
+    background-color: #F4D35E;
     border-color: white;
-    border: 1px solid #8E9AAF;
+    border: 1px solid #FAF0CA;
     padding: 5px;
     cursor: pointer;
 }
@@ -205,7 +230,26 @@ input[type="submit"]
         align-items: center;
     } 
 }
-
+@media(min-width: 930px)
+{
+    .part1
+    {
+        float: left;
+        overflow: auto;
+    }
+    .title2
+    {
+        float: left;
+        width: 85px;
+    }
+    .title3
+    {
+        float: left;
+        width: 100px;
+        margin-left: -5px;
+        margin-right: 20px;
+    }
+}
 /*申請頁面*/
 @media (max-width: 1150px) 
 {
@@ -232,10 +276,6 @@ input[type="submit"]
     {
         width: 75%;
     }
-    input[type="submit"]
-    {
-        width: 55px;
-    }
     #searchType
     {
         margin-right: 15px;
@@ -243,6 +283,14 @@ input[type="submit"]
     }
 }
 
+@media (max-width: 540px) 
+{
+    #searchType
+    {
+        display: none;
+    }
+}
+  
 /*申請+紀錄頁面*/
 @media (max-width: 400px) 
 {
@@ -270,10 +318,6 @@ input[type="submit"]
     {
         float: right;
     }
-    input[type="submit"]
-    {
-        width: 40px;
-    }
 }
 @media (max-width: 280px) 
 {
@@ -286,24 +330,8 @@ input[type="submit"]
     {
         width: 30%;
     }
-    .search
-    {
-        margin-left:45%;
-    }
     .tabs .tabOne
     {
         margin-right: 10px;
     }
-}
-.title2
-{
-    float: left;
-    width: 85px;
-}
-.title3
-{
-    float: left;
-    width: 100px;
-    margin-left: -5px;
-    margin-right: 20px;
 }

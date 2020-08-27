@@ -39,12 +39,8 @@ function showError(rspCode)
 // Get group name from server.
 function getGroup()
 {
-    var getGroupRequest;
-    if (window.XMLHttpRequest)
-        getGroupRequest = new XMLHttpRequest();
-    else
-        getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "/apply/output_apply_group");
+    var getGroupRequest = new XMLHttpRequest();
+    getGroupRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -70,12 +66,8 @@ function getGroup()
 // Check the condition pdf is exist or not.
 function getApplier()
 {
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -104,12 +96,8 @@ function getApplier()
 // Get class from server and display on html.
 function getClass()
 {
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/apply/output_apply_class");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -135,7 +123,6 @@ function getClass()
 }
 function showClass(allClass)
 {
-    console.log(allClass)
     allClass.reverse();
     userClass.options.length = 1;
     for (var i = 0; i < allClass.length; i++)
@@ -187,12 +174,8 @@ function getAllPeriodQuota()
 }
 function getPeriodQuota(index)
 {
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "/apply/output_allow_period");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("POST", "http://192.168.1.144:5000/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     console.log(classList[index][0]);
     getApplierRequest.send(JSON.stringify({"class": classList[index][0]}));
@@ -271,12 +254,8 @@ function showQuota()
 // Update eeach data.
 function updateGroup()
 {
-    var updateGroupRequest;
-    if (window.XMLHttpRequest)
-        updateGroupRequest = new XMLHttpRequest();
-    else
-        updateGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateGroupRequest.open("POST", "/apply/update_apply_group");
+    var updateGroupRequest = new XMLHttpRequest();
+    updateGroupRequest.open("POST", "http://192.168.1.144:5000/apply/update_apply_group");
     updateGroupRequest.setRequestHeader("Content-Type", "application/json");
     updateGroupRequest.send(JSON.stringify({"groupName": document.getElementById("group").value}));
     updateGroupRequest.onload = function()
@@ -306,17 +285,21 @@ function updateFile()
 }
 
 // Edit quota.
-function editQuota(index)
+function editQuota()
 {
+    var indexList = [0, 30, 90, 180, 365];
     if (userClass.selectedIndex != 0)
     {
-        var newQuota = (document.getElementById("period" + index).value) * 1;
-        if(0 <= index && index < 100000)
+        for (var i = 0; i < 5; i++)
         {
-            classList[userClass.selectedIndex - 1][index + 1] = newQuota;
-            showQuota();
+            var newQuota = (document.getElementById("period" + indexList[i]).value) * 1;
+            if(0 <= newQuota && newQuota < 50)
+            {
+                classList[userClass.selectedIndex - 1][indexList[i] + 1] = newQuota;
+                showQuota();
+            }
+            else error.innerHTML = "請輸入位於0~50之間的數值";
         }
-        else error.innerHTML = "請輸入位於0~99999之間的數值";
     }
     console.log(classList[userClass.selectedIndex - 1]);
 }
@@ -327,12 +310,8 @@ function updateClassPeriodQuota()
 }
 function updateOneClassPeriodQuota(index)
 {
-    var updateCPQRequest; // ClassPeriodQuota
-    if (window.XMLHttpRequest)
-        updateCPQRequest = new XMLHttpRequest();
-    else
-        updateCPQRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    updateCPQRequest.open("POST", "/apply/update_add_apply_quota");
+    var updateCPQRequest = new XMLHttpRequest();
+    updateCPQRequest.open("POST", "http://192.168.1.144:5000/apply/update_add_apply_quota");
     updateCPQRequest.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({"class": classList[index][0], "once": classList[index][1], "one": classList[index][2], "three": classList[index][3], "six": classList[index][4], "year": classList[index][5]}));
     updateCPQRequest.send(JSON.stringify({"class": classList[index][0], "once": classList[index][1]+"", "one": classList[index][2]+"", "three": classList[index][3]+"", "six": classList[index][4]+"", "year": classList[index][5]+""}));
@@ -364,12 +343,8 @@ function updateOneClassPeriodQuota(index)
 function deleteClass()
 {
     index = userClass.selectedIndex - 1;
-    var deleteClassRequest;
-    if (window.XMLHttpRequest)
-        deleteClassRequest = new XMLHttpRequest();
-    else
-        deleteClassRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteClassRequest.open("POST", "/apply/delete_apply_class");
+    var deleteClassRequest = new XMLHttpRequest();
+    deleteClassRequest.open("POST", "http://192.168.1.144:5000/apply/delete_apply_class");
     deleteClassRequest.setRequestHeader("Content-Type", "application/json");
     deleteClassRequest.send(JSON.stringify({"class": classList[index][0]}));
     deleteClassRequest.onload = function()

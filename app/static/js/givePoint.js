@@ -12,15 +12,11 @@ const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
 var searchText;
 
-function getUserList(type)
+function getUserList()
 {
     searchText = document.getElementById("searchText").value
-    var getListRequest;
-    if (window.XMLHttpRequest)
-        getListRequest = new XMLHttpRequest();
-    else
-        getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/allotment/show_user");
+    var getListRequest = new XMLHttpRequest();
+    getListRequest.open("POST", "http://192.168.1.144:5000/allotment/show_user");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"target": searchText}));
     getListRequest.onload = function()
@@ -181,15 +177,11 @@ function allotment(index)
 
 function sendAllotment(kind, receiver, quota, period, frequency)
 {
-    var allotmentRequest;
-    if (window.XMLHttpRequest)
-        allotmentRequest = new XMLHttpRequest();
-    else
-        allotmentRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    allotmentRequest.open("POST", "/allotment/allotment");
+    var allotmentRequest = new XMLHttpRequest();
+    allotmentRequest.open("POST", "http://192.168.1.144:5000/allotment/allotment");
     allotmentRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency/*, "adminID": "35"*/}))
-    allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency/*, "adminID": "35"*/}));
+    console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}))
+    allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}));
     allotmentRequest.onload = function()
     {
         console.log(allotmentRequest.responseText);

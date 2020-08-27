@@ -13,10 +13,10 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css" />
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarVisitor.css')}}" type="text/css" />
-        <link rel="stylesheet" href="{{url_for('static', filename='css/carousel2.css')}}" type="text/css" />
-        <link rel="stylesheet" href="{{url_for('static', filename='css/homepage.css')}}" type="text/css" />
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css" />
+        <link rel="stylesheet" href="../static/css/navbarVisitor.css" type="text/css" />
+        <link rel="stylesheet" href="../static/css/carousel2.css" type="text/css" />
+        <link rel="stylesheet" href="../static/css/homepage.css" type="text/css" />
     </head>
 
     <body>
@@ -26,9 +26,9 @@
                     <div class="navbarLeft">
                     </div>
                     <div class="navbarCenter">
-                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
+                        <a class="navbarBrand" href="portal.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
                         </a>
                     </div>
                     <div class="navbarRight">
@@ -37,22 +37,22 @@
                                 <div class="unspanned" id="loginMenu" onclick="clickToSpan('loginForm')">登入</div>
                                 <div class="unspanned loginForm" id="loginForm" name="loginForm">
                                     <div class="loginFormContainer">
-                                        <div class="loginItem loginFont">使用者名稱</div>
+                                        <div class="loginItem loginFont">使用者帳號</div>
                                         <div class="loginItem">
-                                            <input class="loginItem loginInput" id="userName" type="text" placeholder="輸入您的使用者名稱" maxlength="20" onkeypress="if(event.keyCode == 13){login(1);}" />
-                                            <div id="idError" class="error">請輸入使用者名稱(1至20位字元)</div>
+                                            <input class="loginItem loginInput" id="userName" type="text" placeholder="輸入您的使用者帳號" maxlength="20" onkeypress="if(event.keyCode == 13){login(1);}" />
+                                            <div id="idError" class="error">請輸入使用者帳號(1至20位字元)</div>
                                         </div>
                                         <div class="loginItem loginFont">密碼</div>
                                         <div class="loginItem">
                                             <input class="loginItem loginInput" id="userPassword" type="password" placeholder="輸入您的密碼" maxlength="30" onkeypress="if(event.keyCode == 13){login(1);}" />
                                             <div id="passwordError" class="error">請輸入密碼，8-30字元</div>
-                                            <div id="loginError1" class="error">使用者名稱或密碼錯誤，請再試一次</div>
+                                            <div id="loginError1" class="error">使用者帳號或密碼錯誤，請再試一次</div>
                                             <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
                                             <div id="loginError3" class="error">等待伺服器回應中...</div>
                                         </div>
-                                        <a href="{{url_for('USER.forgot_password')}}"><div id="loginForgot">忘記密碼？</div></a>
+                                        <a href="forgotPasswordUser.html"><div id="loginForgot">忘記密碼？</div></a>
                                         <input class="loginItem loginButton" type="submit" value="登入" onclick="login(1)" />
-                                        <a href="{{url_for('USER.register')}}"><span class="loginItem loginButton">註冊</span></a>
+                                        <a href="registerUser.html"><span class="loginItem loginButton">註冊</span></a>
                                     </div>
                                 </div>
                             </li>
@@ -113,7 +113,7 @@
                     </div>
                     <div class="newsDetail" id="newsDetail">
                         <div class="formNewsImg" id="formNewsImg">
-                            <div class="newsImgDiv"><img src="{{url_for('static', filename='img/photo1.jpg')}}" alt="news photo" id="newsImg"></div>
+                            <div class="newsImgDiv"><img src="../static/img/photo1.jpg" alt="news photo" id="newsImg"></div>
                         </div><!--
                      --><div class="formNewsContent" id="newsContentBlock">
                             <textarea class="newsContent" id="newsContent" readonly>最新消息內容</textarea>
@@ -136,7 +136,7 @@
                 <ul class="footerLinks">
                     <li><a href="tel:+886-960998689" class="footerA"> 連絡電話: 0960-998-689 |</a></li>
                     <li><a href="mailto:timebank@taipay.tw" class="footerA">timebank@taipay.tw |</a></li>
-                    <li><a href="{{url_for('GM.register')}}" class="footerA" style="font-size: 18px;">加入我們</a></li>
+                    <li><a href="registerGM.html" class="footerA" style="font-size: 18px;">加入我們</a></li>
                 </ul>
                 <span class="copyrighttext">台景達金融科技股份有限公司 &copy; 2020</span>
                 <span>時間銀行</span>
@@ -149,9 +149,9 @@
                 國立臺南大學 <a href="mailto:NUTN@gmail.com" class="footerA">&nbspTimebank 網頁製作小組 監製@2020</a>
             </div>
         </footer>
-        <script src="{{url_for('static', filename='js/login.js')}}"></script>
-        <script src="{{url_for('static', filename='js/carousel.js')}}"></script>
-        <script src="{{url_for('static', filename='js/homepage.js')}}"></script>
+        <script src="../static/js/login.js"></script>
+        <script src="../static/js/carousel.js"></script>
+        <script src="../static/js/homepage.js"></script>
     </body>
 
 </html>

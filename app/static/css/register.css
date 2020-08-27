@@ -4,6 +4,10 @@
 
 .registerDiv
 {
+    background-color: var(--background-color);
+    color: var(--background-text-color);
+    border: var(--background-border);
+    font-weight: var();    
     padding: 30px 0;
 }
 
@@ -54,15 +58,16 @@
     margin: 0px 10px;
     width: 80px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
     transition: .5s;
 }
 
 .formButton:hover
 {
-    background-color: #5E86C1;
+    background-color: var(--button-hover-background-color);
 }
 
 .error
@@ -78,12 +83,14 @@
 
 @media (min-width: 800px)
 {
+	body
+	{
+		margin-top: 100px;
+	}
     .registerDiv
     {
-        width: 500px;
-        background-color: #293F66;
-        color: white;
         margin: auto;
+        width: 500px;   
         border-radius: 12px;
     }
     .formLabelDiv, .formTextDiv
@@ -106,10 +113,6 @@
         text-align: left;
         width: 300px;
     }
-    .formButton
-    {
-        border: 1px solid #5E86C1;
-    }
     .error
     {
         margin: 0 50px 0 150px;
@@ -126,13 +129,20 @@
 
 @media (max-width: 799px)
 {
+	body
+	{
+		height: 100%;
+		background-color: var(--background-color);
+	}
     .registerDiv
     {
-        margin: 50px 0 0;
+        margin: 50px 0;
+        height: 800px;
         border: 0px;
     }
     .formText
     {
+    	width: 80%;
         text-align: center;
     }
     .formRadios
@@ -142,5 +152,21 @@
     .error
     {
         margin: 0 calc(50vw - 150px);
+    }
+}
+
+@media (max-width: 340px)
+{
+    .formText
+    {
+    	width: 90%;
+    }
+}
+
+@media (max-width: 305px)
+{
+    .formText
+    {
+    	width: 98.5%;
     }
 }

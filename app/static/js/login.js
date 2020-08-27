@@ -7,8 +7,6 @@ var passwordError = document.getElementById("passwordError");
 var loginError1 = document.getElementById("loginError1");
 var loginError2 = document.getElementById("loginError2");
 
-var request;
-
 userName.addEventListener("input", userIDVerify);
 userPassword.addEventListener("input", userPasswordVerify);
 
@@ -83,12 +81,8 @@ function login()
     if (validated())
     {
         console.log("Avalible id and password.");
-        if (window.XMLHttpRequest)
-            request = new XMLHttpRequest();
-        else // Old IE browser.
-            request = new ActiveXObject("Microsoft.XMLHTTP");
-        
-        request.open("POST", "/test/USER/login");
+        var request = new XMLHttpRequest();
+        request.open("POST", "http://192.168.1.144:5000/account/USER/login");
         console.log("XMLHttpRequest opened.");
 
         request.setRequestHeader("Content-Type", "application/json");
@@ -96,6 +90,7 @@ function login()
         console.log("JSON sent.");
         request.onload = function()
         {
+            document.getElementById("loginError3").removeAttribute("style");
             console.log(request.responseText);
             rst = JSON.parse(request.responseText);
             switch (rst.rspCode)
@@ -112,6 +107,7 @@ function login()
                     showLoginError2();
             }
         }
+        document.getElementById("loginError3").style.display = "block";
     }
     else
     {

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>通知</title>
+
+        <meta charset="utf-8" />
+        <meta name="keywords" content="TimeBank, 時間銀行, 交換服務" />
+        <meta name="description" content="時間銀行以交換服務的時數為概念，不再以金錢，而是以時數衡量工作的價值，人人每日都有平等的24小時，如何善用有限的時間，將成為關鍵。" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        
+        <link rel="stylesheet" href="../static/css/notification.css">
+        <link rel="stylesheet" href="../static/css/navbarUser.css">
+        <link rel="stylesheet" href="../static/css/common.css">
+
+    </head>
+    <body>
+        <header id="userNavbar"></header>
+        <div class="bodyContainer">
+            <div class="notificationPart">
+                <table id="notificationTable">
+                    <tr><td>
+                        <div class="introduction">尚無通知</div>
+                    </td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="formPage">
+            <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+            <span class="formPageNumber" id="pageNumber">1/1</span>
+            <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+        </div>
+    </body>
+    <script src="../static/js/clickToSpan.js"></script>
+    <script src="../static/js/navbarUser.js"></script>
+    <script src="../static/js/point.js"></script>
+</html>

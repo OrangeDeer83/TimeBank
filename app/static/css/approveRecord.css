@@ -4,6 +4,10 @@
 
 .approveDiv
 {
+    background-color: var(--background-color);
+    color: var(--background-text-color);  
+    border: var(--background-border);
+    font-weight: var(--background-font-weight);    
     padding: 30px 0;
 }
 
@@ -17,22 +21,23 @@
 
 .formColumn
 {   
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
 }               
 
 .formLine
 {
-    padding-top: 20px;
+    margin: 0;
+    padding-top: 0px;
 }
 
 .formText
 {
+    width: 300px;
+    height: 30px;
+    text-align: left;
     vertical-align: middle;
     padding-left: 5px;
-    text-align: left;
-    height: 30px;
-    width: 300px;
     outline: none;
     border: 1px solid #CCCCCC;
     border-radius: 5px;
@@ -47,12 +52,13 @@
 .approveButton button
 {
     margin: auto;
-    background-color: #293F66;
-    border: 1px solid #5E86C1;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    border-bottom: none;
     padding: 10px 24px;
     cursor: pointer;
-    float: left;                            /* 並排按鈕 */
+    float: left;                            
 }
 
 /* 清除浮動 */
@@ -70,20 +76,20 @@
 
 .approveButton button:hover
 {
-    background-color: #5E86C1;
-    color: #DC143C;
+    background-color: var(--button-hover-background-color);
+    color: white;
 }
 
 /* 搜尋:使用者名稱、申請類別、申請週期、申請結果 */
-#searchUser, #searchCategory, #searchCycle, #searchResult
+#searchUser, #searchClass, #searchPeriod, #searchResult
 {
     height: 30px;
     padding: 0 10px;
-    border: 1px solid white;    
-    background: #f1f1f1;
+    background: var(--background-color);
+    border: var(--button-background-border);   
 }
 
-#searchCategory, #searchCycle, #searchResult
+#searchClass, #searchPeriod, #searchResult
 {
     cursor: pointer;
 }
@@ -91,18 +97,28 @@
 #searchUserButton 
 {
     height: 30px;
-    background: #483D8B;
-    color: white;
+    background: var(--button-background-color);
+    border: var(--button-background-border);
     font-size: 15px;
-    padding: 0;
-    border: 1px solid white;
-    border-left: none;                    /* 避免雙重border */
+    padding: 0;  
     cursor: pointer;
 }
 
 #searchUserButton:hover 
 {
-    background: #5E86C1;
+    background: var(--button-hover-background-color);
+}
+
+#formInformation1, #formInformation2
+{
+    border: var(--button-background-border);
+}
+
+.applyDescription
+{
+    border: 1px solid #CCCCCC;
+	background-color: var(--background-color);
+    resize: none;
 }
 
 /* 申請內容的文字間格 */
@@ -111,59 +127,43 @@
     padding: 5px;
 }    
 
-/* 上一頁及下一頁按鈕 */
+/* 上一頁及下一頁按鈕 */   
 .page
 {
-	float:left;
 	display: flex;
-	justify-content: space-between;
+    justify-content: space-between;
 }
 
 .page button
 {
     height: 30px;
-    background-color: #293F66;
-    color: white;
-    border-color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
     float: left;
 }
 
 .page button:hover
 {
-    background-color: #87CEFA;
-    color: #DC143C;
-}
-
-.formButton
-{
-    margin: 0 10px;
-    width: 80px;
-    height: 30px;
-    background-color: #293F66;
+    background-color: var(--button-hover-background-color);
     color: white;
-    border-radius: 3px;
-    transition: .5s;
 }
 
-.formButton:hover
+.applyButton, .page button
 {
-    background-color: #5E86C1;
-}
-
-.applyButton, .formButton, .page button
-{
-    border: 1px solid #5E86C1;
+    border: var(--button-background-border);
 }
 
 @media (min-width: 800px)
 {
+    body
+    {
+        margin-top: 70px;
+    }
     .approveDiv
     {
-        width: 800px;
-        height: 730px;
-        background-color: #293F66;
-        color: white;
         margin: auto;
+        width: 800px;
+        height: 660px;
         border-radius: 12px;
     }
     .formLine
@@ -176,10 +176,9 @@
     }
 
     /* 搜尋-四欄式排版 */
-
     #search
     {
-        margin: 18px 0 0 20px;
+        margin: 0px 0 0 20px;
         width: 760px;
         height: 10px;
     }
@@ -191,23 +190,33 @@
         margin: 0;
     }
    
-    #searchUser, #searchCategory, #searchCycle, #searchResult
+    #searchUser, #searchClass, #searchPeriod, #searchResult
     {
         width: 170px;
+        border-right: none;     
     }
 
     #searchUserButton
     {
         width: 80px;
+        border-left: none;                    /* 避免雙重border */
+
     }
 
     /* 申請內容-四欄式排版的外框架 */
-    #formInformation1, #formInformation2
+    #formInformation1
     {
-        border: 1px solid white;
+        width: 760px;
+        height: 250px;
+        border-top: none;
         margin: 0 0 0 20px;
+    }
+    #formInformation2
+    {
         width: 760px;
         height: 230px;
+        border-top: none;
+        margin: 0 0 0 20px;
     }
 
     /* 申請內容-四欄式排版 */
@@ -219,39 +228,42 @@
     }
     .Information2
     {
-        width: 165px;
+        width: 235px;
         float: left;
         margin: 20px 0 0 10px;
     }
     .Information3
     {
-        width: 165px;
+        width: 135px;
         float:left;
         margin: 20px 0 0 10px;
     }
     .Information4
     {
-        width: 165px;
+        width: 125px;
         float:left;
         margin: 20px 0 0 20px;
     }
+    #applyReason0
+    {
+        margin-top: 40px;
+    }
     .applyDescription
     {
-        width: 120px;
-        height: 120px;
-        background-color: #293F66;
+        width: 100px;
+        height: 50px;
+        background-color: var(--background-color);
         color: white;
-        border: 1px solid white;
-        resize: none;
+        border: 1px solid #CCCCCC;
     }
     .applyButton
     {
         width: 160px;
-        margin: 10px 0 0 0;
+        margin: 0;
     }
     .formLine1
     { 
-        margin: 10px 0 0 350px;
+        margin: 3px 200px;
         padding: 0 10px;
     }
     .page button
@@ -271,6 +283,10 @@
 
 @media (max-width: 799px)
 {
+    body
+    {
+        margin-top: 50px;
+    }
     .approveDiv
     {
         margin: 0;
@@ -279,5 +295,44 @@
     .formText
     {
         text-align: center;
+        margin: 0px 0 0 20px;
+        width: 760px;
+        height: 10px;
+    }
+
+    /* 搜尋-使用者名稱、申請類別、申請週期、申請結果的外框排版 */
+    #searchUser, #searchClass, #searchPeriod, #searchResult, #searchUserButton
+    {
+        width: 100%;
+        border-bottom: none;
+    }
+    .formText
+    {
+        text-align: center;
+    }
+    #formInformation1
+    {
+        border-bottom: none;
+    }
+    .detail
+    {
+        text-align: left;
+    }
+    .applyDescription
+    {
+        width: 80%;
+        vertical-align: middle;
+    }
+    #detail1
+    {
+        text-align: right;
+    }
+    .formLine1
+    {
+        margin-top: 10px;
+    }
+    .page
+    {
+        margin: 0 10vw;
     }
 }

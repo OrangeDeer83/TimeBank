@@ -15,17 +15,36 @@ const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 2;
 var searchText;
 
+function search()
+{
+    getUserList();
+}
+
 function getUserList()
 {
-    searchText = "";//document.getElementById("searchUser").value
-    var getListRequest;
-    if (window.XMLHttpRequest)
-        getListRequest = new XMLHttpRequest();
-    else
-        getListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getListRequest.open("POST", "/apply/judgement_history");
+    var searchTextInput = document.getElementById('searchUser');
+
+    var searchClassInput = document.getElementById('searchClass');
+    var searchClass = '';
+    if (searchClassInput[searchClassInput.selectedIndex].value != '申請類別')
+        searchClass = searchClassInput[searchClassInput.selectedIndex].value;
+
+    var searchPeriodInput = document.getElementById('searchPeriod');
+    var searchPeriod = '';
+    if (searchPeriodInput[searchPeriodInput.selectedIndex].value != '申請週期')
+    searchPeriod = searchPeriodInput[searchPeriodInput.selectedIndex].value;
+
+    var searchResultInput = document.getElementById('searchResult');
+    var searchStatus = '';
+    if (searchResultInput[searchResultInput.selectedIndex].value != '申請結果')
+        searchStatus = searchResultInput[searchResultInput.selectedIndex].value;
+    console.log(JSON.stringify({"name": searchTextInput.value, "status": searchStatus,
+    "class": searchClass, "period": searchPeriod}))
+    
+    var getListRequest = new XMLHttpRequest();
+    getListRequest.open("POST", "http://192.168.1.144:5000/apply/judgement_history");
     getListRequest.setRequestHeader("Content-Type", "application/json");
-    getListRequest.send(JSON.stringify({"name": searchText, "status": "", "class": "", "period":""}));
+    getListRequest.send(JSON.stringify({"name": searchTextInput.value, "class": searchClass, "period": searchPeriod, "status": searchStatus}));
     getListRequest.onload = function()
     {
         console.log(getListRequest.responseText);
@@ -38,7 +57,7 @@ function getUserList()
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;
                 allList[4] = rst.userSPRate;
-                //allList[5] = rst.userPoint;
+                allList[5] = rst.userPoint;
                 allList[6] = rst.applyID;
                 allList[7] = rst.className;
                 allList[8] = rst.oldQuota;
@@ -65,9 +84,9 @@ function computePage(type)
     switch (type)
     {
         case 0: 
-            if (allList[0].length != allList[2].length || /*allList[1].length != allList[2].length ||*/
+            if (allList[0].length != allList[1].length || allList[1].length != allList[2].length ||
                 allList[2].length != allList[3].length || allList[3].length != allList[4].length ||
-                allList[4].length != allList[6].length || /*allList[5].length != allList[6].length ||*/
+                allList[4].length != allList[5].length || allList[5].length != allList[6].length ||
                 allList[6].length != allList[7].length || allList[7].length != allList[8].length ||
                 allList[8].length != allList[9].length || allList[9].length != allList[10].length ||
                 allList[10].length != allList[11].length || allList[11].length != allList[12].length ||
@@ -126,8 +145,8 @@ function showDetail()
 function putDetail(index)
 {
     index;
-    document.getElementById("userName" + index).innerHTML = allList[0][thisPageList[index]];
-    //document.getElementById("userName" + index).innerHTML = allList[1][thisPageList[index]];
+    document.getElementById("name" + index).innerHTML = allList[0][thisPageList[index]];
+    document.getElementById("userName" + index).innerHTML = allList[1][thisPageList[index]];
     var SRRate = Math.round(allList[3][thisPageList[index]] * 100) / 100;
     if (SRRate == 0)
         document.getElementById("SRRate" + index).innerHTML = "無";
@@ -142,6 +161,7 @@ function putDetail(index)
         document.getElementById("SPRate" + index).innerHTML = SPRate;
     else
         document.getElementById("SPRate" + index).innerHTML = SPRate + ".0";
+    document.getElementById('userPoint' + index).innerHTML = allList[5][thisPageList[index]];
     document.getElementById("applyClass" + index).innerHTML = allList[7][thisPageList[index]];
     document.getElementById("applyQuota" + index).innerHTML = allList[8][thisPageList[index]];
     document.getElementById("applyTime" + index).innerHTML = allList[9][thisPageList[index]];
@@ -155,12 +175,8 @@ function putDetail(index)
 
 function downloadPDF(index)
 {
-    var downloadPDFRequest;
-    if (window.XMLHttpRequest)
-        downloadPDFRequest = new XMLHttpRequest();
-    else
-        downloadPDFRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
+    var downloadPDFRequest = new XMLHttpRequest();
+    downloadPDFRequest.open("POST", "http://192.168.1.144:5000/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
     downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
     downloadPDFRequest.onload = function()
@@ -179,9 +195,4 @@ function downloadPDF(index)
                 break;
         }
     }
-}
-
-function search()
-{
-    alert("此功能尚未完成");
 }

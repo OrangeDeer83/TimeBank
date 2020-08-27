@@ -4,6 +4,10 @@
 
 .loginDiv
 {
+    background-color: var(--background-color);
+    color: var(--background-text-color);
+    border: var(--background-border);
+    font-weight: var(--background-font-weight);
     padding: 30px 0;
 }
 
@@ -42,15 +46,16 @@
     margin: 0px 10px;
     width: 80px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
     transition: .5s;
 }
 
 .formButton:hover
 {
-    background-color: #5E86C1;
+    background-color: var(--button-hover-background-color);
 }
 
 .error
@@ -73,8 +78,6 @@
     .loginDiv
     {
         width: 500px;
-        background-color: #293F66;
-        color: white;
         margin: auto;
         border-radius: 12px;
     }
@@ -99,10 +102,6 @@
     {
         padding-left: 5px;
     }
-    .formButton
-    {
-        border: 1px solid #5E86C1;
-    }
     .error
     {
         margin: 0 0 0 120px;
@@ -119,13 +118,19 @@
 
 @media (max-width: 499px)
 {
+	body
+	{
+		height: 100%;
+		background-color: var(--background-color);
+	}
     .loginDiv
     {
-        margin: 0;
+        margin: 150px 0;
         border: 0px;
     }
     .formText
     {
+    	width: 70vw;
         text-align: center;
     }
     .error

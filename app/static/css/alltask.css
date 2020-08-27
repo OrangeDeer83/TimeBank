@@ -1,150 +1,85 @@
-@charset "utf-8";
-
-/* 所有任務介面 */
-
-/* 避免與navbar重疊 */
-input[type="submit"]
-{
-    padding:5px; 
-    border:2px #F95738 solid;
-    -webkit-border-radius: 5px;
-    border-radius: 5px; 
-    width: 100px;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #F1B555;
-}
-.edit
-{
-	display: none;
-}
-.taskName
-{
-	float: left;
-}
-#bpass .taskName
-{
-	width: 48%;
-
-}
 .bodyContain
 {
 	margin-top: 80px;
 	position: relative;
 }
-.tabPart
-{
-	margin-top: 80px;
-}
-/* 新增任務 */
-.addTask,.takeTask
-{
-	float: right;
-	background-color: #c76e3d;
-	border-radius:8px;
-	color: white;
-	margin-bottom: 10px;
-}
-.takeTask
-{
-	margin-right: 8px;
-}
-.tabPart,.addTaskPart,.tabs,.introduction,.detailed,.formLine,.choosepage
-{
-	overflow: auto;
-}
 
 /* 按鈕選單 */
-#tabsFirst
+#tabsFirst, #tabsSecond
+{
+	overflow: auto;
+	margin-bottom: 10px;
+}
+#tabsFirst > div, #tabsSecond > div
+{
+	text-align: center;
+	border-radius:8px;
+	background-color:#c76e3d;
+	color: var(--button-background-text-color);
+}
+#takeTask
+{
+	background-color:#e4bca7 !important;
+}
+#tabsFirst a, #tabsSecond a
+{
+	color: var(--button-background-text-color);
+}
+#tabsSecond > div:hover,#addTask:hover,#takeTask:hover
+{
+	background-color:#e4bca7;
+	cursor: pointer;
+}
+#addTask, #takeTask
+{
+	float: right;
+	margin-bottom: 5px;
+}
+#boss, #employee
 {
 	float: left;
 }
-#tabsSecond,#tabsThird
-{
-	float: right;
-}
-.tabs ul,.tabs ul li
-{
-	list-style-type:none;
- 	float:left;
-}
-.tabs ul
-{
-	padding-left: 0;
-	margin:0;
-	color: white;
-}
-.tabs li
-{
-	text-align:center;
-	border-top-left-radius:8px;
-	border-top-right-radius:8px;
-}
-#notThisPage,#boss,#employee
-{
-	background-color:#c76e3d;
-}
-.tabs li a,.addTask a,.takeTask a
-{
-	text-decoration:none;
-	color: white;
-}
-#tabsFirst li:hover,.addTask:hover,.takeTask:hover,#thisPage
-{
-	background-color:#e1804a;
-	cursor: pointer;
-}
-#tabsFirst li
-{
-	margin: 0 5px;
-	border-bottom-left-radius:8px;
-	border-bottom-right-radius:8px;
-} 
-#tabsSecond li,#tabsThird li
-{
-	font-size: 20px;
-}
-.notThisPage
-{
-	background-color:#e4b369;
-}
-.tabPart
-{
-	font-size: 24px;
-} 
-#tabsSecond li:hover,#tabsThird li:hover,#thisPage2
-{
-	background-color:#ff9900;
-	cursor: pointer;
-}
 
-/* 所有的表格 */
-.allTable table
+/*表格*/
+#eCheck
 {
-	background-color:#FFE3CE;
+	background-color: var(--background-color);
 	color:black;
+	width: 100%;
 }
-.allTable table td,.allTable table th
+#eCheck td, #eCheck th
 {
-	border: 1.5px ridge brown;
+	border: var(--background-border);
+}
+#eCheck td
+{
+	padding: 5px;
 }
 
-/* 表格內文字 */
-.introduction > div,.taskPlaceContext > div,.scorePart > div
+/*承接按鈕*/
+.taskTake
 {
-	margin: 2px;
+	padding: 3px;
+	border-radius:8px;
+	width: 80px;
+	text-align: center;
+	float: right;
+	cursor: pointer;
+	background:var(--button-background-color);
+	color: var(--button-background-text-color);
 }
-.choose
+.taskTake:hover
 {
-	margin:8px 0;
+	background: var(--button-hover-background-color);
+	color: var(--button-background-text-color);
 }
 
-/* 上下一頁 */
+/*換頁按鈕*/
 .formPage
 {
     margin: auto;
     margin-top: 10px;
-    width: 80vw;
+    width: 60vw;
     color: black;
     text-align: center;
     display: flex;
@@ -163,350 +98,66 @@ input[type="submit"]
     cursor: pointer;
 }
 
-/* 評分 */
-.rating > label:before 
+/*RWD*/
+@media (max-width: 599px)
 {
-    padding: 0;
-    font-size: 24px;
-    line-height: 1em;
-    display: inline-block;
-    content: "★";
-    height: 28px;
-}
-.formLabelDiv
-{
-	float:left;
-}
-.rating
-{
-	float: left;
-	padding-left: 10px;
-}
-#epass .rating > input:checked ~ label,
-#epass .rating:not(:checked) > label:hover,
-#epass .rating:not(:checked) > label:hover ~ label 
-{
-    color: #FFFFFF;
-}
-.formLabelDiv
-{
-	padding-top: 3px;
-}
-.rating 
-{
-    font-size: 0;
-    display: table;
-}
-
-.rating > label 
-{
-    float: right;
-}
-
-.rating > input:checked ~ label:hover,
-.rating > label:hover ~ input:checked ~ label,
-.rating > input:checked ~ label:hover ~ label 
-{
-    opacity: 0.5;
-}
-#formComment
-{
-	float: right;
-	margin: 0 10px 10px 0;
-}
-/* 任務檢舉 */
-.taskReport
-{
-	float: right;
-	color: red;
-	padding: 2px;
-	border: 1px solid red;
-	margin: 5px;
-	border-radius: 8px;
-}
-.taskReport:hover,.taskDelete:hover
-{
-	cursor: pointer;
-}
-
-/* 取消承接任務/刪除任務，承接任務 */
-.taskDelete,.taskTake
-{
-	float: right;
-	background-color: #FFA970;
-	color: white;
-	border: 1px solid white;
-	padding: 2px;
-	margin: 5px;
-	border-radius: 8px;
-}
-.taskTake:hover,.taskDelete:hover
-{
-	cursor: pointer;
-	color: black;
-	background-color: #F8F7FF;
-	border: 1px solid white;
-}
-
-/* 按鈕 */
-.rightBottom2
-{
-	display: inline-block;
-	float: right;
-	width: 50%;
-	overflow: auto;
-}
-
-.done,.edit,.cancel,.delete
-{
-	float: left;
-	background-color: #FFA970;
-	color: white;
-	border: 1px solid white;
-	padding: 4px;
-	margin: 2px 5px;
-	border-radius: 8px;
-}
-.cancel,.delete
-{
-	float: right;
-}
-.rightBottom div:hover
-{
-	cursor: pointer;
-	color: black;
-	background-color: #F8F7FF;
-	border: 1px solid white;
-}
-#bpass .taskPlaceContext
-{
-	margin-bottom: 30px;
-}
-
-/* RWD */
-@media (max-width: 509px) 
-{
-	.tabPart,.addTaskPart,.employeeRefused,.allTable table
+	#tabsFirst > div, #tabsSecond > div, #tabsThird li
 	{
-		width: 100%;
+		width: 90px;
+		padding: 3px;
+		margin-right: 5px;
+		margin-left: 5px;
 	}
-	.tabs li,.addTask,.takeTask
+	#tabsSecond > div, #tabsThird li
 	{
-		padding:2px;
+		padding: 1px;
+		width: 70px;
 	}
-	
-	#eRecord .taskPlaceContext,#bRecord .taskPlaceContext
+	#tabsSecond > div
 	{
-		margin-bottom: 25px;
-	}
-	.taskReport1,.taskDelete1,.rightBottom1,.taskTake1
-	{
-		display: none;
-	}
-	.employeeComment
-	{
-		float: left;
-	}
-	.taskReport2,.taskDelete2,.rightBottom2,.taskTake2
-	{
-		display: block;
-	}
-	#bpass .taskPlaceContext
-	{
-		margin-bottom: 30px;
+		margin-left: 0;
+		width: 80px;
 	}
 }
-
-/* RWD */
-@media (min-width: 510px) 
+@media (min-width: 600px)
 {
-	.tabPart,.allTable
+	#tabsFirst, #tabsSecond
 	{
-		width: 85%;
-		margin: auto;
+		font-size: 25px;
 	}
-	.tabs li,.addTask,.takeTask
+	#tabsThird
 	{
-		padding:3px;
+		font-size: 20px;
 	}
-	.allTable table
+	#tabsFirst > div, #tabsSecond > div, #tabsThird li
 	{
-		width: 100%;
+		width: 120px;
+		padding: 5px;
+		margin-right: 8px;
+		margin-left: 8px;
 	}
-
-	#tabsFirst li
+	#tabsSecond > div,#tabsThird li
 	{
-		width:80px;
-	}
-	#eRecord .taskPlaceContext,#bRecord .taskPlaceContext
-	{
-		margin-bottom: 25px;
-	}
-	.taskReport1,.taskDelete1,.rightBottom1,.taskTake1
-	{
-		display: none;
-	}
-	.employeeComment
-	{
-		float: left;
-	}
-	.taskReport2,.taskDelete2,.rightBottom2,.taskTake2
-	{
-		display: inline-block;
-	}
-}
-/* RWD */
-@media (min-width: 835px) 
-{
-	.tabPart,.allTable
-	{
-		width: 90%;
-		margin: auto;
-	}
-	.allTable table
-	{
-		width: 100%;
-	}
-	.tabs li,.addTask,.takeTask
-	{
-		padding:4px;
-	}
-	.tabPart
-	{
-		font-size: 24px;
-	}
-	#tabsFirst li
-	{
+		padding: 3px;
 		width: 100px;
 	}
-
-	#eRefused .taskName,#eRefused .taskpoint
+	#tabsSecond > div
 	{
-		float: left;
-		width: 21.5%;
+		margin-left: 0;
+		width: 120px;
 	}
-	#eRefused .taskTime
-	{
-		float: left;
-		width: 57%;
-		text-align: center;
-	}
-	.detailed
-	{
-		border-top: 1px solid #ff9900;
-		overflow: auto;
-	}
-	.taskReport2,.taskDelete2,.rightBottom2,.taskTake2
-	{
-		display: none;
-	}
-	.taskReport1,.taskDelete1,.rightBottom1,.taskTake1
-	{
-		display: block;
-		float: right;
-		width: 10%;
-		text-align: center;
-		padding: 3px;
-	}
-	.taskPlaceContext
-	{
-		float: left;
-		width: 45%;
-	}
-	.scorePart
-	{
-		float: right;
-		width: 45%;
-	}
-	#eRecord .taskName,#eRecord .taskPoint,#eCheck .taskName,#eCheck .taskPoint,#bRecord .taskName,#bRecord .taskPoint
-	{
-		float: left;
-		width: 18%;
-		padding-top: 3px;
-	}
-	#eRecord .taskTime,#eCheck .taskTime,#bRecord .taskTime
-	{
-		float: left;
-		width: 50%;
-		text-align: center;
-		padding-top: 3px;
-	}
-	#eCheck .taskName,#eCheck .taskPoint
-	{
-		width: 18%;
-	}
-	#eCheck .taskTime
-	{
-		width: 50%;
-	}
-	.taskDelete1,.taskTake1
-	{
-		width: 10%;
-	}
-	#epass .taskName,#bpass .taskName
-	{
-		padding-top: 10px;
-		float: left;
-		width: 16%;
-	}
-	#epass .taskTime,#bpass .taskTime
-	{
-		padding-top: 10px;
-		float: left;
-		width: 48%;
-		text-align: center;
-	}
-	#epass .taskPoint,#bpass .taskPoint
-	{
-		padding-top: 10px;
-		float: left;
-		width:12%;
-	}
-	#epass .rightBottom1,#bpass .rightBottom1
-	{
-		float: right;
-		width: 18%;
-	}
-	.done,.edit
-	{
-		float: right;
-	}
-	#bpass .taskPlaceContext
-	{
-		float: left;
-		width: 30%;
-	}
-	#bpass .application
-	{
-		float: left;
-		width: 45%;
-	}
-	#bpass .applicationText
-	{
-		float: left;
-		width:50%;
-		text-align: right;
-	}
-	#bpass .applicationChoose
-	{
-		float: left;
-		width:50%;
-	}
-	.applicationChoose .choose
-	{
-		float: left;
-		width: 70%;
-	}
-	.applicationChoose .chooseBottom
-	{
-		float: left;
-		width: 20%;
-		margin-top: 38px;
-	}
-	#epass .rightBottom
-	{
-		width: 300px;
-	}
-
 }
-
+@media (min-width: 650px)
+{
+	#tabsFirst, #tabsSecond
+	{
+		width: 600px;
+		margin: auto;
+		margin-bottom: 10px;
+	}
+	#eCheck
+	{
+		width: 600px;
+		margin: auto;
+	}
+}

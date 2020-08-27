@@ -1,6 +1,7 @@
 window.onload = function()
 {
-    getTaskList();
+    document.getElementById('reportDiv').style.display = 'none';
+    showListDiv();
 }
 
 var taskList = [];
@@ -10,6 +11,72 @@ var thisPageList = [];
 var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
+
+function showListDiv()
+{
+    const table = document.getElementById('eRecord');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '"><td>' +
+            '<div class="upPart">' +
+                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+                '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div> ' +
+                '<div>任務地點：<span id="taskLocation' + i + '"></span></div>' +
+                '<div>任務內容：<span id="taskContent' + i + '"></span></div><br>' +
+            '</div>' +
+            '<div class="downPart">' +
+                '<div id="scorePart' + i + '">' +
+                    '<div class="bossScorePart">' +
+                        '<div class="formLine">' +
+                            '<div class="formLabelDiv">' +
+                                '<label for="rate" class="formLabel">雇主評分：</label>' +
+                            '</div>' +
+                            '<div class="rating">' +
+                                '<input type="radio" id="SRRate0' + i + '" name="rating" value="5" hidden/>' +
+                                '<label id="RLabel0' + i + '" for="star5"></label>' +
+                                '<input type="radio" id="SRRate1' + i + '" name="rating" value="4" hidden/>' +
+                                '<label id="RLabel1' + i + '" for="star4"></label>' +
+                                '<input type="radio" id="SRRate2' + i + '" name="rating" value="3" hidden/>' +
+                                '<label id="RLabel2' + i + '" for="star3"></label>' +
+                                '<input type="radio" id="SRRate3' + i + '" name="rating" value="2" hidden/>' +
+                                '<label id="RLabel3' + i + '" for="star2"></label>' +
+                                '<input type="radio" id="SRRate4' + i + '" name="rating" value="1" hidden/>' +
+                                '<label id="RLabel4' + i + '" for="star1"></label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div>雇主評論：<span id="SRComment' + i + '"></span></div>' +
+                    '</div>' +
+                    '<div class="employeeScorePart">' +
+                        '<div class="formLine">' +
+                            '<div class="formLabelDiv">' +
+                                '<label for="rate" class="formLabel">雇員評分：</label>' +
+                            '</div>' +
+                            '<div class="rating">' +
+                                '<input type="radio" id="SPRate0' + i + '" name="rating" value="5" hidden/>' +
+                                '<label id="PLabel0' + i + '" for="star5"></label>' +
+                                '<input type="radio" id="SPRate1' + i + '" name="rating" value="4" hidden/>' +
+                                '<label id="PLabel1' + i + '" for="star4"></label>' +
+                                '<input type="radio" id="SPRate2' + i + '" name="rating" value="3" hidden/>' +
+                                '<label id="PLabel2' + i + '" for="star3"></label>' +
+                                '<input type="radio" id="SPRate3' + i + '" name="rating" value="2" hidden/>' +
+                                '<label id="PLabel3' + i + '" for="star2"></label>' +
+                                '<input type="radio" id="SPRate4' + i + '" name="rating" value="1" hidden/>' +
+                                '<label id="PLabel4' + i + '" for="star1"></label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div>雇員評論：<span id="SPComment' + i + '"></span></div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="button" id="reportButton' + i + '" onclick="showReportDiv(' + i + ')">檢舉</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
+}
 
 /*const error = document.getElementById("error");
 function showError(rspCode)
@@ -26,12 +93,8 @@ function showError() {;}
 
 function getTaskList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/task/SP/output/record");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/record");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -160,9 +223,45 @@ function putDetail(index)
     }
 }
 
-function report(index)
+var reportTaskIndex = -1;
+function showReportDiv(index)
 {
-    // Not now.
-    index++;
-    alert("此功能尚未完成");
+    reportTaskIndex = index;
+    document.getElementById('reportDiv').removeAttribute('style');
+    document.getElementById('reportButton' + index).style.display = 'none';
+    for (var i = 0; i < 10; i++)
+        if (i != index)
+            document.getElementById('taskList' + i).style.display = 'none';
+}
+
+function hideReportDiv()
+{
+    document.getElementById('reportDiv').style.display = 'none';
+    document.getElementById('reportButton' + reportTaskIndex).removeAttribute('style');
+    for (var i = 0; i < 10; i++)
+        document.getElementById('taskList' + i).removeAttribute('style');
+    document.getElementById('reportReason').value = '';
+    reportTaskIndex = -1;
+}
+
+function sendReport()
+{
+    var reportRequest = new XMLHttpRequest();
+    reportRequest.open("POST", "http://192.168.1.144:5000/report/send_report");
+    reportRequest.setRequestHeader("Content-Type", "application/json");
+    reportRequest.send(JSON.stringify({'taskID': thisPageList[reportTaskIndex].taskID, 'reportReason': document.getElementById('reportReason').value}));
+    reportRequest.onload = function()
+    {
+        console.log(reportRequest.responseText);
+        rst = JSON.parse(reportRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "20": case 20:
+                console.log('檢舉已送出');
+                hideReportDiv();
+                break;
+            default:
+                alert('系統錯誤，無法送出檢舉');
+            }
+    }
 }

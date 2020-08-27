@@ -3,13 +3,14 @@ from ..models.model import *
 from ..models.dao import *
 from ..models import db, userType
 from ..models.makePoint import *
+from sqlalchemy import or_
 import datetime
 Allotment = Blueprint('allotment', __name__)
 
 
 #顯示user名單
 #要json傳target(搜尋目標，沒有就傳空值)
-#回傳rspCode, userName, userID, userSRRate, userSPRate
+#回傳rspCode, name, userID, userSRRate, userSPRate
 @Allotment.route('/show_user', methods = ['POST'])
 def show_user():
     if request.method != 'POST':
@@ -25,21 +26,21 @@ def show_user():
     userID = []
     userSRRate = []
     userSPRate = []
-    userName = [] 
+    name = [] 
     userPoint= []
+    userName = []
     try:
-        if target == '':        
-            #`userID`,`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`
-            userData = db.engine.execute(select_all_user()).fetchall()     
-        else:
-            userData = db.engine.execute(select_search_user(target)).fetchall()
+        userData = db.session.query(account.userID,account.name,account.SRRate,account.SRRateTimes,account.SPRate,account.SPRateTimes,account.userPoint,account.userName)
+        if target != '':        
+            userData = userData.filter(or_(account.userName.like('%{}%'.format(target)),account.name.like('%{}%'.format(target))))
+        userData = userData.order_by(account.userID)
     except:
         #rspCode 400:查資料失敗
             return jsonify({"rspCode":"400","name":"","userID":"","userSRRate":"","userSPRate":""})
     
     for user in userData:
         userID.append(user[0])
-        userName.append(user[1])
+        name.append(user[1])
         try:
             userSRRate.append(float(user[2]) / float(user[3]))
         except:
@@ -49,14 +50,15 @@ def show_user():
         except:
             userSPRate.append(0)
         userPoint.append(user[6])
-    return jsonify({"rspCode":"200","userID":userID,"name":userName,"userSRRate":userSRRate,"userSPRate":userSPRate,"userPoint":userPoint})
+        userName.append(user[7])
+    return jsonify({"rspCode":"200","userID":userID,"name":name,"userSRRate":userSRRate,"userSPRate":userSPRate,"userPoint":userPoint,"userName":userName})
 
 #配發按鍵
 #要json傳kind(one or all), receiver(one時是目標的ID all是搜尋了什麼), period,
 #frequency(一次性傳1), quota
 #回傳rspCode 和 notAllow
 @Allotment.route("/allotment" , methods = ['POST'])
-def allotment():
+def allotment_():
     try:
         json = request.get_json()
     except:
@@ -187,47 +189,49 @@ def simple_allotment_history():
     
 #主動配發紀錄
 #要json傳target(搜尋了什麼，沒有就傳空值)
-#回傳rspCode, period, frequency, quota, time, userID, name
+#回傳rspCode, period, frequency, quota, time, userName, name
 #userSRRate, userSPRate
 @Allotment.route('/allotment_history', methods = ['POST'])
 def allotment_history():
     if request.method != 'POST':
-        return jsonify({"rspCode":"300","time":"","quota":"","period":"","frequency":"","userID":"","name":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":"300","time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
     try:
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AS']):
-            return jsonify({"rspCode":"500","time":"","quota":"","period":"","frequency":"","userID":"","name":"","userSRRate":"","userSPRate":""})
+            return jsonify({"rspCode":"500","time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
         try:
             json = request.get_json()
         except:
-            return jsonify({"rspCode":"410","time":"","quota":"","period":"","frequency":"","userID":"","name":"","userSRRate":"","userSPRate":""})
+            return jsonify({"rspCode":"410","time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
         target = json['target']
         period = []
         frequency = []
         quota = []
         time = []
-        userID = []
         userName = []
+        name = []
         userSRRate = []
         userSPRate = []
-        #allotmentTime, quota, period, frequency, userID, userName, SRRate,
+        #allotmentTime, quota, period, frequency, userName, userName, SRRate,
         #SRRateTimes, SPRate, SPRateTimes
-        allotmentData = db.engine.execute(select_allotment_history_by_userID_userName(target,target)).fetchall()
-        for allotment in allotmentData:
-            time.append(str(allotment[0]))
-            quota.append(allotment[1])
-            period.append(allotment[2])
-            frequency.append(allotment[3])
-            userID.append(allotment[4])
-            userName.append(allotment[5])
+        allotmentData = db.session.query(allotment.allotmentTime, allotment.quota, allotment.period, allotment.frequency, account.userName, account.name, account.SRRate, account.SRRateTimes, account.SPRate, account.SPRateTimes).join(account).filter(allotment.userID == account.userID)
+        if target != '':
+            allotmentData = allotmentData.filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target))))
+        for allotment_ in allotmentData:
+            time.append(str(allotment_[0]))
+            quota.append(allotment_[1])
+            period.append(allotment_[2])
+            frequency.append(allotment_[3])
+            userName.append(allotment_[4])
+            name.append(allotment_[5])
             try:
-                userSRRate.append(str(float(allotment[6]) / float(allotment[7])))
+                userSRRate.append(str(float(allotment_[6]) / float(allotment_[7])))
             except:
                 userSRRate.append(0)
             try:
-                userSPRate.append(str(float(allotment[8]) / float(allotment[9])))
+                userSPRate.append(str(float(allotment_[8]) / float(allotment_[9])))
             except:
                 userSPRate.append(0)
-        return jsonify({"rspCode":"200","time":time,"quota":quota,"period":period,"frequency":frequency,"userID":userID,"name":userName,"userSRRate":userSPRate,"userSPRate":userSPRate})
+        return jsonify({"rspCode":"200","time":time,"quota":quota,"period":period,"frequency":frequency,"userName":userName,"name":name,"userSRRate":userSPRate,"userSPRate":userSPRate})
     except:
         #以防萬一
-        return jsonify({"rspCode":"400","time":"","quota":"","period":"","frequency":"","userID":"","name":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":"400","time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})

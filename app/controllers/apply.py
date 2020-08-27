@@ -5,6 +5,7 @@ from ..models import db, userType
 import os
 import datetime
 from ..models.makePoint import *
+from sqlalchemy import or_
 Apply = Blueprint('apply', __name__)
 
 @Apply.route('/update_apply_group', methods = ['POST'])
@@ -335,7 +336,7 @@ def return_period_by_class():
 #回傳rspCode,notAllow
 @Apply.route("/USER/add_apply", methods = ['POST'])
 def user_add_apply():
-    #try:
+    try:
         if request.method == 'POST':
             if not(session.get('userType') == userType['USER']):
                 session.clear()
@@ -433,7 +434,7 @@ def user_add_apply():
         else:
             #return jsonify({"rspCode":"300","notALlow":""})
             return redirect(url_for('USER.application'))
-    #except:
+    except:
         #rspCode 400:某個地方爆掉但不知道哪裡
         #return jsonify({"rspCode":"400","notALlow":""})
         return redirect(url_for('USER.application'))
@@ -474,8 +475,7 @@ def show_apply_status_0():
             return jsonify({"rspCode":"401","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
         else:
             #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
-            applyData = db.engine.execute(get_all_apply_status_0_search_user_name(target)).fetchall()
-           
+            applyData = db.session.query(apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency).join(account).filter(apply.applyStatus == 0,apply.userID==account.userID).filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target)))).all()
         try:
            for oneData in applyData:
                
@@ -615,7 +615,6 @@ def apply_judge():
     applyStatus = json['applyStatus']
     quotaChange = json['quotaChange']
     notAllow = []
-    
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
     if applyID == "":
@@ -625,13 +624,11 @@ def apply_judge():
     if not(applyStatus == '1' or applyStatus == '2'):
         notAllow.append('applyStatus')
     if quotaChange == '':
-        
         if notAllow != []:
             #rspCode 400:有非法輸入
             return jsonify({"rspCode":"400","notAllow":notAllow})
         db.engine.execute(alter_apply_status(applyStatus,applyID))
         if applyStatus == '1':
-            
             userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
             userPoint = db.engine.execute(get_user_point(userID)).fetchone()[0]
             ConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
@@ -648,13 +645,7 @@ def apply_judge():
             for x in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
-                db.session.commit()     
-            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
-            db.session.add(transferRecord_)
-            db.session.commit()
-            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
-            db.session.add(transferRecordApply_)
-            db.session.commit()
+                db.session.commit()            
             transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
             db.session.add(transferRecord_)
             db.session.commit()
@@ -702,6 +693,12 @@ def apply_judge():
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
                 db.engine.execute(make_point_sql(pointID,adminID,userID))
                 db.session.commit()
+            transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
+            db.session.add(transferRecord_)
+            db.session.commit()
+            transferRecordApply_ = transferRecordApply(transferRecordID = transferRecord_.transferRecordID, applyID = applyID, times = 1)
+            db.session.add(transferRecordApply_)
+            db.session.commit()
         else:
             #不是1就只改status和adminID
             db.engine.execute(alter_apply_status(applyStatus,applyID))
@@ -747,36 +744,42 @@ def judgement_history():
         className = json['class']
         period = json['period']
         status = json['status']
-        #conditionID
-        #,applyTime,frequency,result,applyStatus,oldConditionID,judgeTime,applyID,userID
-        applyData = db.engine.execute(show_judge_history(Name,className,period,status)).fetchall()
-        for apply in applyData:
-            applyStatus.append(apply[4])
+        applyData = db.session.query(apply.conditionID ,apply.applyTime, apply.frequency, apply.result, apply.applyStatus, apply.oldConditionID, apply.judgeTime, apply.applyID,apply.userID).filter(apply.applyStatus != 0).filter(apply.conditionID == applyCondition.conditionID).filter(apply.userID ==account.userID )
+        if Name != '':
+            applyData = applyData.filter(or_(account.name.like('%{}%'.format(Name)),account.userName.like('%{}%'.format(Name))))
+        if className != '':
+            applyData = applyData.filter(applyCondition.className == className)
+        if period != '':
+            applyData = applyData.filter(applyCondition.period == period)
+        if status != '':
+            applyData = applyData.filter(apply.applyStatus == status)
+        for apply_ in applyData:
+            applyStatus.append(apply_[4])
             #`period`,`class`,`quota`
-            condition = db.engine.execute(show_condition_data(apply[0])).fetchone()
+            condition = db.engine.execute(show_condition_data(apply_[0])).fetchone()
             applyPeriod.append(condition[0])
             applyClass.append(condition[1])
-            if apply[4] == 1:
+            if apply_[4] == 1:
                 applyQuota.append(condition[2])
             else:
                 applyQuota.append(0)
-            applyTime.append(apply[1])
-            frequency.append(apply[2])
-            result.append(apply[3])
-            if apply[5] != None:
-                oldQuota.append(db.engine.execute(show_old_condition_data(apply[5])).fetchone()[2])
+            applyTime.append(str(apply_[1]))
+            frequency.append(apply_[2])
+            result.append(apply_[3])
+            if apply_[5] != None:
+                oldQuota.append(db.engine.execute(show_old_condition_data(apply_[5])).fetchone()[2])
             else:
                 oldQuota.append(condition[2])
-            judgeTime.append(apply[6])
-            applyID.append(apply[7])
+            judgeTime.append(str(apply_[6]))
+            applyID.append(apply_[7])
             try:
-                fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply[7],apply[7]),'r',encoding="utf-8")
+                fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply_[7],apply_[7]),'r',encoding="utf-8")
                 applyPdfName.append(fileTxt.read().split('"')[0])
             except:
                 applyPdfName.append(None)
-            userID.append(apply[8])
+            userID.append(apply_[8])
             #`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`
-            userData = db.engine.execute(get_apply_judge_user_info(apply[8])).fetchone()
+            userData = db.engine.execute(get_apply_judge_user_info(apply_[8])).fetchone()
             try:
                 userSRRate.append(float(userData[1] / float(userData[2])))
             except:

@@ -1,6 +1,19 @@
 @charset "utf-8";
 
 /* 所有網頁的css基礎架構 */
+
+:root
+{
+    --background-color: #FFE3CE;
+    --background-text-color: black;
+    --background-border: 1.5px solid brown;
+    --background-font-weight: bold;
+    --button-background-color: #e4b369;
+    --button-background-text-color: white;
+    --button-background-border: 1.5px solid #ca9174;
+    --button-hover-background-color: #cf7f07;
+}
+
 * { box-sizing: border-box; }
 
 @font-face

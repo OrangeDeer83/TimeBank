@@ -1,7 +1,7 @@
 window.onload = function()
 {
-    console.log(" ")
-    getTaskList();
+    document.getElementById('editTaskDiv').style.display = 'none';
+    showListDiv();
 }
 
 var taskList = [];
@@ -9,31 +9,66 @@ var taskAmount = 0;
 var pageAmount = 1;
 var thisPageList = [];
 var currentPage = 1;
-const pageNumber = document.getElementById("pageNumber");
+const pageNumber = document.getElementById('pageNumber');
 const maxPageAmount = 10;
 
-/*const error = document.getElementById("error");
+function showListDiv()
+{
+    const table = document.getElementById('bPass');
+    table.innerHTML = '';
+    for (var i = 0; i < maxPageAmount; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '" style="display:none;"><td>' +
+            '<div class="introduction">' +
+                '<div>' +
+                    '<div class="button" onclick="deleteTask(' + i + ')">刪除</div>' +
+                    '<div class="button" id="edit' + i + '" onclick="showEditDiv(' + i + ')">編輯</div>' +
+                '</div>' +
+                '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+                '<div>任務時間<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
+            '</div>' +
+            '<div class="detailed">' +
+                '<div>任務地點：<span id="taskLocation' + i + '"></span></div>' +
+                '<div>任務內容：<span id="taskContent' + i + '"></span></div>' +
+                '<div>' +
+                    '<div class="title" id="applicationText">' +
+                        '申請之雇員：' +
+                    '</div>' +
+                    '<div class="title" id="choose">' +
+                        '<select id="applySP' + i + '">' +
+                            '<option disabled selected hidden>尚無申請</option>' +
+                        '</select>' +
+                    '</div>' +
+                    '<div class="title chooseButton">' +
+                        '<input type="button" name="submitBottom" value="選擇" onclick="selectSP(' + i + ')" />' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
+}
+
+/*const error = document.getElementById('error');
 function showError(rspCode)
 {
-    error.style.color = "red";
+    error.style.color = 'red';
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case   200: error.innerHTML = '已就緒...'; error.style.color = ''; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = ''; return ;
     }
 }*/
 function showError() {;}
 
 function getTaskList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/task/SR/output/release");
-    taskListRequest.setRequestHeader("Content-Type", "application/json");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open('GET', 'http://192.168.1.144:5000/task/SR/output/release');
+    taskListRequest.setRequestHeader('Content-Type', 'application/json');
     taskListRequest.send();
     taskListRequest.onload = function()
     {
@@ -42,15 +77,15 @@ function getTaskList()
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
-            case "200": case 200:
+            case '200': case 200:
                 showError(20029);
                 taskList = rst.taskList;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
                 computePage(0);
                 break;
-            case "300": case 300:
-            case "400": case 400:
+            case '300': case 300:
+            case '400': case 400:
                 showError(30029);
             }
     }
@@ -74,7 +109,7 @@ function computePage(type)
             else currentPage++;
             break;
     }
-    pageNumber.innerHTML = currentPage + "/" + pageAmount;
+    pageNumber.innerHTML = currentPage + '/' + pageAmount;
     computeThisPageList();
 }
 
@@ -97,68 +132,61 @@ function showDetail()
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);
-        document.getElementById("taskList" + i).removeAttribute("style");
+        document.getElementById('taskList' + i).removeAttribute('style');
     }
     for (var i = thisPageList.length; i < maxPageAmount; i++)
-        document.getElementById("taskList" + i).style.display = "none";
+        document.getElementById('taskList' + i).style.display = 'none';
 }
 
 function putDetail(index)
 {
     var currentTask = thisPageList[index];
-    document.getElementById("applySP" + index).length = 1;
-    if (currentTask.taskStatus == 1 || currentTask.taskStatus == "1")
+    document.getElementById('applySP' + index).length = 1;
+    if (currentTask.taskStatus == 0 || currentTask.taskStatus == '0')
     {
-        document.getElementById("edit1" + index).style.display = "none";
-        document.getElementById("edit2" + index).style.display = "none";
-        document.getElementById("applySP" + index)[0] = new Option("請選擇僱員", "");
-        document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
-        document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + currentTask.taskEndTime;
-        document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-        document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
-        document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
+        document.getElementById('edit' + index).removeAttribute('style');
+        document.getElementById('applySP' + index)[0] = new Option('尚無申請', '');
+        document.getElementById('taskName' + index).innerHTML = currentTask.taskName;
+        document.getElementById('taskTime' + index).innerHTML = currentTask.taskStartTime + ' ~ ' + currentTask.taskEndTime;
+        document.getElementById('taskQuota' + index).innerHTML = currentTask.taskPoint;
+        document.getElementById('taskLocation' + index).innerHTML = currentTask.taskLocation;
+        document.getElementById('taskContent' + index).innerHTML = currentTask.taskContent;
+    }
+    else if (currentTask.taskStatus == 1 || currentTask.taskStatus == '1')
+    {
+        document.getElementById('edit' + index).style.display = 'none';
+        document.getElementById('applySP' + index)[0] = new Option('請選擇僱員', '');
+        document.getElementById('taskName' + index).innerHTML = currentTask.taskName;
+        document.getElementById('taskTime' + index).innerHTML = currentTask.taskStartTime + ' ~ ' + currentTask.taskEndTime;
+        document.getElementById('taskQuota' + index).innerHTML = currentTask.taskPoint;
+        document.getElementById('taskLocation' + index).innerHTML = currentTask.taskLocation;
+        document.getElementById('taskContent' + index).innerHTML = currentTask.taskContent;
         for (var i = 0; i < currentTask.CandidateList.length; i++)
-            document.getElementById("applySP" + index).add(new Option(currentTask.CandidateList[i][0], currentTask.CandidateList[i][1]));
+            document.getElementById('applySP' + index).add(new Option(currentTask.CandidateList[i][0], currentTask.CandidateList[i][1]));
     }
-    else if (currentTask.taskStatus == 0 || currentTask.taskStatus == "0")
-    {
-        document.getElementById("edit1" + index).style.display = "block";
-        document.getElementById("edit2" + index).style.display = "block";
-        document.getElementById("applySP" + index)[0] = new Option("請選擇僱員", "");
-        document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
-        document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + currentTask.taskEndTime;
-        document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-        document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
-        document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
-        document.getElementById("applySP" + index)[0] = new Option("尚無申請", "");
-    }
-    else document.getElementById("applySP" + index)[0] = new Option("尚無申請", "");
+    else document.getElementById('applySP' + index)[0] = new Option('尚無申請', '');
 }
 
 function selectSP(index)
 {
-    const candidateList = document.getElementById("applySP" + index);
+    const candidateList = document.getElementById('applySP' + index);
     const selectedIndex = candidateList.selectedIndex;
     const candidate = candidateList[selectedIndex];
     if (candidateList.length == 1)
     {
-        alert("此任務尚無人申請：" + thisPageList[index].taskName);
+        alert('此任務尚無人申請：' + thisPageList[index].taskName);
         return ;
     }
     if (selectedIndex == 0)
     {
-        alert("請選擇僱員");
+        alert('請選擇僱員');
         return ;
     }
 
-    var selectSPRequest;
-    if (window.XMLHttpRequest)
-        selectSPRequest = new XMLHttpRequest();
-    else
-        selectSPRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    selectSPRequest.open("POST", "/task/SR/decide_SP");
-    selectSPRequest.setRequestHeader("Content-Type", "application/json");
-    selectSPRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "candidateID": candidate.value}));
+    var selectSPRequest = new XMLHttpRequest();
+    selectSPRequest.open('POST', 'http://192.168.1.144:5000/task/SR/decide_SP');
+    selectSPRequest.setRequestHeader('Content-Type', 'application/json');
+    selectSPRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID, 'candidateID': candidate.value}));
     selectSPRequest.onload = function()
     {
         showError(200);
@@ -166,35 +194,90 @@ function selectSP(index)
         rst = JSON.parse(selectSPRequest.responseText);
         switch (rst.rspCode)
         {
-            case "200": case 200:
-                alert(thisPageList[index].taskName + "已成功選擇僱員：" + candidate.text);
+            case '200': case 200:
+                alert(thisPageList[index].taskName + '已成功選擇僱員：' + candidate.text);
                 window.location.reload();
                 break;
-            case "300": case 300:
-            case "400": case 400:
+            case '300': case 300:
+            case '400': case 400:
             default:
-                alert(thisPageList[index].taskName + "僱員選擇失敗");
+                alert(thisPageList[index].taskName + '僱員選擇失敗');
             }
     }
     showError(400);
 }
 
-function editTask(index)
+var editTaskIndex = -1;
+function showEditDiv(index)
 {
-    // It will be done after all other pages can run.
-    alert("此功能尚未完成");
+    editTaskIndex = index;
+    document.getElementById('editTaskDiv').removeAttribute('style');
+    document.getElementById('edit' + index).style.display = 'none';
+    for (var i = 0; i < 10; i++)
+        if (i != index)
+            document.getElementById('taskList' + i).style.display = 'none';
+    document.getElementById('newTaskName').value = thisPageList[index].taskName;
+    document.getElementById('newTaskStartTime').value = thisPageList[index].taskStartTime;
+    document.getElementById('newTaskEndTime').value = thisPageList[index].taskEndTime;
+    document.getElementById('newTaskQuota').value = thisPageList[index].taskQuota;
+    document.getElementById('newTaskLocation').value = thisPageList[index].taskLocation;
+    document.getElementById('newTaskContent').value = thisPageList[index].taskContent;
+}
+function hideEditDiv()
+{
+    document.getElementById('editTaskDiv').style.display = 'none';
+    document.getElementById('edit' + editTaskIndex).removeAttribute('style');
+    for (var i = 0; i < 10; i++)
+        document.getElementById('taskList' + i).removeAttribute('style');
+    document.getElementById('newTaskName').value = '';
+    document.getElementById('newTaskStartTime').value = '';
+    document.getElementById('newTaskEndTime').value = '';
+    document.getElementById('newTaskQuota').value = '';
+    document.getElementById('newTaskLocation').value = '';
+    document.getElementById('newTaskContent').value = '';
+    editTaskIndex = -1;
+}
+function updateEdit(index)
+{
+    document.getElementById('taskName' + index).innerHTML = document.getElementById('newTaskName').value
+    document.getElementById('taskTime' + index).innerHTML = document.getElementById('newTaskStartTime').value + ' ~ ' + document.getElementById('newTaskEndTime').value;
+    document.getElementById('taskQuota' + index).innerHTML = document.getElementById('newTaskQuota').value;
+    document.getElementById('taskLocation' + index).innerHTML = document.getElementById('newTaskLocation').value;
+    document.getElementById('taskContent' + index).innerHTML = document.getElementById('newTaskContent').value;
+}
+function sendEdit()
+{
+    var editTaskRequest = new XMLHttpRequest();
+    editTaskRequest.open('POST', 'http://192.168.1.144:5000/report/send_report');
+    editTaskRequest.setRequestHeader('Content-Type', 'application/json');
+    editTaskRequest.send(JSON.stringify({'taskID': thisPageList[editTaskIndex].taskID, 'taskName': document.getElementById('newTaskName').value,
+    'taskStartTime': document.getElementById('newTaskStartTime').value, 'taskEndTime': document.getElementById('newTaskEndTime').value + ':00',
+    'taskPoint': document.getElementById('newTaskQuota').value, 'taskLocation': document.getElementById('newTaskLocation').value,
+    'taskContent': document.getElementById('newTaskContent').value,}));
+    editTaskRequest.onload = function()
+    {
+        console.log(editTaskRequest.responseText);
+        rst = JSON.parse(editTaskRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case '20': case 20:
+                console.log('任務編輯已送出');
+                updateEdit(editTaskIndex);
+                hideEditDiv();
+                editTaskIndex = -1;
+                break;
+            default:
+                alert('系統錯誤，無法送出檢舉');
+            }
+    }
 }
 
 function deleteTask(index)
 {
-    var deleteTaskRequest;
-    if (window.XMLHttpRequest)
-        deleteTaskRequest = new XMLHttpRequest();
-    else
-        deleteTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteTaskRequest.open("POST", "/task/SR/delete_task");
-    deleteTaskRequest.setRequestHeader("Content-Type", "application/json");
-    deleteTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
+    var deleteTaskRequest = new XMLHttpRequest();
+    deleteTaskRequest.open('POST', 'http://192.168.1.144:5000/task/SR/delete_task');
+    deleteTaskRequest.setRequestHeader('Content-Type', 'application/json');
+    deleteTaskRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID}));
     deleteTaskRequest.onload = function()
     {
         showError(200);
@@ -202,14 +285,14 @@ function deleteTask(index)
         rst = JSON.parse(deleteTaskRequest.responseText);
         switch (rst.rspCode)
         {
-            case "200": case 200:
-                alert("已刪除任務：" + thisPageList[index].taskName);
+            case '200': case 200:
+                alert('已刪除任務：' + thisPageList[index].taskName);
                 window.location.reload();
                 break;
-            case "300": case 300:
-            case "400": case 400:
+            case '300': case 300:
+            case '400': case 400:
             default:
-                alert("任務刪除失敗：" + thisPageList[index].taskName);
+                alert('任務刪除失敗：' + thisPageList[index].taskName);
             }
     }
     showError(400);

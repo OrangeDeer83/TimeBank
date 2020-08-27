@@ -26,12 +26,8 @@ function showError() {;}
 
 function getTaskList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/task/SP/output/task_can_be_taken");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/task_can_be_taken");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -117,12 +113,8 @@ function putDetail(index)
 
 function takeTask(index)
 {
-    var taskTaskRequest;
-    if (window.XMLHttpRequest)
-        taskTaskRequest = new XMLHttpRequest();
-    else
-        taskTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskTaskRequest.open("POST", "/task/SP/taken_task");
+    var taskTaskRequest = new XMLHttpRequest();
+    taskTaskRequest.open("POST", "http://192.168.1.144:5000/task/SP/taken_task");
     taskTaskRequest.setRequestHeader("Content-Type", "application/json");
     taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     taskTaskRequest.onload = function()

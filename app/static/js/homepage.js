@@ -16,12 +16,8 @@ var currentNews = 0;
 // Get news amount.
 function getNewsAmount()
 {
-    var getNewsAmountRequest;
-    if (window.XMLHttpRequest)
-        getNewsAmountRequest = new XMLHttpRequest();
-    else
-        getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
+    var getNewsAmountRequest = new XMLHttpRequest();
+    getNewsAmountRequest.open("GET", "http://192.168.1.144:5000/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -32,10 +28,10 @@ function getNewsAmount()
         {
             case "200": case 200:
                 console.log("最新消息數量讀取成功");
-                maxNewsNum = rst.max; console.log(maxNewsNum)
-                existNews = rst.numberList; console.log(existNews)
-                newsAmount = existNews.length; console.log(newsAmount)
-                pageAmount = Math.ceil(newsAmount / 5);console.log(pageAmount+typeof(pageAmount))
+                maxNewsNum = rst.max;
+                existNews = rst.numberList;
+                newsAmount = existNews.length;
+                pageAmount = Math.ceil(newsAmount / 5);
                 computePage(0);
                 break;
             case "300": case 300:
@@ -101,25 +97,25 @@ function getCarouselImg()
     for (var i = 0; i < thisPageList.length && i < 5; i++)
     {
         var d = new Date();
-		var time = "";
-		if (d.getHours() < 10) {
-			time += "0" + d.getHours();
-		}
-		else{
-			time += d.getHours();
-		}
-		if (d.getMinutes() < 10) {
-			time += "0" + d.getMinutes();
-		}
-		else{
-			time += d.getMinutes();
-		}
-		if (d.getSeconds() < 10) {
-			time += "0" +d.getSeconds();
-		}
-		else{
-			time += d.getSeconds();
-		}
+        var time = "";
+        if (d.getHours() < 10) {
+            time += "0" + d.getHours();
+        }
+        else{
+            time += d.getHours();
+        }
+        if (d.getMinutes() < 10) {
+            time += "0" + d.getMinutes();
+        }
+        else{
+            time += d.getMinutes();
+        }
+        if (d.getSeconds() < 10) {
+            time += "0" +d.getSeconds();
+        }
+        else{
+            time += d.getSeconds();
+        }
         document.getElementById("carouselImg" + i).src = "../static/uploadFile/newsImage/" + thisPageList[i] + ".jpg?v=" + time;
     }
 }
@@ -133,12 +129,8 @@ function getNewestNewsTitle()
 // Get introduction from database.
 function getIntroduction()
 {
-    var getIntroductionRequest;
-    if (window.XMLHttpRequest)
-        getIntroductionRequest = new XMLHttpRequest();
-    else
-        getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "/portal/output_webIntro");
+    var getIntroductionRequest = new XMLHttpRequest();
+    getIntroductionRequest.open("GET", "http://192.168.1.144:5000/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     getIntroductionRequest.onload = function()
@@ -165,12 +157,8 @@ function getIntroduction()
 
 function getNewsTitle(index)
 {
-    var getTitleRequest;
-    if (window.XMLHttpRequest)
-        getTitleRequest = new XMLHttpRequest();
-    else
-        getTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[index]);
+    var getTitleRequest = new XMLHttpRequest();
+    getTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[index]);
     getTitleRequest.setRequestHeader("Content-Type", "application/json");
     getTitleRequest.send();
     getTitleRequest.onload = function()
@@ -218,12 +206,8 @@ function spanNews(index)
 
 function getNewsContent(index)
 {
-    var getContentRequest;
-    if (window.XMLHttpRequest)
-        getContentRequest = new XMLHttpRequest();
-    else
-        getContentRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getContentRequest.open("GET", "/portal/output_news_content/" + thisPageList[index]);
+    var getContentRequest = new XMLHttpRequest();
+    getContentRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[index]);
     getContentRequest.setRequestHeader("Content-Type", "application/json");
     getContentRequest.send();
     getContentRequest.onload = function()

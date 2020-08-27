@@ -27,8 +27,6 @@ var birthError1 = document.getElementById("birthError1");
 var birthError2 = document.getElementById("birthError2");
 var registerError = document.getElementById("registerError");
 
-var request, checkID;
-
 nameOfUser.addEventListener("input", nameVerify);
 userName.addEventListener("keyup", userNameVerify);
 userPassword.addEventListener("input", userPasswordVerify);
@@ -63,11 +61,8 @@ function hideError(inputElement, errorDiv)
 
 function idTest()
 {
-    if (window.XMLHttpRequest)
-        checkID = new XMLHttpRequest();
-    else // Old IE browser.
-        checkID = new ActiveXObject("Microsoft.XMLHTTP");
-    checkID.open("POST", "/account/USER/detect_repeated");
+    var checkID = new XMLHttpRequest();
+    checkID.open("POST", "http://192.168.1.144:5000/account/USER/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
     checkID.send(JSON.stringify({"userName": userName.value}));
     console.log("CheckID JSON sent.");
@@ -329,12 +324,8 @@ function register()
     if (validated())
     {
         console.log("Avalible input.");
-        if (window.XMLHttpRequest)
-            request = new XMLHttpRequest();
-        else // Old IE browser.
-            request = new ActiveXObject("Microsoft.XMLHTTP");
-
-        request.open("POST", "/account/USER/register");
+        var request = new XMLHttpRequest();
+        request.open("POST", "http://192.168.1.144:5000/account/USER/register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"name": nameOfUser.value, "userName": userName.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
@@ -347,7 +338,6 @@ function register()
             {
                 case "200": case 200: // Register success.
                     console.log("Register success!");
-                    alert(nameOfUser.value + " 註冊成功!");
                     window.location.assign("/USER/");
                     return true;
                 case "300": case 300: // Methods wrong.

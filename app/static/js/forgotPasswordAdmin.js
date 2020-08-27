@@ -5,7 +5,6 @@ var emailError2 = document.getElementById("emailError2");
 var registerError1 = document.getElementById("systemError1");
 var registerError2 = document.getElementById("systemError2");
 
-var request;
 const emailRegexp = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
 
 userEmail.addEventListener("input", userEmailVerify);
@@ -28,7 +27,6 @@ function userEmailVerify()
 
 function forgotPasswordEmail()
 {
-    console.log(userEmail.value);
     if (userEmail.value.length < 3 || userEmail.value.length > 50)
     {
         userEmail.style.border = "1px solid red";
@@ -43,11 +41,9 @@ function forgotPasswordEmail()
         userEmail.focus();
         return false;
     }
-    if (window.XMLHttpRequest)
-        request = new XMLHttpRequest();
-    else // Old IE browser.
-        request = new ActiveXObject("Microsoft.XMLHTTP");
-    request.open("POST", "/account/Admin/forgot_password");
+
+    var request = new XMLHttpRequest();
+    request.open("POST", "http://192.168.1.144/account/Admin/forgot_password");
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify({"adminMail": userEmail.value}));
     request.onload = function()

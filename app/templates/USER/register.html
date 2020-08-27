@@ -14,9 +14,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarVisitor.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
+        <link rel="stylesheet" href="../static/css/common.css">
+        <link rel="stylesheet" href="../static/css/navbarVisitor.css">
+        <link rel="stylesheet" href="../static/css/register.css">
     </head>
 
     <body>
@@ -26,9 +26,9 @@
                     <div class="navbarLeft">
                     </div>
                     <div class="navbarCenter">
-                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
+                        <a class="navbarBrand" href="portal.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
                         </a>
                     </div>
                     <div class="navbarRight">
@@ -42,15 +42,15 @@
             <div class="formColumn">
                 <div class="registerUser" id="registerUser" name="registerUser">
                     <div class="formLine">
-                        <div class="formLabelDiv"><label for="name" class="formLabel">您的稱呼</label></div>
+                        <div class="formLabelDiv"><label for="name" class="formLabel">名稱</label></div>
                         <input type="text" class="formText" id="name" name="name" placeholder="最多20字元，之後可至設定修改" autofocus maxlength="20" onkeypress="if(event.keyCode == 13){register();}" />
-                        <div id="nameError" class="error">請輸入您的稱呼，至多20字元</div>
+                        <div id="nameError" class="error">請輸入您的名稱，至多20字元</div>
                     </div>
 
                     <div class="formLine">
-                        <div class="formLabelDiv"><label for="userName" class="formLabel">使用者名稱</label></div>
+                        <div class="formLabelDiv"><label for="userName" class="formLabel">使用者帳號</label></div>
                         <input type="text" class="formText" id="userName" name="userName" placeholder="最多20字元，且不得與他人重複，無法修改" maxlength="20" onkeypress="if(event.keyCode == 13){register();}" />
-                        <div id="userNameError1" class="error">請輸入使用者名稱，至多20字元</div>
+                        <div id="userNameError1" class="error">請輸入使用者帳號，至多20字元</div>
                         <div id="userNameError2" class="error">此名稱已有人使用，請再試一次</div>
                         <div id="userNameError3" class="error">伺服器錯誤，請稍後再試</div>
                     </div>
@@ -116,7 +116,7 @@
                         <input type="reset" class="formButton" value="重新填寫" onclick="javascript:window.location.reload()" />
                     </div>
                 </div>
-                <script src="{{url_for('static', filename='js/register.js')}}"></script>
+                <script src="../static/js/register.js"></script>
             </div>  
         </div>  
     </body>

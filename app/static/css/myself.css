@@ -47,42 +47,50 @@
 	padding:5px;
 	margin-bottom: 4px;
 	margin: 2px;
+	color: #e4b369;
+}
+.tabs li a
+{
+	color: #e4b369;
 }
 .tabs li:hover,#thisPage
 {
-	color: #05439e;
-	border-bottom: 2px solid #A693B4;
+	color: orange !important;
+	border-bottom: 2px solid #F4D35E !important;
 	margin: 2px;
 	cursor: pointer;
+}
+.tabs li a:hover
+{
+	color: orange !important;
 }
 
 /*資訊表格*/
 #task,#SR,#SP
 {
-	background-color: #787f86;
+	background-color: brown;
 }
 
 #task td, #task th ,#SR td,#SR th,#SP td,#SP th
 {
-	border: 1px ridge #ddd;
 	padding: 10px;
 }
 #task td, #SR td,#SP td
 {
-	background-color: #787f86;
-	color: white;
+	background-color: var(--background-color);
+	color: var(--background-text-color);
 }
 .bottonTask
 {
-	border: 2px solid white;
+	background: var(--button-background-color);
+	border: var(--button-background-border);
+	color: var(--button-background-text-color);
 	text-align: center;
 	border-radius: 5px;
 }
 .bottonTask:hover
 {
-	border: 2px solid #787f86;
-	background-color: white;
-	color:#787f86;
+	background-color: var(--button-hover-background-color);
 }
 .point
 {
@@ -119,9 +127,9 @@
     margin: auto;
     height: 30px;
     color: black;
-    background-color: #ADADC1;
+    background-color: #F4D35E;
     border-color: white;
-    border: 1px solid #DEE2FF;
+    border: 1px solid #FAF0CA;
     padding: 5px;
     cursor: pointer;
 }
@@ -140,8 +148,6 @@
 	{
 		width: 40%;
 		padding: 10px;
-		/*position: relative;
-		top: calc(50% - 64px);*/
 	}
 	#profilePicture
 	{
@@ -170,7 +176,7 @@
 	.tabPartMyself
 	{
 		margin-bottom: 3px;
-		border-bottom: 1.5px solid #736d6d;
+		border-bottom: 1.5px solid brown;
 	}
 }
 @media (min-width: 400px)
@@ -221,7 +227,7 @@
 	.tabPartMyself
 	{
 		margin-bottom: 6px;
-		border-bottom: 2px solid #736d6d;
+		border-bottom: 2px solid brown;
 	}
 }
 @media (min-width: 800px)

@@ -12,8 +12,8 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/loginManager6.css')}}" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/loginManager6.css" type="text/css">
     </head>
 
     <body>
@@ -23,9 +23,9 @@
                     <div class="navbarLeft">
                     </div>
                     <div class="navbarCenter">
-                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
+                        <a class="navbarBrand" href="portal.html">
+                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />
+                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />
                         </a>
                     </div>
                     <div class="navbarRight">
@@ -54,14 +54,14 @@
                             </div>
                             <div class="formLine" id="formLine2">
                                 <input type="button" class="formButton" value="登入" onclick="gmLogin()">
-                                <span class="psw"><a href="{{url_for('Admin.forgot_password')}}">忘記密碼?</a></span>
+                                <span class="psw"><a href="forgotPasswordSA.html">忘記密碼?</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="{{url_for('static', filename='js/loginGM.js')}}"></script>
+        <script src="../static/js/loginGM.js"></script>
     </body>
     
 </html>

@@ -83,10 +83,15 @@ def SP_output_passed():
                 sortTaskByTaskID(taskPassed, 0, len(taskPassed) - 1)
                 taskPassedJson = []
                 for task in taskPassed:
+                    commentStatus = 1
+                    if task.db_task_comment[0].SPComment == None:
+                        commentStatus = 0
+                    taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
                     taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                            "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+                                            "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                            "commentStatus": commentStatus})
                 return jsonify({"rspCode": "200", "taskPassed": taskPassedJson})                                        #成功取得
             else:
                 return jsonify({"rspCode": "402", "taskRecord": ""})                                                    #沒有userID
@@ -248,7 +253,7 @@ def SR_add_task():
     elif newTaskStartTime < str(datetime.datetime.now()):
         notAllow.append("taskStartTime")
     if newTaskEndTime == '':
-        notAllow,append("taskEndTime")
+        notAllow.append("taskEndTime")
     elif newTaskStartTime >= newTaskEndTime:
         notAllow.append("taskEndTime")
     if not(newTaskPoint.isdigit()):
@@ -335,7 +340,7 @@ def SP_output_task_can_be_taken():
     taskContent = []
     taskID = []
     task_list=[]
-    taskData = db.session.query(task).filter(task.taskStatus.in_([0,1])).all()
+    taskData = db.session.query(task).filter(task.taskStatus.in_([0,1])).order_by(task.taskStartTime,task.taskPoint.desc()).all()
     #user = db.session.query(account).filter(account.userID == userID).first()
     for task_ in taskData:
         #flag = 0
@@ -608,9 +613,14 @@ def SR_accept():
             if task_.taskStatus in  [2,9,3,6,7,8,10,13,14,15,16]:
                 if task_.taskEndTime + datetime.timedelta(hours=24) > datetime.datetime.now():
                     if task_.db_task_comment[0].commentStatus == -1:
-                        taskList.append({"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),\
-                                         "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
-                                         "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus)})
+                        commentStatus = 1
+                        if task_.db_task_comment[0].SRComment == None:
+                            commentStatus = 0
+                        taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
+                        taskList.append({"taskName":task_.taskName,"taskStartTime": task_.taskStartTime,"taskEndTime":str(task_.taskEndTime),\
+                                        "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
+                                        "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus),\
+                                        "commentStatus": commentStatus})
         return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
     except:
         return jsonify({"rspCode":"400","taskList":"","taskAmount":""})

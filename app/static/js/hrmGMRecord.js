@@ -32,12 +32,8 @@ function showError(rspCode)
 // Get GM list from server.
 function getGMList()
 {
-    var getALRequest;
-    if (window.XMLHttpRequest)
-        getALRequest = new XMLHttpRequest();
-    else
-        getALRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getALRequest.open("GET", "/HRManage/GM_list");
+    var getALRequest = new XMLHttpRequest();
+    getALRequest.open("GET", "http://192.168.1.144:5000/HRManage/GM_list");
     getALRequest.setRequestHeader("Content-Type", "application/json");
     getALRequest.send();
     getALRequest.onload = function()
@@ -115,12 +111,8 @@ function showThisPageList()
 
 function deleteManager(index)
 {
-    var deleteManagerRequest;
-    if (window.XMLHttpRequest)
-        deleteManagerRequest = new XMLHttpRequest();
-    else
-        deleteManagerRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteManagerRequest.open("POST", "/HRManage/delete/GM");
+    var deleteManagerRequest = new XMLHttpRequest();
+    deleteManagerRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/GM");
     deleteManagerRequest.setRequestHeader("Content-Type", "application/json");
     deleteManagerRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID, "adminID": "39"}));
     deleteManagerRequest.onload = function()
@@ -150,12 +142,8 @@ function deleteManager(index)
 
 function checkPassword()
 {
-    var checkPasswordRequest;
-    if (window.XMLHttpRequest)
-        checkPasswordRequest = new XMLHttpRequest();
-    else
-        checkPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkPasswordRequest.open("POST", "/HRManage/delete/Admin/check_password");
+    var checkPasswordRequest = new XMLHttpRequest();
+    checkPasswordRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("deletePassword").value}));
     checkPasswordRequest.onload = function()

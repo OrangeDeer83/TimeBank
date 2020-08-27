@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+/* 點數紀錄介面 */
+
+/*頁面內文*/
+.notificationPart
+{
+    margin-top: 100px;
+}
+/*表格*/
+#notificationTable
+{
+    width: 70%;
+    margin:auto;
+    background-color: var(--background-color);
+}
+#notificationTable td,#notificationPart th
+{
+    border: var(--background-border);
+    padding: 4px;
+}
+
+.formPage
+{
+    margin: auto;
+    margin-top: 10px;
+    width: 80vw;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton
+{
+    margin: auto;
+    height: 30px;
+    color: black;
+    background-color: #F4D35E;
+    border-color: white;
+    border: 1px solid #FAF0CA;
+    padding: 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 580px)
+{
+
+    .introduction
+    {
+        width: 100%;
+    }
+}

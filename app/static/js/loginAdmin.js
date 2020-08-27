@@ -86,12 +86,8 @@ function adminLogin()
     if (!validated()) return ;
     else
     {
-        var loginAdminRequest;
-        if (window.XMLHttpRequest)
-            loginAdminRequest = new XMLHttpRequest();
-        else
-            loginAdminRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        loginAdminRequest.open("POST", "/account/Admin/login");
+        var loginAdminRequest = new XMLHttpRequest();
+        loginAdminRequest.open("POST", "http://192.168.1.144:5000/account/Admin/login");
         loginAdminRequest.setRequestHeader("Content-Type", "application/json");
         loginAdminRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginAdminRequest.onload = function()
@@ -102,7 +98,6 @@ function adminLogin()
             switch (rst.rspCode)
             {
                 case "200": case 200:
-                    alert("登入成功");
                     window.location.assign("/Admin/AdminList");
                     break;
                 case "300": case 300:

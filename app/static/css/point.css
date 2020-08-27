@@ -2,16 +2,22 @@
 
 /* 點數紀錄介面 */
 
+/*頁面內文*/
+.pointPart
+{
+    margin-top: 100px;
+}
 /*表格*/
 #pointTable
 {
     width: 70%;
     margin:auto;
-    background-color: #fbf9b2;
+    background-color: var(--background-color);
 }
 #pointTable td,#pointPart th
 {
-    border: 1px ridge #ddd;
+    border: var(--background-border);
+    padding: 4px;
 }
 /*表格內容*/
 .introduction
@@ -55,16 +61,32 @@
     margin-bottom: -10px;
     height: 30px;
 }
-
-/*頁面內文*/
-.bodyContainer
+.formPage
 {
-    margin-top: 50px;
-    position: relative;
+    margin: auto;
+    margin-top: 10px;
+    width: 80vw;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton
+{
+    margin: auto;
+    height: 30px;
+    color: black;
+    background-color: #F4D35E;
+    border-color: white;
+    border: 1px solid #FAF0CA;
+    padding: 5px;
+    cursor: pointer;
 }
 
 @media (max-width: 580px)
 {
+
     .introduction
     {
         width: 100%;

@@ -86,12 +86,8 @@ function gmLogin()
     if (!validated()) return ;
     else
     {
-        var loginGMRequest;
-        if (window.XMLHttpRequest)
-            loginGMRequest = new XMLHttpRequest();
-        else
-            loginGMRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        loginGMRequest.open("POST", "/account/Admin/login");
+        var loginGMRequest = new XMLHttpRequest();
+        loginGMRequest.open("POST", "http://192.168.1.144:5000/account/Admin/login");
         loginGMRequest.setRequestHeader("Content-Type", "application/json");
         loginGMRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginGMRequest.onload = function()
@@ -102,7 +98,6 @@ function gmLogin()
             switch (rst.rspCode)
             {
                 case "200": case 200:
-                    alert("登入成功");
                     window.location.assign("/GM/updateGrade");
                     break;
                 case "300": case 300:

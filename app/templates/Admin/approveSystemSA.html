@@ -11,78 +11,49 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/approveSystem.css')}}" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/approveSystem.css" type="text/css">
     </head>
 
     <body>
-        <header>
-            <nav class="nav navbarBack">
-                <div class="navbarContainer">
-                    <div class="navbarLeft">
-                        <div class="dropdown">
-                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
-                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
-                                <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
-                                <div class="unspanned" id="HRSpan">
-                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.Admin_list')}}">系統管理員</a></div>
-                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.GM_list')}}">評論管理員</a></div>
-                                </div>
-                                <li><a href="{{url_for('Admin.give_point')}}" class="dropdownMenuItem">配發系統</a></li>
-                                <li><a href="{{url_for('Admin.approve_system')}}" class="dropdownMenuItem">核准系統</a></li>
-                                <li><a href="{{url_for('Admin.update_condition')}}" class="dropdownMenuItem">更新申請條件</a></li>
-                                <li><a href="{{url_for('Admin.update_web')}}" class="dropdownMenuItem">更新入口網站</a></li>
-                                <li><a href="{{url_for('Admin.setting')}}" class="dropdownMenuItem">設定</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="navbarCenter">
-                        <div class="navbarBrand">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="{{url_for('static', filename='img/SAColor.png')}}" />
-                        </div>
-                    </div>
-                    <div class="navbarRight">
-                        <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
-                    </div>
-                </div>
-            </nav>
-        </header>
+        <header id="SAnavbar"></header>
         <div class="approveDiv">
             <div id="formTitleDiv"><h3 id="formTitle">核准系統 - 核准申請</h3></div>
             <div class="formColumn">
                 <div class="formLine">
                     <div class="approveButton">
                         <button>核准申請</button>
-                        <a href="{{url_for('Admin.approve_record')}}"><button>核准紀錄</button></a>
+                        <a href="approveRecordSA.html"><button>核准紀錄</button></a>
                     </div>
                 </div>
                 <div class="formLine">               
-                    <input type="text" class="Text" id="searchUser" name="searchUser" placeholder="輸入使用者名稱" maxlength="20" />
+                    <input type="text" class="Text" id="searchUser" name="searchUser" placeholder="輸入名稱或使用者帳號" maxlength="20" />
                     <button id="searchUserButton" onclick="getUserList()">&#128269</button>
                 </div>
                 <div class="formLine">                    
                     <div id="formInformation1">
                         <div class="Information1">
-                            <div class="detail">申請人：<span id="userName0"></span></div>
+                            <div class="detail">申請人：<span id="Name0"></span></div>
+                            <div class="detail">使用者帳號：<span id="userName0"></span></div>
+                            <div class="detail">現有點數：<span id="userPoint0"></span>點</div>
                             <div class="detail">雇主評分：<span id="scoreSR0"></span></div>
                             <div class="detail">雇員評分：<span id="scoreSP0"></span></div>
                             <div class="detail" onclick="downloadPDF(0)">附件下載(PDF檔)</div>
                         </div> 
                         <div class="Information2">
-                            <div class="detail">申請類別：<span id="applyClass0"></span></div>
                             <div class="detail">申請額度：<span id="applyQuota0"></span>點</div>
                             <div class="detail">申請時間：<br><span id="applyTime0"></span></div>
                             <div class="detail">發放週期：<span id="applyPeriod0"></span></div>
                             <div class="detail">發放次數：<span id="applyFrequency0"></span></div>
                         </div>
                         <div class="Information3">
+                        	<div class="detail">申請類別：<span id="applyClass0"></span></div>
                             <div class="detail" id="applyReason0">申請原因：<textarea class="applyDescription" id="applyResult0" readonly></textarea> </div>
                         </div>
                         <div class="Information4">
                             <div class="detail">更改額度：<input type="number" class="quodaChange" id="changeQuota0" placeholder="1~50" min="1" max="50"/></div>
-                            <div class="detail">
+                            <div class="detail" id="detail1">
                                 <input type="submit" class="applyButton" id="approve" value="核准" onclick="approve(0,'1')" />
                                 <input type="reset" class="applyButton" id="deny" value="否決" onclick="approve(0,'2')" />
                             </div>
@@ -90,24 +61,26 @@
                     </div>
                     <div id="formInformation2">
                         <div class="Information1">
-                            <div class="detail">申請人：<span id="userName1"></span></div>
+                            <div class="detail">申請人：<span id="Name1"></span></div>
+                            <div class="detail">使用者帳號：<span id="userName1"></span></div>
+                            <div class="detail">現有點數：<span id="userPoint1"></span>點</div>
                             <div class="detail">雇主評分：<span id="scoreSR1"></span></div>
                             <div class="detail">雇員評分：<span id="scoreSP1"></span></div>
                             <div class="detail" onclick="downloadPDF(1)">附件下載(PDF檔)</div>
                         </div> 
                         <div class="Information2">
-                            <div class="detail">申請類別：<span id="applyClass1"></span></div>
                             <div class="detail">申請額度：<span id="applyQuota1"></span>點</div>
                             <div class="detail">申請時間：<br><span id="applyTime1"></span></div>
                             <div class="detail">發放週期：<span id="applyPeriod1"></span></div>
                             <div class="detail">發放次數：<span id="applyFrequency1"></span></div>
                         </div>
                         <div class="Information3">
+                        	<div class="detail">申請類別：<span id="applyClass1"></span></div>
                             <div class="detail" id="applyReason0">申請原因：<textarea class="applyDescription" id="applyResult1" readonly></textarea> </div>
                         </div>
                         <div class="Information4">
                             <div class="detail">更改額度：<input type="number" class="quodaChange" id="changeQuota1" placeholder="1~50" min="1" max="50"/></div>
-                            <div class="detail">
+                            <div class="detail" id="detail1">
                                 <input type="submit" class="applyButton" id="approve" value="核准" onclick="approve(1,'1')" />
                                 <input type="reset" class="applyButton" id="deny" value="否決" onclick="approve(1,'2')" />
                             </div>
@@ -119,7 +92,7 @@
                 <div class="page">
                     <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
                         <span class="formPageNumber" id="pageNumber">&nbsp1/1</span>
-                <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+                    <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
                 </div>
                 <div class="allApprove">
                     <input type="submit" class="formButton" id="allApproveButton" value="全部核准" onclick="approve(2,'1')" />
@@ -127,11 +100,9 @@
                 </div>
             </div>
         </div>
-        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/approveSystem.js')}}"></script>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/navbarSA.js"></script>
+        <script src="../static/js/approveSystem.js"></script>
     </body>
 
 </html>
-
-
-

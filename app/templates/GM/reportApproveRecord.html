@@ -1,0 +1,75 @@
+<!--GM檢舉紀錄-->
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <title>檢舉紀錄</title>
+
+        <meta charset="utf-8" />
+        <meta name="author" content="Ariel Damian Ellen" />
+        <meta name="generator" content="VScode 1.47, Sublime Text 3" />
+        <meta name="dcterms.rightHolder" content="TaiPay" />
+        <meta name="dcterms.dateCopyrighted" content="2020" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarManager.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/reportApprove.css" type="text/css">
+
+    </head>
+
+    <body>
+        <header id="GMnavbar"></header>
+        <div class="bodyContainer">
+            <div id="form">
+                <div id="detail">
+                    <div id="title">檢舉紀錄</div>
+                    <div class="formLine">
+                        <div class="auditButton">
+                            <a href="reportApprove.html"><button id="formAudit">檢舉審核</button></a>
+                            <button id="formAudit">檢舉紀錄</button>
+                        </div>
+                    </div>
+                    <div id="taskGradeDiv">
+                        <div id="taskIDDiv">
+                            <div id="taskLeft">檢舉編號<br><span id="reportID">1</span></div><!--
+                        ---><div id="taskCenter">
+                                <div class="taskInfo">檢舉時間：<span id="taskTime"></span></div>
+                                <div class="taskInfo">檢舉人：<span id="taskName"></span></div>
+                                <div class="taskInfo">檢舉原因：<span id="SRReason"></span></div>
+                            </div><!--
+                        ---><div id="taskRight">
+                                <div class="taskInfo">結果：<span id="approveResult"></span></div>
+                                <div class="taskInfo">gmID：<span id="gmID"></span></div>
+                            </div>
+                        </div>
+                        <div id="taskDetailDiv">
+                            <div class="taskDetail">任務名稱：<span id="taskName"></span></div>
+                            <div class="taskDetail">任務時間：<span id="taskTime"></span></div>
+                            <div class="taskDetail">任務內容：<div><textarea class="textarea" id="taskContent" readonly></textarea></div></div>
+                            <div class="taskDetail">雇主名稱：<span id="SRName"></span></div>
+                            <div class="taskDetail">雇主電話號碼：<span id="SRPhone"></span></div>
+                            <div class="taskDetail">雇主評分：<span id="SRRate"></span></div>
+                            <div class="taskDetail">雇主評論：<div><textarea class="textarea" id="SRComment" readonly></textarea></div></div>
+                            <div class="taskDetail">雇員名稱：<span id="SPName"></span></div>
+                            <div class="taskDetail">雇員電話號碼：<span id="SPPhone"></span></div>
+                            <div class="taskDetail">雇員評分：<span id="SRRate"></span></div>
+                            <div class="taskDetail">雇員評論：<div><textarea class="textarea" id="SPComment" readonly></textarea></div></div>           
+                        </div>
+                    </div>
+                    <div class="formPage">
+                        <span id="formPage1">
+                            <button class="button pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                            <span class="formPageNumber" id="pageNumber">1/1</span>
+                            <button class="button pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/navbarGM.js"></script>
+        <script src="../static/js/updateGrade.js"></script>
+    </body>
+</html>

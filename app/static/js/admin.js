@@ -42,7 +42,7 @@ function showError(type)
             break;
         case 4032:
             error.innerHTML = "請輸入您的密碼以刪除管理員";
-            document.getElementById("deleteDiv").style.display = "block";
+            document.getElementById("checkSAPassword").style.display = "block";
             break;
         case 4042: case 4027:
             error.innerHTML = "使用者帳號重複，請再次輸入";
@@ -70,12 +70,8 @@ var pageNumber = document.getElementById("pageNumber");
 // Get amount of admins.
 function getAdminAmount()
 {
-    var getAdminAmountRequest;
-    if (window.XMLHttpRequest)
-        getAdminAmountRequest = new XMLHttpRequest();
-    else
-        getAdminAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getAdminAmountRequest.open("GET", "/HRManage/Admin_list");
+    var getAdminAmountRequest = new XMLHttpRequest();
+    getAdminAmountRequest.open("GET", "http://192.168.1.144:5000/HRManage/Admin_list");
     getAdminAmountRequest.setRequestHeader("Content-Type", "application/json");
     getAdminAmountRequest.send();
     getAdminAmountRequest.onload = function()
@@ -87,21 +83,46 @@ function getAdminAmount()
         {
             case "200": case 200:
                 console.log("管理員數量讀取成功");
+                adminList = rst.AdminList;
+                adminAmount = adminList.length;
+                pageAmount = Math.ceil(adminAmount / 10);
+                if (adminAmount == 0)
+                    return;
+                showListDiv();
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，管理員數量讀取失敗，請稍後再試");
                 return false;
         }
-        adminList = rst.AdminList;
-        adminAmount = adminList.length;
-        pageAmount = Math.ceil(adminAmount / 10);
-        if (adminAmount == 0)
-            return;
-        computePage(0);
     }
     console.log("正在等待伺服器回傳管理員數量");
     showError(400);
+}
+
+function showListDiv()
+{
+    const table = document.getElementById('listTable');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr class="list" id="list' + i + '" style="displat:none;"><td>' +
+            '<div class="authority" id="authority' + i + '">權限：</div>' +
+            '<div class="userName" id="userName' + i + '">使用者帳號：</div>' +
+            '<div id="reset">密碼：<input type="text" id="newPassword' + i + '" placeholder="輸入新密碼" /></div>' +
+            '<div class="delete" id="delete' + i + '" onclick="deleteAdmin(' + i + ')">刪除</div>' +
+            '<div id="resetButton"><input type="submit" value="更改密碼" onclick="changePassword(' + i + ')" /></div>' +
+        '</td></tr>';
+    }
+    table.innerHTML += '<tr><td>' +
+        '<div id="changePageDiv">' +
+            '<button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>' +
+            '<span class="formPageNumber" id="pageNumber">1/1</span>' +
+            '<button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>' +
+        '</div>' +
+    '</td></tr>';
+    computePage(0);
 }
 
 // Compute and react nextPage button, prevOage button and number of pages.
@@ -168,8 +189,7 @@ function getDetail(index)
     }
     document.getElementById("authority" + index).innerHTML = "權限：" + adminType;
     document.getElementById("userName" + index).innerHTML = "使用者名稱：" + thisPageList[index].adminName;
-    document.getElementById("phone" + index).innerHTML = "Phone：" + thisPageList[index].adminPhone;
-    document.getElementById("email" + index).innerHTML = "Email：" + thisPageList[index].adminMail;
+    document.getElementById('newPassword' + index).value = '';
 }
 
 // Add Admin.
@@ -201,12 +221,8 @@ function addAdmin()
         return;
     }
 
-    var addAdminRequest;
-    if (window.XMLHttpRequest)
-        addAdminRequest = new XMLHttpRequest();
-    else
-        addAdminRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addAdminRequest.open("POST", "/HRManage/create/Admin");
+    var addAdminRequest = new XMLHttpRequest();
+    addAdminRequest.open("POST", "http://192.168.1.144:5000/HRManage/create/Admin");
     addAdminRequest.setRequestHeader("Content-Type", "application/json");
     console.log(adminType + adminUserName.value + adminPassword.value);
     addAdminRequest.send(JSON.stringify({"adminType": adminType, "adminName": adminUserName.value, "adminPassword": adminPassword.value}));
@@ -257,17 +273,44 @@ function adminPasswordVerify()
         showError(200);
 }
 
+function changePassword(index)
+{
+    const newPassword = document.getElementById('newPassword' + index).value;
+    if (newPassword.match(passwordRegexp) == null)
+    {
+        alert('新密碼格式錯誤');
+        return ;
+    }
+
+    var changePasswordRequest = new XMLHttpRequest();
+    changePasswordRequest.open('POST', 'http://192.168.1.144:5000/HRManage/changePassword');
+    changePasswordRequest.setRequestHeader('Content-Type', 'application/json');
+    changePasswordRequest.send(JSON.stringify({'adminID': thisPageList[index].adminID, 'newPassword': newPassword}));
+    changePasswordRequest.onload = function()
+    {
+        console.log(changePasswordRequest.responseText);
+        rst = JSON.parse(changePasswordRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case '20': case 20:
+                showDetail(rst.noticeList);
+                break;
+            case '18': case 18:
+                document.getElementById("checkSAPassword").style.display = "block";
+            default:
+                console.log('無法更改密碼');
+                break;
+        }
+    }
+}
+
 // Delete admin.
 function deleteAdmin(index)
 {
-    var deleteRequest;
-    if (window.XMLHttpRequest)
-        deleteRequest = new XMLHttpRequest();
-    else
-        deleteRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteRequest.open("POST", "/HRManage/delete/Admin");
+    var deleteRequest = new XMLHttpRequest();
+    deleteRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin");
     deleteRequest.setRequestHeader("Content-Type", "application/json");
-    deleteRequest.send(JSON.stringify({"SAID": "5", "adminID": thisPageList[index].adminID}));
+    deleteRequest.send(JSON.stringify({"adminID": thisPageList[index].adminID}));
     deleteRequest.onload = function()
     {
         showError(200);
@@ -298,12 +341,8 @@ function deleteAdmin(index)
 
 function checkPassword()
 {
-    var checkPasswordRequest;
-    if (window.XMLHttpRequest)
-        checkPasswordRequest = new XMLHttpRequest();
-    else
-        checkPasswordRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkPasswordRequest.open("POST", "/HRManage/delete/Admin/check_password");
+    var checkPasswordRequest = new XMLHttpRequest();
+    checkPasswordRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("password").value}));
     checkPasswordRequest.onload = function()
@@ -315,7 +354,7 @@ function checkPassword()
         {
             case "200": case 200:
                 alert("密碼驗證成功");
-                document.getElementById("deleteDiv").style.display = "none";
+                document.getElementById("checkSAPassword").style.display = "none";
                 break;
             case "300": case 300:
                 showError(30022);
@@ -333,12 +372,8 @@ function checkPassword()
 
 function checkUserName()
 {
-    var checkUserNameRequest;
-    if (window.XMLHttpRequest)
-        checkUserNameRequest = new XMLHttpRequest();
-    else // Old IE browser.
-        checkUserNameRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    checkUserNameRequest.open("POST", "/account/Admin/detect_repeated");
+    var checkUserNameRequest = new XMLHttpRequest();
+    checkUserNameRequest.open("POST", "http://192.168.1.144:5000/account/Admin/detect_repeated");
     checkUserNameRequest.setRequestHeader("Content-Type", "application/json");
     checkUserNameRequest.send(JSON.stringify({"adminName": adminUserName.value}));
     checkUserNameRequest.onload = function()

@@ -10,12 +10,8 @@ window.onload = function()
 var introduction = "";
 function getIntroduction()
 {
-    var getIntroductionRequest;
-    if (window.XMLHttpRequest)
-        getIntroductionRequest = new XMLHttpRequest();
-    else // Old IE browser.
-        getIntroductionRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIntroductionRequest.open("GET", "/portal/output_webIntro");
+    var getIntroductionRequest = new XMLHttpRequest();
+    getIntroductionRequest.open("GET", "http://192.168.1.144:5000/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     
@@ -45,12 +41,8 @@ function getIntroduction()
 // Send web introduction to server.
 function storeIntroduction()
 {
-    var sendIntroduction;
-    if (window.XMLHttpRequest)
-        sendIntroduction = new XMLHttpRequest();
-    else
-        sendIntroduction = new ActiveXObject("Microsoft.XMLHTTP");
-    sendIntroduction.open("POST", "/portal/upload_web_intro");
+    var sendIntroduction = new XMLHttpRequest();
+    sendIntroduction.open("POST", "http://192.168.1.144:5000/portal/upload_web_intro");
     sendIntroduction.setRequestHeader("Content-Type", "application/json");
     sendIntroduction.send(JSON.stringify({"intro": document.getElementById("introduction").value}));
      
@@ -84,12 +76,8 @@ var changePage = document.getElementById("changePage");
 // Get news amount.
 function getNewsAmount()
 {
-    var getNewsAmountRequest;
-    if (window.XMLHttpRequest)
-        getNewsAmountRequest = new XMLHttpRequest();
-    else
-        getNewsAmountRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
+    var getNewsAmountRequest = new XMLHttpRequest();
+    getNewsAmountRequest.open("GET", "http://192.168.1.144:5000/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -118,12 +106,8 @@ function getNewsAmount()
 // getDetails from server each news
 function getTitle(i)
 {
-    var getOldTitleRequest;
-    if (window.XMLHttpRequest)
-        getOldTitleRequest = new XMLHttpRequest();
-    else
-        getOldTitleRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getOldTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[i]);
+    var getOldTitleRequest = new XMLHttpRequest();
+    getOldTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[i]);
     getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
     getOldTitleRequest.send();
     var index = i; console.log(i + "" + index);
@@ -148,12 +132,8 @@ function getTitle(i)
 }
 function getText(i)
 {
-    var getTextRequest;
-    if (window.XMLHttpRequest)
-        getTextRequest = new XMLHttpRequest();
-    else
-        getTextRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTextRequest.open("GET", "/portal/output_news_content/" + thisPageList[i]);
+    var getTextRequest = new XMLHttpRequest();
+    getTextRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[i]);
     getTextRequest.setRequestHeader("Content-Type", "application/json");
     getTextRequest.send();
     var index = i;
@@ -173,7 +153,6 @@ function getText(i)
         }
         //thisPageText.push(rst.content); console.log(rst.content);
         document.getElementById("newsText" + (index + 1)).value = rst.content;
-        console.log("editNewsForm" + (index + 1));
         document.getElementById("editNewsForm" + (index + 1)).action = "/portal/edit_news/" + thisPageList[index];
     }
 }
@@ -267,7 +246,7 @@ function previewImg()
 function changeSpan(newIndex)
 {
     var currentIndex = getCurrentIndex();
-    if (currentIndex == newIndex) console.log("span" + newIndex); // Didn't change.
+    if (currentIndex == newIndex); // Didn't change.
     else
     {
         var currentSpan = document.getElementsByClassName("currentSpannedNews")[0];
@@ -311,12 +290,8 @@ function changeSpan(newIndex)
 
 function deleteNews(index)
 {
-    var deleteNewsRequest;
-    if (window.XMLHttpRequest)
-        deleteNewsRequest = new XMLHttpRequest();
-    else
-        deleteNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    deleteNewsRequest.open("GET", "/portal/delete_news/" + thisPageList[index - 1]);
+    var deleteNewsRequest = new XMLHttpRequest();
+    deleteNewsRequest.open("GET", "http://192.168.1.144:5000/portal/delete_news/" + thisPageList[index - 1]);
     deleteNewsRequest.setRequestHeader("Content-Type", "application/json");
     deleteNewsRequest.send();
     deleteNewsRequest.onload = function()
@@ -344,12 +319,8 @@ function deleteNews(index)
     var reader = new FileReader;
     reader.readAsDataURL(img.files[0]);
 
-    var editNewsRequest;
-    if (window.XMLHttpRequest)
-        editNewsRequest = new XMLHttpRequest();
-    else
-        editNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    editNewsRequest.open("POST", "/portal/edit_news/" + thisPageList[currentIndex - 1]);
+    var editNewsRequest = new XMLHttpRequest();
+    editNewsRequest.open("POST", "http://192.168.1.144:5000/portal/edit_news/" + thisPageList[currentIndex - 1]);
     editNewsRequest.setRequestHeader("Content-Type", "application/json");
     editNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     editNewsRequest.onload = function()
@@ -391,12 +362,8 @@ function addNews()
     var reader = new FileReader;
     reader.readAsDataURL(img.files[0]);
 
-    var addNewsRequest;
-    if (window.XMLHttpRequest)
-        addNewsRequest = new XMLHttpRequest();
-    else
-        addNewsRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    addNewsRequest.open("POST", "/portal/upload_news/");
+    var addNewsRequest = new XMLHttpRequest();
+    addNewsRequest.open("POST", "http://192.168.1.144:5000/portal/upload_news/");
     addNewsRequest.setRequestHeader("Content-Type", "application/json");
     addNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     addNewsRequest.onload = function()

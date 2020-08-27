@@ -1,5 +1,3 @@
-const userID = "10"; // Only for beta.
-
 const taskName = document.getElementById("taskName");
 const taskStartTime = document.getElementById("taskStartTime");
 const taskEndTime = document.getElementById("taskEndTime");
@@ -77,15 +75,10 @@ function createTask()
     if (!validated)
         return ;
 
-    var createTaskRequest;
-    if (window.XMLHttpRequest)
-        createTaskRequest = new XMLHttpRequest();
-    else
-        createTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    createTaskRequest.open("POST", "/task/SR/add_task");
+    var createTaskRequest = new XMLHttpRequest();
+    createTaskRequest.open("POST", "http://192.168.1.144:5000/task/SR/add_task");
     createTaskRequest.setRequestHeader("Content-Type", "application/json");
-    // userId is for test.
-    createTaskRequest.send(JSON.stringify({"taskName": taskName.value, "taskStartTime": taskStartTime.value, "taskEndTime": taskEndTime.value, "taskPoint": taskQuota.value, "taskLocation": taskLocation.value, "taskContent": taskContent.value, "userID": userID}));
+    createTaskRequest.send(JSON.stringify({"taskName": taskName.value, "taskStartTime": taskStartTime.value, "taskEndTime": taskEndTime.value, "taskPoint": taskQuota.value, "taskLocation": taskLocation.value, "taskContent": taskContent.value}));
     createTaskRequest.onload = function()
     {
         console.log(createTaskRequest.responseText);

@@ -12,371 +12,36 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="{{url_for('static', filename='css/allTask.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="../static/css/allTaskSRAccepted.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
     </head>
     <body>
-        <header>
-            <nav class="nav navbarBack">
-                <div class="navbarContainer">
-                    <div class="navbarLeft">
-                        <div class="dropdown menuIconBack" onclick="clickToSpan('menuIconSpan')">
-                            <div class="menuIcon"></div>
-                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
-                                <li class="hiddenLarge">
-                                    <a class="point" href="{{url_for('USER.point_record')}}">
-                                        <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                        <span id="navbarPoint1">0</span>
-                                    </a>
-                                </li>
-                                <li><a href="{{url_for('USER.all_task')}}">所有任務</a></li>
-                                <li><a href="{{url_for('USER.create_task')}}">新增任務</a></li>
-                                <li><a href="{{url_for('USER.schedule')}}">行事曆</a></li>
-                                <li><a href="{{url_for('USER.application')}}">點數申請</a></li>
-                                <li><a href="{{url_for('USER.setting')}}">設定</a></li>
-                                <li><a id="logout" href="{{url_for('account.logout')}}">登出</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="navbarCenter">
-                        <a class="navbarBrand" href="{{url_for('USER.index')}}">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="{{url_for('static', filename='img/brandWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="{{url_for('static', filename='img/brandColor.png')}}" />
-                        </a>
-                    </div>
-                    <div class="navbarRight">
-                        <ul class="nav navbarUl">
-                            <li class="dropdown">
-                                <div class="navbarNotice" onclick="clickToSpan('noticeSpan')">通知</div>
-                                <ul id="noticeSpan" class="dropdownMenu dropdownMenuRight unspanned">
-                                    <li><a><div>此功能尚未完成</div></a></li>
-                                </ul>
-                            </li>
-                            <li class="hiddenSmall">
-                                <a class="point" href="{{url_for('USER.point_record')}}">
-                                    <img class="navbarPointImg" alt="Point" src="{{url_for('static', filename='img/point3.png')}}" />
-                                    <span id="navbarPoint">0</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <a class="navbarPortrait" id="navbarUserID">
-                            <img class="navbarPortraitImg" alt="Portrait" />
-                        </a>                           
-                    </div>
-                </div>
-            </nav>
-        </header>
-    <div class="bodyContain">
-        <div class="tabPart">
-                <div class="tabs" id="tabsFirst">
-                    <ul>
-                        <li id="thisPage">雇主</li>
-                        <li id="notThisPage"><a href="{{url_for('USER.SP_all_task_passed')}}">雇員</a></li>
-                    </ul>
-                </div>
-                <div class="addTask">
-                    <a href="{{url_for('USER.create_task')}}">新增任務</a>
-                </div>
-                <div class="takeTask">
-                    <a href="{{url_for('USER.all_task')}}">承接任務</a>
-                </div>
-        </div>
-        <div class="tabPart">
-                <div class="tabs" id="tabsThird">
-                    <ul>
-                        <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_passed')}}">已發布</a></li>
-                        <li id="thisPage2">已接受</li>
-                        <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_record')}}">歷史紀錄</a></li>
-                    </ul>
-                </div>
-        </div>
-        <div class="allTable" id="employeePassed">
-            <table id="epass">
-                <tr id="taskList0"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName0"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime0"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota0"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment10" onclick="openGradingDiv(0)">評論</div>
-                            <div class="done" id="undone10" onclick="finishTask(0, 0)">未完成</div>
-                            <div class="done" id="done10" onclick="finishTask(0, 1)">完成</div>
-                            <div class="cancel" id="cancel10" onclick="cancelTask(0)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP0"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation0"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content0"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment20" onclick="openGradingDiv(0)">評論</div>
-                                    <div class="done" id="undone20" onclick="finishTask(0, 0)">未完成</div>
-                                    <div class="done" id="done20" onclick="finishTask(0, 1)">完成</div>
-                                    <div class="cancel" id="cancel20" onclick="cancelTask(0)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList1"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName1"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime1"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota1"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment11" onclick="openGradingDiv(1)">評論</div>
-                            <div class="done" id="undone11" onclick="finishTask(1, 0)">未完成</div>
-                            <div class="done" id="done11" onclick="finishTask(1, 1)">完成</div>
-                            <div class="cancel" id="cancel11" onclick="cancelTask(1)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP1"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation1"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content1"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment21" onclick="openGradingDiv(1)">評論</div>
-                                    <div class="done" id="undone21" onclick="finishTask(1, 0)">未完成</div>
-                                    <div class="done" id="done21" onclick="finishTask(1, 1)">完成</div>
-                                    <div class="cancel" id="cancel21" onclick="cancelTask(1)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList2"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName2"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime2"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota2"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment12" onclick="openGradingDiv(2)">評論</div>
-                            <div class="done" id="undone12" onclick="finishTask(2, 0)">未完成</div>
-                            <div class="done" id="done12" onclick="finishTask(2, 1)">完成</div>
-                            <div class="cancel" id="cancel12" onclick="cancelTask(2)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP2"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation2"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content2"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment22" onclick="openGradingDiv(2)">評論</div>
-                                    <div class="done" id="undone22" onclick="finishTask(2, 0)">未完成</div>
-                                    <div class="done" id="done22" onclick="finishTask(2, 1)">完成</div>
-                                    <div class="cancel" id="cancel22" onclick="cancelTask(2)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList3"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName3"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime3"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota3"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment13" onclick="openGradingDiv(3)">評論</div>
-                            <div class="done" id="undone13" onclick="finishTask(3, 0)">未完成</div>
-                            <div class="done" id="done13" onclick="finishTask(3, 1)">完成</div>
-                            <div class="cancel" id="cancel13" onclick="cancelTask(3)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP3"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation3"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content3"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment23" onclick="openGradingDiv(3)">評論</div>
-                                    <div class="done" id="undone23" onclick="finishTask(3, 0)">未完成</div>
-                                    <div class="done" id="done23" onclick="finishTask(3, 1)">完成</div>
-                                    <div class="cancel" id="cancel23" onclick="cancelTask(3)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList4"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName4"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime4"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota4"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment14" onclick="openGradingDiv(4)">評論</div>
-                            <div class="done" id="undone14" onclick="finishTask(4, 0)">未完成</div>
-                            <div class="done" id="done14" onclick="finishTask(4, 1)">完成</div>
-                            <div class="cancel" id="cancel14" onclick="cancelTask(4)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP4"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation4"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content4"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment24" onclick="openGradingDiv(4)">評論</div>
-                                    <div class="done" id="undone24" onclick="finishTask(4, 0)">未完成</div>
-                                    <div class="done" id="done24" onclick="finishTask(4, 1)">完成</div>
-                                    <div class="cancel" id="cancel24" onclick="cancelTask(4)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList5"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName5"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime5"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota5"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment15" onclick="openGradingDiv(5)">評論</div>
-                            <div class="done" id="undone15" onclick="finishTask(5, 0)">未完成</div>
-                            <div class="done" id="done15" onclick="finishTask(5, 1)">完成</div>
-                            <div class="cancel" id="cancel15" onclick="cancelTask(5)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP5"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation5"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content5"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment25" onclick="openGradingDiv(5)">評論</div>
-                                    <div class="done" id="undone25" onclick="finishTask(5, 0)">未完成</div>
-                                    <div class="done" id="done25" onclick="finishTask(5, 1)">完成</div>
-                                    <div class="cancel" id="cancel25" onclick="cancelTask(5)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList6"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName6"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime6"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota6"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment16" onclick="openGradingDiv(6)">評論</div>
-                            <div class="done" id="undone16" onclick="finishTask(6, 0)">未完成</div>
-                            <div class="done" id="done16" onclick="finishTask(6, 1)">完成</div>
-                            <div class="cancel" id="cancel16" onclick="cancelTask(6)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP6"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation6"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content6"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment26" onclick="openGradingDiv(6)">評論</div>
-                                    <div class="done" id="undone26" onclick="finishTask(6, 0)">未完成</div>
-                                    <div class="done" id="done26" onclick="finishTask(6, 1)">完成</div>
-                                    <div class="cancel" id="cancel26" onclick="cancelTask(6)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList7"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName7"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime7"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota7"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment17" onclick="openGradingDiv(7)">評論</div>
-                            <div class="done" id="undone17" onclick="finishTask(7, 0)">未完成</div>
-                            <div class="done" id="done17" onclick="finishTask(7, 1)">完成</div>
-                            <div class="cancel" id="cancel17" onclick="cancelTask(7)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP7"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation7"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content7"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment27" onclick="openGradingDiv(7)">評論</div>
-                                    <div class="done" id="undone27" onclick="finishTask(7, 0)">未完成</div>
-                                    <div class="done" id="done27" onclick="finishTask(7, 1)">完成</div>
-                                    <div class="cancel" id="cancel27" onclick="cancelTask(7)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList8"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName8"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime8"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota8"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment18" onclick="openGradingDiv(8)">評論</div>
-                            <div class="done" id="undone18" onclick="finishTask(8, 0)">未完成</div>
-                            <div class="done" id="done18" onclick="finishTask(8, 1)">完成</div>
-                            <div class="cancel" id="cancel18" onclick="cancelTask(8)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP8"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation8"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content8"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment28" onclick="openGradingDiv(8)">評論</div>
-                                    <div class="done" id="undone28" onclick="finishTask(8, 0)">未完成</div>
-                                    <div class="done" id="done28" onclick="finishTask(8, 1)">完成</div>
-                                    <div class="cancel" id="cancel28" onclick="cancelTask(8)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="taskList9"><td>
-                    <div class="introduction">
-                        <div class="taskName">任務名稱：<span id="taskName9"></span></div>
-                        <div class="taskTime">任務時間：<span id="taskTime9"></span></div>
-                        <div class="taskPoint">任務額度：<span id="taskQuota9"></span>點</div>
-                        <div class="rightBottom rightBottom1">
-                            <div class="done" id="comment19" onclick="openGradingDiv(9)">評論</div>
-                            <div class="done" id="undone19" onclick="finishTask(9, 0)">未完成</div>
-                            <div class="done" id="done19" onclick="finishTask(9, 1)">完成</div>
-                            <div class="cancel" id="cancel19" onclick="cancelTask(9)">取消任務</div>
-                        </div>
-                    </div>
-                    <div class="detailed">
-                        <div class="taskPlaceContext">
-                            <div class="employeeName">雇員：<span id="taskSP9"></span></div>
-                            <div class="place">任務地點：<span id="taskLocation9"></span></div>
-                            <div>
-                                <div class="context">任務內容：<span id="content9"></span></div>
-                                <div class="rightBottom rightBottom2">
-                                    <div class="done" id="comment29" onclick="openGradingDiv(9)">評論</div>
-                                    <div class="done" id="undone29" onclick="finishTask(9, 0)">未完成</div>
-                                    <div class="done" id="done29" onclick="finishTask(9, 1)">完成</div>
-                                    <div class="cancel" id="cancel29" onclick="cancelTask(9)">取消任務</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td></tr>
-                <tr id="gradingDiv"><td>
+        <header id="userNavbar"></header>
+        <div class="bodyContain">
+            <div id="tabsFirst">
+                <div id="addTask"><a href="createTask.html">新增任務</a></div>
+                <div id="takeTask"><a href="allTask.html">承接任務</a></div>
+            </div>
+            <div id="tabsSecond">  
+                <div id="boss">雇主</div>
+                <div id="employee"><a href="alltaskSPPassed.html">雇員</a></div>
+            </div>    
+            <div id="tabsThird">
+                <ul>
+                    <li class="notThisPage"><a href="allTaskSRPassed.html">已發布</a></li>
+                    <li id="thisPage">已接受</li>
+                    <li class="notThisPage"><a href="allTaskSRRecord.html">歷史紀錄</a></li>
+                </ul>
+            </div>
+            <div class="allTable" id="employeePassed">
+                <table id="ePass">
+                    
+                </table><br>
+                <div id="rating">
                     <div class="formLine" id="rateStar">
                         <div class="formLabelDiv" id="rateStar1">
-                            <label for="rate" class="formLabel">評分：</label>
+                            <label for="rate" class="formLabel">評分:</label>
                         </div>
                         <div class="rating">
                             <input type="radio" id="star5" name="rating" value="5" hidden/>
@@ -392,7 +57,7 @@
                         </div>
                     </div>
                     <div class="formLine" id="commentStar">
-                        <div class="formLabelDiv" id="commentStar1"><label for="commemt" class="formLabel">評論：</label></div>
+                        <div class="formLabelDiv" id="commentStar1"><label for="commemt" class="formLabel">評論:</label></div>
                         <div class="formLabelDiv" id="commentStar2">
                             <textarea id="comment" placeholder="請寫下你的評論..."></textarea>
                         </div>     
@@ -400,16 +65,16 @@
                     <div class="formLine" id="formComment">
                         <input type="submit" class="formButton" value="送出評論" onclick="sendGrade()" />
                     </div>
-                </td></tr>
-            </table>
+                </div>
+            </div>
+            <div class="formPage">
+                <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+                <span class="formPageNumber" id="pageNumber">1/1</span>
+                <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+            </div>
         </div>
-        <div class="formPage">
-            <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
-            <span class="formPageNumber" id="pageNumber">1/1</span>
-            <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
-        </div>
-    </div>
-    <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-    <script src="{{url_for('static', filename='js/allTaskSRAccepted.js')}}"></script>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/navbarUser.js"></script>
+        <script src="../static/js/allTaskSRAccepted.js"></script>
     </body>
 </html>

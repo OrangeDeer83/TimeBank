@@ -224,12 +224,8 @@ function gmRegister()
     if (!validated()) return;
     else
     {
-        var gmRegisterRequest;
-        if (window.XMLHttpRequest)
-            gmRegisterRequest = new XMLHttpRequest();
-        else
-            gmRegisterRequest = new ActiveXObject("Microsoft.XMLHTTP");
-        gmRegisterRequest.open("POST", "/account/GM/register");
+        var gmRegisterRequest = new XMLHttpRequest();
+        gmRegisterRequest.open("POST", "http://192.168.1.144:5000/account/GM/register");
         gmRegisterRequest.setRequestHeader("Content-Type", "application/json");
         gmRegisterRequest.send(JSON.stringify({"GMName": gmName.value, "GMPassword": gmPassword.value, "GMMail": gmEmail.value, "GMPhone": gmPhone.value}));
         gmRegisterRequest.onload = function()

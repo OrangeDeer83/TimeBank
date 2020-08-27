@@ -4,7 +4,6 @@ function contains(classString, check)
 {
     for (var i = 0; i < classString.length; i++)
     {
-        console.log("Find " + check + " in " + classString);
         var wordNow = "";
         // Splite the string by " ".
         while(classString[i] != " " && i < classString.length)
@@ -32,13 +31,11 @@ function clickToSpan(name)
         element.style.display = "";
         classVal = classVal.replace("spanned","unspanned");
         element.setAttribute("class", classVal);
-        console.log("Spanned.");
     }
     else if (contains(classVal, "unspanned")) // Span the element.
     {
         element.style.display = "block";
         classVal = classVal.replace("unspanned","spanned");
         element.setAttribute("class", classVal);
-        console.log("Hide.");
     }
 }

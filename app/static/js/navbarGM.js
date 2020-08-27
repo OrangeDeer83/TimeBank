@@ -1,0 +1,28 @@
+showNavbar();
+function showNavbar()
+{
+    document.getElementById("GMnavbar").innerHTML =
+    '<nav class="nav navbarBack">' +
+        '<div class="navbarContainer">' +
+            '<div class="navbarLeft">' +
+                '<div class="dropdown">' +
+                    '<div id="menuIconBack" onclick="clickToSpan(\'menuIconSpan\')"><div id="menuIcon"></div></div>' +
+                    '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
+                        '<li><a href="reportApprove.html" class="dropdownMenuItem">檢舉審核</a></li>' +
+                        '<li><a href="updateGrade.html" class="dropdownMenuItem">評論審核</a></li>' +
+                        '<li><a href="settingManager.html" class="dropdownMenuItem">設定</a></li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>' +
+            '<div class="navbarCenter">' +
+                '<div class="navbarBrand">' +
+                    '<img class="navbarBrandImg" id="navbarBrandImg1" alt="GM" src="../static/img/GMWhite.png" />' +
+                    '<img class="navbarBrandImg" id="navbarBrandImg2" alt="GM" src="../static/img/GMColor.png" />' +
+                '</div>' +
+            '</div>' +
+            '<div class="navbarRight">' +
+                '<a class="navbarUl" id="logout" href="{{url_for(\'account.logout\')}}">登出</a>' +
+            '</div>' +
+        '</div>' +
+    '</nav>';
+}

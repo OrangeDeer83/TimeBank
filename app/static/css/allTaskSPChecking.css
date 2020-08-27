@@ -1,0 +1,178 @@
+.bodyContain
+{
+	margin-top: 80px;
+	position: relative;
+}
+#tabsFirst, #tabsSecond
+{
+	overflow: auto;
+	margin-bottom: 10px;
+}
+#tabsThird
+{
+	overflow: auto;
+}
+#tabsThird ul, #tabsThird ul li
+{
+	list-style-type:none;
+	float:left;
+	padding-left: 0;
+	margin: 0;
+}
+#tabsFirst > div, #tabsSecond > div, #tabsThird li
+{
+	text-align: center;
+	border-radius:8px;
+	background-color:#c76e3d;
+	color: var(--button-background-text-color);
+}
+#tabsThird li
+{
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	background-color: var(--button-background-color);
+	color: var(--button-background-text-color);
+
+}
+#tabsFirst a, #tabsSecond a, #tabsThird a
+{
+	color: var(--button-background-text-color);
+}
+#tabsSecond > div:hover,#addTask:hover,#takeTask:hover
+{
+	background-color:#e4bca7;
+	cursor: pointer;
+}
+#tabsThird li:hover, input[type="button"]:hover, .button:hover
+{
+	background-color: var(--button-hover-background-color);
+	cursor: pointer
+}
+#employee
+{
+	background-color: #e4bca7 !important;
+}
+#thisPage
+{
+	background-color: var(--button-hover-background-color) !important;
+}
+#addTask, #takeTask
+{
+	float: right;
+	margin-bottom: 5px;
+}
+#boss, #employee
+{
+	float: left;
+}
+
+#eCheck
+{
+	background-color: var(--background-color);
+	color:black;
+	width: 100%;
+}
+#eCheck td, #eCheck th
+{
+	border: var(--background-border);
+}
+#eCheck td
+{
+	padding: 5px;
+}
+.button
+{
+	float: right;
+	border:  var(--button-background-border);
+	color:  var(--button-background-text-color);
+	background-color: var(--button-background-color);
+	padding: 3px;
+	border-radius:5px;
+	margin-left: 2px;
+	width: 73px;
+	text-align: center;
+}
+.formPage
+{
+    margin: auto;
+    margin-top: 10px;
+    width: 60vw;
+    color: black;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pageButton
+{
+    margin: auto;
+    height: 30px;
+    color: black;
+    background-color: #F4D35E;
+    border-color: white;
+    border: 1px solid #FAF0CA;
+    padding: 5px;
+    cursor: pointer;
+}
+@media (max-width: 599px)
+{
+	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	{
+		width: 90px;
+		padding: 3px;
+		margin-right: 5px;
+		margin-left: 5px;
+	}
+	#tabsSecond > div, #tabsThird li
+	{
+		padding: 1px;
+		width: 70px;
+	}
+	#tabsSecond > div
+	{
+		margin-left: 0;
+		width: 80px;
+	}
+}
+@media (min-width: 600px)
+{
+	#tabsFirst, #tabsSecond
+	{
+		font-size: 25px;
+	}
+	#tabsThird
+	{
+		font-size: 20px;
+	}
+	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	{
+		width: 120px;
+		padding: 5px;
+		margin-right: 8px;
+		margin-left: 8px;
+	}
+	#tabsSecond > div,#tabsThird li
+	{
+		padding: 3px;
+		width: 100px;
+	}
+	#tabsSecond > div
+	{
+		margin-left: 0;
+		width: 120px;
+	}
+}
+@media (min-width: 650px)
+{
+	#tabsFirst, #tabsSecond
+	{
+		width: 600px;
+		margin: auto;
+		margin-bottom: 10px;
+	}
+	#tabsThird, #eCheck
+	{
+		width: 600px;
+		margin: auto;
+	}
+}

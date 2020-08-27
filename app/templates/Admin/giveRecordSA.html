@@ -10,68 +10,41 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="{{url_for('static', filename='css/givePoint.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
+        <link rel="stylesheet" href="../static/css/givePoint.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
 
     </head>
     <body>
-        <header>
-            <nav class="nav navbarBack">
-                <div class="navbarContainer">
-                    <div class="navbarLeft">
-                        <div class="dropdown">
-                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
-                                <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
-                                    <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
-                                    <div class="unspanned" id="HRSpan">
-                                        <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.Admin_list')}}">系統管理員</a></div>
-                                        <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.GM_list')}}">評論管理員</a></div>
-                                    </div>
-                                    <li><a href="{{url_for('Admin.give_point')}}" class="dropdownMenuItem">配發系統</a></li>
-                                    <li><a href="{{url_for('Admin.approve_system')}}" class="dropdownMenuItem">核准系統</a></li>
-                                    <li><a href="{{url_for('Admin.update_condition')}}" class="dropdownMenuItem">更新申請條件</a></li>
-                                    <li><a href="{{url_for('Admin.update_web')}}" class="dropdownMenuItem">更新入口網站</a></li>
-                                    <li><a href="{{url_for('Admin.setting')}}" class="dropdownMenuItem">設定</a></li>
-                                </ul>
-                            </div>
-                    </div>
-                    <div class="navbarCenter">
-                        <div class="navbarBrand">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="{{url_for('static', filename='img/SAColor.png')}}" />
-                        </div>
-                    </div>
-                    <div class="navbarRight">
-                        <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
-                    </div>
-                </div>
-            </nav>
-        </header>
-
+        <header id="SAnavbar"></header>
         <div class="bodyContainer">
             <div class="tabsPart">
                 <ul class="tabs">
-                        <li class="tabOne"><a href="{{url_for('Admin.give_point')}}" target="_self" >配發點數</a></li>
-                        <li class="tabOne" id="tabTwo"><a href="{{url_for('Admin.give_record')}}" target="_self" class="thisPage">配發紀錄</a></li>
+                        <li class="tabOne"><a href="givePointSA.html" target="_self" >配發點數</a></li>
+                        <li class="tabOne thisPage" id="tabTwo"><a href="giveRecordSA.html" target="_self">配發紀錄</a></li>
                 </ul>
             </div>
             <div class="searchPart"></div>
             <div class="tablePart">
                 <table id="giveTable">
                     <tr><td> 
-                        <div id="searchImg">&#128269</div>
-                        <div id="searchType">使用者名稱</div>
-                        <div class="enterName">
-                            <input type="text" id="searchText" placeholder="輸入名稱或使用者名稱" onkeypress="if(event.keyCode == 13){getUserList();}" />
+                        <div id="searchPart">
+                            <div id="searchImg">&#128269</div>
+                            <div class="enterName">
+                                <input type="text" id="searchText" placeholder="輸入名稱或使用者帳號" onkeypress="if(event.keyCode == 13){getUserList();}" />
+                            </div>
                         </div>
                         <div class="search"><input type="submit" value="搜尋" onclick="getUserList()"></div>
                     </td></tr>
                     <tr id="list0"><td>
                         <div class="introductionLeft">
                             <div class="total">
-                                <div class="title1">使用者名稱：</div>
+                                <div class="title1">使用者帳號：</div>
                                 <div class="word" id="userName0"></div>
+                            </div>
+                            <div class="total">
+                                <div class="title1">名稱：</div>
+                                <div class="word" id="name0"></div>
                             </div>
                             <div class="total">
                                 <div class="title1">雇主評分：</div>
@@ -102,321 +75,6 @@
                         </div>
                         <div class="clear"></div>
                     </td></tr>
-                    <tr id="list1"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName1"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR1"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP1"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota1"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time1"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period1"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency1"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list2"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName2"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR2"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP2"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota2"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time2"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period2"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency2"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list3"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName3"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR3"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP3"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota3"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time3"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period3"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency3"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list4"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName4"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR4"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP4"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota4"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time4"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period4"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency4"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list5"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName5"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR5"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP5"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota5"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time5"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period5"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency5"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list6"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName6"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR6"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP6"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota6"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time6"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period6"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency6"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list7"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName7"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR7"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP7"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota7"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time7"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period7"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency7"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list8"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName8"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR8"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP8"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota8"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time8"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period8"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency8"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
-                    <tr id="list9"><td>
-                        <div class="introductionLeft">
-                            <div class="total">
-                                <div class="title1">使用者名稱：</div>
-                                <div class="word" id="userName9"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇主評分：</div>
-                                <div class="word" id="scoreSR9"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">雇員評分：</div>
-                                <div class="word" id="scoreSP9"></div>
-                            </div>
-                        </div>
-                        <div class="introductionRight">
-                            <div class="total">
-                                <div class="title">配發額度：</div>
-                                <div class="context"><span id="quota9"></span>點</div>
-                            </div>
-                            <div class="total">
-                                <div class="timeTitle">配發時間：</div>
-                                <div class="time" id="time9"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發週期：</div>
-                                <div class="context" id="period9"></div>
-                            </div>
-                            <div class="total">
-                                <div class="title">配發次數：</div>
-                                <div class="context" id="frequency9"></div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </td></tr>
                 </table>
             </div>
             <div class="formPage">
@@ -425,7 +83,8 @@
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
         </div>
-        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/giveRecord.js')}}"></script>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/navbarSA.js"></script>
+        <script src="../static/js/giveRecord.js"></script>
     </body>
 </html>

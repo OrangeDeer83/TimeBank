@@ -4,6 +4,10 @@
 
 .pointDiv
 {
+    font-weight: var(--background-font-weight);
+    background-color: var(--background-color);
+    color: var(--background-text-color);
+    border: var(--background-border);
     padding: 30px 0;
 }
 
@@ -35,11 +39,7 @@
     outline: none;
     border: 1px solid #CCCCCC;
     border-radius: 5px;
-}
-
-#formCycle
-{
-    text-align: left;
+    background-color: white;
 }
 
 .formRadios
@@ -61,6 +61,16 @@
     display: none;
 }
 
+#uploadFile
+{
+    display: inline-block;
+}
+
+#applyDocument
+{
+    display: none;
+}
+
 /* 下載申請條件 */
 
 #conditionDescription
@@ -74,30 +84,29 @@
     margin: 0 10px 10px 10px;
     width: 80px;
     height: 30px;
-    background-color: #293F66;
-    color: white;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
     border-radius: 3px;
     transition: .5s;
 }
 
 .formButton:hover
 {
-    background-color: #5E86C1;
+    background-color: var(--button-hover-background-color);
 }
 
 @media (min-width: 600px)
 {
     .pointApplication
     {
-        margin-top: 100px;
+        margin-top: 120px;
     }
     .pointDiv
     {
+        margin: auto;
         width: 600px;
         height: 500px;
-        background-color: #293F66;
-        color: white;
-        margin: auto;
         border-radius: 12px;
     }
     .formLabelDiv, .formTextDiv
@@ -114,15 +123,22 @@
     {
         width: 350px;
     }
+    .formClass
+    {
+        width: 59%;
+        display: inline-block;
+        text-align: left;
+    }
+    #userClass
+    {
+        width: 100%;
+        height: 25px;
+    }
     .formRadios
     {
         display: inline-block;
         text-align: center;
         width: 350px;
-    }
-    .formButton
-    {
-        border: 1px solid #5E86C1;
     }
 }
 
@@ -136,28 +152,40 @@
 
 @media (max-width: 599px)
 {
+    body
+    {
+        margin-top: 120px;
+        height: 100%;
+        background-color: var(--background-color);
+    }
     .pointDiv
     {
-        margin-top: 70px;
-        margin-left: 6vw;
-        width: 400px;
-        height: 650px;
-        border: 0px;
-        background-color: #90A8C3;
-        color: white;
-        border-radius: 12px;
+        height: 550px;
+        border: none;
+    }
+    .formColumn
+    {
+        margin-top: 5px;
+    }
+    .formLine
+    {
+        padding-top: 15px;
     }
     #formTitle
     {
-        margin-top: 20px;
+        margin-top: 5px;
     }
     .formText
     {
-        width: 65vw;
+        width: 90%;
         height: 30px;
         text-align: center;
-        background-color: #E6E6FA;
-        border: 1px solid white;
+        border: 1px solid #CCCCCC;
+    }
+    #userClass
+    {
+        width: 90%;
+        height: 25px;
     }
     .formRadios
     {
@@ -169,7 +197,13 @@
     }
     #uploadFile
     {
+         background-color: var(--background-color);
         color: #999999;
+    }
+    #applyDocument
+    {
+        width: 50%;
+        height: 25px;
     }
 }
 

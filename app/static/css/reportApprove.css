@@ -1,35 +1,11 @@
 @charset "utf-8";
 
-/* GM檢舉審核介面 */
-
-* {box-sizing: border-box;}
-
-.auditDiv
+#form
 {
-    padding: 30px 0; 
+    border: var(--background-border);
 }
 
-#formTitle
-{
-    margin: 0;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 800;
-}
-
-.formColumn
-{   
-    margin-top: 0;
-    text-align: center;
-}               
-
-.formLine
-{
-    padding-top: 20px;
-}
-
-/*按鈕-檢舉審核及評論審核*/
-
+/* 按鈕-檢舉審核及檢舉紀錄 */
 .auditButton
 {
     margin: 0;
@@ -37,315 +13,331 @@
 
 .auditButton button
 {
-	margin: auto;
-  	background-color: #293F66;
-  	border: 1px solid #5E86C1;
-  	color: white;
-  	padding: 10px 24px;
-  	cursor: pointer;
-  	float: left;					        /*並排按鈕*/
+    margin: auto;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    padding: 10px 24px;
+    cursor: pointer;
+    float: left;                            /* 並排按鈕 */
 }
 
-/*清除浮動*/
-
+/* 清除浮動 */
 .auditButton:after
 {
-	content: "";
-	clear: both;
-	display: table;
+    content: "";
+    clear: both;
+    display: table;
 }
 
-.auditButton button:not(:last-child)		/*防止雙重border*/
+.auditButton button:not(:last-child)        /* 防止雙重border */
 {
-	border-right: none;
+    border-right: none;
 }
 
-.auditButton button:hover
+.auditButton button:hover, .dealButton:hover, .pageButton button:hover
 {
-	background-color: #5E86C1;
-    color: #DC143C;
-}
-
-/*審核內容-檢舉時間及檢舉人外觀*/
-
-.informationDetailTime, .informationDetailMan 
-{
-    margin-top: 5px;
-}
-
-/*按鈕-已處理跟略過*/
-
-.dealButton
-{
-    width: 100px;
-    height: 30px;
-    margin-top: 5px;
-    background-color: #293F66;
+    background-color: var(--button-hover-background-color);
     color: white;
-    border-radius: 3px;
-    transition: .5s;
 }
 
-.dealButton:hover, .pageButton button:hover
+#detail
 {
-    background-color: #87CEFA;
-    color: #DC143C;
+    padding: 20px;
+    background-color: var(--background-color);
+    border-radius: 10px;
 }
 
-/*審核內容-任務評分詳細內容區塊*/
-
-.informationDetail
+#title
 {
-    margin: 15px 0 0 5px;
-    padding: 0;
-} 
-
-/*審核內容-雇主雇員評分星等*/
-
-.rating > label 
-{
-    color: #ddd;
-    float: right;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
 }
 
-.rating > label:before 
+#taskLeft
 {
-    padding: 0;
-    font-size: 26px;
-    line-height: 1em;
+    padding-top: 25px;
+    text-align: center;
     display: inline-block;
-    content: "★";
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
+    border-right: none;
 }
 
-.rating > input:checked ~ label,
-.rating:not(:checked) > label:hover,
-.rating:not(:checked) > label:hover ~ label 
+#taskCenter
 {
-    color: #FFD700;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
+    border-right: none;
 }
 
-.rating > input:checked ~ label:hover,
-.rating > label:hover ~ input:checked ~ label,
-.rating > input:checked ~ label:hover ~ label 
+#taskRight
 {
-    opacity: 0.5;
+    padding-top: 15px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
 }
 
-/*按鈕-上一頁及下一頁*/
-
-.pageButton button
+#taskDetailDiv
 {
-    margin: auto;
-    height: 30px;
-    background-color: #293F66;
-    color: white;
-    border-color: white;
-    border: 1px solid #5E86C1;
+    padding: 20px;
+    border: var(--button-background-border);
+    border-top: none;
 }
 
-/*按鈕-上一頁*/
-
-#prePageButton
+.textarea
 {
-	float: left;
+    padding: 5px;
+    font-size: 14px;
+    resize: none;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #CCCCCC;
 }
 
-/*按鈕-下一頁*/
-
-#nextPageButton
+.formPage
 {
-	float: right;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
 }
- 
-@media (min-width: 800px)
+
+.button
 {
-    .auditDiv
+    font-size: 14px;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    border-radius: 3px;
+}
+
+@media (min-width: 700px)
+{
+    #form
     {
-        width: 800px;
-        height: 650px;
-        background-color: #293F66;
-        color: white;
-        margin: auto;
-        border-radius: 12px;
+        width: 704px;
+        height: 765px;
+        margin-top: calc(12vh - 25px);
+        margin-left: calc(50vw - 348px);
+        margin-bottom: 50px;
     }
-    .formLine
+    #tabs
     {
-        text-align: left;
+        width: 400px;
+        height: 25px;
     }
-    .auditButton
+    #detail
     {
-        margin: 0 0 0 20px;
-    }
-
-    /*審核內容-兩欄式排版的外框架*/
-
-    #formInformation1
-    {
-        border: 1px solid white;
-        margin: 18px 0 0 20px;
-        width: 760px;
-        height: 80px;
+        height: 100%;
+        width: 700px;
     }
 
-    #formInformation2
+    #title
     {
-        border: 1px solid white;
-        margin: 0 0 0 20px;
-        width: 760px;
-        height: 400px;
+        margin: 20px 10px 30px;
     }
 
-    /*審核內容-任務編號及檢舉內容區塊*/
-
-    .informationTopLeft
+    #taskLeft
     {
-        width: 70%;
+        width: 90px;
+        height: 100px;
+    }
+
+    #taskCenter
+    {
+        width: 480px;
+        height: 100px;
+    }
+
+    #taskRight
+    {
+        width: 90px;
+        height: 100px;
+    }
+
+    #taskDetailDiv
+    {
+        width: 660px;
+    }
+
+    .taskDetail
+    {
+        margin: 3px 0;
+    }
+
+    .textarea
+    {
+        margin: -20px 0 0 80px;
+        width: 540px;
         height: 60px;
-        float: left;
     }
 
-    /*審核內容-文字區塊*/
-    .informationDetailText
+    .formPage
     {
-        width: 250px;
-        height: 40px;
-        vertical-align: middle;
-        background-color: #293F66;
-        color: white;
-        border: 1px solid white;
-        margin: 3px;
-        overflow: auto;
+        margin-top: 10px;
+        margin-left: 30%;
     }
 
-    /*審核內容-任務編號外觀*/
-
-    .informationLeft
+    .formPageNumber
     {
-        width: 19.5%;
-        height: 80px;
-        float: left;
-        margin-top: 0;
-        padding: 0;
-        border: 1px solid white;
+        margin: 0 10px;
     }
-
-    /*審核內容-檢舉內容外觀*/
-
-    .informationRight
+    .gradeButton
     {
-        width: 80.5%;
-        float: left;
+        margin: 5px;
+        width: 70px;
+        height: 25px;
+    }
+    .pageButton, .allGradeButton
+    {
+        width: 100px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 699px)
+{
+    body
+    {
+        height: 100%;
+        background-color: var(--background-color);
+    }
+    #form
+    {
+        width: 100%;
+        height: 651px;
+        margin-top: calc(5vh - 55px);
+        border: none;
+    }
+    #tabs
+    {
+        width: 400px;
+        height: 25px;
+    }
+    #detail
+    {
+        height: 100%;
+        width: 99.4%;
     }
 
-    /*審核內容-檢舉時間外觀*/
+    #title
+    {
+        margin-left: 5%;
+    }
 
-    #reportTime
+    #taskLeft
+    {
+        width: 15%;
+        height: 100px;
+    }
+
+    #taskCenter
     {
         width: 60%;
-        float: left;
+        height: 100px;
     }
 
-    /*審核內容-檢舉人外觀*/
-
-    #reportMan
+    #taskRight
     {
-        width: 40%;
-        float: left;
+        width: 25%;
+        height: 100px;
     }
 
-    /*按鈕區塊-已處理跟略過*/
-
-    .informationTopRight
-    {
-        width: 30%;
-        height: 60px;
-        float: left;
-    }
-
-    /*按鈕-已處理及略過*/
-
-    .dealButton
-    {
-        width: 130px;
-        margin-left: 80px;
-    }
-
-    /*審核內容-雇主雇員評分及手機號碼區塊*/
-
-    .informationDetailRate, .informationDetailPhone
-    {
-        width: 50%;
-        float: left;
-    }
-
-    /*審核內容-雇主雇員評分外觀*/
-
-    .ratingLabel
-    {
-        width: 20%;
-        float: left;
-    }
-
-    .rating 
-    {
-        width: 30%;
-        font-size: 0;
-        display: table;
-    }
-
-    /*按鈕區塊-上一頁及下一頁*/
-
-    .formLine1
-    { 
-        margin: 10px 0 0 325px;
-        padding: 0 10px;
-    }
-
-    /*按鈕-上一頁及下一頁*/
-
-    .pageButton button
-    {
-        margin: 0 0 0 5px;
-    }
-
-}
-
-@media (min-height: 580px)
-{
-    .auditDiv
-    {
-        margin-top: calc(50vh - 300px);
-    }
-}
-
-@media (max-width: 799px)
-{
-    .auditDiv
-    {
-        margin: 0;
-        border: 0px;
-    }
-    #formTitle
-    {
-        margin-top: 50px;
-    }
-    .formLine
-    {
-        text-align: center;
-    }
-    .auditButton button
-    {
-        width: 50%;
-    }
-    .informationDetail
+    #taskDetailDiv
     {
         width: 100%;
     }
 
-    /*審核內容-雇主雇員評分外觀*/
-
-    .ratingLabel, .rating 
+    .taskDetail
     {
-        width: 50%;
+        margin: 3px 0;
+    }
+
+    .textarea
+    {
+        margin: -20px 0 0 80px;
+        width: 80%;
+        height: 60px;
+    }
+
+    .formPage
+    {
+        margin-top: 10px;
+        margin-left: 30%;
+    }
+
+    .formPageNumber
+    {
+        margin: 0 10px;
+    }
+    .gradeButton
+    {
+        margin: 5px;
+        width: 70px;
+        height: 25px;
+    }
+    .pageButton, .allGradeButton
+    {
+        width: 100px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 615px)
+{
+    .formPage
+    {
+        margin-left: 25%;
+    }
+}
+
+@media (max-width: 450px)
+{
+    .textarea
+    {
+        width: 70%;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-left: 15%;
+    }
+}
+
+@media (max-width: 399px)
+{
+    .textarea
+    {
+        width: 65%;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-left: 20%;
+    }
+    .formPage button
+    {
+        width: 60px;
+    }
+}
+
+@media (max-width: 360px)
+{
+    .formPage
+    {
+        margin-left: 17%;
     }
 }

@@ -2,78 +2,10 @@ window.onload = function()
 {
     getUserID();
     getProfile();
-    getTaskList();
     getPropicMyself();
-}
-
-// For all myself.
-var userID;
-function getUserID()
-{
-    var getIDRequest;
-    if (window.XMLHttpRequest)
-        getIDRequest = new XMLHttpRequest();
-    else
-        getIDRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getIDRequest.open("GET", "/account/get_ID");
-    getIDRequest.setRequestHeader("Content-Type", "application/json");
-    getIDRequest.send();console.log(1);
-    getIDRequest.onload = function()
-    {
-        console.log(getIDRequest.responseText);
-        rst = JSON.parse(getIDRequest.responseText);
-        switch (rst.rspCode)
-        {
-            case "200": case 200:
-                userID = rst.ID;
-                document.getElementById("navbarUserID").href = "/USER/info/" + rst.ID;
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得userID");
-                break;
-        }
-    }
-}
-
-function getProfile()
-{
-    var getProfileRequest;
-    if (window.XMLHttpRequest)
-        getProfileRequest = new XMLHttpRequest();
-    else
-        getProfileRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getProfileRequest.open("POST", "/profile/output/info");
-    getProfileRequest.setRequestHeader("Content-Type", "application/json");
-    getProfileRequest.send(JSON.stringify({"userID": getToken()}));
-    getProfileRequest.onload = function()
-    {
-        console.log(getProfileRequest.responseText);
-        rst = JSON.parse(getProfileRequest.responseText);
-        switch (rst.rspCode)
-        {
-            case "200": case 200:
-                showProfile(rst);
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得使用者介紹");
-                break;
-        }
-    }
-}
-
-function showProfile(profile)
-{
-    document.getElementById("name").innerHTML = profile.name;
-    switch(profile.userGender * 1)
-    {
-        case 0: document.getElementById("gender").innerHTML = "男"; break;
-        case 1: document.getElementById("gender").innerHTML = "女"; break;
-        case 2: document.getElementById("gender").innerHTML = "其他"; break;
-    }
-    document.getElementById("age").innerHTML = profile.userAge;
-    document.getElementById("profile").innerHTML = profile.userInfo;
+    getTaskList();
+    document.getElementById('hrefMyselfSR').innerHTML = '<a href="myselfSR.html' + /*getToken() + */'">雇主評分</a>';
+    document.getElementById('hrefMyselfSP').innerHTML = '<a href="myselfSP.html' + /*getToken() + */'">雇員評分</a>';
 }
 
 var taskList = [];
@@ -84,14 +16,26 @@ var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
 
+function getToken()
+{
+    var location = window.location.href;
+    var token = "";
+    var i = 0;
+    while (i != location.length)
+    {
+        if (location[i] != "/" && location != "?")
+            token += location[i];
+        else
+            token = "";
+        i++;
+    }
+    return token;
+}
+
 function getTaskList()
 {
-    var getTaskRequest;
-    if (window.XMLHttpRequest)
-        getTaskRequest = new XMLHttpRequest();
-    else
-        getTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getTaskRequest.open("POST", "/profile/output/task");
+    var getTaskRequest = new XMLHttpRequest();
+    getTaskRequest.open("POST", "http://192.168.1.144:5000/profile/output/task");
     getTaskRequest.setRequestHeader("Content-Type", "application/json");
     getTaskRequest.send(JSON.stringify({"userID": getToken()}));
     getTaskRequest.onload = function()
@@ -173,30 +117,10 @@ function putDetail(index)
     document.getElementById("taskQuota" + index).innerHTML = thisPageList[index].taskPoint;
 }
 
-function getToken()
-{
-    var location = window.location.href;
-    var token = "";
-    var i = 0;
-    while (i != location.length)
-    {
-        if (location[i] != "/" && location != "?")
-            token += location[i];
-        else
-            token = "";
-        i++;
-    }
-    return token;
-}
-
 function takeTask(index)
 {
-    var taskTaskRequest;
-    if (window.XMLHttpRequest)
-        taskTaskRequest = new XMLHttpRequest();
-    else
-        taskTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskTaskRequest.open("POST", "/test/SP/taken_task");
+    var taskTaskRequest = new XMLHttpRequest();
+    taskTaskRequest.open("POST", "http://192.168.1.144:5000/task/SP/taken_task");
     taskTaskRequest.setRequestHeader("Content-Type", "application/json");
     taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID,"userID": getToken()}));
     taskTaskRequest.onload = function()
@@ -217,54 +141,5 @@ function takeTask(index)
             default:
                 alert("系統錯誤，請稍後再試");
             }
-    }
-}
-
-function getPropicMyself()
-{
-    var propicID = getToken();
-    var getPropicRequest;
-    if (window.XMLHttpRequest)
-        getPropicRequest = new XMLHttpRequest();
-    else
-        getPropicRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getPropicRequest.open("POST", "/account/propic_exist");
-    getPropicRequest.setRequestHeader("Content-Type", "application/json");
-    getPropicRequest.send(JSON.stringify({"userID": propicID}));
-    getPropicRequest.onload = function()
-    {
-        console.log(getPropicRequest.responseText);
-        rst = JSON.parse(getPropicRequest.responseText);
-        var d = new Date();
-		var time = "";
-		if (d.getHours() < 10) {
-			time += "0" + d.getHours();
-		}
-		else{
-			time += d.getHours();
-		}
-		if (d.getMinutes() < 10) {
-			time += "0" + d.getMinutes();
-		}
-		else{
-			time += d.getMinutes();
-		}
-		if (d.getSeconds() < 10) {
-			time += "0" +d.getSeconds();
-		}
-		else{
-			time += d.getSeconds();
-		}
-        switch (rst.rspCode)
-        {
-            case "200": case 200:
-                if (rst.exist == "1") document.getElementById("profilePicture").src = "/static/img/propic/" + propicID + ".jpg?v=" + time;
-                else document.getElementById("profilePicture").src = "/static/img/propic/default.jpg";
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得照片存在");
-                break;
-        }
     }
 }

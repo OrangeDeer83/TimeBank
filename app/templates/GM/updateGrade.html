@@ -12,43 +12,24 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarManager.css')}}" type="text/css">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/updateGrade.css')}}" type="text/css">
+        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/navbarManager.css" type="text/css">
+        <link rel="stylesheet" href="../static/css/updateGrade.css" type="text/css">
 
     </head>
 
     <body>
-        <header>
-            <nav class="nav navbarBack">
-                <div class="navbarContainer">
-                    <div class="navbarLeft">
-                        <div class="dropdown">
-                            <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
-                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
-                                <li><a href="{{url_for('GM.report_approve')}}" class="dropdownMenuItem">檢舉審核</a></li>
-                                <li><a href="{{url_for('GM.update_grade')}}" class="dropdownMenuItem">評論審核</a></li>
-                                <li><a href="{{url_for('GM.setting')}}" class="dropdownMenuItem">設定</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="navbarCenter">
-                        <div class="navbarBrand">
-                            <img class="navbarBrandImg" id="navbarBrandImg1" alt="GM" src="{{url_for('static', filename='img/GMWhite.png')}}" />
-                            <img class="navbarBrandImg" id="navbarBrandImg2" alt="GM" src="{{url_for('static', filename='img/GMColor.png')}}" />
-                        </div>
-                    </div>
-                    <div class="navbarRight">
-                        <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
-                    </div>
-                </div>
-            </nav>
-        </header>
-
+        <header id="GMnavbar"></header>
         <div class="bodyContainer">
             <div id="form">
                 <div id="detail">
                     <div id="title">評論審核</div>
+                    <div class="formLine">
+                        <div class="auditButton">
+                            <button id="formAudit">評論審核</button>
+                            <a href="updateGradeRecord.html"><button id="formAudit">評論紀錄</button></a>
+                        </div>
+                    </div>
                     <div id="taskGradeDiv">
                         <div id="taskIDDiv">
                             <div id="taskLeft">任務編號<br><span id="taskID">1</span></div><!--
@@ -74,21 +55,26 @@
                         </div>
                     </div>
                     <div class="formPage">
-                        <span>
-                            <button class="button pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
-                            <span class="formPageNumber" id="pageNumber">1/1</span>
-                            <button class="button pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
-                        </span>
-                        <span class="allGradeButtonSpan">
-                            <button class="button allGradeButton" onclick="gradeAll('1')">全 部 確 認</button>
-                            <button class="button allGradeButton" onclick="gradeAll('0')">全 部 否 決</button>
-                        </span>
+                    	<div class="formPage1">
+                    		<span id="formPage1">
+	                            <button class="button pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
+	                            <span class="formPageNumber" id="pageNumber">1/1</span>
+	                            <button class="button pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
+	                        </span>
+                    	</div>
+                        <div class="formPage2">
+                        	<span class="allGradeButtonSpan" id="formPage2">
+	                            <button class="button allGradeButton" onclick="gradeAll('1')">全 部 確 認</button>
+	                            <button class="button allGradeButton" id="allGradeButton1" onclick="gradeAll('0')">全 部 否 決</button>
+	                        </span>
+                        </div>                       
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/updateGrade.js')}}"></script>
+        <script src="../static/js/clickToSpan.js"></script>
+        <script src="../static/js/navbarGM.js"></script>
+        <script src="../static/js/updateGrade.js"></script>
     </body>
 </html>

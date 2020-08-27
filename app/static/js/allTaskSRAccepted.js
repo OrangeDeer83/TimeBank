@@ -1,6 +1,7 @@
 window.onload = function()
 {
-    getTaskList();
+    document.getElementById("rating").style.display = "none";
+    showListDiv();
 }
 
 var taskList = [];
@@ -10,6 +11,37 @@ var thisPageList = [];
 var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
+
+function showListDiv()
+{
+    const table = document.getElementById('ePass');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '"><td>' +
+            '<div class="introduction">' +
+                '<div>雇員：<span id="taskSP' + i + '"></span></div>' +
+                '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+                '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
+            '</div>' +
+            '<div class="detailed">            ' +
+                '<div>任務地點：<span id="taskLocation' + i + '"></span></div>' +
+                '<div>' +
+                    '<div>任務內容：<span id="content' + i + '"></span></div><br>' +
+                    '<div>' +
+                        '<div class="button" id="comment' + i + '" onclick="openGradingDiv(' + i + ')" style="display:none;">評論</div>' +
+                        '<div class="button" id="undone' + i + '" onclick="finishTask(' + i + ', 0)" style="display:none;">未完成</div>' +
+                        '<div class="button" id="done' + i + '" onclick="finishTask(' + i + ', 1)" style="display:none;">完成</div>' +
+                        '<div class="button" id="cancel' + i + '" onclick="cancelTask(' + i + ')" style="display:none;">取消任務</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
+}
 
 /*const error = document.getElementById("error");
 function showError(rspCode)
@@ -26,12 +58,8 @@ function showError() {;}
 
 function getTaskList()
 {
-    var taskListRequest;
-    if (window.XMLHttpRequest)
-        taskListRequest = new XMLHttpRequest();
-    else
-        taskListRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    taskListRequest.open("GET", "/task/SR/output/accept");
+    var taskListRequest = new XMLHttpRequest();
+    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SR/output/accept");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -96,7 +124,6 @@ function computeThisPageList()
 
 function showDetail()
 {
-    document.getElementById("gradingDiv").style.display = "none";
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);
@@ -109,68 +136,70 @@ function showDetail()
 function putDetail(index)
 {
     var currentTask = thisPageList[index];
+    var startTime = currentTask.taskStartTime;
+    var endTime = currentTask.taskEndTime;
     document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
-    document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + currentTask.taskEndTime;
+    document.getElementById("taskTime" + index).innerHTML = getDate(startTime) + " ~ " + getDate(endTime);
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-    document.getElementById("taskSP" + index).innerHTML = currentTask.taskSPName;
-    document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
+    document.getElementById("taskSP" + index).innerHTML = currentTask.taskSR;
+    document.getElementById("Location" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("content" + index).innerHTML = currentTask.taskContent;
 
-    if (currentTask.taskStatus == 2 || currentTask.taskStatus == 9 || currentTask.taskStatus == 10)
+    var taskStatus = currentTask.taskStatus;
+    if (taskStatus == 2)
     {
-        // Time up or not will be finished later.
-        document.getElementById("done1" + index).removeAttribute("style"); // time up
-        document.getElementById("done2" + index).removeAttribute("style");
-        document.getElementById("undone1" + index).removeAttribute("style"); // time up
-        document.getElementById("undone2" + index).removeAttribute("style");
-        document.getElementById("cancel1" + index).removeAttribute("style"); // befortime up
-        document.getElementById("cancel2" + index).removeAttribute("style");
-        document.getElementById("comment1" + index).style.display = "none";
-        document.getElementById("comment2" + index).style.display = "none";
+        if (startTime >= Date.now()) // startTime is passed;
+        {
+            document.getElementById("done" + index).removeAttribute("style");
+            document.getElementById("undone" + index).removeAttribute("style");
+            document.getElementById("cancel" + index).style.display = "none";
+        }
+        else
+        {
+            document.getElementById("done" + index).style.display = "none";
+            document.getElementById("undone" + index).style.display = "none";
+            document.getElementById("cancel" + index).removeAttribute("style");
+        }
+        document.getElementById("comment" + index).style.display = "none";
     }
-    else if (currentTask.taskStatus == 6 || currentTask.taskStatus == 7 || currentTask.taskStatus == 8)
+    else if (taskStatus == 3 || taskStatus == 6 || taskStatus == 7 || taskStatus == 8 || taskStatus == 13 || taskStatus == 14)
     {
-        document.getElementById("done1" + index).removeAttribute("style");
-        document.getElementById("done2" + index).removeAttribute("style");
-        document.getElementById("undone1" + index).removeAttribute("style");
-        document.getElementById("undone2" + index).removeAttribute("style");
-        document.getElementById("cancel1" + index).style.display = "none";
-        document.getElementById("cancel2" + index).style.display = "none";
-        document.getElementById("comment1" + index).style.display = "none";
-        document.getElementById("comment2" + index).style.display = "none";
+        document.getElementById("done" + index).style.display = "none";
+        document.getElementById("undone" + index).style.display = "none";
+        document.getElementById("cancel" + index).style.display = "none";
+        if (currentTask.commentStatus == 1)
+            document.getElementById("comment" + index).style.display = "none";
+        else
+            document.getElementById("comment" + index).removeAttribute("style");
     }
-    else if (currentTask.taskStatus == 13)
+    else if (taskStatus == 15 || taskStatus == 16)
     {
-        document.getElementById("done1" + index).style.display = "none";
-        document.getElementById("done2" + index).style.display = "none";
-        document.getElementById("undone1" + index).style.display = "none";
-        document.getElementById("undone2" + index).style.display = "none";
-        document.getElementById("cancel1" + index).style.display = "none";
-        document.getElementById("cancel2" + index).style.display = "none";
-        document.getElementById("comment1" + index).style.display = "none";
-        document.getElementById("comment2" + index).style.display = "none";
+        document.getElementById("done" + index).removeAttribute("style");
+        document.getElementById("undone" + index).removeAttribute("style");
+        document.getElementById("cancel" + index).style.display = "none";
+        document.getElementById("comment" + index).style.display = "none";
     }
-    else
+    else if (taskStatus == 9)
     {
-        document.getElementById("done1" + index).style.display = "none";
-        document.getElementById("done2" + index).style.display = "none";
-        document.getElementById("undone1" + index).style.display = "none";
-        document.getElementById("undone2" + index).style.display = "none";
-        document.getElementById("cancel1" + index).style.display = "none";
-        document.getElementById("cancel2" + index).style.display = "none";
-        document.getElementById("comment1" + index).removeAttribute("style");
-        document.getElementById("comment2" + index).removeAttribute("style");
+        document.getElementById("done" + index).style.display = "none";
+        document.getElementById("undone" + index).style.display = "none";
+        document.getElementById("cancel" + index).removeAttribute("style");
+        document.getElementById("comment" + index).style.display = "none";
     }
+}
+
+function getDate(time) {
+    var now = new Date(time),
+    y = now.getFullYear(time),
+    m = ("0" + (now.getMonth(time) + 1)).slice(-2),
+    d = ("0" + now.getDate(time)).slice(-2);
+    return y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8);
 }
 
 function cancelTask(index)
 {
-    var cancelTaskRequest;
-    if (window.XMLHttpRequest)
-        cancelTaskRequest = new XMLHttpRequest();
-    else
-        cancelTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    cancelTaskRequest.open("POST", "/task/SR/cancel_task");
+    var cancelTaskRequest = new XMLHttpRequest();
+    cancelTaskRequest.open("POST", "http://192.168.1.144:5000/task/SR/cancel_task");
     cancelTaskRequest.setRequestHeader("Content-Type", "application/json");
     cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     cancelTaskRequest.onload = function()
@@ -187,19 +216,15 @@ function cancelTask(index)
             case "400": case 400:
             default:
                 alert("無法取消任務");
-            }
+        }
     }
     showError(400);
 }
 
 function finishTask(index, type)
 {
-    var finishTaskRequest;
-    if (window.XMLHttpRequest)
-        finishTaskRequest = new XMLHttpRequest();
-    else
-        finishTaskRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    finishTaskRequest.open("POST", "/task/task_finish_or_not");
+    var finishTaskRequest = new XMLHttpRequest();
+    finishTaskRequest.open("POST", "http://192.168.1.144:5000/task/task_finish_or_not");
     finishTaskRequest.setRequestHeader("Content-Type", "application/json");
     console.log(type)
     finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + ""}));
@@ -217,7 +242,7 @@ function finishTask(index, type)
             case "400": case 400:
             default:
                 alert("無法結束任務");
-            }
+        }
     }
     showError(400);
 }
@@ -231,10 +256,10 @@ function validated()
 }
 
 var gradingTask = -1;
-function openGradingDiv(index)
+function openRating(index)
 {
     gradingTask = index;
-    document.getElementById("gradingDiv").removeAttribute("style");
+    document.getElementById("rating").removeAttribute("style");
     for (var i = 0; i < 10; i++)
         if (i != index)
             document.getElementById("taskList" + i).style.display = "none";
@@ -256,12 +281,8 @@ function sendGrade()
             i = -1;
         }
     }
-    var sendGradeRequest;
-    if (window.XMLHttpRequest)
-        sendGradeRequest = new XMLHttpRequest();
-    else
-        sendGradeRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendGradeRequest.open("POST", "/comment/comment_action");
+    var sendGradeRequest = new XMLHttpRequest();
+    sendGradeRequest.open("POST", "http://192.168.1.144:5000/comment/comment_action");
     sendGradeRequest.setRequestHeader("Content-Type", "application/json");
     sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + ""}));
     sendGradeRequest.onload = function()
@@ -279,7 +300,7 @@ function sendGrade()
             case "400": case 400:
             default:
                 alert("系統錯誤，無法評論");
-            }
+        }
     }
     showError(400);
 }

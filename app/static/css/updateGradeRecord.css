@@ -1,0 +1,314 @@
+@charset "utf-8";
+
+#form
+{
+    border: var(--background-border);
+}
+
+/* 按鈕-評論審核及評論紀錄 */
+.auditButton
+{
+    margin: 0;
+}
+
+.auditButton button
+{
+    margin: auto;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    padding: 10px 24px;
+    cursor: pointer;
+    float: left;                            /* 並排按鈕 */
+}
+
+/* 清除浮動 */
+.auditButton:after
+{
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.auditButton button:not(:last-child)        /* 防止雙重border */
+{
+    border-right: none;
+}
+
+.auditButton button:hover, .dealButton:hover, .pageButton button:hover
+{
+    background-color: var(--button-hover-background-color);
+    color: white;
+}
+
+#detail
+{
+    padding: 20px;
+    background-color: var(--background-color);
+    border-radius: 10px;
+}
+
+#title
+{
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+#taskLeft
+{
+    padding-top: 25px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
+    border-right: none;
+}
+
+#taskCenter
+{
+    padding: 5px;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
+    border-right: none;
+}
+
+#taskRight
+{
+    padding-top: 20px;
+    padding-left: 5px;
+    text-align: left;
+    display: inline-block;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: normal;
+    overflow: auto;
+    border: var(--button-background-border);
+}
+
+#taskDetailDiv
+{
+    padding: 20px;
+    border: var(--button-background-border);
+    border-top: none;
+}
+
+.textarea
+{
+    padding: 5px;
+    font-size: 14px;
+    resize: none;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #CCCCCC;
+}
+
+.formPage
+{
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.button
+{
+    font-size: 14px;
+    background-color: var(--button-background-color);
+    color: var(--button-background-text-color);
+    border: var(--button-background-border);
+    border-radius: 3px;
+}
+
+@media (min-width: 700px)
+{
+    #form
+    {
+        width: 704px;
+        height: 651px;
+        margin-top: calc(12vh - 25px);
+        margin-left: calc(50vw - 348px);
+    }
+    #tabs
+    {
+        width: 400px;
+        height: 25px;
+    }
+    #detail
+    {
+        height: 100%;
+        width: 700px;
+    }
+    #title
+    {
+        margin: 20px 10px 30px;
+    }
+    #taskLeft
+    {
+        width: 90px;
+        height: 100px;
+    }
+    #taskCenter
+    {
+        width: 400px;
+        height: 100px;
+    }
+    #taskRight
+    {
+        margin-left: 0;
+        width: 170px;
+        height: 100px;
+    }
+    #taskDetailDiv
+    {
+        width: 660px;
+    }
+    .taskDetail
+    {
+        margin: 3px 0;
+    }
+    .textarea
+    {
+        margin: -20px 0 0 80px;
+        width: 540px;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-left: 33%;
+        margin-top: 10px;
+    }
+    .formPageNumber
+    {
+        margin: 0 10px;
+    }
+    .pageButton
+    {
+        width: 100px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 699px)
+{
+    body
+    {
+        height: 100%;
+        background-color: var(--background-color);
+    }
+    #form
+    {
+        width: 100%;
+        height: 651px;
+        margin-top: calc(5vh - 55px);
+        border: none;
+    }
+    #tabs
+    {
+        width: 400px;
+        height: 25px;
+    }
+    #detail
+    {
+        height: 100%;
+        width: 99.4%;
+    }
+    #title
+    {
+        margin-left: 5%;
+    }
+    #taskLeft
+    {
+        width: 15%;
+        height: 100px;
+    }
+    #taskCenter
+    {
+        width: 60%;
+        height: 100px;
+    }
+    #taskRight
+    {
+        width: 25%;
+        height: 100px;
+    }
+    #taskDetailDiv
+    {
+        width: 100%;
+    }
+    .taskDetail
+    {
+        margin: 3px 0;
+    }
+    .textarea
+    {
+        margin: -20px 0 0 80px;
+        width: 80%;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-top: 10px;
+        margin-left: 30%;
+    }
+    .formPageNumber
+    {
+        margin: 0 10px;
+    }
+    .pageButton
+    {
+        width: 100px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 615px)
+{
+    .formPage
+    {
+        margin-left: 25%;
+    }
+}
+
+@media (max-width: 450px)
+{
+    .textarea
+    {
+        width: 70%;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-left: 15%;
+    }
+}
+
+@media (max-width: 399px)
+{
+    .textarea
+    {
+        width: 65%;
+        height: 60px;
+    }
+    .formPage
+    {
+        margin-left: 20%;
+    }
+    .formPage button
+    {
+        width: 60px;
+    }
+}
+
+@media (max-width: 360px)
+{
+    .formPage
+    {
+        margin-left: 17%;
+    }
+}

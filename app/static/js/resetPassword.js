@@ -7,7 +7,6 @@ var passwordError3 = document.getElementById("passwordError3");
 var passwordError4 = document.getElementById("passwordError4");
 var systemError = document.getElementById("systemError");
 
-var request;
 var passwordRegexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\w).{8,30}$/;
 
 newPassword.addEventListener("input", newPasswordVerify);
@@ -90,12 +89,8 @@ function resetPassword()
         return false;
     }
 
-    if (window.XMLHttpRequest)
-        request = new XMLHttpRequest();
-    else // Old IE browser.
-        request = new ActiveXObject("Microsoft.XMLHTTP");
-
-    request.open("POST", "/account/USER/reset_password/" + getToken());
+    var request = new XMLHttpRequest();
+    request.open("POST", "http://192.168.1.144:5000/account/USER/reset_password/" + getToken());
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify({"userPassword": newPassword.value}));
     request.onload = function()

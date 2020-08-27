@@ -11,44 +11,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
 
-    <link rel="stylesheet" href="{{url_for('static', filename='css/admin.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
+    <link rel="stylesheet" href="../static/css/admin.css">
+    <link rel="stylesheet" href="../static/css/navbarSA.css">
+    <link rel="stylesheet" href="../static/css/common.css">
 
 </head>
 <body>
-    <header>
-        <nav class="nav navbarBack">
-            <div class="navbarContainer">
-                <div class="navbarLeft">
-                    <div class="dropdown">
-                        <div id="menuIconBack" onclick="clickToSpan('menuIconSpan')"><div id="menuIcon"></div></div>
-                            <ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">
-                                <li><div class="dropdownMenuItem" onclick="clickToSpan('HRSpan')">人事管理</div></li>
-                                <div class="unspanned" id="HRSpan">
-                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.Admin_list')}}">系統管理員</a></div>
-                                    <div class="dropdownMenuItem HRSpanItem"><a href="{{url_for('Admin.GM_list')}}">評論管理員</a></div>
-                                </div>
-                                <li><a href="{{url_for('Admin.give_point')}}" class="dropdownMenuItem">配發系統</a></li>
-                                <li><a href="{{url_for('Admin.approve_system')}}" class="dropdownMenuItem">核准系統</a></li>
-                                <li><a href="{{url_for('Admin.update_condition')}}" class="dropdownMenuItem">更新申請條件</a></li>
-                                <li><a href="{{url_for('Admin.update_web')}}" class="dropdownMenuItem">更新入口網站</a></li>
-                                <li><a href="{{url_for('Admin.setting')}}" class="dropdownMenuItem">設定</a></li>
-                            </ul>
-                        </div>
-                </div>
-                <div class="navbarCenter">
-                    <div class="navbarBrand">
-                        <img class="navbarBrandImg" id="navbarBrandImg1" alt="SA" src="{{url_for('static', filename='img/SAWhite.png')}}" />
-                        <img class="navbarBrandImg" id="navbarBrandImg2" alt="SA" src="{{url_for('static', filename='img/SAColor.png')}}" />
-                    </div>
-                </div>
-                <div class="navbarRight">
-                    <a class="navbarUl" id="logout" href="{{url_for('account.logout')}}">登出</a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <header id="SAnavbar"></header>
     <div class="bodyContainer">
         <div class="addPart">
             <div class="permissionDescription">
@@ -60,18 +29,18 @@
                 </div>
                 <div class="choosePermissionRight">
                     <select id="selectPermission" name="chooseAdmin">                  
-                        <option class="choosePermission" id="choosePermission" value=-1 disabled selected hidden>選擇權限</option>
-                        <option class="choosePermission" value=2>AS</option>
-                        <option class="choosePermission" value=3>AA</option>
-                        <option class="choosePermission" value=4>AU</option>
-                        <option class="choosePermmision" value=5>AG</option>
+                        <option class="choosePermission" id="choosePermission" value="-1" disabled selected hidden>選擇權限</option>
+                        <option class="choosePermission" value="2">AS</option>
+                        <option class="choosePermission" value="3">AA</option>
+                        <option class="choosePermission" value="4">AU</option>
+                        <option class="choosePermmision" value="5">AG</option>
                     </select>
                 </div>
             </div>
             <div class="choose">
                 <div class="userNamePart">
-                    <div class="choosePermissionLeft"><label class=".userNameTitle">使用者名稱</label></div>
-                    <div class="choosePermissionRight"><input class="idText" id="addUserName" type="text" name="使用者名稱" maxlength="20" /></div>
+                    <div class="choosePermissionLeft"><label class=".userNameTitle">管理員帳號</label></div>
+                    <div class="choosePermissionRight"><input class="idText" id="addUserName" type="text" name="管理員帳號" maxlength="20" /></div>
                 </div>               
             </div>
             <div class="choose">
@@ -80,89 +49,26 @@
                     <div class="choosePermissionRight"><input class="idText" id="addPassword" type="text" name="密碼" value="Admin.1234" maxlength="30"></div>
                 </div>
             </div>
-            <div class="addButton" id="permissionRightDiv"><button id="addNewButton" onclick="addAdmin()">新增</button></div>
+            <div class="addButton" id="permissionRightDiv"><div id="addNewButton" onclick="addAdmin()">新增</div></div>
         </div>
         <div class="deleteDiv" id="deleteDiv">
             <div class="deleteDiv1">
-                <label for="password" class="deleteDiv2">請輸入密碼以刪除管理員</label>
+                <label for="password" class="deleteDiv2">輸入密碼確認身分</label>
                 <input type="password" class="deleteDiv3" id="password" name="password" placeholder="您的密碼" maxlength="30" onkeypress="if (event.keyCode == 13) {checkPassword();}" />
-                <button id="checkPassword" onclick="checkPassword()">送出</button>
+                <div id="checkPassword" onclick="checkPassword()">送出</div>
             </div>
         </div>
-        <div class="deleteDiv" id="error"></div>
+        <div class="deleteDiv" id="error"></div><br>
         <div class="tableTitle">成員列表</div>
-        <div class="tablePart">
+        <div id="tablePart">
             <table id="infoTable">
                 <tbody>
                     <tr class="list" id="list0"><td>
                         <div class="authority" id="authority0">權限：</div>
-                        <div class="userName" id="userName0">使用者名稱：</div>
-                        <div class="phone" id="phone0">Phone：</div>
-                        <div class="email" id="email0">Email：</div>
+                        <div class="userName" id="userName0">管理員帳號：</div>
+                        <div id="reset">密碼：<input type="text" id="resetText" placeholder="輸入新密碼" /></div>
                         <div class="delete" id="delete0" onclick="deleteAdmin(0)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list1"><td>
-                        <div class="authority" id="authority1">權限：</div>
-                        <div class="userName" id="userName1">使用者名稱：</div>
-                        <div class="phone" id="phone1">Phone：</div>
-                        <div class="email" id="email1">Email：</div>
-                        <div class="delete" id="delete1" onclick="deleteAdmin(1)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list2"><td>
-                        <div class="authority" id="authority2">權限：</div>
-                        <div class="userName" id="userName2">使用者名稱：</div>
-                        <div class="phone" id="phone2">Phone：</div>
-                        <div class="email" id="email2">Email：</div>
-                        <div class="delete" id="delete2" onclick="deleteAdmin(2)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list3"><td>
-                        <div class="authority" id="authority3">權限：</div>
-                        <div class="userName" id="userName3">使用者名稱：</div>
-                        <div class="phone" id="phone3">Phone：</div>
-                        <div class="email" id="email3">Email：</div>
-                        <div class="delete" id="delete3" onclick="deleteAdmin(3)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list4"><td>
-                        <div class="authority" id="authority4">權限：</div>
-                        <div class="userName" id="userName4">使用者名稱：</div>
-                        <div class="phone" id="phone4">Phone：</div>
-                        <div class="email" id="email4">Email：</div>
-                        <div class="delete" id="delete4" onclick="deleteAdmin(4)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list5"><td>
-                        <div class="authority" id="authority5">權限：</div>
-                        <div class="userName" id="userName5">使用者名稱：</div>
-                        <div class="phone" id="phone5">Phone：</div>
-                        <div class="email" id="email5">Email：</div>
-                        <div class="delete" id="delete5" onclick="deleteAdmin(5)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list6"><td>
-                        <div class="authority" id="authority6">權限：</div>
-                        <div class="userName" id="userName6">使用者名稱：</div>
-                        <div class="phone" id="phone6">Phone：</div>
-                        <div class="email" id="email6">Email：</div>
-                        <div class="delete" id="delete6" onclick="deleteAdmin(6)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list7"><td>
-                        <div class="authority" id="authority7">權限：</div>
-                        <div class="userName" id="userName7">使用者名稱：</div>
-                        <div class="phone" id="phone7">Phone：</div>
-                        <div class="email" id="email7">Email：</div>
-                        <div class="delete" id="delete7" onclick="deleteAdmin(7)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list8"><td>
-                        <div class="authority" id="authority8">權限：</div>
-                        <div class="userName" id="userName8">使用者名稱：</div>
-                        <div class="phone" id="phone8">Phone：</div>
-                        <div class="email" id="email8">Email：</div>
-                        <div class="delete" id="delete8" onclick="deleteAdmin(8)">刪除</div>
-                    </td></tr>
-                    <tr class="list" id="list9"><td>
-                        <div class="authority" id="authority9">權限：</div>
-                        <div class="userName" id="userName9">使用者名稱：</div>
-                        <div class="phone" id="phone9">Phone：</div>
-                        <div class="email" id="email9">Email：</div>
-                        <div class="delete" id="delete9" onclick="deleteAdmin(9)">刪除</div>
+                        <div id="resetButton"><input type="submit" value="更改密碼"></div>
                     </td></tr>
                     <tr><td>
                         <div id="changePageDiv">
@@ -175,7 +81,8 @@
             </table>
         </div>
     </div>
-    <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-    <script src="{{url_for('static', filename='js/admin.js')}}"></script>
+    <script src="../static/js/clickToSpan.js"></script>
+    <script src="../static/js/navbarSA.js"></script>
+    <script src="../static/js/admin.js"></script>
 </body>
 </html>

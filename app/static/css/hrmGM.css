@@ -5,34 +5,17 @@
 /*新增評論管理員*/
 #addTable
 {
-    background-color: #7693c7;
-    color: white;
+    background-color: var(--background-color);
+    color: var(--background-text-color);
 }
 #addTable td, #addTable th
 {
-    border: 1px ridge #ddd;
+    border: var(--background-border);
     padding: 10px;
 }
 #addTable tr:nth-child(1)
 {
     text-align: center;
-}
-.enterEmail
-{
-    float: left;
-    width: 85%;
-}
-.addButton
-{
-    float:right;
-    border: 1.5px solid white;
-    padding: 1.5px;
-    border-radius: 8px;
-}
-.addButton:hover
-{
-    background: white;
-    color: #93acd8;
 }
 
 /*頁面轉換按鈕*/
@@ -47,13 +30,18 @@
 }
 .tabOne
 {
-    background-color: #93acd8;
-    padding: 3px;
+    background-color: var(--button-background-color);
+    padding: 5px 2px;
     border-top-left-radius:5px;
     border-top-right-radius:5px;
-    border: 1px solid white;
+    color: var(--button-background-text-color);
+    width: 120px;
+    text-align: center;
+    font-size: 20px;
+}
+.tabOne a
+{
     color: white;
-    
 }
 .tabOneA
 {
@@ -65,7 +53,7 @@
 }
 .tabOne:hover
 {
-    background-color: white;
+    background-color: var(--button-hover-background-color);
 }
 .tabs, .tabs .tabOne
 {
@@ -74,40 +62,40 @@
 }
 .currentTabOne
 {
-    background-color: white;
+    background-color: var(--button-hover-background-color);
 }
 
 /*資訊表格*/
 #applicantTable td, #applicantTable th
 {
     padding: 10px;
-    background-color: #93acd8;
+    background-color: var(--background-color);
 }
 #applicantTable
 {
-    background-color: white;
+    background-color: brown;
 }
-.agree, .reject, .delete
+.agree, .reject, .delete,.addButton
 {
-    float: left;
-    border: 1.5px solid white;
+    width: 60px;
+    border:var(--button-background-border);
     border-radius: 8px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
+    color: var(--button-background-text-color);
+    background-color: var(--button-background-color);
     font-size: 16px;
+    text-align: center;
 }
 .pageButton
 {
-    border: 1.5px solid white;
+    border: var(--button-background-border);
     border-radius: 8px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0);
+    color: var(--button-background-text-color);
+    background-color: var(--button-background-color);
     font-size: 16px;
 }
-.agree:hover, .reject:hover, .delete:hover, .pageButton:hover
+.agree:hover, .reject:hover, .delete:hover, .pageButton:hover, .addButton:hover
 {
-    background: white;
-    color: #93acd8;
+    background: var(--button-hover-background-color);
     cursor: pointer;
 }
 #addTable,#applicantTable, .tabsPart
@@ -130,6 +118,10 @@
         width: 100%;
         margin: auto;
     }
+    .addBotton
+    {
+        margin: auto;
+    }
 }
 @media (max-width: 799px) 
 {
@@ -143,30 +135,27 @@
     {
         text-align: center;
     }
-    .enterEmail
-    {
-        margin-top: 2.5px;
-    }
 
     /*資訊表格*/
     .managerName, .phone, .email, .button
     {
         margin-bottom: 5px;
     }
-    .agree, .reject, .addButton, .delete
+    
+    #newEmail
     {
-        padding: 4px;
-        margin-right: 5px;
+        width: 85%;
+    }
+    .addButton
+    {
+        margin: auto;
+        margin-top: 10px;
     }
 
 }
 @media (min-width: 800px) 
 {
     /*新增評論管理員*/
-    .enterEmail
-    {
-        margin-top: 3px;
-    }
     #newEmail
     {
         width: calc(80vw - 300px);
@@ -175,19 +164,40 @@
     {
         width: calc(80vw - 300px);
     }
+    .enterEmail
+    {
+        float: left;
+    }
 
     /*頁面轉換按鈕*/
     .tabs
     {
         width: 50%;
     }
-    .tabOne
-    {
-        width: 100px;
-        text-align: center;
-    }
 
     /*資訊表格*/
+    .managerName
+    {
+        width: 200px;
+    }
+    .phone
+    {
+        width: 200px;
+    }
+    .email
+    {
+        width: 350px;
+    }
+    .addButton
+    {
+        padding: 4px;
+        margin-right: 5px;
+        float: right;
+    }
+
+}
+@media (min-width: 1170px)
+{
     .managerName, .phone, .email
     {
         margin-top: 4.5px;
@@ -196,29 +206,23 @@
     .button
     {
         float: right;
-        width: 20%;
     }
-    .managerName
-    {
-        width: 17.5%;
-    }
-    .phone
-    {
-        width: 22.5%;
-    }
-    .email
-    {
-        width: 40%;
-    }
-    .agree, .reject, .addButton, .delete
+    .agree, .reject, .delete
     {
         padding: 4px;
         margin-right: 10px;
         float:right; 
     }
-
 }
-
+@media (max-width: 1169px)
+{
+    .agree, .reject, .delete
+    {
+        padding: 4px;
+        margin-right: 5px;
+        float: right;
+    }
+}
 #newEmail, #deletePassword
 {
     height: 24px;

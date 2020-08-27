@@ -34,12 +34,8 @@ function showError(rspCode)
 // Get group name from server.
 function getGroup()
 {
-    var getGroupRequest;
-    if (window.XMLHttpRequest)
-        getGroupRequest = new XMLHttpRequest();
-    else
-        getGroupRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getGroupRequest.open("GET", "/apply/output_apply_group");
+    var getGroupRequest = new XMLHttpRequest();
+    getGroupRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -65,12 +61,8 @@ function getGroup()
 // Check the condition pdf is exist or not.
 function getApplier()
 {
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -98,12 +90,8 @@ function getApplier()
 // Get class from server and display on html.
 function getClass()
 {
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("GET", "/apply/output_apply_class");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -157,12 +145,8 @@ function getPeriodQuota(index)
         return ;
     }
     
-    var getApplierRequest;
-    if (window.XMLHttpRequest)
-        getApplierRequest = new XMLHttpRequest();
-    else
-        getApplierRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    getApplierRequest.open("POST", "/apply/output_allow_period");
+    var getApplierRequest = new XMLHttpRequest();
+    getApplierRequest.open("POST", "http://192.168.1.144:5000/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send(JSON.stringify({"class": classList[index]}));
     getApplierRequest.onload = function()
@@ -191,14 +175,12 @@ function computeQuota(periodList, quotaList)
     var once = 0, one = 0, three = 0, six = 0, year = 0;
     for (var i = 0; i < 5; i++)
     {
-        console.log(quotaList[0]+" "+periodList[0])
         if (periodList[0] === "")
         {
             i = 6;
         }
         else
         {
-            console.log(123);
             switch (periodList.shift())
             {
                 case "0": case 0:
@@ -299,12 +281,8 @@ function sendApplication()
         return ;
     }
 
-    var sendApplicationRequest;
-    if (window.XMLHttpRequest)
-        sendApplicationRequest = new XMLHttpRequest();
-    else
-        sendApplicationRequest = new ActiveXObject("Microsoft.XMLHTTP");
-    sendApplicationRequest.open("POST", "/apply/USER/add_apply");
+    var sendApplicationRequest = new XMLHttpRequest();
+    sendApplicationRequest.open("POST", "http://192.168.1.144:5000/application/json");
     sendApplicationRequest.setRequestHeader("Content-Type", "application/json");
     sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""}));
     sendApplicationRequest.onload = function()

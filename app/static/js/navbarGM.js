@@ -8,9 +8,9 @@ function showNavbar()
                 '<div class="dropdown">' +
                     '<div id="menuIconBack" onclick="clickToSpan(\'menuIconSpan\')"><div id="menuIcon"></div></div>' +
                     '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
-                        '<li><a href="reportApprove.html" class="dropdownMenuItem">檢舉審核</a></li>' +
-                        '<li><a href="updateGrade.html" class="dropdownMenuItem">評論審核</a></li>' +
-                        '<li><a href="settingManager.html" class="dropdownMenuItem">設定</a></li>' +
+                        '<li><a href="/GM/reportApprove" class="dropdownMenuItem">檢舉審核</a></li>' +
+                        '<li><a href="/GM/updateGrade" class="dropdownMenuItem">評論審核</a></li>' +
+                        '<li><a href="/GM/setting" class="dropdownMenuItem">設定</a></li>' +
                     '</ul>' +
                 '</div>' +
             '</div>' +

@@ -11,9 +11,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
 
-        <link rel="stylesheet" href="../static/css/givePoint.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/givePoint.css')}}" type="text/css">
         
     </head>
     <body>
@@ -22,7 +22,7 @@
         <div class="bodyContainer">
             <div class="tabsPart">
             <ul class="tabs">
-                    <li class="tabOne thisPage"><a href="givePointSA.html" target="_self">配發點數</a></li>
+                    <li class="tabOne thisPage"><a href="/givePoint" target="_self">配發點數</a></li>
                     <li class="tabOne" id="tabTwo"><a href="giveRecordSA.html" target="_self">配發紀錄</a></li>
             </ul>
             </div>
@@ -96,8 +96,8 @@
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
         </div>
-        <script src="../static/js/givePoint.js"></script>
-        <script src="../static/js/navbarSA.js"></script>
-        <script src="../static/js/clickToSpan.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{url_for('static', filename='js/givePoint.js')}}"></script>
     </body>
 </html>

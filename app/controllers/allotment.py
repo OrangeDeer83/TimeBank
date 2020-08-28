@@ -1,7 +1,7 @@
 from flask import Blueprint , jsonify ,request, send_from_directory ,session
 from ..models.model import *
 from ..models.dao import *
-from ..models import db, userType
+from ..models import db, userType, noticeType
 from ..models.makePoint import *
 from sqlalchemy import or_
 import datetime
@@ -119,12 +119,18 @@ def allotment_():
             transferRecordAllotment_ = transferRecordAllotment(transferRecordID = transferRecord_.transferRecordID, allotmentID = allotmentID, times = 1)
             db.session.add(transferRecordAllotment_)
             db.session.commit()
+            notice_ =notice(userID = userID, time = datetime.datetime.now(), status = noticeType['allotment'], haveRead = 0)
+            db.session.add(notice_)
+            db.session.commit()
+            notice_allotment = noticeAllotment(noticeID = notice_.ID, transferRecordID = transferRecordAllotment_.transferRecordAllotmentID)
+            db.session.add(notice_allotment)
+            db.session.commit()
             return jsonify({"rspCode":"200"})
         except:
             #可能是userID不存在或是adminID不存在
             return jsonify({"rspCode":"400","notAllow":"userID"})
     elif kind == 'all':
-        userData = db.engine.execute(select_search_userID(receiver)).fetchall()
+        userData = db.session.query(account.userID).filter(or_(account.name.like('%{}%'.format(receiver)),account.userName.like('%{}%'.format(receiver)))).all()
         try:
             for user in userData:
                 userID = user[0]
@@ -145,6 +151,12 @@ def allotment_():
                 db.session.commit()
                 transferRecordAllotment_ = transferRecordAllotment(transferRecordID = transferRecord_.transferRecordID, allotmentID = allotmentID, times = 1)
                 db.session.add(transferRecordAllotment_)
+                db.session.commit()
+                notice_ =notice(userID = userID, time = datetime.datetime.now(), status = noticeType['allotment'], haveRead = 0)
+                db.session.add(notice_)
+                db.session.commit()
+                notice_allotment = noticeAllotment(noticeID = notice_.ID, transferRecordID = transferRecordAllotment_.transferRecordAllotmentID)
+                db.session.add(notice_allotment)
                 db.session.commit()
             return jsonify({"rspCode":"200","notAllow":""})
         except:

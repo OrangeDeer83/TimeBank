@@ -119,14 +119,14 @@ function numToUrl(type)
 {
     switch(type)
     {
-        case 1: return 'allTask.html';
-        case 2: return 'allTaskSRPassed.html';
+        case 1: return '/USER/allTask';
+        case 2: return '/USER/SR/allTaskPassed';
         case 3: return 'allTaskSRAccepted.html';
         case 4: return 'allTaskSRRecord.html';
-        case 5: return 'allTaskSPPassed.html';
-        case 6: return 'allTaskSPChecking.html';
-        case 7: return 'allTaskSPRefused.html';
-        case 8: return 'allTaskSPRecord.html';
+        case 5: return '/USER/SP/allTaskPassed';
+        case 6: return '/USER/SP/allTaskChecking';
+        case 7: return '/USER/SP/allTaskRefused';
+        case 8: return '/USER/SP/allTaskRecord';
         case 9: return 'point.html';
     }
 }

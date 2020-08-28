@@ -1,6 +1,6 @@
 window.onload = function()
 {
-    getTaskList();
+    showListDiv();
 }
 
 var taskList = [];
@@ -10,6 +10,29 @@ var thisPageList = [];
 var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
+
+function showListDiv()
+{
+    const table = document.getElementById('eRefused');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '"><td>' +
+            '<div class="introduction">' +
+                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+                '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
+            '</div>' +
+            '<div class="detailed">' +
+                '<div>任務地點：<span id="taskLocation' + i + '"></span></div>' +
+                '<div>任務內容：<span id="taskContent' + i + '"></span></div>' +
+            '</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
+}
 
 /*const error = document.getElementById("error");
 function showError(rspCode)

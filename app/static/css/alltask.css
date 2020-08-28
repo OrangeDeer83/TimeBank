@@ -14,12 +14,12 @@
 {
 	text-align: center;
 	border-radius:8px;
-	background-color:#c76e3d;
+	background-color:#e4bca7;
 	color: var(--button-background-text-color);
 }
 #takeTask
 {
-	background-color:#e4bca7 !important;
+	background-color:#c76e3d !important;
 }
 #tabsFirst a, #tabsSecond a
 {
@@ -27,7 +27,7 @@
 }
 #tabsSecond > div:hover,#addTask:hover,#takeTask:hover
 {
-	background-color:#e4bca7;
+	background-color:#c76e3d;
 	cursor: pointer;
 }
 #addTask, #takeTask
@@ -84,6 +84,7 @@
     text-align: center;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 30px;
 }
 
 .pageButton

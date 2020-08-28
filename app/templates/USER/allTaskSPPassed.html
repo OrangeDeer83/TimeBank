@@ -12,27 +12,27 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="../static/css/allTaskSPPassed.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/allTaskSPPassed.css')}}" type="text/css">
     </head>
     <body>
         <header id="userNavbar"></header>
         <div class="bodyContain">
             <div id="tabsFirst">
-                <div id="addTask"><a href="createTask.html">新增任務</a></div>
-                <div id="takeTask"><a href="allTask.html">承接任務</a></div>
+                <div id="addTask"><a href="/USER/createTaskk">新增任務</a></div>
+                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
             </div>
             <div id="tabsSecond">  
-                <div id="boss"><a href="alltaskSRPassed.html">雇主</a></div>
+                <div id="boss"><a href="/USER/SR/allTaskPassed">雇主</a></div>
                 <div id="employee">雇員</div>
             </div>    
             <div id="tabsThird">
                 <ul>
                     <li id="thisPage">已通過</li>
-                    <li class="notThisPage"><a href="allTaskSPChecking.html">審核中</a></li>
-                    <li class="notThisPage"><a href="allTaskSPRefused.html">遭拒絕</a></li>
-                    <li class="notThisPage"><a href="allTaskSPRecord.html">歷史紀錄</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskChecking">審核中</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskRefused">遭拒絕</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskRecord">歷史紀錄</a></li>
                 </ul>
             </div>
             <div id="employeePassed">
@@ -74,8 +74,8 @@
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
         </div>
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/navbarUser.js"></script>
-        <script src="../static/js/allTaskSPPassed.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
+        <script src="{{url_for('static', filename='js/allTaskSPPassed.js')}}"></script>
     </body>
 </html>

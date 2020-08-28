@@ -1,7 +1,7 @@
 from flask import Blueprint ,url_for, jsonify ,request ,current_app, send_from_directory ,session, redirect
 from ..models.model import *
 from ..models.dao import *
-from ..models import db, userType
+from ..models import db, userType, noticeType
 import os
 import datetime
 from ..models.makePoint import *
@@ -594,7 +594,7 @@ def apply_pdf_download(number):
         #rspCode 400:檔案不存在
         return jsonify({"rspCode":"400"})
 
-#決定申請是否通過###
+#決定申請是否通過
 #要json傳 applyID,applyStatus(案的是核准就給1沒過給2),quotaChange(核准額度有變給值，沒有傳空)
 #回傳 rspCode,notAllow
 @Apply.route('/apply_judge', methods = ['POST'])
@@ -666,17 +666,13 @@ def apply_judge():
             return jsonify({"rspCode":"400","notAllow":notAllow})
         if applyStatus == '1':
             #status是1就改變apply的condditionID和status
-            
             oldConditionID = db.engine.execute(get_conditionID(applyID)).fetchone()[0]
             conditionData = db.engine.execute(show_old_condition_data(oldConditionID)).fetchone()
-            
             className = conditionData[1]
             period = conditionData[0]
-            
             if db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone() == None:
                 db.engine.execute(set_up_special_apply_condition(className,period,quotaChange))
                 newConditionID = db.session.query(applyCondition.conditionID).filter(applyCondition.className == className).filter(applyCondition.period == period).filter(applyCondition.quota == quotaChange).first()[0]
-                
             else:
                 newConditionID = db.engine.execute(find_special_apply_condition(className,period,quotaChange)).fetchone()[0]
             db.engine.execute(alter_oldConditionID(oldConditionID,applyID))
@@ -702,9 +698,15 @@ def apply_judge():
         else:
             #不是1就只改status和adminID
             db.engine.execute(alter_apply_status(applyStatus,applyID))
-
     db.engine.execute(upudate_adminID_in_apply(adminID,applyID))
     db.engine.execute(update_judge_time_in_apply(judgeTime,applyID))
+    userID_ = db.session.query(apply.userID).filter(apply.applyID == applyID).first()[0]
+    notice_ =notice(userID = userID, time = datetime.datetime.now(), status = noticeType['judgeApply'], haveRead = 0)
+    db.session.add(notice_)
+    db.session.commit()
+    notice_apply = noticeApply(noticeID = notice_.ID, applyID = int(applyID))
+    db.session.add(notice_apply)
+    db.session.commit()
     return jsonify({"rspCode":"200","notAllow":""})
 
 

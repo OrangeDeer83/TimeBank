@@ -1,7 +1,6 @@
 from flask import Blueprint, session, jsonify, request
-import time
 from ..models.model import *
-from ..models import db, userType
+from ..models import db, userType,noticeType
 from ..models.dao import *
 Task = Blueprint('task', __name__)
 
@@ -90,7 +89,7 @@ def SP_output_passed():
                     taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
                     taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
-                                            "taskStartTime": task.taskStartTime, "taskEndTime": str(task.taskEndTime),\
+                                            "taskStartTime": taskStartTime, "taskEndTime": str(task.taskEndTime),\
                                             "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
                                             "commentStatus": commentStatus})
                 return jsonify({"rspCode": "200", "taskPassed": taskPassedJson})                                        #成功取得
@@ -319,6 +318,14 @@ def SR_add_task():
     db.engine.execute(task_status_13_to_3(task_ID,EndTime))
     EndTime = str(addTask.taskEndTime + datetime.timedelta(days=1))
     db.engine.execute(comment_status_0(task_ID,EndTime))
+    #notice 
+    notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['createTask'], haveRead = 0)
+    db.session.add(notice_)
+    db.session.commit()
+    notice_task = noticeTask(noticeID = notice_.ID, taskID = task_ID)
+    db.session.add(notice_task)
+    db.session.commit()
+    db.engine.execute(NoSP(userID_,task_ID,newTaskStartTime))
     return jsonify({"rspCode":"200","notAllow":"","taskConflit":"","pointConflit":""})
 ##顯示可接任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SRName,taskLocation,taskContent
@@ -417,6 +424,12 @@ def SP_taken_task():
         task_.taskStatus = 1
         taskCandidateAdd = taskCandidate(taskID=taskID_,userID=userID)
         db.session.add(taskCandidateAdd)
+        db.session.commit()
+        notice_ = notice(userID = userID,time = datetime.datetime.now(), status = noticeType['haveCandidate'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_candidate = noticeCandidate(noticeID = notice_.ID, candidateID = taskCandidateAdd.rejectID)
+        db.session.add(notice_candidate)
         db.session.commit()
         return jsonify({"rspCode":"200","taskConflit":""})
     except:
@@ -557,6 +570,12 @@ def SR_edit_task():
     if newTaskPoint != "":
         oldTask.taskPoint = newTaskPoint
     db.session.commit()
+    notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['editTask'], haveRead = 0)
+    db.session.add(notice_)
+    db.session.commit()
+    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+    db.session.add(notice_task)
+    db.session.commit()
     return jsonify({"rspCode":"20"})
 #雇主確定雇員
 #傳cnadidateID,taskID
@@ -586,11 +605,24 @@ def SR_decide_SP():
             #此人不是候選人
             return jsonify({"rspCode":"401"})
         if task_.taskStatus == 2:
-            return jsonify({"rspCode":"400"})
+            return jsonify({"rspCode":"403"})
         task_.taskStatus = 2
         SP_ = db.session.query(account).filter(account.userID == candidateID_).first()
         task_.SP = [SP_]
         db.session.commit()
+        notice_ = notice(userID = candidateID_,time = datetime.datetime.now(), status = noticeType['SPPassed'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+        db.session.add(notice_task)
+        db.session.commit()
+        db.engine.execute(task_will_start(userID,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours=1))))
+        db.engine.execute(task_will_start(candidateID_,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours=1))))
+        db.engine.execute(task_start(userID,task_.taskID,task_.taskStartTime))
+        db.engine.execute(task_start(candidateID_,task_.taskID,task_.taskStartTime))
+        db.engine.execute(plzComment(userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours=23))))
+        db.engine.execute(plzComment(candidateID_,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours=23))))
+        db.engine.execute(taskEndTime_sql(userID,task_.taskID,str(task_.taskEndTime)))
         return jsonify({"rspCode":"200"})
     except:
         return jsonify({"rspCode":"400"})
@@ -618,7 +650,7 @@ def SR_accept():
                         if task_.db_task_comment[0].SRComment == None:
                             commentStatus = 0
                         taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
-                        taskList.append({"taskName":task_.taskName,"taskStartTime": task_.taskStartTime,"taskEndTime":str(task_.taskEndTime),\
+                        taskList.append({"taskName":task_.taskName,"taskStartTime": taskStartTime,"taskEndTime":str(task_.taskEndTime),\
                                         "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
                                         "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus),\
                                         "commentStatus": commentStatus})
@@ -657,6 +689,12 @@ def delete_task():
         return jsonify({"rspCode":"402"})
     task_.taskStatus = 12
     db.session.commit()
+    notice_ = notice(userID = int(userID_),time = datetime.datetime.now(), status = noticeType['deleteTask'], haveRead = 0)
+    db.session.add(notice_)
+    db.session.commit()
+    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+    db.session.add(notice_task)
+    db.session.commit()
     return jsonify({"rspCode":"200"})
 
 #雇主取消
@@ -669,7 +707,7 @@ def SR_cancel_task():
     if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","taskConflit":""})
     try:
-        userID_ = int(session.get('userID'))
+        userID_ = int(session.get('userID'))   
     except:
         return jsonify({"rspCode":"500","taskConflit":""})
     json = request.get_json()
@@ -684,11 +722,29 @@ def SR_cancel_task():
     elif task_.taskStatus == 2:
         task_.taskStatus = 9
         db.session.commit()
+        notice_ = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['SRCancel'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+        db.session.add(notice_task)
+        db.session.commit()
         return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 10:
         task_.taskStatus = 11
         comment_ = task_.db_task_comment[0]
         db.session.delete(comment_)
+        db.session.commit()
+        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['cancelTask'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+        db.session.add(notice_task)
+        db.session.commit()
+        notice_2 = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['cancelTask'], haveRead = 0)
+        db.session.add(notice_2)
+        db.session.commit()
+        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = task_.taskID)
+        db.session.add(notice_task_2)
         db.session.commit()
         return jsonify({"rspCode":"200"})
     #任務不可取消
@@ -707,7 +763,6 @@ def SP_cancel_task():
         return jsonify({"rspCode":"500"})
     if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500"})
-
     json = request.get_json()
     taskID_ = json['taskID']
     task_ = db.session.query(task).filter(task.taskID == taskID_).first()   
@@ -720,11 +775,21 @@ def SP_cancel_task():
             for candidate in candidateList:
                 if candidate.userID == int(userID_):
                     target = db.session.query(taskCandidate).filter(taskCandidate.userID == int(userID_)).filter(taskCandidate.taskID == taskID_).first()
+                    noticeCandidate_ = db.session.query(noticeCandidate).filter(noticeCandidate.candidateID == target.rejectID).first()
+                    notice__ = db.session.query(notice).filter(notice.ID == noticeCandidate_.noticeID).first()
+                    db.session.delete(noticeCandidate_)
+                    db.session.delete(notice__)
                     db.session.delete(target)
                     db.session.commit()
                     if task_.db_task_taskCandidate == []:
                         task_.taskStatus = 0
                         db.session.commit()
+                    db.session.commit()
+                    notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['cancelAccepting'], haveRead = 0)
+                    db.session.add(notice_)
+                    db.session.commit()
+                    notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+                    db.session.add(notice_task)
                     db.session.commit()
                     return jsonify({"rspCode":"200"})
         except:
@@ -733,12 +798,30 @@ def SP_cancel_task():
         return jsonify({"rspCode":"401"})   
     elif task_.taskStatus == 2:
         task_.taskStatus =10
+        notice_ = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['SPCancel'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+        db.session.add(notice_task)
+        db.session.commit()
         db.session.commit()
         return jsonify({"rspCode":"200"})
     elif task_.taskStatus == 9:
         task_.taskStatus = 11
-        comment_ = db.session.query(comment).filter(comment.commentID == task_.taskID).first()
+        comment_ = db.session.query(comment).filter(comment.taskID == task_.taskID).first()
         db.session.delete(comment_)
+        db.session.commit()
+        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['cancelTask'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
+        db.session.add(notice_task)
+        db.session.commit()
+        notice_2 = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['cancelTask'], haveRead = 0)
+        db.session.add(notice_2)
+        db.session.commit()
+        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = task_.taskID)
+        db.session.add(notice_task_2)
         db.session.commit()
         return jsonify({"rspCode":"200"})
     #任務不可取消
@@ -764,22 +847,52 @@ def task_finish_or_not():
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
-    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskEndTime:
+    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(hours=1) or datetime.datetime.now() < task_.taskStartTime:
         #不在可評價時間
         return jsonify({"rspCode":"401"})
-
     if not(status in ['0','1']):
         #status 只能是 0 or 1
-        return jsonify({"rspCode":"403"})
-    
+        return jsonify({"rspCode":"403"}) 
     if task_.SR[0].userID == int(userID_) :
         if task_.taskStatus in [2,16,15,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
+                    notice_ = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['SRFinish'], haveRead = 0)
+                    db.session.add(notice_)
+                    db.session.commit()
+                    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                    db.session.add(notice_task)
+                    db.session.commit()
                     task_.taskStatus = 13
                 elif task_.taskStatus == 16:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 3
                 elif task_.taskStatus == 15:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 6
                 task_.SR[0].userPoint -= task_.taskPoint
                 task_.SP[0].userPoint += task_.taskPoint
@@ -804,10 +917,42 @@ def task_finish_or_not():
                 return jsonify({"rspCode":"200"})
             elif status == '0':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
+                    notice_ = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['SRFinish'], haveRead = 0)
+                    db.session.add(notice_)
+                    db.session.commit()
+                    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                    db.session.add(notice_task)
+                    db.session.commit()
                     task_.taskStatus = 14
                 elif task_.taskStatus == 16:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 7
                 elif task_.taskStatus == 15:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SP[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 8
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
@@ -818,19 +963,83 @@ def task_finish_or_not():
         if task_.taskStatus in [2,14,13,9,10]:
             if status == '1':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
+                    notice_ = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['SPFinish'], haveRead = 0)
+                    db.session.add(notice_)
+                    db.session.commit()
+                    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                    db.session.add(notice_task)
+                    db.session.commit()
                     task_.taskStatus = 16
                 elif task_.taskStatus == 13:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 3
                 elif task_.taskStatus == 14:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 7
                 db.session.commit()
                 return jsonify({"rspCode":"200"})
             elif status == '0':
                 if task_.taskStatus == 2 or task_.taskStatus == 9 or task_.taskStatus == 10:
+                    notice_ = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['SPFinish'], haveRead = 0)
+                    db.session.add(notice_)
+                    db.session.commit()
+                    notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                    db.session.add(notice_task)
+                    db.session.commit()
                     task_.taskStatus = 8
                 elif task_.taskStatus == 13:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 6
                 elif task_.taskStatus == 14:
+                    if datetime.datetime.now() < task_.taskEndTime:
+                        notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_)
+                        db.session.commit()
+                        notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
+                        db.session.add(notice_task)
+                        db.session.commit()
+                        notice_2 = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
+                        db.session.add(notice_2)
+                        db.session.commit()
+                        notice_task_2 = noticeTask(noticeID = notice_2.ID, taskID = int(taskID_))
+                        db.session.add(notice_task_2)
+                        db.session.commit()
                     task_.taskStatus = 8
                 db.session.commit()
                 return jsonify({"rspCode":"200"})

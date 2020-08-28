@@ -11,9 +11,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/approveSystem.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/approveSystem.css')}}" type="text/css">
     </head>
 
     <body>
@@ -100,9 +100,9 @@
                 </div>
             </div>
         </div>
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/navbarSA.js"></script>
-        <script src="../static/js/approveSystem.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{url_for('static', filename='js/approveSystem.js')}}"></script>
     </body>
 
 </html>

@@ -12,9 +12,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarManager.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/updateGradeRecord.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarManager.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/updateGradeRecord.css')}}" type="text/css">
 
     </head>
 
@@ -26,7 +26,7 @@
                     <div id="title">評論審核</div>
                     <div class="formLine">
                         <div class="auditButton">
-                            <a href="updateGrade.html"><button id="formAudit">評論審核</button></a>
+                            <a href="/USER/updateGrade"><button id="formAudit">評論審核</button></a>
                             <button id="formAudit">評論紀錄</button>
                         </div>
                     </div>
@@ -67,8 +67,8 @@
             </div>
         </div>
 
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/navbarGM.js"></script>
-        <script src="../static/js/updateGrade.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarGM.js')}}"></script>
+        <script src="{{url_for('static', filename='js/updateGrade.js')}}"></script>
     </body>
 </html>

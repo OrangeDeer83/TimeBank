@@ -26,7 +26,7 @@
     right: 0;
     min-width: 100vw;
     min-height: 100vh;
-    background-color: #293f66;
+    background-color: #E6E6FA;
     font-weight: bold;
 }
 
@@ -74,11 +74,11 @@
 {
     height: 40px;
     color: white;
-    background-color: #293f66;
+    background-color: var(--button-background-color);
     outline: none;
     padding: 7.5px 50.5px;
     margin: 10px 0 0 5px;
-    border: 1px solid #5e86c1;
+    border: 1px solid var(--button-background-border);
     border-radius: 3px;
     font-size: 16px;
     font-weight: bold;
@@ -88,8 +88,8 @@
 
 .loginButton:hover
 {
-    color: #f5fffa;
-    background-color: #5e86c1;
+    color: var(--button-background-text-color);
+    background-color: var(--button-hover-background-color);
 }
 
 .error
@@ -112,7 +112,7 @@
     .loginFormContainer
     {
         padding: 30px;
-        background-color: #E6E6FA;
+        background-color: var(--background-color);
         color: black;
         border: 1px solid #CCCCCC;
         border-radius: 5px;

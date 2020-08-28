@@ -14,9 +14,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css">
-        <link rel="stylesheet" href="../static/css/navbarVisitor.css">
-        <link rel="stylesheet" href="../static/css/register.css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarVisitor.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
     </head>
 
     <body>
@@ -116,7 +116,7 @@
                         <input type="reset" class="formButton" value="重新填寫" onclick="javascript:window.location.reload()" />
                     </div>
                 </div>
-                <script src="../static/js/register.js"></script>
+                <script src="{{url_for('static', filename='js/register.js')}}"></script>
             </div>  
         </div>  
     </body>

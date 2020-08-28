@@ -2073,6 +2073,7 @@ response:
 <br>
 
 
+
 # 42.下載申請說明文件
 ### GET	
 #### 不須傳值
@@ -2089,5 +2090,222 @@ response:
 {
 	rspCode:""  |300 method wrong|400 失敗
 	成功會直接下載
+}
+```
+
+<br>
+
+
+
+# 43.檢舉動作
+### POST	
+#### user檢舉
+#### path : /report/send_report
+```
+request:
+
+{	
+	taskID:""
+	reportReason:"" 不要奇怪的符號
+	userID : session
+}
+	
+response:
+
+{
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|41 沒有此task|42 任務必須先按過完成未完成 |43 user非本任務先關人士|44 不能重複檢舉|49 json傳來不合法輸入
+}
+```
+
+<br>
+
+# 44.審核檢舉
+### POST	
+#### GM審核
+#### path : /report/approve
+```
+request:
+
+{
+    adminID : session
+	reportID:""
+	reportStatus:""  1 = 通過 2 = 不通握 
+}
+	
+response:
+
+{
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|41 檢舉不存在|42 已經審理過 |43 status不合法|44 admind ID不存在|48 未知|49 json傳來不合法輸入
+}
+```
+
+
+<br>
+
+# 45.全部有哪些待審核report和有幾個
+### GET	
+#### 在審核頁面用，只有列出尚未審核的部分
+#### path : /report/list_amount
+```
+request:
+
+{
+    NULL
+}
+	
+response:
+
+{
+    reportList:[] reportID列表
+    reportAmount:"" 數量
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|48 未知
+}
+```
+
+<br>
+
+# 46.檢舉審核表列
+### POST
+### 現在只傳一個
+#### path : /report/list
+```
+request:
+
+{
+    reportID:"" 你要的那一個
+}
+	
+response:
+
+{
+    reportList:[{
+        taskName:"",
+        taskContent:"",
+        SRRate:"",
+        SRName:"",
+        SRComment:"",
+        SRPhone:"",
+        SPRate:"",
+        SPName:"",
+        SPComment:"",   
+        SPPhone:""
+    }]
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|48 未知| 49 json錯誤
+}
+```
+
+<br>
+
+# 47.檢舉審核歷史紀錄
+### POST	
+#### 在審核歷史紀錄時用
+#### path : /report/report_history_list
+```
+request:
+
+{
+    reportID:""
+}
+	
+response:
+
+{
+    reportList:[{
+        taskName:""
+        taskContent:""
+        SRRate:""
+        SRName:""
+        SRComment:""
+        SPRate:""
+        SPName:""
+        SPComment:""
+        gmID:""
+        approveResult:""
+    }] 
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|48 未知| 49 json錯誤
+}
+```
+
+<br>
+
+# 48.全部有哪些report和有幾個
+### GET	
+#### 在審核歷史紀錄時用
+#### path : /report/report_history_list_amount
+```
+request:
+
+{
+    NULL
+}
+	
+response:
+
+{
+    reportList:[] reportID列表
+    reportAmount:"" 數量
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|48 未知
+}
+```
+
+<br>
+
+# 49.評論歷史紀錄數量和有哪些
+### GET	
+#### 在評論歷史紀錄時用
+#### path : /comment/rate_history_list_ammount
+```
+request:
+
+{
+    NULL
+}
+	
+response:
+
+{
+    taskIDList:[] taskID列表
+    taskIDAmount:"" 數量
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|48 未知
+}
+```
+
+<br>
+
+# 50.評論歷史紀錄
+### GET	
+#### 一次10個
+#### path : /comment/rate_history_list
+```
+request:
+
+{
+    NULL
+}
+	
+response:
+
+{
+    commentList:[{
+        taskStartTime:""
+        taskEndTime:""
+        taskName:""
+        taskContent:""
+        taskID:""
+        SRID:""
+        SRStar:""
+        SRName:""
+        SRComment:""
+        SPID:""
+        SPName:""
+        SPStar:""
+        SPComment:""
+        SRPhone:""
+        SPPhone:""
+        gmID:""
+        approveResult:""
+    }] 
+    commentAmount:"" 數量
+	rspCode:""  20 成功| 30 method wrong|31 session 錯誤|41 資瞭庫錯誤|49 json錯誤
 }
 ```

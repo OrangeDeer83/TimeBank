@@ -555,6 +555,7 @@ def SR_edit_task():
     if newTaskLocation != "":
         oldTask.taskLocation = newTaskLocation
     if newTaskPoint != "":
+        oldTask.taskPoint = newTaskPoint
     db.session.commit()
     return jsonify({"rspCode":"20"})
 #雇主確定雇員

@@ -7,11 +7,11 @@ USER = Blueprint('USER', __name__)
 #點數紀錄
 @USER.route('/pointRecord')
 def point_record():
-    return "此功能未完成"
-    if session.get('userType') == userType['USER']:
-        return render_template('/USER/point.html')
-    else:
-        return redirect(url_for('USER.index'))
+    # if session.get('userType') == userType['USER']:
+    #     return render_template('/USER/point.html')
+    # else:
+    #     return redirect(url_for('USER.index'))
+    return render_template('/USER/point.html')
 
 #忘記密碼頁面
 @USER.route('/forgotPassword')
@@ -69,7 +69,7 @@ def SP_myself(userID):
 @USER.route('/SR/myself/<userID>')
 def SR_myself(userID):
     if session.get('userType') == userType['USER']:
-        return render_template('/USER/myselfSR.html')
+        return render_template('/USER//SR/myself')
     else:
         return redirect(url_for('USER.index'))
 

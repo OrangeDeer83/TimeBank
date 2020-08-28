@@ -60,7 +60,7 @@ def verify(result):
       result_msg = '網頁出現錯誤，請稍後再試'
    return result_msg
 
-#審核評論
+#評論審核
 @GM.route('/updateGrade')
 def update_grade():
    if session.get('userType') == userType['GM']:
@@ -68,19 +68,33 @@ def update_grade():
    else:
       return redirect(url_for('GM.login'))
 
+#評論審核紀錄
+@GM.route('/updateGradeRecord')
+def update_grade_record():
+   if session.get('userType') == userType['GM']:
+      return render_template('/GM/updateGradeRecord.html')
+   else:
+      return redirect(url_for('GM.login'))
+
 #檢舉審核
 @GM.route('/reportApprove')
 def report_approve():
-   return "此功能未完成"
    if session.get('userType') == userType['GM']:
       return render_template('/GM/reportApprove.html')
+   else:
+      return redirect(url_for('GM.login'))
+
+#檢舉審核紀錄
+@GM.route('/reportApproveRecord')
+def report_approve_record():
+   if session.get('userType') == userType['GM']:
+      return render_template('/GM/reportApproveRecord.html')
    else:
       return redirect(url_for('GM.login'))
 
 #設定頁面
 @GM.route('/setting')
 def setting():
-   return "此功能未完成"
    if session.get('userType') == userType['GM']:
       return render_template('/GM/settingGM.html')
    else:

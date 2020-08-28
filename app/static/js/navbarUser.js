@@ -16,11 +16,11 @@ function showNavbar()
                             '<span id="navbarPoint1">0</span>' +
                         '</a>' +
                     '</li>' +
-                    '<li><a href="allTask.html">所有任務</a></li>' +
-                    '<li><a href="createTask.html">新增任務</a></li>' +
-                    '<li><a href="calendar.html">行事曆</a></li>' +
-                    '<li><a href="application.html">點數申請</a></li>' +
-                    '<li><a href="setting.html">設定</a></li>' +
+                    '<li><a href="/USER/allTask">所有任務</a></li>' +
+                    '<li><a href="/USER/createTask">新增任務</a></li>' +
+                    '<li><a href="/USER/calendar">行事曆</a></li>' +
+                    '<li><a href="/USER/application">點數申請</a></li>' +
+                    '<li><a href="/USER/setting">設定</a></li>' +
                     '<li><a id="logout" href="{{url_for(\'account.logout\')}}">登出</a></li>' +
                 '</ul>' +
             '</div>' +
@@ -37,7 +37,7 @@ function showNavbar()
                     '<div class="navbarNotice" id="navbarNotice" onclick="clickToSpan(\'noticeSpan\');getNewNotice();">通知</div>' +
                     '<ul id="noticeSpan" class="dropdownMenu dropdownMenuRight unspanned">' +
                         '<li><a><div>無新通知</div></a></li>' +
-                        '<li><a href="notification.html"><div>顯示所有通知</div></a></li>' +
+                        '<li><a href="/USER/notice"><div>顯示所有通知</div></a></li>' +
                     '</ul>' +
                 '</li>' +
                 '<li class="hiddenSmall">' +
@@ -223,21 +223,21 @@ function putNewNotice(noticeList)
     {
         noticeSpan += '<li><a href="' + numToUrl(noticeList[i].connectTo) + '<div>' + noticeList[i].content +'</div></a></li>';
     }
-    noticeSpan += '<li><a href="notification.html"><div>顯示所有通知</div></a></li>';
+    noticeSpan += '<li><a href="/USER/notice"><div>顯示所有通知</div></a></li>';
 }
 
 function numToUrl(type)
 {
     switch(type)
     {
-        case 1: return 'allTask.html';
-        case 2: return 'allTaskSRPassed.html';
+        case 1: return '/USER/allTask';
+        case 2: return '/USER/SR/allTaskPassed';
         case 3: return 'allTaskSRAccepted.html';
         case 4: return 'allTaskSRRecord.html';
-        case 5: return 'allTaskSPPassed.html';
-        case 6: return 'allTaskSPChecking.html';
-        case 7: return 'allTaskSPRefused.html';
-        case 8: return 'allTaskSPRecord.html';
+        case 5: return '/USER/SP/allTaskPassed';
+        case 6: return '/USER/SP/allTaskChecking';
+        case 7: return '/USER/SP/allTaskRefused';
+        case 8: return '/USER/SP/allTaskRecord';
         case 9: return 'point.html';
     }
 }

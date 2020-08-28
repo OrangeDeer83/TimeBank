@@ -13,10 +13,10 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/navbarVisitor.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/carousel2.css" type="text/css" />
-        <link rel="stylesheet" href="../static/css/homepage.css" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarVisitor.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/carousel2.css')}}" type="text/css" />
+        <link rel="stylesheet" href="{{url_for('static', filename='css/homepage.css')}}" type="text/css" />
     </head>
 
     <body>
@@ -149,9 +149,9 @@
                 國立臺南大學 <a href="mailto:NUTN@gmail.com" class="footerA">&nbspTimebank 網頁製作小組 監製@2020</a>
             </div>
         </footer>
-        <script src="../static/js/login.js"></script>
-        <script src="../static/js/carousel.js"></script>
-        <script src="../static/js/homepage.js"></script>
+        <script src="{{url_for('static', filename='js/login.js')}}"></script>
+        <script src="{{url_for('static', filename='js/carousel.js')}}"></script>
+        <script src="{{url_for('static', filename='js/homepage.js')}}"></script>
     </body>
 
 </html>

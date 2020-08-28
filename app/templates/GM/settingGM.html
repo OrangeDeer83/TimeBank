@@ -11,9 +11,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarManager.css" type="text/css">
-         <link rel="stylesheet" href="../static/css/settingSAGM.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarManager.css')}}" type="text/css">
+         <link rel="stylesheet" href="{{url_for('static', filename='css/settingSAGM.css')}}" type="text/css">
     </head>
 
     <body>
@@ -41,9 +41,9 @@
                         <input type="button" class="formButton" id="settingButton" value="確認修改" onclick="uploadNewPassword()" />
                     </div>
                 </div>
-                <script src="../static/js/clickToSpan.js"></script>
-                <script src="../static/js/navbarGM.js"></script>
-                <script src="../static/js/settingSAGM.js"></script>
+                <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+                <script src="{{url_for('static', filename='js/navbarGM.js')}}"></script>
+                <script src="{{url_for('static', filename='js/settingSAGM.js')}}"></script>
             </div>  
         </div>  
     </body>

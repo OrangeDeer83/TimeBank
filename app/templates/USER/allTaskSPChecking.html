@@ -12,160 +12,33 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="../static/css/allTaskSPChecking.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/allTaskSPChecking.css')}}" type="text/css">
     </head>
     <body>
-        <header></header>
+        <header id="userNavbar"></header>
         <div class="bodyContain">
             <div id="tabsFirst">
-                <div id="addTask"><a href="createTask.html">新增任務</a></div>
-                <div id="takeTask"><a href="allTask.html">承接任務</a></div>
+                <div id="addTask"><a href="/USER/createTask">新增任務</a></div>
+                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
             </div>
             <div id="tabsSecond">  
-                <div id="boss"><a href="alltaskSRPassed.html">雇主</a></div>
+                <div id="boss"><a href="/USER/SR/allTaskPassed">雇主</a></div>
                 <div id="employee">雇員</div>
             </div>    
             <div id="tabsThird">
                 <ul>
-                    <li class="notThisPage"><a href="allTaskSPPassed.html">已通過</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskPassed">已通過</a></li>
                     <li id="thisPage">審核中</li>
-                    <li class="notThisPage"><a href="allTaskSPRefused.html">遭拒絕</a></li>
-                    <li class="notThisPage"><a href="allTaskSPRecord.html">歷史紀錄</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskRefused">遭拒絕</a></li>
+                    <li class="notThisPage"><a href="/USER/SP/allTaskRecord">歷史紀錄</a></li>
                 </ul>
             </div>
             <div id="employeeCheck">
                 <table id="eCheck">
-                    <tr id="taskList0"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR0"></span></div>
-                            <div>任務名稱：<span id="taskName0"></span></div>
-                            <div>任務時間：<span id="taskTime0"></span></div>
-                            <div>任務額度：<span id="taskQuota0"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation0"></span></div>
-                            <div>任務內容：<span id="taskContent0"></span></div>
-                            <div class="button" onclick="cancelTask(0)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList1"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR1"></span></div>
-                            <div>任務名稱：<span id="taskName1"></span></div>
-                            <div>任務時間：<span id="taskTime1"></span></div>
-                            <div>任務額度：<span id="taskQuota1"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation1"></span></div>
-                            <div>任務內容：<span id="taskContent1"></span></div>
-                            <div class="button" onclick="cancelTask(1)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList2"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR2"></span></div>
-                            <div>任務名稱：<span id="taskName2"></span></div>
-                            <div>任務時間：<span id="taskTime2"></span></div>
-                            <div>任務額度：<span id="taskQuota2"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation2"></span></div>
-                            <div>任務內容：<span id="taskContent2"></span></div>
-                            <div class="button" onclick="cancelTask(2)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList3"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR3"></span></div>
-                            <div>任務名稱：<span id="taskName3"></span></div>
-                            <div>任務時間：<span id="taskTime3"></span></div>
-                            <div>任務額度：<span id="taskQuota3"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation3"></span></div>
-                            <div>任務內容：<span id="taskContent3"></span></div>
-                            <div class="button" onclick="cancelTask(3)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList4"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR4"></span></div>
-                            <div>任務名稱：<span id="taskName4"></span></div>
-                            <div>任務時間：<span id="taskTime4"></span></div>
-                            <div>任務額度：<span id="taskQuota4"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation4"></span></div>
-                            <div>任務內容：<span id="taskContent4"></span></div>
-                            <div class="button" onclick="cancelTask(4)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList5"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR5"></span></div>
-                            <div>任務名稱：<span id="taskName5"></span></div>
-                            <div>任務時間：<span id="taskTime5"></span></div>
-                            <div>任務額度：<span id="taskQuota5"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation5"></span></div>
-                            <div>任務內容：<span id="taskContent5"></span></div>
-                            <div class="button" onclick="cancelTask(5)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList6"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR6"></span></div>
-                            <div>任務名稱：<span id="taskName6"></span></div>
-                            <div>任務時間：<span id="taskTime6"></span></div>
-                            <div>任務額度：<span id="taskQuota6"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation6"></span></div>
-                            <div>任務內容：<span id="taskContent6"></span></div>
-                            <div class="button" onclick="cancelTask(6)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList7"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR7"></span></div>
-                            <div>任務名稱：<span id="taskName7"></span></div>
-                            <div>任務時間：<span id="taskTime7"></span></div>
-                            <div>任務額度：<span id="taskQuota7"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation7"></span></div>
-                            <div>任務內容：<span id="taskContent7"></span></div>
-                            <div class="button" onclick="cancelTask(7)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList8"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR8"></span></div>
-                            <div>任務名稱：<span id="taskName8"></span></div>
-                            <div>任務時間：<span id="taskTime8"></span></div>
-                            <div>任務額度：<span id="taskQuota8"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation8"></span></div>
-                            <div>任務內容：<span id="taskContent8"></span></div>
-                            <div class="button" onclick="cancelTask(8)">取消申請</div>
-                        </div>
-                    </td></tr>
-                    <tr id="taskList9"><td>
-                        <div class="introduction">
-                            <div class="bossName">雇主：<span id="taskSR9"></span></div>
-                            <div>任務名稱：<span id="taskName9"></span></div>
-                            <div>任務時間：<span id="taskTime9"></span></div>
-                            <div>任務額度：<span id="taskQuota9"></span>點</div>
-                        </div>
-                        <div class="detailed">
-                            <div>任務地點：<span id="taskLocation9"></span></div>
-                            <div>任務內容：<span id="taskContent9"></span></div>
-                            <div class="button" onclick="cancelTask(9)">取消申請</div>
-                        </div>
+                    <tr><td>
+                        <div class="introduction">目前尚無審核中任務</div>
                     </td></tr>
                 </table>
             </div>
@@ -175,7 +48,8 @@
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
         </div>
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/allTaskSPChecking.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
+        <script src="{{url_for('static', filename='js/allTaskSPChecking.js')}}"></script>
     </body>
 </html>

@@ -13,13 +13,14 @@
     margin: auto;
     height: 50px;
     font-size: 20px;
-    background-color: #B8D8BA;
+    background-color: var(--button-background-color);
     border-radius: 1px;
-    border: 1px solid #84A98C;
+    border: var(--button-background-border);
     color: white;
     padding: 10px 24px;
     cursor: pointer;
     display: inline-block;
+    outline: none;
 }
 
 .formButton button:not(:last-child)        /* 防止雙重border */
@@ -29,18 +30,23 @@
 
 .formButton button:hover
 {
-    background-color: #5E86C1;
-    color: #CBF3F0;
+    background-color: var(--button-hover-background-color);
+    color: var(--button-background-text-color);
+    outline: none;
 }
 
 .newsDiv
 {
     margin: auto;
     height: 500px;
-    background-color: #D0EDE2;
+    background-color: var(--background-color);
     border-radius: 5px;
-    border: 1px solid #CCCCCC;
+    border: var(--background-border);
     padding: 20px;
+}
+#newsButton
+{
+    background: var(--button-hover-background-color);
 }
 
 .formContainer
@@ -156,9 +162,9 @@
     margin: auto;
     height: 30px;
     color: black;
-    background-color: #D0EDE2;
+    background-color: #F4D35E;
     border-color: white;
-    border: 1px solid #D0EDE2;
+    border: 1px solid #FAF0CA;
     padding: 5px;
 }
 

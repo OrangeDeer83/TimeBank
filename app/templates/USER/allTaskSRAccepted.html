@@ -12,24 +12,24 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         
-        <link rel="stylesheet" href="../static/css/allTaskSRAccepted.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/allTaskSRAccepted.css')}}" type="text/css">
     </head>
     <body>
         <header id="userNavbar"></header>
         <div class="bodyContain">
             <div id="tabsFirst">
-                <div id="addTask"><a href="createTask.html">新增任務</a></div>
-                <div id="takeTask"><a href="allTask.html">承接任務</a></div>
+                <div id="addTask"><a href="/USER/createTask">新增任務</a></div>
+                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
             </div>
             <div id="tabsSecond">  
                 <div id="boss">雇主</div>
-                <div id="employee"><a href="alltaskSPPassed.html">雇員</a></div>
+                <div id="employee"><a href="/USER/SP/allTaskPassed">雇員</a></div>
             </div>    
             <div id="tabsThird">
                 <ul>
-                    <li class="notThisPage"><a href="allTaskSRPassed.html">已發布</a></li>
+                    <li class="notThisPage"><a href="/USER/SR/allTaskPassed">已發布</a></li>
                     <li id="thisPage">已接受</li>
                     <li class="notThisPage"><a href="allTaskSRRecord.html">歷史紀錄</a></li>
                 </ul>
@@ -73,8 +73,8 @@
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
         </div>
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/navbarUser.js"></script>
-        <script src="../static/js/allTaskSRAccepted.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
+        <script src="{{url_for('static', filename='js/allTaskSRAccepted.js')}}"></script>
     </body>
 </html>

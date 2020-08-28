@@ -12,9 +12,9 @@
     <meta name="dcterms.dateCopyrighted" content="2020" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     
-    <link rel="stylesheet" href="../static/css/myself.css" type="text/css">
-    <link rel="stylesheet" href="../static/css/navbarUser.css" type="text/css">
-    <link rel="stylesheet" href="../static/css/common.css" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/navbarUser.css')}}" type="text/css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/myself.css')}}" type="text/css">
 </head>
 <body>
     <header id="userNavbar"></header>
@@ -52,9 +52,9 @@
             <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
         </div>
     </div>
-    <script src="../static/js/clickToSpan.js"></script>
-    <script src="../static/js/navbarUser.js"></script>
-    <script src="../static/js/myself.js"></script>
-    <script src="../static/js/myselfSP.js"></script>
+    <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+    <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
+    <script src="{{url_for('static', filename='js/myself.js')}}"></script>
+    <script src="{{url_for('static', filename='js/myselfSP.js')}}"></script>
     </body>
 </html>

@@ -11,9 +11,9 @@
         <meta name="dcterms.dateCopyrighted" content="2020" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        <link rel="stylesheet" href="../static/css/common.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/navbarSA.css" type="text/css">
-        <link rel="stylesheet" href="../static/css/approveRecord.css" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}" type="text/css">
     </head>
 
     <body>
@@ -23,7 +23,7 @@
             <div class="formColumn">
                 <div class="formLine">
                     <div class="approveButton">
-                        <a href="approveSystemSA.html"><button id="formApprove">核准申請</button></a>
+                        <a href="/admin/approveSystem"><button id="formApprove">核准申請</button></a>
                         <button id="formApprove">核准紀錄</button>
                     </div>
                 </div>
@@ -121,9 +121,9 @@
                 </div>
             </div>
         </div>
-        <script src="../static/js/clickToSpan.js"></script>
-        <script src="../static/js/navbarSA.js"></script>
-        <script src="../static/js/approveRecord.js"></script>
+        <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
+        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{url_for('static', filename='js/approveRecord.js')}}"></script>
     </body>
 
 </html>

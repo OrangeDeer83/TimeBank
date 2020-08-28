@@ -186,11 +186,15 @@ function span(index)
     {
         document.getElementById("newsContainer").style.display = "block";
         document.getElementById("introductionContainer").style.display = "none";
+        document.getElementById("newsButton").style.background = "var(--button-hover-background-color)";
+        document.getElementById("introductionButton").style.background = "var(--button-background-color)";
     }
     else if (index == 1)
     {
         document.getElementById("newsContainer").style.display = "none";
         document.getElementById("introductionContainer").style.display = "block";
+        document.getElementById("introductionButton").style.background = "var(--button-hover-background-color)";
+        document.getElementById("newsButton").style.background = "var(--button-background-color)";
     }
 }
 

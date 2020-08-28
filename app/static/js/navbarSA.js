@@ -13,11 +13,11 @@ function showNavbar()
                         '<div class="dropdownMenuItem HRSpanItem"><a href="hrmManager.html">系統管理員</a></div>' +
                         '<div class="dropdownMenuItem HRSpanItem"><a href="hrmGMApplicationSA.html">評論管理員</a></div>' +
                     '</div>' +
-                    '<li><a href="givePointSA.html" class="dropdownMenuItem">配發系統</a></li>' +
-                    '<li><a href="approveSystemSA.html" class="dropdownMenuItem">核准系統</a></li>' +
-                    '<li><a href="updateConditionSA.html" class="dropdownMenuItem">更新申請條件</a></li>' +
-                    '<li><a href="updateWebSA.html" class="dropdownMenuItem">更新入口網站</a></li>' +
-                    '<li><a href="settingSA.html" class="dropdownMenuItem">設定</a></li>' +
+                    '<li><a href="/Admin/givePoint" class="dropdownMenuItem">配發系統</a></li>' +
+                    '<li><a href="/Admin/approveSystem" class="dropdownMenuItem">核准系統</a></li>' +
+                    '<li><a href="/Admin/updateCondition" class="dropdownMenuItem">更新申請條件</a></li>' +
+                    '<li><a href="/Admin/updateWeb" class="dropdownMenuItem">更新入口網站</a></li>' +
+                    '<li><a href="/Admin/setting" class="dropdownMenuItem">設定</a></li>' +
                 '</ul>' +
             '</div>' +
         '</div>' +

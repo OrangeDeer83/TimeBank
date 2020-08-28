@@ -83,6 +83,7 @@ def comment_action():
                     comment_.SRComment = user_comment
                     if comment_.SPComment != None:
                         comment_.commentStatus = 0
+                    db.session.commit()
                 else:
                     #已經不可評論
                     return jsonify({"rspCode":"404"})
@@ -187,6 +188,18 @@ def judge_commentaction():
         db.session.commit()
     except:
         return jsonify({"rspCode":"402"})
+    notice_ = notice(userID = SR_user.userID,time = datetime.datetime.now(), status = noticeType['judgeComment'], haveRead = 0)
+    db.session.add(notice_)
+    db.session.commit()
+    notice_task = noticeTask(noticeID = notice_.ID, taskID = comment_.taskID)
+    db.session.add(notice_task)
+    db.session.commit()
+    notice_2 = notice(userID = SP_user.userID,time = datetime.datetime.now(), status = noticeType['judgeComment'], haveRead = 0)
+    db.session.add(notice_2)
+    db.session.commit()
+    notice_task_2 = noticeTask(noticeID = notice_.ID, taskID = comment_.taskID)
+    db.session.add(notice_task_2)
+    db.session.commit()
     return jsonify({"rspCode":"200"})
 
 #評論歷史紀錄數量   md
@@ -195,17 +208,17 @@ def judge_commentaction():
 @Comment.route("/rate_history_list_ammount", methods = ['GET'])
 def rate_history_list_ammount():
     if request.method != 'GET':
-        return jsonify({"rspCode":"30","taskIDList":""})
+        return jsonify({"rspCode":"30","taskIDList":"","taskIDAmount":""})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":"31","taskIDList":""})
+        return jsonify({"rspCode":"31","taskIDList":"","taskIDAmount":""})
     try:
         taskIDList = []
         list = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
-        for commentID in list:
+        for commentID in list:  
             taskIDList.append(commentID[0])
-        return jsonify({"rspCode":"20","taskIDList":taskIDList})
+        return jsonify({"rspCode":"20","taskIDList":taskIDList,"taskIDAmount":len(taskIDList)})
     except:
-        return jsonify({"rspCode":"48","taskIDList":""})
+        return jsonify({"rspCode":"48","taskIDList":"","taskIDAmount":""})
 
 #評論歷史紀錄 md 十個
 #POST
@@ -217,7 +230,7 @@ def rate_history_list():
         return jsonify({"commentList":"","rspCode":"30","commentAmount":""})
     if session.get('userType') != userType['GM']:
         #此帳號不是GM
-        return jsonify({"commentList":"","rspCode":"50","commentAmount":""})
+        return jsonify({"commentList":"","rspCode":"31","commentAmount":""})
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])

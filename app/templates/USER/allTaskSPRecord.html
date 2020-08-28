@@ -20,18 +20,18 @@
         <header id="userNavbar"></header>
         <div class="bodyContain">
            <div id="tabsFirst">
-                <div id="addTask"><a href="/USER/createTaskk">新增任務</a></div>
-                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
+                <div id="addTask"><a href="{{url_for('USER.create_task')}}">新增任務</a></div>
+                <div id="takeTask"><a href="{{url_for('USER.all_task')}}">承接任務</a></div>
             </div>
             <div id="tabsSecond">
-                <div id="boss">雇主</div>
-                <div id="employee"><a href="/USER/SP/allTaskPassed">雇員</a></div>
+                <div id="boss"><a href="{{url_for('USER.SR_all_task_passed')}}">雇主</a></div>
+                <div id="employee">雇員</div>
             </div>    
             <div id="tabsThird">
                 <ul>
-                    <li class="notThisPage"><a href="/USER/SP/allTaskPassed">已通過</a></li>
-                    <li class="notThisPage"><a href="/USER/SP/allTaskChecking">審核中</a></li>
-                    <li class="notThisPage"><a href="/USER/SP/allTaskRefused">遭拒絕</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_passed')}}">已通過</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_checking')}}">審核中</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SP_all_task_refused')}}">遭拒絕</a></li>
                     <li id="thisPage">歷史紀錄</li>
                 </ul>
             </div>

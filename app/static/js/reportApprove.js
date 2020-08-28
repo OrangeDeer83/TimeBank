@@ -33,6 +33,7 @@ function getReportAmount()
 
 function computePage(type)
 {
+    console.log(type)
     switch (type)
     {
         case 1:
@@ -64,7 +65,7 @@ function getDetail()
         switch (rst.rspCode)
         {
             case '20': case 20:
-                computePage(rst.reportList);
+                showDetail(rst.reportList[0]);
                 break;
             default:
                 console.log('無法取得檢舉細節')
@@ -72,7 +73,7 @@ function getDetail()
     }
 }
 
-function shoeDetail(reportDetail)
+function showDetail(reportDetail)
 {
     document.getElementById('reportID').innerHTML = reportList[currentReport];
     document.getElementById('reportTime').innerHTML = reportDetail.reportTime;
@@ -83,16 +84,17 @@ function shoeDetail(reportDetail)
     document.getElementById('taskContent').value = reportDetail.taskContent;
     document.getElementById('SRName').innerHTML = reportDetail.SRName;
     document.getElementById('SRPhone').innerHTML = reportDetail.SRPhone;
-    document.getElementById('SRRate').innerHTML = reportDetail.SRStar;
+    document.getElementById('SRRate').innerHTML = reportDetail.SRRate;
     document.getElementById('SRComment').value = reportDetail.SRComment;
     document.getElementById('SPName').innerHTML = reportDetail.SPName;
     document.getElementById('SPPhone').innerHTML = reportDetail.SPPhone;
-    document.getElementById('SPRate').innerHTML = reportDetail.SPStar;
+    document.getElementById('SPRate').innerHTML = reportDetail.SPRate;
     document.getElementById('SPComment').value = reportDetail.SPComment;
 }
 
 function report(type)
 {
+    console.log(100)
     var approveRequest = new XMLHttpRequest();
     approveRequest.open('POST', 'http://192.168.1.144:5000/report/approve');
     approveRequest.setRequestHeader('Content-Type', 'application/json');

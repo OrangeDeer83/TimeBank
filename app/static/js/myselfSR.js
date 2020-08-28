@@ -4,8 +4,8 @@ window.onload = function()
     getProfile();
     getPropicMyself();
     getRateAmount();
-    document.getElementById('hrefMyselfTask').innerHTML = '<a href="myselfTask.html' + /*getToken() + */'">已發任務</a>';
-    document.getElementById('hrefMyselfSP').innerHTML = '<a href="myselfSP.html' + /*getToken() + */'">雇員評分</a>';
+    document.getElementById('hrefMyselfTask').innerHTML = '<a href="/USER/info/' + getToken() + '">已發任務</a>';
+    document.getElementById('hrefMyselfSP').innerHTML = '<a href="/USER/SP/myself/' + getToken() + '">雇員評分</a>';
 }
 
 var rateAmount = 0;

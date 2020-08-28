@@ -48,7 +48,7 @@ input:focus
 
 a
 {
-    color: cadetblue;
+    color: #a23400;
     text-decoration: none; 
     background-color: transparent;
 }
@@ -149,7 +149,7 @@ button
 .navbarBrand
 {
     color: #777777;
-    width: 162px;
+    /*width: 162px;*/
     height: 50px;
     padding: 5px 15px;
     font-size: 18px;

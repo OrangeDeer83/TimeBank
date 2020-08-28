@@ -17,7 +17,7 @@ function showListDiv()
     table.innerHTML = '';
     for (var i = 0; i < 10; i++)
     {
-        table += '' +
+        table.innerHTML += '' +
         '<tr id="taskList' + i + '"><td>' +
             '<div class="introduction">' +
                 '<div class="bossName">雇主：<span id="taskSR' + i + '"></span></div>' +

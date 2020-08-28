@@ -257,7 +257,7 @@ function sendReport()
         switch (rst.rspCode)
         {
             case "20": case 20:
-                console.log('檢舉已送出');
+                alert('檢舉已送出');
                 hideReportDiv();
                 break;
             default:

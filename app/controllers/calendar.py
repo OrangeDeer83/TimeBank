@@ -46,7 +46,7 @@ def one_month_list():
                 Found = False
                 for task in query_data.taskSR:
                     #確定不是取消跟刪除
-                    if  task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
+                    if task.taskStatus != 11 and task.taskStatus != 12:
                         if dateStart > task.taskStartTime and dateStart < task.taskEndTime:
                             dateList.append(1)
                             Found = True
@@ -84,7 +84,7 @@ def one_month_list():
                                 Found = True
                                 break
                         #已經接到或是完成
-                        elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 4 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
+                        elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
                             #確定SP是自己
                             if taskCandidate_.task.SP[0].userID == userID:
                                 if dateStart > taskCandidate_.task.taskStartTime and dateStart < taskCandidate_.task.taskEndTime:
@@ -124,7 +124,7 @@ def one_date_list():
             show_year = value['year']
             show_month = value['month']
             show_day = value['day']
-            userID = value['userID']
+            userID = session.get('userID')
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
@@ -135,7 +135,7 @@ def one_date_list():
             dateStart = datetime.datetime(show_year, show_month, show_day, 0, 0, 0)
             dateEnd = datetime.datetime(show_year, show_month, show_day, 23, 59, 59)
             for task in query_data.taskSR:
-                if  task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
+                if task.taskStatus != 11 and task.taskStatus != 12:
                     if dateStart > task.taskStartTime and dateStart < task.taskEndTime:
                         taskList.append(task)
                     elif dateEnd > task.taskStartTime and dateEnd < task.taskEndTime:
@@ -156,7 +156,8 @@ def one_date_list():
                     elif dateStart < taskCandidate_.task.taskStartTime and dateEnd > taskCandidate_.task.taskEndTime:
                         taskList.append(taskCandidate_.task)
                 #已經接到或是完成
-                elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 4 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
+                elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
+                    print(taskCandidate_.task.taskStatus)
                     #確定SP是自己
                     if taskCandidate_.task.SP[0].userID == userID:
                         if dateStart > taskCandidate_.task.taskStartTime and dateStart < taskCandidate_.task.taskEndTime:
@@ -179,7 +180,7 @@ def one_date_list():
                     taskEnd = dateEnd
                 else:
                     taskEnd = task.taskEndTime
-                if task.taskStatus == 0:
+                if task.taskStatus in [0, 4]:
                     taskListJson.append({"taskName": task.taskName, "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
                                         "taskLocation": task.taskLocation, "taskSRName": "-", "taskSPName": "-"})
@@ -187,7 +188,7 @@ def one_date_list():
                     taskListJson.append({"taskName": task.taskName + "(申請中)", "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
                                         "taskLocation": task.taskLocation, "taskSRName": task.SR[0].userName, "taskSPName": "-"})
-                elif task.taskStatus > 1 and task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
+                elif task.taskStatus > 1 and task.taskStatus != 11 and task.taskStatus != 12:
                     if task.SP[0].userID == userID:
                         taskListJson.append({"taskName": task.taskName, "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\

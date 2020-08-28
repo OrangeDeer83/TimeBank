@@ -4,8 +4,8 @@ window.onload = function()
     getProfile();
     getPropicMyself();
     getTaskList();
-    document.getElementById('hrefMyselfSR').innerHTML = '<a href="myselfSR.html' + /*getToken() + */'">雇主評分</a>';
-    document.getElementById('hrefMyselfSP').innerHTML = '<a href="myselfSP.html' + /*getToken() + */'">雇員評分</a>';
+    document.getElementById('hrefMyselfSR').innerHTML = '<a href="/USER/SR/myself/' + getToken() + '">雇主評分</a>';
+    document.getElementById('hrefMyselfSP').innerHTML = '<a href="/USER/SP/myself/' + getToken() + '">雇員評分</a>';
 }
 
 var taskList = [];

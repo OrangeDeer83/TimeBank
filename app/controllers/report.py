@@ -1,6 +1,6 @@
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
-from ..models import db, userType
+from ..models import db, userType,noticeType
 Report = Blueprint('report', __name__)
 #檢舉動作
 #POST
@@ -10,17 +10,16 @@ Report = Blueprint('report', __name__)
 def send_report():
     if request.method != 'POST':
         return jsonify({"rspCode":"30"})
-    #if session.get('userType') != userType['USER']:
-    #    return jsonify({"rspCode":"31"})
-    #try:
-    #    userID_ = int(session.get('userID'))
-    #except:
-    #    return jsonify({"rspCode":"31"})
+    if session.get('userType') != userType['USER']:
+        return jsonify({"rspCode":"31"})
+    try:
+        userID_ = int(session.get('userID'))
+    except:
+        return jsonify({"rspCode":"31"})
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])
         reason_ = json['reportReason']
-        userID_ = int(json['userID'])
     except:
         return jsonify({"rspCode":"31"})
     task_ = db.session.query(task).filter(task.taskID == taskID_).first()
@@ -33,6 +32,12 @@ def send_report():
         if task_.taskStatus in [3,6,7,8,13,14,15,16]:
             newReport = report(taskID = taskID_, adminID = None, reason = reason_, reportStatus = 0, reportUserID = userID_)
             db.session.add(newReport)
+            db.session.commit()
+            notice_ = notice(userID = userID_,time = str(datetime.datetime.now()), status = noticeType['sendReport'], haveRead = 0)
+            db.session.add(notice_)
+            db.session.commit()
+            notice_report = noticeReport(noticeID = notice_.ID,reportID = newReport.reportID)
+            db.session.add(notice_report)
             db.session.commit()
             return jsonify({"rspCode":"20"})
         #任務必須案過完成未完成才可檢舉
@@ -49,17 +54,16 @@ def send_report():
 def approve():
     if request.method != 'POST':
         return jsonify({"rspCode":"30"})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"31"})
-    #try:
-    #    adminID_ = int(session.get('adminID'))
-    #except:
-    #    return jsonify({"rspCode":"31"})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"31"})
+    try:
+        adminID_ = int(session.get('adminID'))
+    except:
+        return jsonify({"rspCode":"31"})
     try:
         json = request.get_json()
         reportID_ = json['reportID']
         reportStatus_ = int(json['reportStatus'])
-        adminID_ = int(json['adminID'])
     except:
         return jsonify({"rspCode":"49"})
     if db.session.query(adminAccount).filter(adminAccount.adminID == adminID_).first() == None:
@@ -89,8 +93,8 @@ def approve():
 def list_amount():
     if request.method != 'GET':
         return jsonify({"rspCode":"30","reportList":"","reportAmount":""})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
     try:
         report_list = db.session.query(report.reportID).filter(report.reportStatus == 0).all()
         reportList = []
@@ -104,8 +108,8 @@ def list_amount():
 def list():
     if request.method != 'POST':
         return jsonify({"reportList":"","rspCode":"30"})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"reportList":"","rspCode":"31"})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"reportList":"","rspCode":"31"})
     try:
         json = request.get_json()
         startID = int(json['reportID'])
@@ -131,21 +135,21 @@ def list():
                 SPComment = ""
             reportList.append({"taskName":task_.taskName,"taskContent":task_.taskContent,"SRRate":SRStar,"SRName":task_.SR[0].name,\
                                 "SRComment":SRComment,"SRPhone":task_.SR[0].userPhone,"SPRate":SPStar,"SPName":task_.SP[0].name,\
-                                "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone})
+                                "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone,"reportUserName":report.account.name,"reportReason":report.reason,"taskStartTime":task_.taskStartTime,"taskEndTime":task_.taskEndTime})
         return jsonify({"reportList":reportList,"rspCode":"20"})
     except:
         return jsonify({"reportList":"","rspCode":"48"})
 
 #檢舉審核紀錄
-#POSR
+#POST
 #傳reportID
 #回傳reporLisst,rspCode
 @Report.route("report_history_list", methods = ['POST'])
 def report_history_list():
     if request.method != 'POST':
         return jsonify({"rspCode":"30","reportList":"","reportAmount":""})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
     try:
         json = request.get_json()
         startID = int(json['reportID'])
@@ -180,8 +184,8 @@ def report_history_list():
 def report_history_list_amount():
     if request.method != 'GET':
         return jsonify({"rspCode":"30","reportList":"","reportAmount":""})
-    #if session.get('userType') != userType['GM']:
-    #    return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
+    if session.get('userType') != userType['GM']:
+        return jsonify({"rspCode":"31","reportList":"","reportAmount":""})
     try:
         report_list = db.session.query(report.reportID).filter(report.reportStatus != 0).all()
         reportList = []

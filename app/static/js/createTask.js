@@ -87,7 +87,7 @@ function createTask()
         {
             case "200": case 200:
                 alert("任務建立成功");
-                window.location.reload();
+                window.location.assign('/USER/SR/allTaskPassed');
                 break;
             case "300": case 300:
             case "400": case 400:

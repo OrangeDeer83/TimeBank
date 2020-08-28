@@ -22,7 +22,6 @@ from .controllers.portal import Portal
 from .controllers.profile import Profile
 from .controllers.report import Report
 from .controllers.task import Task
-from .controllers.test import test
 
 #匯入views
 from .views.Admin import Admin
@@ -44,5 +43,4 @@ app.register_blueprint(Portal, url_prefix='/portal')
 app.register_blueprint(Profile, url_prefix='/profile')
 app.register_blueprint(Report, url_prefix='/report')
 app.register_blueprint(Task, url_prefix='/task')
-app.register_blueprint(test, url_prefix='/test')
 app.register_blueprint(USER, url_prefix='/USER')

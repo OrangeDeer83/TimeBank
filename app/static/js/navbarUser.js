@@ -1,3 +1,4 @@
+const urlPath = 'http://192.168.1.144:5000';
 var haveNewNotice = 0;
 var lastRequestOnload = 1;
 showNavbar();
@@ -11,8 +12,8 @@ function showNavbar()
                 '<div class="menuIcon"></div>' +
                 '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
                     '<li class="hiddenLarge">' +
-                        '<a class="point" href="point.html">' +
-                            '<img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />' +
+                        '<a class="point" href="/Admin/pointRecord">' +
+                            '<img class="navbarPointImg" alt="Point" src="' + urlPath + '/static/img/point3.png" />' +
                             '<span id="navbarPoint1">0</span>' +
                         '</a>' +
                     '</li>' +
@@ -21,14 +22,14 @@ function showNavbar()
                     '<li><a href="/USER/calendar">行事曆</a></li>' +
                     '<li><a href="/USER/application">點數申請</a></li>' +
                     '<li><a href="/USER/setting">設定</a></li>' +
-                    '<li><a id="logout" href="{{url_for(\'account.logout\')}}">登出</a></li>' +
+                    '<li><a id="logout" href="/account/logout">登出</a></li>' +
                 '</ul>' +
             '</div>' +
         '</div>' +
         '<div class="navbarCenter">' +
-            '<a class="navbarBrand" href="homepage.html">' +
-                '<img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="../static/img/brandWhite.png" />' +
-                '<img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="../static/img/brandColor.png" />' +
+            '<a class="navbarBrand" href="/USER">' +
+                '<img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="' + urlPath + '/static/img/brandWhite.png" />' +
+                '<img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="' + urlPath + '/static/img/brandColor.png" />' +
             '</a>' +
         '</div>' +
         '<div class="navbarRight">' +
@@ -41,8 +42,8 @@ function showNavbar()
                     '</ul>' +
                 '</li>' +
                 '<li class="hiddenSmall">' +
-                    '<a class="point" href="point.html">' +
-                        '<img class="navbarPointImg" alt="Point" src="../static/img/point3.png" />' +
+                    '<a class="navbarPointA" href="/USER/pointRecord">' +
+                        '<img class="navbarPointImg" alt="Point" src="' + urlPath + '/static/img/point3.png" />' +
                         '<span id="navbarPoint">0</span>' +
                     '</a>' +
                 '</li>' +
@@ -157,10 +158,11 @@ function getCurrentPointAmount()
 
 function checkNoticeIndication()
 {
+    getNoticeIndication();
     // Check for new notice every second.
-    window.setInterval(getNoticeIndication, 1000);
+    window.setInterval(getNoticeIndication, 10000);///////////////////////////////////////
     // More then 10 sec not onload, reset the standard.
-    //window.setInterval(function(){ if (lastRequestOnload == 0)lastRequestOnload = 1;}, 10000);
+    window.setInterval(function(){ if (lastRequestOnload == 0)lastRequestOnload = 1;}, 10000);
 }
 function getNoticeIndication()
 {
@@ -195,6 +197,7 @@ function getNewNotice()
 {
     console.log('getNewNotice')
     document.getElementById('navbarNotice').removeAttribute('style');
+    lastRequestOnload = 0;
     
     var getNewNoticeRequest = new XMLHttpRequest();
     getNewNoticeRequest.open('GET', 'http://192.168.1.144:5000/notice/new_list');
@@ -207,6 +210,7 @@ function getNewNotice()
         switch (rst.rspCode)
         {
             case "20": case 20:
+                haveNewNotice = 0;
                 putNewNotice(rst.newNoticeList)
                 break;
             default:
@@ -219,11 +223,21 @@ function putNewNotice(noticeList)
 {
     const noticeSpan = document.getElementById('noticeSpan');
     noticeSpan.innerHTML = '';
-    for (var i = 0; i < noticeList.length; i++)
+    if (noticeList.length > 0)
     {
-        noticeSpan += '<li><a href="' + numToUrl(noticeList[i].connectTo) + '<div>' + noticeList[i].content +'</div></a></li>';
+        
+        for (var i = noticeList.length - 1; i >= 0; i--)
+        {
+            noticeSpan.innerHTML += '<li><a href="' + numToUrl(noticeList[i]['connectTo']) + '">' +
+            '<div>' + noticeList[i].time +
+            '</div><div>' + noticeList[i].content +'</div></a></li>';
+        }
     }
-    noticeSpan += '<li><a href="/USER/notice"><div>顯示所有通知</div></a></li>';
+    else
+    {
+        noticeSpan.innerHTML += '<li><a><div>無新通知</div></a></li>';
+    }
+    noticeSpan.innerHTML += '<li><a href="/USER/notice"><div>顯示所有通知</div></a></li>';
 }
 
 function numToUrl(type)
@@ -232,13 +246,13 @@ function numToUrl(type)
     {
         case 1: return '/USER/allTask';
         case 2: return '/USER/SR/allTaskPassed';
-        case 3: return 'allTaskSRAccepted.html';
-        case 4: return 'allTaskSRRecord.html';
+        case 3: return '/USER/SR/allTaskAccepted';
+        case 4: return '/USER/SR/allTaskRecord';
         case 5: return '/USER/SP/allTaskPassed';
         case 6: return '/USER/SP/allTaskChecking';
         case 7: return '/USER/SP/allTaskRefused';
         case 8: return '/USER/SP/allTaskRecord';
-        case 9: return 'point.html';
+        case 9: return '/Admin/pointRecord';
     }
 }
 

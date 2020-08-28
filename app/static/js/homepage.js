@@ -201,8 +201,28 @@ function span(index)
 // Switch between newDetial of different newsTitle.
 function spanNews(index)
 {
+    var d = new Date();
+        var time = "";
+        if (d.getHours() < 10) {
+            time += "0" + d.getHours();
+        }
+        else{
+            time += d.getHours();
+        }
+        if (d.getMinutes() < 10) {
+            time += "0" + d.getMinutes();
+        }
+        else{
+            time += d.getMinutes();
+        }
+        if (d.getSeconds() < 10) {
+            time += "0" +d.getSeconds();
+        }
+        else{
+            time += d.getSeconds();
+        }
     getNewsContent(index);
-    document.getElementById("newsImg").src = "../static/uploadFile/newsImage/" + thisPageList[index] + ".jpg";
+    document.getElementById("newsImg").src = "../static/uploadFile/newsImage/" + thisPageList[index] + ".jpg?v=" + time;
     document.getElementById("newsTitle" + currentNews).style.border = "1px solid #CCCCCC";
     currentNews = index;
     document.getElementById("newsTitle" + currentNews).style.border = "3px solid black";

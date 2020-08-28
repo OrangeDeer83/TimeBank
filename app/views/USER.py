@@ -69,7 +69,7 @@ def SP_myself(userID):
 @USER.route('/SR/myself/<userID>')
 def SR_myself(userID):
     if session.get('userType') == userType['USER']:
-        return render_template('/USER//SR/myself')
+        return render_template('/USER/myselfSR.html')
     else:
         return redirect(url_for('USER.index'))
 
@@ -170,3 +170,10 @@ def info(userID):
     else:
         return redirect(url_for('USER.index'))
 
+#所有通知頁面
+@USER.route('/notice')
+def notice():
+    if session.get('userType') == userType['USER']:
+        return render_template('/USER/notification.html')
+    else:
+        return redirect(url_for('USER.index'))

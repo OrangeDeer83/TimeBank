@@ -10,8 +10,8 @@ function showNavbar()
                 '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
                     '<li><div class="dropdownMenuItem" onclick="clickToSpan(\'HRSpan\')">人事管理</div></li>' +
                     '<div class="unspanned" id="HRSpan">' +
-                        '<div class="dropdownMenuItem HRSpanItem"><a href="hrmManager.html">系統管理員</a></div>' +
-                        '<div class="dropdownMenuItem HRSpanItem"><a href="hrmGMApplicationSA.html">評論管理員</a></div>' +
+                        '<div class="dropdownMenuItem HRSpanItem"><a href="/Admin/AdminList">系統管理員</a></div>' +
+                        '<div class="dropdownMenuItem HRSpanItem"><a href="/Admin/GMApplication">評論管理員</a></div>' +
                     '</div>' +
                     '<li><a href="/Admin/givePoint" class="dropdownMenuItem">配發系統</a></li>' +
                     '<li><a href="/Admin/approveSystem" class="dropdownMenuItem">核准系統</a></li>' +
@@ -28,7 +28,7 @@ function showNavbar()
             '</div>' +
         '</div>' +
         '<div class="navbarRight">' +
-            '<a class="navbarUl" id="logout" href="{{url_for(\'account.logout\')}}">登出</a>' +
+            '<a class="navbarUl" id="logout" href="/account/logout">登出</a>' +
         '</div>' +
     '</div>' +
     '</nav>';

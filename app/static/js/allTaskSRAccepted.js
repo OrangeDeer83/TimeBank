@@ -31,7 +31,7 @@ function showListDiv()
                 '<div>' +
                     '<div>任務內容：<span id="content' + i + '"></span></div><br>' +
                     '<div>' +
-                        '<div class="button" id="comment' + i + '" onclick="openGradingDiv(' + i + ')" style="display:none;">評論</div>' +
+                        '<div class="button" id="comment' + i + '" onclick="openRating(' + i + ')" style="display:none;">評論</div>' +
                         '<div class="button" id="undone' + i + '" onclick="finishTask(' + i + ', 0)" style="display:none;">未完成</div>' +
                         '<div class="button" id="done' + i + '" onclick="finishTask(' + i + ', 1)" style="display:none;">完成</div>' +
                         '<div class="button" id="cancel' + i + '" onclick="cancelTask(' + i + ')" style="display:none;">取消任務</div>' +
@@ -141,14 +141,14 @@ function putDetail(index)
     document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
     document.getElementById("taskTime" + index).innerHTML = getDate(startTime) + " ~ " + getDate(endTime);
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-    document.getElementById("taskSP" + index).innerHTML = currentTask.taskSR;
-    document.getElementById("Location" + index).innerHTML = currentTask.taskLocation;
+    document.getElementById("taskSP" + index).innerHTML = currentTask.taskSPName;
+    document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("content" + index).innerHTML = currentTask.taskContent;
 
     var taskStatus = currentTask.taskStatus;
     if (taskStatus == 2)
     {
-        if (startTime >= Date.now()) // startTime is passed;
+        if (startTime <= Date.now()) // startTime is passed;
         {
             document.getElementById("done" + index).removeAttribute("style");
             document.getElementById("undone" + index).removeAttribute("style");
@@ -210,7 +210,8 @@ function cancelTask(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("任務取消已送出，等待雇員回應");
+                alert("任務取消已送出");
+                window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:
@@ -237,6 +238,9 @@ function finishTask(index, type)
         {
             case "200": case 200:
                 alert("任務結束，請評論");
+                document.getElementById('done' + index).style.display = 'none';
+                document.getElementById('undone' + index).style.display = 'none';
+                openRating(index);
                 break;
             case "300": case 300:
             case "400": case 400:

@@ -21,18 +21,18 @@
         <header id="userNavbar"></header>
         <div class="bodyContain">
            <div id="tabsFirst">
-                <div id="addTask"><a href="/USER/createTask">新增任務</a></div>
-                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
+            <div id="addTask"><a href="{{url_for('USER.create_task')}}">新增任務</a></div>
+            <div id="takeTask"><a href="{{url_for('USER.all_task')}}">承接任務</a></div>
             </div>
             <div id="tabsSecond">  
                 <div id="boss">雇主</div>
-                <div id="employee"><a href="/USER/SP/allTaskPassed">雇員</a></div>
+                <div id="employee"><a href="{{url_for('USER.SP_all_task_passed')}}">雇員</a></div>
             </div>    
             <div id="tabsThird">
                 <ul>
                     <li id="thisPage">已發布</li>
-                    <li class="notThisPage"><a href="allTaskSRAccepted.html">已接受</a></li>
-                    <li class="notThisPage"><a href="allTaskSRRecord.html">歷史紀錄</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_accepted')}}">已接受</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_record')}}">歷史紀錄</a></li>
                 </ul>
             </div>
             <div id="bossPass">
@@ -42,9 +42,9 @@
             </div>
             <div id="editTaskDiv">
                 <label>任務名稱：<input type="text" class="newText" id="newTaskName" placeholder="請輸入任務名稱" maxlength="20" /></label>
-                <label>起始時間：<input type="datetime-local" class="newText" id="newTaskStartTime" placeholder="yyyy-mm-dd hh:mm" /></label>
-                <label>結束時間：<input type="datetime-local" class="newText" id="newTaskEndTime" placeholder="yyyy-mm-dd hh:mm" /></label>
-                <label>任務額度：<input type="number" class="newText" id="newTaskQuota" min="0" max="99" placeholder="0~99" /></label>
+                <label>起始時間：<input type="text" class="newText" id="newTaskStartTime" placeholder="yyyy-mm-dd hh:mm:ss" /></label>
+                <label>結束時間：<input type="text" class="newText" id="newTaskEndTime" placeholder="yyyy-mm-dd hh:mm:ss" /></label>
+                <label>任務額度：<input type="text" class="newText" id="newTaskQuota" min="0" max="99" placeholder="0~99" /></label>
                 <label>任務地點：<input type="text" class="newText" id="newTaskLocation" /></label>
                 <label>任務說明：<textarea id="newTaskContent"></textarea></label>
                 <input type="button" value="送出編輯" onclick="sendEdit();" />

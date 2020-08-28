@@ -36,13 +36,13 @@ function getNoticeAmount()
 
 function showDiv()
 {
-    const pointTable = document.getElementById('pointTable');
+    const pointTable = document.getElementById('notificationTable');
     pointTable.innerHTML = '';
-    for (var i = 0; i < maxPageAmount && i < recordAmount; i++)
+    for (var i = 0; i < maxPageAmount && i < noticeAmount; i++)
     {
         pointTable.innerHTML += '<tr id="noticeDiv' + i + '" style="display:none;"><td>' +
-        '<span id="notixeTime' + i + '"></span>' +
-        '<a class="introduction" id="noticehref"><span id="noticeContent' + i + '"></span></a></td></tr>';
+        '<span id="noticeTime' + i + '"></span>' +
+        '<a class="introduction" id="noticehref' + i + '"><br /><span id="noticeContent' + i + '"></span></a></td></tr>';
     }
     computePage(0);
 }
@@ -106,7 +106,7 @@ function showDetail(noticeList)
         document.getElementById('noticehref' + i).href = numToUrl(noticeList[i].connectTo);
         document.getElementById('noticeDiv' + i).removeAttribute('style');
     }
-    for (var i = currentPageAmount; i < maxPageAmount; i++)
+    for (var i = currentPageAmount; i < maxPageAmount && i < noticeAmount; i++)
     {
         document.getElementById('noticeContent' + i).innerHTML = '';
         document.getElementById('noticeTime' + i).innerHTML = '';
@@ -121,12 +121,12 @@ function numToUrl(type)
     {
         case 1: return '/USER/allTask';
         case 2: return '/USER/SR/allTaskPassed';
-        case 3: return 'allTaskSRAccepted.html';
-        case 4: return 'allTaskSRRecord.html';
+        case 3: return '/USER/SR/allTaskAccepted';
+        case 4: return '/USER/SR/allTaskRecord';
         case 5: return '/USER/SP/allTaskPassed';
         case 6: return '/USER/SP/allTaskChecking';
         case 7: return '/USER/SP/allTaskRefused';
         case 8: return '/USER/SP/allTaskRecord';
-        case 9: return 'point.html';
+        case 9: return '/USER/pointRecord';
     }
 }

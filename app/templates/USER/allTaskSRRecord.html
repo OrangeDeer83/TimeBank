@@ -20,17 +20,17 @@
         <header id="userNavbar"></header>
         <div class="bodyContain">
            <div id="tabsFirst">
-                <div id="addTask"><a href="/USER/createTask">新增任務</a></div>
-                <div id="takeTask"><a href="/USER/allTask">承接任務</a></div>
+                <div id="addTask"><a href="{{url_for('USER.create_task')}}">新增任務</a></div>
+                <div id="takeTask"><a href="{{url_for('USER.all_task')}}">承接任務</a></div>
             </div>
             <div id="tabsSecond">
                 <div id="boss">雇主</div>
-                <div id="employee"><a href="/USER/SP/allTaskPassed">雇員</a></div>
+                <div id="employee"><a href="{{url_for('USER.SP_all_task_passed')}}">雇員</a></div>
             </div>    
             <div id="tabsThird">
                 <ul>
-                    <li class="notThisPage"><a href="/USER/SR/allTaskPassed">已發布</a></li>
-                    <li class="notThisPage"><a href="allTaskSRAccepted.html">已接受</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_passed')}}">已發布</a></li>
+                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_accepted')}}">已接受</a></li>
                     <li id="thisPage">歷史紀錄</li>
                 </ul>
             </div>

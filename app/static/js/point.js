@@ -48,8 +48,8 @@ function showDiv()
         + '<div class="name">科目：<span id="subject' + i + '"></span></div>'
         + '<div class="name""><span id="detail' + i + '">細節：</span></div>'
         + '<div class="name">時間：<span id="time' + i + '"></span></div></div>'
-        + '<div class="point"><img class="pointImg" alt="Point" src="../static/img/point1.png" />'
-        + '<span id="amount' + i + '"></span></div></div></td></tr>';
+        + '<div class="point"><span id="amount' + i + '"></span>'
+        + '<img class="pointImg" alt="Point" src="../static/img/point1.png" /></div></div></td></tr>';
     }
     computePage(0);
 }
@@ -147,5 +147,5 @@ function putDetail(pointRecord, index)
             break;
     }
     document.getElementById("time" + index).innerHTML = pointRecord.time;
-    document.getElementById('amount' + index).innerHTML = pointRecord.amount + '點';
+    document.getElementById('amount' + index).innerHTML = pointRecord.amount;
 }

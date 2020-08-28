@@ -116,7 +116,7 @@ def SP_rate():
                             commentList.append(task.db_task_comment[0])
             rateListJson = []
             for i in range(startNum, startNum + amount):
-                rateListJson.append({"commentBy": commentList[i].task.SR[0].userName, "rate": int(commentList[i].SRComment[0]),\
+                rateListJson.append({"commentBy": commentList[i].task.SR[0].name, "rate": int(commentList[i].SRComment[0]),\
                                             "comment": commentList[i].SRComment[2:]})
             print(rateListJson)
             return jsonify({"rspCode": "20", "rateList": rateListJson})                                                    #取得成功
@@ -181,7 +181,7 @@ def SR_rate():
             rateListJson = []
             for i in range(startNum, startNum + amount):
                 print(i)
-                rateListJson.append({"commentBy": commentList[i].task.SP[0].userName, "rate": int(commentList[i].SPComment[0]),\
+                rateListJson.append({"commentBy": commentList[i].task.SP[0].name, "rate": int(commentList[i].SPComment[0]),\
                                             "comment": commentList[i].SPComment[2:]})
             print(rateListJson)
             return jsonify({"rspCode": "20", "rateList": rateListJson})                                                    #取得成功

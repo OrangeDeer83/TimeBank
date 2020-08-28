@@ -127,6 +127,7 @@ function takeTask(index)
             case "200": case 200:
                 showError(20030);
                 alert("成功送出承接任務之申請：" + thisPageList[index].taskName);
+                window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:

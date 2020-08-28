@@ -21,7 +21,7 @@ function getGradeList()
         switch (rst.rspCode)
         {
             case '20': case 20:
-                gradeList = rst.commentList;
+                gradeList = rst.taskIDList;
                 gradeAmount = gradeList.length;
                 computePage();
                 break;
@@ -54,9 +54,9 @@ function computePage(type)
 function getDetail()
 {
     var detailRequest = new XMLHttpRequest();
-    detailRequest.open('POST', 'http://192.168.1.144:5000/report/rate_history_list');
+    detailRequest.open('POST', 'http://192.168.1.144:5000/comment/rate_history_list');
     detailRequest.setRequestHeader('Content-Type', 'application/json');
-    detailRequest.send(JSON.stringify({'reportID': reportList[currentReport]}));
+    detailRequest.send(JSON.stringify({'taskID': gradeList[currentGrade], 'taskAmount': 1}));
     detailRequest.onload = function()
     {
         console.log(detailRequest.responseText);
@@ -64,7 +64,7 @@ function getDetail()
         switch (rst.rspCode)
         {
             case '20': case 20:
-                showDetail(rst.commentList);
+                showDetail(rst);
                 break;
             default:
                 console.log('無法取得評論細節')

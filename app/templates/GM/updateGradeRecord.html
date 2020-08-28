@@ -26,7 +26,7 @@
                     <div id="title">評論審核</div>
                     <div class="formLine">
                         <div class="auditButton">
-                            <a href="/USER/updateGrade"><button id="formAudit">評論審核</button></a>
+                            <a href="{{url_for('GM.update_grade')}}"><button id="formAudit">評論審核</button></a>
                             <button id="formAudit">評論紀錄</button>
                         </div>
                     </div>
@@ -36,8 +36,7 @@
                         ---><div id="taskCenter">
                                 <div class="taskInfo">任務時間：<span id="taskTime"></span></div>
                                 <div class="taskInfo">任務名稱：<span id="taskName"></span></div>
-                                <div class="taskInfo">雇主評分：<span id="SRRate"></span></div>
-                                <div class="taskInfo">雇員評分：<span id="SPRate"></span></div>
+                                <div class="taskInfo">雇主評分：<span id="SRRate"></span><span>&nbsp&nbsp&nbsp</span>雇員評分：<span id="SPRate"></span></div>
                             </div><!--
                         ---><div id="taskRight">
                                 <div class="taskInfo">結果：<span id="approveResult"></span></div>
@@ -69,6 +68,6 @@
 
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
         <script src="{{url_for('static', filename='js/navbarGM.js')}}"></script>
-        <script src="{{url_for('static', filename='js/updateGrade.js')}}"></script>
+        <script src="{{url_for('static', filename='js/updateGradeRecord.js')}}"></script>
     </body>
 </html>

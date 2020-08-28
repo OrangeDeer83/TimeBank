@@ -21,7 +21,7 @@ function showNavbar()
                 '</div>' +
             '</div>' +
             '<div class="navbarRight">' +
-                '<a class="navbarUl" id="logout" href="{{url_for(\'account.logout\')}}">登出</a>' +
+                '<a class="navbarUl" id="logout" href="/account/logout">登出</a>' +
             '</div>' +
         '</div>' +
     '</nav>';

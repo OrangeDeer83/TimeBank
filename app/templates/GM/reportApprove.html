@@ -27,16 +27,16 @@
                     <div class="formLine">
                         <div class="auditButton">
                             <button id="formAudit">檢舉審核</button>
-                            <a href="reportApproveRecord.html"><button id="formAudit">檢舉紀錄</button></a>
+                            <a href="{{url_for('GM.report_approve_record')}}"><button id="formAudit">檢舉紀錄</button></a>
                         </div>
                     </div>
                     <div id="taskGradeDiv">
                         <div id="taskIDDiv">
                             <div id="taskLeft">檢舉編號<br><span id="reportID">1</span></div><!--
                         ---><div id="taskCenter">
-                                <div class="taskInfo">檢舉時間：<span id="taskTime"></span></div>
-                                <div class="taskInfo">檢舉人：<span id="taskName"></span></div>
-                                <div class="taskInfo">檢舉原因：<span id="SRReason"></span></div>
+                                <div class="taskInfo">檢舉時間：<span id="reportTime"></span></div>
+                                <div class="taskInfo">檢舉人：<span id="reportUserName"></span></div>
+                                <div class="taskInfo">檢舉原因：<span id="reportReason"></span></div>
                             </div><!--
                         ---><div id="taskRight">
                                 <button class="button gradeButton" onclick="grade(1)">已處理</button>
@@ -53,7 +53,7 @@
                             <div class="taskDetail">雇主評論：<div><textarea class="textarea" id="SRComment" readonly></textarea></div></div>
                             <div class="taskDetail">雇員名稱：<span id="SPName"></span></div>
                             <div class="taskDetail">雇員電話號碼：<span id="SPPhone"></span></div>
-                            <div class="taskDetail">雇員評分：<span id="SRRate"></span></div>
+                            <div class="taskDetail">雇員評分：<span id="SPRate"></span></div>
                             <div class="taskDetail">雇員評論：<div><textarea class="textarea" id="SPComment" readonly></textarea></div></div>           
                         </div>
                     </div>

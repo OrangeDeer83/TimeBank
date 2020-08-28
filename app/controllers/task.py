@@ -2,6 +2,7 @@ from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models import db, userType,noticeType
 from ..models.dao import *
+import time
 Task = Blueprint('task', __name__)
 
 
@@ -20,9 +21,11 @@ def SR_output_record():
                     return jsonify({"rspCode": "400", "taskRecord": ""})                                       #資料庫錯誤
                 taskRecord = []
                 for task in query_data.taskSR:
-                    if task.taskStatus in [3, 4, 5, 6, 7, 8, 11]:
+                    if task.taskStatus in [3, 5, 6, 7, 8]:
                         if task.db_task_comment[0].commentStatus != -1:
                             taskRecord.append(task)
+                    elif task.taskStatus in [4, 11]:
+                        taskRecord.append(task)
                 sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
                 taskRecordJson = []
                 for task in taskRecord:
@@ -87,9 +90,10 @@ def SP_output_passed():
                     if task.db_task_comment[0].SPComment == None:
                         commentStatus = 0
                     taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
+                    taskEndTime = time.mktime(task.taskEndTime.timetuple()) * 1000
                     taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
-                                            "taskStartTime": taskStartTime, "taskEndTime": str(task.taskEndTime),\
+                                            "taskStartTime": taskStartTime, "taskEndTime": taskEndTime,\
                                             "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
                                             "commentStatus": commentStatus})
                 return jsonify({"rspCode": "200", "taskPassed": taskPassedJson})                                        #成功取得
@@ -115,7 +119,6 @@ def SP_output_checking():
                     return jsonify({"rspCode": "400", "taskChecking": ""})                                                  #資料庫錯誤
                 taskChecking = []
                 for candidate in query_data:
-                    print(candidate.task.taskStatus)
                     if candidate.task.taskStatus == 1:
                         taskChecking.append(candidate.task)
                 sortTaskByTaskID(taskChecking, 0, len(taskChecking) - 1)
@@ -148,7 +151,7 @@ def SP_output_refused():
                     return jsonify({"rspCode": "400", "taskRefused": ""})                                                  #資料庫錯誤
                 taskRefused = []
                 for candidate in query_data:
-                    if candidate.task.taskStatus >= 2 and candidate.task.SP[0].userID != userID:
+                    if candidate.task.taskStatus in [2, 3, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16] and candidate.task.SP[0].userID != userID:
                         taskRefused.append(candidate.task)
                 sortTaskByTaskID(taskRefused, 0, len(taskRefused) - 1)
                 taskRefusedJson = []
@@ -180,9 +183,11 @@ def SP_output_record():
                     return jsonify({"rspCode": "400", "taskRecord": ""})                                                  #資料庫錯誤
                 taskRecord = []
                 for task in query_data.taskSP:
-                    if task.taskStatus in [3, 4, 5, 6, 7, 8, 11]:
+                    if task.taskStatus in [3, 4, 5, 6, 7, 8]:
                         if task.db_task_comment[0].commentStatus != -1:
                             taskRecord.append(task)
+                    elif task.taskStatus == 11:
+                        taskRecord.append(task)
                 sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
                 taskRecordJson = []
                 for task in taskRecord:
@@ -425,7 +430,7 @@ def SP_taken_task():
         taskCandidateAdd = taskCandidate(taskID=taskID_,userID=userID)
         db.session.add(taskCandidateAdd)
         db.session.commit()
-        notice_ = notice(userID = userID,time = datetime.datetime.now(), status = noticeType['haveCandidate'], haveRead = 0)
+        notice_ = notice(userID = task_.SR[0].userID,time = datetime.datetime.now(), status = noticeType['haveCandidate'], haveRead = 0)
         db.session.add(notice_)
         db.session.commit()
         notice_candidate = noticeCandidate(noticeID = notice_.ID, candidateID = taskCandidateAdd.rejectID)
@@ -560,10 +565,12 @@ def SR_edit_task():
     if newTaskName != "":
         oldTask.taskName = newTaskName
     if newTaskStartTime != "":
-        x =  datetime.datetime.strptime(newTaskStartTime, "%Y-%m-%d %H:%M:%S")
+        x =  datetime.datetime.strptime(newTaskStartTime[:19], "%Y-%m-%d %H:%M:%S")
+        print(x)
         oldTask.taskStartTime = x
     if newTaskEndTime != "":
-        x =  datetime.datetime.strptime(newTaskEndTime, "%Y-%m-%d %H:%M:%S")
+        x =  datetime.datetime.strptime(newTaskEndTime[:19], "%Y-%m-%d %H:%M:%S")
+        print(x)
         oldTask.taskEndTime = x
     if newTaskLocation != "":
         oldTask.taskLocation = newTaskLocation
@@ -610,6 +617,7 @@ def SR_decide_SP():
         SP_ = db.session.query(account).filter(account.userID == candidateID_).first()
         task_.SP = [SP_]
         db.session.commit()
+        print(task_.SP[0].userID)
         notice_ = notice(userID = candidateID_,time = datetime.datetime.now(), status = noticeType['SPPassed'], haveRead = 0)
         db.session.add(notice_)
         db.session.commit()
@@ -631,32 +639,34 @@ def SR_decide_SP():
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SPName,taskLocation,taskContent, taskID在taskList,rspCode,taskAmount
 @Task.route("/SR/output/accept", methods = ['GET'])
 def SR_accept():
+   # try:
+    if request.method != 'GET':
+        return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
+    if session.get('userType') != userType['USER']:
+        return jsonify({"rspCode":"500","taskList":"","taskAmount":""})
     try:
-        if request.method != 'GET':
-            return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
-        if session.get('userType') != userType['USER']:
-            return jsonify({"rspCode":"500","taskList":"","taskAmount":""})
-        try:
-            SRID = int(session.get('userID'))
-        except:
-            return jsonify({"rspCode":"500","taskList":"","taskAmount":""})
-        task_list = db.session.query(account).filter(account.userID == SRID).first().taskSR
-        taskList = []
-        for task_ in task_list:
-            if task_.taskStatus in  [2,9,3,6,7,8,10,13,14,15,16]:
-                if task_.taskEndTime + datetime.timedelta(hours=24) > datetime.datetime.now():
-                    if task_.db_task_comment[0].commentStatus == -1:
-                        commentStatus = 1
-                        if task_.db_task_comment[0].SRComment == None:
-                            commentStatus = 0
-                        taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
-                        taskList.append({"taskName":task_.taskName,"taskStartTime": taskStartTime,"taskEndTime":str(task_.taskEndTime),\
-                                        "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
-                                        "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus),\
-                                        "commentStatus": commentStatus})
-        return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
+        SRID = int(session.get('userID'))
     except:
-        return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
+        return jsonify({"rspCode":"500","taskList":"","taskAmount":""})
+    task_list = db.session.query(account).filter(account.userID == SRID).first().taskSR
+    taskList = []
+    for task_ in task_list:
+        if task_.taskStatus in  [2,9,3,6,7,8,10,13,14,15,16]:
+            if task_.taskEndTime + datetime.timedelta(hours=24) > datetime.datetime.now():
+                if task_.db_task_comment[0].commentStatus == -1:
+                    commentStatus = 1
+                    print(task_.db_task_comment[0].SRComment)
+                    if task_.db_task_comment[0].SRComment == None:
+                        commentStatus = 0
+                    taskStartTime = time.mktime(task_.taskStartTime.timetuple()) * 1000
+                    taskEndTime = time.mktime(task_.taskEndTime.timetuple()) * 1000
+                    taskList.append({"taskName":task_.taskName,"taskStartTime": taskStartTime,"taskEndTime": taskEndTime,\
+                                    "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
+                                    "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus),\
+                                    "commentStatus": commentStatus})
+    return jsonify({"rspCode":"200","taskList":taskList,"taskAmount":str(len(taskList))})
+    #except:
+    #    return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
 
 #雇主刪除任務
 #傳taskID
@@ -971,9 +981,9 @@ def task_finish_or_not():
                     db.session.commit()
                     task_.taskStatus = 16
                 elif task_.taskStatus == 13:
-                    if datetime.datetime.now() < task_.taskEndTime:
+                    if str(datetime.datetime.now()) < str(task_.taskEndTime):
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
-                        db.session.add(notice_)
+                        db.session.add(notice_) 
                         db.session.commit()
                         notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
                         db.session.add(notice_task)
@@ -986,7 +996,7 @@ def task_finish_or_not():
                         db.session.commit()
                     task_.taskStatus = 3
                 elif task_.taskStatus == 14:
-                    if datetime.datetime.now() < task_.taskEndTime:
+                    if str(datetime.datetime.now()) < str(task_.taskEndTime):
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
                         db.session.add(notice_)
                         db.session.commit()
@@ -1012,7 +1022,7 @@ def task_finish_or_not():
                     db.session.commit()
                     task_.taskStatus = 8
                 elif task_.taskStatus == 13:
-                    if datetime.datetime.now() < task_.taskEndTime:
+                    if str(datetime.datetime.now()) < str(task_.taskEndTime):
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
                         db.session.add(notice_)
                         db.session.commit()
@@ -1027,7 +1037,7 @@ def task_finish_or_not():
                         db.session.commit()
                     task_.taskStatus = 6
                 elif task_.taskStatus == 14:
-                    if datetime.datetime.now() < task_.taskEndTime:
+                    if str(datetime.datetime.now()) < str(task_.taskEndTime):
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
                         db.session.add(notice_)
                         db.session.commit()

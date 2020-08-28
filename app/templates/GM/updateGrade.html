@@ -27,7 +27,7 @@
                     <div class="formLine">
                         <div class="auditButton">
                             <button id="formAudit">評論審核</button>
-                            <a href="updateGradeRecord.html"><button id="formAudit">評論紀錄</button></a>
+                            <a href="{{url_for('GM.update_grade_record')}}"><button id="formAudit">評論紀錄</button></a>
                         </div>
                     </div>
                     <div id="taskGradeDiv">
@@ -74,7 +74,7 @@
         </div>
 
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="../static/js/navbarGM.js"></script>
-        <script src="../static/js/updateGrade.js"></script>
+        <script src="{{url_for('static', filename='js/navbarGM.js')}}"></script>
+        <script src="{{url_for('static', filename='js/updateGrade.js')}}"></script>
     </body>
 </html>

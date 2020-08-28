@@ -14,7 +14,7 @@ function getUserID()
         {
             case "200": case 200:
                 userID = rst.ID;
-                document.getElementByID("navbarUserId").href = "/USER/info/" + rst.ID;
+                document.getElementById("navbarUserID").href = "/USER/info/" + rst.ID;
                 break;
             case "300": case 300:
             case "400": case 400:

@@ -253,9 +253,9 @@ class noticeAllotment(db.Model):
     noticeID = db.Column(db.Integer, db.ForeignKey('notice.ID'), nullable=False)
     transferRecordAllotmentID = db.Column(db.Integer, db.ForeignKey('transferRecordAllotment.transferRecordAllotmentID'), nullable=False)
 
-    def __init__(self, noticeID, transferRecordID):
+    def __init__(self, noticeID, transferRecordAllotmentID):
         self.noticeID = noticeID
-        self.transferRecordID = transferRecordID
+        self.transferRecordAllotmentID = transferRecordAllotmentID
 
 
 class noticeReport(db.Model):

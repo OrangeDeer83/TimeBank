@@ -26,7 +26,7 @@ function showListDiv()
                     '<div class="button" id="edit' + i + '" onclick="showEditDiv(' + i + ')">編輯</div>' +
                 '</div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
-                '<div>任務時間<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務時間：<span id="taskStartTime' + i + '"></span> ~ <span id="taskEndTime' + i + '"></span></div>' +
                 '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
             '</div>' +
             '<div class="detailed">' +
@@ -147,7 +147,8 @@ function putDetail(index)
         document.getElementById('edit' + index).removeAttribute('style');
         document.getElementById('applySP' + index)[0] = new Option('尚無申請', '');
         document.getElementById('taskName' + index).innerHTML = currentTask.taskName;
-        document.getElementById('taskTime' + index).innerHTML = currentTask.taskStartTime + ' ~ ' + currentTask.taskEndTime;
+        document.getElementById('taskStartTime' + index).innerHTML = currentTask.taskStartTime;
+        document.getElementById('taskEndTime' + index).innerHTML = currentTask.taskEndTime;
         document.getElementById('taskQuota' + index).innerHTML = currentTask.taskPoint;
         document.getElementById('taskLocation' + index).innerHTML = currentTask.taskLocation;
         document.getElementById('taskContent' + index).innerHTML = currentTask.taskContent;
@@ -157,7 +158,8 @@ function putDetail(index)
         document.getElementById('edit' + index).style.display = 'none';
         document.getElementById('applySP' + index)[0] = new Option('請選擇僱員', '');
         document.getElementById('taskName' + index).innerHTML = currentTask.taskName;
-        document.getElementById('taskTime' + index).innerHTML = currentTask.taskStartTime + ' ~ ' + currentTask.taskEndTime;
+        document.getElementById('taskStartTime' + index).innerHTML = currentTask.taskStartTime;
+        document.getElementById('taskEndTime' + index).innerHTML = currentTask.taskEndTime;
         document.getElementById('taskQuota' + index).innerHTML = currentTask.taskPoint;
         document.getElementById('taskLocation' + index).innerHTML = currentTask.taskLocation;
         document.getElementById('taskContent' + index).innerHTML = currentTask.taskContent;
@@ -216,18 +218,18 @@ function showEditDiv(index)
     for (var i = 0; i < 10; i++)
         if (i != index)
             document.getElementById('taskList' + i).style.display = 'none';
-    document.getElementById('newTaskName').value = thisPageList[index].taskName;
+    document.getElementById('newTaskName').value = document.getElementById('taskName' + index).innerHTML
     document.getElementById('newTaskStartTime').value = thisPageList[index].taskStartTime;
     document.getElementById('newTaskEndTime').value = thisPageList[index].taskEndTime;
-    document.getElementById('newTaskQuota').value = thisPageList[index].taskQuota;
-    document.getElementById('newTaskLocation').value = thisPageList[index].taskLocation;
-    document.getElementById('newTaskContent').value = thisPageList[index].taskContent;
+    document.getElementById('newTaskQuota').value = document.getElementById('taskQuota' + index).innerHTML
+    document.getElementById('newTaskLocation').value = document.getElementById('taskLocation' + index).innerHTML
+    document.getElementById('newTaskContent').value = document.getElementById('taskContent' + index).innerHTML
 }
 function hideEditDiv()
 {
     document.getElementById('editTaskDiv').style.display = 'none';
     document.getElementById('edit' + editTaskIndex).removeAttribute('style');
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < thisPageList.length; i++)
         document.getElementById('taskList' + i).removeAttribute('style');
     document.getElementById('newTaskName').value = '';
     document.getElementById('newTaskStartTime').value = '';
@@ -239,8 +241,9 @@ function hideEditDiv()
 }
 function updateEdit(index)
 {
-    document.getElementById('taskName' + index).innerHTML = document.getElementById('newTaskName').value
-    document.getElementById('taskTime' + index).innerHTML = document.getElementById('newTaskStartTime').value + ' ~ ' + document.getElementById('newTaskEndTime').value;
+    document.getElementById('taskName' + index).innerHTML = document.getElementById('newTaskName').value;
+    document.getElementById('taskStartTime' + index).innerHTML = document.getElementById('newTaskStartTime').value;
+    document.getElementById('taskEndTime' + index).innerHTML = document.getElementById('newTaskEndTime').value;
     document.getElementById('taskQuota' + index).innerHTML = document.getElementById('newTaskQuota').value;
     document.getElementById('taskLocation' + index).innerHTML = document.getElementById('newTaskLocation').value;
     document.getElementById('taskContent' + index).innerHTML = document.getElementById('newTaskContent').value;
@@ -248,7 +251,7 @@ function updateEdit(index)
 function sendEdit()
 {
     var editTaskRequest = new XMLHttpRequest();
-    editTaskRequest.open('POST', 'http://192.168.1.144:5000/report/send_report');
+    editTaskRequest.open('POST', 'http://192.168.1.144:5000/task/SR/edit_task');
     editTaskRequest.setRequestHeader('Content-Type', 'application/json');
     editTaskRequest.send(JSON.stringify({'taskID': thisPageList[editTaskIndex].taskID, 'taskName': document.getElementById('newTaskName').value,
     'taskStartTime': document.getElementById('newTaskStartTime').value, 'taskEndTime': document.getElementById('newTaskEndTime').value + ':00',
@@ -267,7 +270,7 @@ function sendEdit()
                 editTaskIndex = -1;
                 break;
             default:
-                alert('系統錯誤，無法送出檢舉');
+                alert('系統錯誤，無法編輯任務');
             }
     }
 }
@@ -286,7 +289,7 @@ function deleteTask(index)
         switch (rst.rspCode)
         {
             case '200': case 200:
-                alert('已刪除任務：' + thisPageList[index].taskName);
+                console.log('已刪除任務：' + thisPageList[index].taskName);
                 window.location.reload();
                 break;
             case '300': case 300:

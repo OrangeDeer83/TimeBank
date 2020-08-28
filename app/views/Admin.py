@@ -36,7 +36,6 @@ def login():
 #設定頁面
 @Admin.route('/setting')
 def setting():
-   return "此功能未完成"
    if session.get('userType') == userType['SA']:
       return render_template('/Admin/settingSA.html')
    elif session.get('userType') == userType['AA']:

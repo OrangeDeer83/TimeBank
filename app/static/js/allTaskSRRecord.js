@@ -162,6 +162,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);
@@ -177,7 +178,10 @@ function putDetail(index)
     document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
     document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + thisPageList[index].taskEndTime;
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-    document.getElementById("taskSP" + index).innerHTML = currentTask.taskSP;
+    if (currentTask.taskSP === '' || currentTask.taskStatus == 4)
+        document.getElementById("taskSP" + index).innerHTML = '此任務未成功被承接';
+    else
+        document.getElementById("taskSP" + index).innerHTML = currentTask.taskSP;
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
     document.getElementById("SRComment" + index).innerHTML = currentTask.SRComment;
@@ -241,13 +245,13 @@ function hideReportDiv()
 {
     document.getElementById('reportDiv').style.display = 'none';
     document.getElementById('reportButton' + reportTaskIndex).removeAttribute('style');
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < thisPageList.length; i++)
         document.getElementById('taskList' + i).removeAttribute('style');
     document.getElementById('reportReason').value = '';
     reportTaskIndex = -1;
 }
 
-function sendReport(index)
+function sendReport()
 {
     var reportRequest = new XMLHttpRequest();
     reportRequest.open("POST", "http://192.168.1.144:5000/report/send_report");
@@ -260,7 +264,7 @@ function sendReport(index)
         switch (rst.rspCode)
         {
             case "20": case 20:
-                console.log('檢舉已送出');
+                alert('檢舉已送出');
                 hideReportDiv();
                 break;
             default:

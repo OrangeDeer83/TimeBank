@@ -51,7 +51,7 @@ def record():
             except:
                 return jsonify({"rspCode": "40"})                                           #非法字元
             userID = session.get('userID')
-            recordStartID = value['recordID']
+            recordStartID = value['pointRecordID']
             requestAmount = value ['requestAmount']
             try:
                 query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time).all()

@@ -21,7 +21,7 @@ input[type="submit"]
 	overflow: auto;
 	background-color: var(--background-color);
 	border: var(--background-border);	
-	padding: 2%;
+	padding: 1.5%;
 }
 
 #password

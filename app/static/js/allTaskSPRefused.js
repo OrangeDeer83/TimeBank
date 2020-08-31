@@ -18,7 +18,7 @@ function showListDiv()
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
-        '<tr id="taskList' + i + '"><td>' +
+        '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
                 '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
@@ -93,7 +93,10 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無遭拒絕的申請";
+    {
+        pageNumber.innerHTML = "1/1";
+        document.getElementById('eRefused').innerHTML = '<tr><td>尚無遭拒絕的申請</td></tr>';
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -115,6 +118,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);

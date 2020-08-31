@@ -109,7 +109,13 @@ function computePage(type)
             else currentPage++;
             break;
     }
-    pageNumber.innerHTML = currentPage + '/' + pageAmount;
+    if (pageAmount == 0)
+    {
+        pageNumber.innerHTML = '1/1';
+        document.getElementById('bPass').innerHTML = '<tr><td>尚無已發布任務，請至新增任務頁面建立新任務</td></tr>';
+    }
+    else
+        pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
 }
 
@@ -129,6 +135,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);

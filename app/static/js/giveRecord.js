@@ -1,18 +1,66 @@
 window.onload = function()
 {
-    getUserList();
+    showListDiv();
 }
 
 var allList = [5]; // name, userName, userID, SRRate, SPRate, quota, time, frequency, period
 var userAmount = 0;
-var pageAmount = 1;
+var pageAmount = 0;
 var thisPageList = [];
 var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
 var searchText;
 
-function getUserList(type)
+function showListDiv()
+{
+    for (var i = 0; i < maxPageAmount; i++)
+    {
+        document.getElementById('giveTable').innerHTML += '' +
+        '<tr id="list' + i + '"><td>' +
+            '<div class="introductionLeft">' +
+                '<div class="total">' +
+                    '<div class="title1">使用者帳號：</div>' +
+                    '<div class="word" id="userName' + i + '"></div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="title1">名稱：</div>' +
+                    '<div class="word" id="name' + i + '"></div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="title1">雇主評分：</div>' +
+                    '<div class="word" id="scoreSR' + i + '"></div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="title1">雇員評分：</div>' +
+                    '<div class="word" id="scoreSP' + i + '"></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="introductionRight">' +
+                '<div class="total">' +
+                    '<div class="title">配發額度：</div>' +
+                    '<div class="context"><span id="quota' + i + '"></span>點</div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="timeTitle">配發時間：</div>' +
+                    '<div class="time" id="time' + i + '"></div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="title">配發週期：</div>' +
+                    '<div class="context" id="period' + i + '"></div>' +
+                '</div>' +
+                '<div class="total">' +
+                    '<div class="title">配發次數：</div>' +
+                    '<div class="context" id="frequency' + i + '"></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="clear"></div>' +
+        '</td></tr>';
+    }
+    getUserList();
+}
+
+function getUserList()
 {
     searchText = document.getElementById("searchText").value
     var getListRequest = new XMLHttpRequest();
@@ -26,8 +74,9 @@ function getUserList(type)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                allList[0] = rst.name;
-                allList[2] = rst.userID;
+                allList[0] = rst.userName;
+                allList[1] = rst.name;
+                /*allList[2] = rst.userID;*/
                 allList[3] = rst.userSRRate;
                 allList[4] = rst.userSPRate;
                 allList[5] = rst.quota;
@@ -49,8 +98,8 @@ function computePage(type)
     switch (type)
     {
         case 0: 
-            if (allList[0].length != allList[2].length || /*allList[1].length != allList[2].length ||*/
-                allList[2].length != allList[3].length || allList[3].length != allList[4].length ||
+            if (allList[0].length != allList[1].length || allList[1].length != /*allList[2].length ||
+                allList[2].length != */allList[3].length || allList[3].length != allList[4].length ||
                 allList[4].length != allList[5].length || allList[5].length != allList[6].length ||
                 allList[6].length != allList[7].length || allList[7].length != allList[8].length)
             {
@@ -61,6 +110,7 @@ function computePage(type)
             {
                 userAmount = allList[0].length;
                 pageAmount = Math.ceil(userAmount / maxPageAmount);
+                console.log(userAmount)
             }
             break;
         case 1:
@@ -73,7 +123,7 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無使用者";
+        pageNumber.innerHTML = "尚無配發紀錄";
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -86,9 +136,12 @@ function computeThisPageList()
     if (currentPage < pageAmount)
         for (var i = 0; i < maxPageAmount; i++)
             thisPageList.push(maxPageAmount * (currentPage - 1) + i);
-    else
+    else if (userAmount % maxPageAmount != 0)
         for (var i = 0; i < (userAmount % maxPageAmount); i++)
             thisPageList.push(maxPageAmount * (currentPage - 1) + i);
+    else
+        for (var i = 0; i < maxPageAmount; i++)
+                thisPageList.push(maxPageAmount * (currentPage - 1) + i);
     showDetail();
 }
 
@@ -106,6 +159,7 @@ function showDetail()
 function putDetail(index)
 {
     document.getElementById("userName" + index).innerHTML = allList[0][thisPageList[index]];
+    document.getElementById("name" + index).innerHTML = allList[1][thisPageList[index]];
     var SRRate = allList[3][thisPageList[index]]
     if (SRRate == 0)
         document.getElementById("scoreSR" + index).innerHTML = "無";

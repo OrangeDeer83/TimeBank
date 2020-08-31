@@ -23,7 +23,7 @@ function getReportAmount()
             case '20': case 20:
                 reportList = rst.reportList;
                 reportAmount = reportList.length;
-                computePage();
+                computePage(0);
                 break;
             default:
                 console.log('無法取得檢舉數量')
@@ -33,7 +33,6 @@ function getReportAmount()
 
 function computePage(type)
 {
-    console.log(type)
     switch (type)
     {
         case 1:
@@ -94,7 +93,6 @@ function showDetail(reportDetail)
 
 function report(type)
 {
-    console.log(100)
     var approveRequest = new XMLHttpRequest();
     approveRequest.open('POST', 'http://192.168.1.144:5000/report/approve');
     approveRequest.setRequestHeader('Content-Type', 'application/json');

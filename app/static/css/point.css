@@ -8,9 +8,14 @@
     margin-top: 100px;
 }
 /*表格*/
+#tableTitle
+{
+    font-size: 18px;
+    border: var(--background-border);
+    padding: 4px;
+}
 #pointTable
 {
-    width: 70%;
     margin:auto;
     background-color: var(--background-color);
 }
@@ -52,7 +57,7 @@
 .point
 {
     float: right;
-    margin: 2.8% 1.5% 0.5% 0px;
+    /*margin: 2.8% 1.5% 0.5% 0px;*/
 }
 .pointImg
 {

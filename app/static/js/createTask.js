@@ -66,7 +66,8 @@ function displayError(inputElement, index, type)
 
 function validated()
 {
-    // It will be done when all other pages can run.
+    if (taskQuota < 2 || taskQuota > 50)
+        return false;
     return true;
 }
 

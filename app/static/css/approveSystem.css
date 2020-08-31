@@ -80,6 +80,11 @@
     color: white;
 }
 
+.approveButton > button
+{
+    background-color: var(--button-hover-background-color);
+}
+
 /* 搜尋使用者名稱 */
 #searchUser
 {
@@ -151,6 +156,7 @@
 {
     background-color: var(--button-hover-background-color);
     color: white;
+    cursor: pointer;
 }
 
 /* 上一頁及下一頁按鈕 */

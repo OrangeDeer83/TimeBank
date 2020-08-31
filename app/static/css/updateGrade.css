@@ -13,6 +13,7 @@
 
 .auditButton button
 {
+    font-size: 16px;
     margin: auto;
     background-color: var(--button-background-color);
     color: var(--button-background-text-color);
@@ -35,10 +36,16 @@
     border-right: none;
 }
 
-.auditButton button:hover, .dealButton:hover, .pageButton button:hover
+.auditButton button:hover,.button:hover
 {
     background-color: var(--button-hover-background-color);
     color: white;
+    cursor: pointer;
+}
+
+.auditButton > button
+{
+    background-color: var(--button-hover-background-color);
 }
 
 #detail

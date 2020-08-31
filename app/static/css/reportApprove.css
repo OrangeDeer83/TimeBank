@@ -13,6 +13,7 @@
 
 .auditButton button
 {
+    font-size: 16px;
     margin: auto;
     background-color: var(--button-background-color);
     color: var(--button-background-text-color);
@@ -39,6 +40,7 @@
 {
     background-color: var(--button-hover-background-color);
     color: white;
+    cursor: pointer;
 }
 
 #detail

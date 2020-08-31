@@ -19,7 +19,7 @@
 	padding-left: 0;
 	margin: 0;
 }
-#tabsFirst > div, #tabsSecond > div, #tabsThird li
+#tabsFirst > a, #tabsSecond > a, #tabsThird li, #boss
 {
 	text-align: center;
 	border-radius:8px;
@@ -34,11 +34,7 @@
 	color: var(--button-background-text-color);
 
 }
-#tabsFirst a, #tabsSecond a, #tabsThird a
-{
-	color: var(--button-background-text-color);
-}
-#tabsSecond > div:hover,#addTask:hover,#takeTask:hover
+#tabsSecond > a:hover,#addTask:hover,#takeTask:hover, #boss:hover
 {
 	background-color:#c76e3d;
 	cursor: pointer;
@@ -77,11 +73,17 @@ input[type="button"]:hover, .button:hover
 	color:black;
 	width: 100%;
 }
-#bRecord td, #bRecord th
+#reportDiv
+{
+    background-color: var(--background-color);
+    color:black;
+    overflow: auto;
+}
+#bRecord td, #bRecord th, #reportDiv
 {
 	border: var(--background-border);
 }
-#bRecord td
+#bRecord td, #reportDiv
 {
 	padding: 5px;
 }
@@ -160,14 +162,14 @@ input[type="button"]:hover, .button:hover
 }
 @media (max-width: 599px)
 {
-	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	#tabsFirst > a, #tabsSecond > a, #tabsThird li, #boss
 	{
 		width: 90px;
 		padding: 3px;
 		margin-right: 5px;
 		margin-left: 5px;
 	}
-	#tabsSecond > div, #tabsThird li
+	#tabsSecond > a, #tabsThird li, #boss
 	{
 		padding: 1px;
 		width: 70px;
@@ -183,19 +185,19 @@ input[type="button"]:hover, .button:hover
 	{
 		font-size: 20px;
 	}
-	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	#tabsFirst > a, #tabsSecond > a, #tabsThird li, #boss
 	{
 		width: 120px;
 		padding: 5px;
 		margin-right: 8px;
 		margin-left: 8px;
 	}
-	#tabsSecond > div,#tabsThird li
+	#tabsSecond > a,#tabsThird li, #boss
 	{
 		padding: 3px;
 		width: 100px;
 	}
-	#tabsSecond > div
+	#tabsSecond > a, #boss
 	{
 		margin-left: 0;
 		width: 120px;
@@ -209,7 +211,7 @@ input[type="button"]:hover, .button:hover
 		margin: auto;
 		margin-bottom: 10px;
 	}
-	#tabsThird, #bRecord
+	#tabsThird, #bRecord, #reportDiv
 	{
 		width: 600px;
 		margin: auto;

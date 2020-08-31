@@ -82,6 +82,12 @@ def approve():
         report_.adminID = adminID_
         report_.reportStatus = reportStatus_ 
         db.session.commit()
+        notice_ = notice(userID = int(report_.account.userID),time = datetime.datetime.now(), status = noticeType['judgeReport'], haveRead = 0)
+        db.session.add(notice_)
+        db.session.commit()
+        notice_report = noticeReport(noticeID = notice_.ID, reportID = report_.reportID)
+        db.session.add(notice_report)
+        db.session.commit()
         return jsonify({"rspCode":"20"})
     #未知
     return jsonify({"rspCode":"48"})
@@ -104,7 +110,7 @@ def list_amount():
     except:
         return jsonify({"rspCode":"48","reportList":"","reportAmount":""})
 
-@Report.route("list", methods = ['POST'])
+@Report.route("/list", methods = ['POST'])
 def list():
     if request.method != 'POST':
         return jsonify({"reportList":"","rspCode":"30"})
@@ -135,7 +141,8 @@ def list():
                 SPComment = ""
             reportList.append({"taskName":task_.taskName,"taskContent":task_.taskContent,"SRRate":SRStar,"SRName":task_.SR[0].name,\
                                 "SRComment":SRComment,"SRPhone":task_.SR[0].userPhone,"SPRate":SPStar,"SPName":task_.SP[0].name,\
-                                "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone,"reportUserName":report.account.name,"reportReason":report.reason,"taskStartTime":task_.taskStartTime,"taskEndTime":task_.taskEndTime})
+                                "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone,"reportUserName":report_.account.name,\
+                                "reportReason":report_.reason,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime)})
         return jsonify({"reportList":reportList,"rspCode":"20"})
     except:
         return jsonify({"reportList":"","rspCode":"48"})
@@ -174,8 +181,10 @@ def report_history_list():
                 SPStar = ""
                 SPComment = ""
             reportList.append({"taskName":task_.taskName,"taskContent":task_.taskContent,"SRRate":SRStar,"SRName":task_.SR[0].name,\
-                                "SRComment":SRComment,"SPRate":SPStar,"SPName":task_.SP[0].name,\
-                                "SPComment":SPComment,"gmID":str(report_.adminID),"approveResult":str(report_.reportStatus)})
+                                "SRComment":SRComment,"SRPhone":task_.SR[0].userPhone,"SPRate":SPStar,"SPName":task_.SP[0].name,\
+                                "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone,"gmID":str(report_.adminID),\
+                                "approveResult":str(report_.reportStatus),"reportUserName":report_.account.name,\
+                                "reportReason":report_.reason,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime)})
         return jsonify({"reportList":reportList,"rspCode":"20"})
     except:
         return jsonify({"reportList":"","rspCode":"48"})

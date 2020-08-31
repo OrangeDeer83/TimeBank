@@ -16,6 +16,10 @@ input[type="text"]
     border-radius: 5px; 
     width: 95%;
 }
+input[type="text"]:hover
+{
+    cursor: auto;
+}
 input[type="submit"]
 { 
     -webkit-border-radius: 5px; 
@@ -189,9 +193,9 @@ input[type="submit"]
 /* 上下一頁 */
 .formPage
 {
-
-    margin: 10px 0;
     margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
     width: 80vw;
     color: black;
     text-align: center;

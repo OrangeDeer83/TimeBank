@@ -8,10 +8,15 @@
     margin-top: 100px;
 }
 /*表格*/
+#tableTitle
+{
+    font-size: 18px;
+    border: var(--background-border);
+    padding: 4px;
+}
 #notificationTable
 {
-    width: 70%;
-    margin:auto;
+    margin: auto;
     background-color: var(--background-color);
 }
 #notificationTable td,#notificationPart th

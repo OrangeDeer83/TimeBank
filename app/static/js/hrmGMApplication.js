@@ -1,13 +1,12 @@
 window.onload = function()
 {
-    getGMList();
+    showListDiv();
 }
 
 //const error = document.getElementById("error");
-const pageNumber = document.getElementById("pageNumber");
 var applicationList = [];
 var applicationAmount = 0;
-var pageAmount = 1;
+var pageAmount = 0;
 var thisPageList = [];
 var currentPage = 1;
 
@@ -25,6 +24,32 @@ function showError(rspCode)
         case 40113: error.innerHTML = "未知的評論管理員，請稍後再試"; return ;
         case 40016: error.innerHTML = "系統錯誤，無法讀取申請列表"; return ;
     }
+}
+
+function showListDiv()
+{
+    const table = document.getElementById('applicantTable');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="list' + i + '" style="display:none"><td>' +
+            '<div class="managerName">管理員名稱：<span id="managerName' + i + '"></span></div>' +
+            '<div class="phone">電話號碼:<span id="managerPhone' + i + '"></span></div>' +
+            '<div class="email">電子郵件：<span id="managerEmail' + i + '"></span></div>' +
+            '<div class="button">' +
+                '<input type="button" class="agree" onclick="approve(' + i + ')" value="同意" />' +
+                '<input type="button" class="reject" onclick="reject(' + i + ')" value="拒絕" />' +
+            '</div>' +
+        '</td></tr>';
+    }
+    table.innerHTML += '' +
+    '<tr><td class="pageTr">' +
+        '<button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>' +
+            '<span class="formPageNumber" id="pageNumber">1/1</span>' +
+        '<button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>' +
+    '</td></tr>';
+    getGMList();
 }
 
 // Get application list from server.
@@ -74,7 +99,18 @@ function computePage(type)
             else currentPage++;
             break;
     }
-     pageNumber.innerHTML = currentPage + "/" + pageAmount;
+    if (pageAmount == 0)
+    {
+        document.getElementById("pageNumber").innerHTML = '1/1';
+        document.getElementById('applicantTable').innerHTML = '<tr><td目前無申請</td></tr>' +
+        '<tr><td class="pageTr">' +
+            '<button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>' +
+                '<span class="formPageNumber" id="pageNumber">1/1</span>' +
+            '<button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>' +
+        '</td></tr>';
+    }
+    else
+        document.getElementById("pageNumber").innerHTML = currentPage + "/" + pageAmount;
      computeThisPageList();
 }
 // Compute the index of this page.
@@ -93,12 +129,13 @@ function computeThisPageList()
     showThisPageList();
 
     for (var i = 0; i < thisPageList.length; i++)
-        document.getElementById("list" + i).style.display = "";
+        document.getElementById("list" + i).removeAttribute('style');
     for (var i = thisPageList.length; i < maxPageAmount; i++)
         document.getElementById("list" + i).style.display = "none";
 }
 function showThisPageList()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         document.getElementById("managerName" + i).innerHTML = thisPageList[i].adminName;

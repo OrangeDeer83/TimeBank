@@ -19,7 +19,7 @@ function showListDiv()
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
-        '<tr id="taskList' + i + '"><td>' +
+        '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
                 '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
@@ -102,7 +102,10 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無已通過的任務";
+    {
+        pageNumber.innerHTML = '1/1';
+        document.getElementById('ePass').innerHTML = '<tr><td>尚無已通過的任務</td></tr>';
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -124,6 +127,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     document.getElementById("rating").style.display = "none";
     for (var i = 0; i < thisPageList.length; i++)
     {
@@ -180,11 +184,20 @@ function putDetail(index)
         document.getElementById("cancel" + index).style.display = "none";
         document.getElementById("comment" + index).style.display = "none";
     }
-    else if (taskStatus == 9)
+    else if (taskStatus == 9 || taskStatus == 10)
     {
-        document.getElementById("done" + index).style.display = "none";
-        document.getElementById("undone" + index).style.display = "none";
-        document.getElementById("cancel" + index).removeAttribute("style");
+        if (startTime <= Date.now())
+        {
+            document.getElementById("done" + index).removeAttribute("style");
+            document.getElementById("undone" + index).removeAttribute("style");
+            document.getElementById("cancel" + index).style.display = "none";
+        }
+        else
+        {
+            document.getElementById("done" + index).style.display = "none";
+            document.getElementById("undone" + index).style.display = "none";
+            document.getElementById("cancel" + index).removeAttribute("style");
+        }
         document.getElementById("comment" + index).style.display = "none";
     }
 }
@@ -239,6 +252,9 @@ function finishTask(index, type)
         {
             case "200": case 200:
                 alert("任務結束，請評論");
+                document.getElementById('done' + index).style.display = 'none';
+                document.getElementById('undone' + index).style.display = 'none';
+                openRating(index);
                 break;
             case "300": case 300:
             case "400": case 400:

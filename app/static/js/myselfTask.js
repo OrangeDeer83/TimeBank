@@ -3,7 +3,7 @@ window.onload = function()
     getUserID();
     getProfile();
     getPropicMyself();
-    getTaskList();
+    showListDiv();
     document.getElementById('hrefMyselfSR').innerHTML = '<a href="/USER/SR/myself/' + getToken() + '">雇主評分</a>';
     document.getElementById('hrefMyselfSP').innerHTML = '<a href="/USER/SP/myself/' + getToken() + '">雇員評分</a>';
 }
@@ -30,6 +30,25 @@ function getToken()
         i++;
     }
     return token;
+}
+
+function showListDiv()
+{
+    const table = document.getElementById('task');
+    table.innerHTML = '';
+    for (var i = 0; i < 10; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '" style="display:none;"><td>' +
+            '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+            '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
+            '<div class="taskBottom">' +
+                '<div class="point">任務點數：<span id="taskQuota' + i + '"></span></div>' +
+                '<div class="bottonTask" id="taskTaskButton' + i + '" onclick="takeTask(' + i + ')">接任務</div>' +
+            '</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
 }
 
 function getTaskList()
@@ -79,7 +98,10 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無已發任務";
+    {
+        pageNumber.innerHTML = "1/1";
+        document.getElementById('task').innerHTML = '<tr><td>尚無已發任務</td></tr>';
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -101,6 +123,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);

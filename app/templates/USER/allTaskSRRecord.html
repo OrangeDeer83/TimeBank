@@ -19,18 +19,18 @@
     <body>
         <header id="userNavbar"></header>
         <div class="bodyContain">
-           <div id="tabsFirst">
-                <div id="addTask"><a href="{{url_for('USER.create_task')}}">新增任務</a></div>
-                <div id="takeTask"><a href="{{url_for('USER.all_task')}}">承接任務</a></div>
+            <div id="tabsFirst">
+                <a id="addTask" href="{{url_for('USER.create_task')}}"><div>新增任務</div></a>
+                <a id="takeTask" href="{{url_for('USER.all_task')}}"><div>承接任務</div></a>
             </div>
-            <div id="tabsSecond">
+            <div id="tabsSecond">  
                 <div id="boss">雇主</div>
-                <div id="employee"><a href="{{url_for('USER.SP_all_task_passed')}}">雇員</a></div>
+                <a id="employee" href="{{url_for('USER.SP_all_task_passed')}}"><div>雇員</div></a>
             </div>    
             <div id="tabsThird">
                 <ul>
-                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_passed')}}">已發布</a></li>
-                    <li class="notThisPage"><a href="{{url_for('USER.SR_all_task_accepted')}}">已接受</a></li>
+                    <a href="{{url_for('USER.SR_all_task_passed')}}"><li class="notThisPage">已發布</li></a>
+                    <a href="{{url_for('USER.SR_all_task_accepted')}}"><li class="notThisPage">已接受</li></a>
                     <li id="thisPage">歷史紀錄</li>
                 </ul>
             </div>
@@ -38,13 +38,13 @@
                 <table id="bRecord">
                     <tr><td>尚無雇主歷史紀錄</td></tr>
                 </table>
-                <table id="reportDiv">
+                <div id="reportDiv">
                     <tr><td>
                         <textarea id="reportReason" placeholder="請輸入檢舉原因..."></textarea>
                         <div class="button" onclick="hideReportDiv()">取消</div>
                         <div class="button" onclick="sendReport()">送出檢舉</div>
                     </td></tr>
-                </table>
+                </div>
             </div>
             <div class="formPage">
                 <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>

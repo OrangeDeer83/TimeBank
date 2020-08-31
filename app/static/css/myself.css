@@ -24,6 +24,11 @@
     height: 200px;
     border-radius: 50%;
 }
+#profile
+{
+	color: black;
+    resize: none;
+}
 
 
 /*頁面轉換按鈕*/
@@ -40,7 +45,7 @@
 {
 	padding-left: 0;
 	margin-bottom: 0;
-	font-size: 1.2rem;
+	font-size: 18px;
 }
 .tabs li
 {
@@ -135,7 +140,7 @@
 }
 
 /*RWD*/
-@media (max-width: 399px)
+@media (max-width: 499px)
 {
 	/*寬度*/
 	.tabPartMyself,#task,#SP,#SR
@@ -179,7 +184,7 @@
 		border-bottom: 1.5px solid brown;
 	}
 }
-@media (min-width: 400px)
+@media (min-width: 500px)
 {
 	/*寬度*/
 	.tabPartMyself,#task,#SP,#SR
@@ -199,8 +204,6 @@
 	{
 		width: 20%;
 		padding: 10px;
-		/*position: relative;
-		top: calc(50%+64px);*/
 	}
 	.introduce
 	{
@@ -222,7 +225,7 @@
 	.tabs
 	{
 		margin-top:40px;
-		font-size: 1.3rem;
+		font-size: 22px;
 	}
 	.tabPartMyself
 	{

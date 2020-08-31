@@ -80,6 +80,11 @@
     color: white;
 }
 
+.approveButton > button
+{
+    background-color: var(--button-hover-background-color);
+}
+
 /* 搜尋:使用者名稱、申請類別、申請週期、申請結果 */
 #searchUser, #searchClass, #searchPeriod, #searchResult
 {
@@ -146,11 +151,13 @@
 {
     background-color: var(--button-hover-background-color);
     color: white;
+    cursor: pointer;
 }
 
 .applyButton, .page button
 {
     border: var(--button-background-border);
+    cursor: pointer;
 }
 
 @media (min-width: 800px)

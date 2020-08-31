@@ -94,6 +94,7 @@
 .formButton:hover
 {
     background-color: var(--button-hover-background-color);
+    cursor: pointer;
 }
 
 @media (min-width: 600px)

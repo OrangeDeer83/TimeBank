@@ -1,6 +1,6 @@
 window.onload = function()
 {
-    getTaskList();
+    showListDiv();
 }
 
 var taskList = [];
@@ -10,6 +10,32 @@ var thisPageList = [];
 var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
+
+function showListDiv()
+{
+    const table = document.getElementById('eCheck');
+    table.innerHTML = '';
+    for (var i = 0; i < maxPageAmount; i++)
+    {
+        table.innerHTML += '' +
+        '<tr id="taskList' + i + '" style="display:none"><td>' +
+            '<div class="introduction">' +
+                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
+                '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
+                '<div>任務額度：<span id="taskQuota' + i + '"></span></div>' +
+            '</div>' +
+            '<div class="detailed">' +
+                '<div>任務地點：<span id="taskLocation' + i + '"></span></div>' +
+                '<div>' +
+                    '<div>任務內容：<span id="taskContent' + i + '"></span></div>' +
+                    '<div class="taskTake" onclick="takeTask(' + i + ')">承接任務</div>' +
+                '</div>' +
+            '</div>' +
+        '</td></tr>';
+    }
+    getTaskList();
+}
 
 /*const error = document.getElementById("error");
 function showError(rspCode)
@@ -70,7 +96,10 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無可承接任務";
+    {
+        pageNumber.innerHTML = "1/1";
+        document.getElementById('eCheck').innerHTML = '<tr><td>尚無可承接任務</td></tr>';
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -92,6 +121,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);

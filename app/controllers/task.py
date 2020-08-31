@@ -337,7 +337,7 @@ def SR_add_task():
 @Task.route('/SP/output/task_can_be_taken', methods = ['GET'])
 def SP_output_task_can_be_taken():
     if request.method != 'GET':
-           return jsonify({"rspCode":"300","taskList":""})
+        return jsonify({"rspCode":"300","taskList":""})
     if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":"500","taskList":""})
     try:
@@ -366,8 +366,8 @@ def SP_output_task_can_be_taken():
                 if source[0] == userID:
                     continue
         task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),\
-                          "taskEndTime":str(task_.taskEndTime),"taskPoint":str(task_.taskPoint),"SRName":task_.SR[0].name,\
-                          "taskLocation":task_.taskLocation,"taskContent":task_.taskContent})
+                        "taskEndTime":str(task_.taskEndTime),"taskPoint":str(task_.taskPoint),"SRName":task_.SR[0].name,\
+                        "taskLocation":task_.taskLocation,"taskContent":task_.taskContent})
     return ({"rspCode":"200","taskList":task_list})
 #承接接任務
 #用json傳taskID
@@ -438,7 +438,7 @@ def SP_taken_task():
         db.session.commit()
         return jsonify({"rspCode":"200","taskConflit":""})
     except:
-           return jsonify({"rspCode":"400","taskConflit":""})
+        return jsonify({"rspCode":"400","taskConflit":""})
 
 #顯示雇主已發布任務
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, taskCandidate,taskLocation,taskContent, taskID 變get
@@ -461,11 +461,11 @@ def SR_release():
                 candidateList = db.session.query(account.name,account.userID).join(taskCandidate).filter(taskCandidate.taskID == task_.taskID and taskCandidate.userID == account.userID).all()
                 candidateNum = len(candidateList)
                 task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime),"taskStatus":str(task_.taskStatus)\
-                                 ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
+                                ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
 
         return jsonify({"rspCode":"200","taskList":task_list,"taskAmount":str(len(task_list))})
     except:
-         return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
+        return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
 
 #編輯任務
 #傳 taskID,taskName,taskStartTime,taskEndTime,taskPoint,taskLocation,taskContent
@@ -559,7 +559,7 @@ def SR_edit_task():
         pointConflict = ("-{}".format(str(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0])))
     if notAllow != [] or pointConflict != '' or taskConflict != []:
         return jsonify({"rspCode":"42","notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
-  
+
     if newTaskContent != "":
         oldTask.taskContent = newTaskContent
     if newTaskName != "":
@@ -603,6 +603,9 @@ def SR_decide_SP():
         taskID_ = json['taskID']
         flag = 0
         task_ = db.session.query(task).filter(task.taskID == taskID_).first()
+        if str(datetime.datetime.now()) > str(task_.taskStartTime):
+            #任務時間超過
+            return jsonify({"rspCode":"403"}) 
         if userID != task_.SR[0].userID:
             return jsonify({"rspCode":"402"})
         for people in task_.db_task_taskCandidate:
@@ -624,13 +627,11 @@ def SR_decide_SP():
         notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
         db.session.add(notice_task)
         db.session.commit()
-        db.engine.execute(task_will_start(userID,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours=1))))
-        db.engine.execute(task_will_start(candidateID_,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours=1))))
-        db.engine.execute(task_start(userID,task_.taskID,task_.taskStartTime))
-        db.engine.execute(task_start(candidateID_,task_.taskID,task_.taskStartTime))
-        db.engine.execute(plzComment(userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours=23))))
-        db.engine.execute(plzComment(candidateID_,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours=23))))
-        db.engine.execute(taskEndTime_sql(userID,task_.taskID,str(task_.taskEndTime)))
+        db.engine.execute(task_will_start(userID,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours=1)),candidateID_))	
+        db.engine.execute(task_start(userID,task_.taskID,task_.taskStartTime,candidateID_))	
+        db.engine.execute(plzComment(userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(seconds=1)),candidateID_))	
+        print(plzComment(userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(seconds=1)),candidateID_))
+        db.engine.execute(taskEndTime_sql(userID,task_.taskID,str(task_.taskEndTime),candidateID_))
         return jsonify({"rspCode":"200"})
     except:
         return jsonify({"rspCode":"400"})
@@ -639,7 +640,7 @@ def SR_decide_SP():
 #回傳taskName, taskStartTime, taskEndTime, taskPoint, SPName,taskLocation,taskContent, taskID在taskList,rspCode,taskAmount
 @Task.route("/SR/output/accept", methods = ['GET'])
 def SR_accept():
-   # try:
+# try:
     if request.method != 'GET':
         return jsonify({"rspCode":"300","taskList":"","taskAmount":""})
     if session.get('userType') != userType['USER']:
@@ -726,6 +727,8 @@ def SR_cancel_task():
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
+    elif str(task_.taskStartTime) < str(datetime.datetime.now()):
+        return ({"rspCode":"402"})
     elif task_.SR[0].userID != userID_:
         #你不是任務發布人
         return jsonify({"rspCode":"401"})
@@ -779,6 +782,8 @@ def SP_cancel_task():
     if task_ == None:
         #任務不存在
         return jsonify({"rspCode":"400"})
+    elif str(task_.taskStartTime) < str(datetime.datetime.now()):
+        return ({"rspCode":"402"})
     elif task_.SP == []:
         try:
             candidateList =task_.db_task_taskCandidate
@@ -907,8 +912,13 @@ def task_finish_or_not():
                 task_.SR[0].userPoint -= task_.taskPoint
                 task_.SP[0].userPoint += task_.taskPoint
                 pointList = db.session.query(point).filter(point.ownerID == int(userID_)).limit(task_.taskPoint).all()                
+                now_ = datetime.datetime.now()
                 for p in pointList:
                     p.ownerID = task_.SP[0].userID
+                    p.time = now_
+                    pointRecord_ = pointRecord(pointID = p.ID, ownerID = task_.SP[0].userID, transferTime = now_)
+                    db.session.add(pointRecord_)
+                    db.session.commit()
                 db.session.commit()
                 #SR
                 transferRecord_ = transferRecord(userID = task_.SR[0].userID,time = datetime.datetime.now())

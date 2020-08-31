@@ -78,6 +78,16 @@ function upload(index)
             break;
         case 30:
             uploadUserBirthday();
+            break;
+        case 100:
+            uploadProfile();
+            uploadName();
+            uploadUserName();
+            uploadNewPassword();
+            uploadUserEmail();
+            uploadUserPhone();
+            uploadGender();
+            uploadUserBirthday();
     }
 }
 

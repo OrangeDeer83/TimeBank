@@ -12,7 +12,7 @@ function showNavbar()
                 '<div class="menuIcon"></div>' +
                 '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
                     '<li class="hiddenLarge">' +
-                        '<a class="point" href="/Admin/pointRecord">' +
+                        '<a class="navbarPointA" href="/USER/pointRecord">' +
                             '<img class="navbarPointImg" alt="Point" src="' + urlPath + '/static/img/point3.png" />' +
                             '<span id="navbarPoint1">0</span>' +
                         '</a>' +
@@ -160,7 +160,7 @@ function checkNoticeIndication()
 {
     getNoticeIndication();
     // Check for new notice every second.
-    window.setInterval(getNoticeIndication, 10000);///////////////////////////////////////
+    window.setInterval(getNoticeIndication, 5000);///////////////////////////////////////
     // More then 10 sec not onload, reset the standard.
     window.setInterval(function(){ if (lastRequestOnload == 0)lastRequestOnload = 1;}, 10000);
 }
@@ -185,6 +185,7 @@ function getNoticeIndication()
                 {
                     haveNewNotice = 1;
                     document.getElementById('navbarNotice').setAttribute('style', 'background-color:rgba(255, 0, 0, .5);');
+                    getCurrentPointAmount();
                 }
                 break;
             default:

@@ -100,9 +100,10 @@ function getAdminAmount()
     showError(400);
 }
 
+// Add html element
 function showListDiv()
 {
-    const table = document.getElementById('listTable');
+    const table = document.getElementById('infoTable');
     table.innerHTML = '';
     for (var i = 0; i < 10; i++)
     {
@@ -171,7 +172,7 @@ function computeThisPageList()
         document.getElementById("list" + i).style.display = "none";
 }
 
-// Call getDetail to print the information
+// Call getDetail to print the information of this page.
 function getNewList()
 {
     for (var i = 0; i < thisPageList.length; i++) getDetail(i);

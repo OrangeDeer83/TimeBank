@@ -8,6 +8,7 @@ var recordAmount = 0;
 var pageAmount = 0;
 var thisPageList = [];
 var currentPage = 1;
+var currentPageAmount = 0;
 const pageNumber = document.getElementById('pageNumber');
 const maxPageAmount = 20;
 
@@ -40,7 +41,7 @@ function getRecordAmount()
 function showDiv()
 {
     const pointTable = document.getElementById('pointTable');
-    pointTable.innerHTML = '';
+    pointTable.innerHTML = '<caption id="tableTitle">點數紀錄</caption>';
     for (var i = 0; i < maxPageAmount && i < recordAmount; i++)
     {
         pointTable.innerHTML += '<tr id="pointRecordDiv' + i + '"><td>'
@@ -75,6 +76,13 @@ function computePage(type)
         pageNumber.innerHTML = '1/1';
     else
         pageNumber.innerHTML = currentPage + '/' + pageAmount;
+
+    if (recordAmount == 0)
+        currentPageAmount = 0;
+    else if (currentPage < pageAmount || (recordAmount % maxPageAmount) == 0)
+        currentPageAmount = maxPageAmount;
+    else
+        currentPageAmount = recordAmount % maxPageAmount;
     computeThisPageList();
 }
 
@@ -108,6 +116,11 @@ function getDetail()
         switch (rst.rspCode)
         {
             case '20': case 20:
+                if (rst.pointRecord.length != currentPageAmount)
+                {
+                    document.getElementById('pointTable').innerHTML += '伺服器錯誤，數量不相符' + rst.pointRecord.length + '/' + currentPageAmount;
+                    return ;
+                }
                 showDetail(rst.pointRecord);
                 break;
             default:
@@ -147,5 +160,9 @@ function putDetail(pointRecord, index)
             break;
     }
     document.getElementById("time" + index).innerHTML = pointRecord.time;
-    document.getElementById('amount' + index).innerHTML = pointRecord.amount;
+    console.log(pointRecord)
+    if (pointRecord.amount > 0)
+        document.getElementById('amount' + index).innerHTML = '+' + pointRecord.amount;
+    else if (pointRecord.amount <= 0)
+        document.getElementById('amount' + index).innerHTML = pointRecord.amount;
 }

@@ -11,6 +11,7 @@ var currentPage = 1;
 const pageNumber = document.getElementById("pageNumber");
 const maxPageAmount = 10;
 var searchText;
+var notOnload = 0;
 
 function getUserList()
 {
@@ -26,7 +27,8 @@ function getUserList()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                allList[0] = rst.name;
+                allList[0] = rst.userName;
+                allList[1] = rst.name;
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;
                 allList[4] = rst.userSPRate;
@@ -46,7 +48,7 @@ function computePage(type)
     switch (type)
     {
         case 0: 
-            if (allList[0].length != allList[2].length || /*allList[1].length != allList[2].length ||*/
+            if (allList[0].length != allList[1].length || allList[1].length != allList[2].length ||
                 allList[2].length != allList[3].length || allList[3].length != allList[4].length ||
                 allList[4].length != allList[5].length)
             {
@@ -102,6 +104,7 @@ function showDetail()
 function putDetail(index)
 {
     document.getElementById("userName" + index).innerHTML = allList[0][thisPageList[index]];
+    document.getElementById("name" + index).innerHTML = allList[1][thisPageList[index]];
     var SRRate = allList[3][thisPageList[index]]
     if (SRRate == 0)
         document.getElementById("scoreSR" + index).innerHTML = "無";
@@ -134,11 +137,18 @@ function periodChange()
     {
         document.getElementById("frequency").removeAttribute("style");
         document.getElementById("frequencySpan").removeAttribute("style");
+        document.getElementById("frequency").value = "";
     }
 }
 
 function allotment(index)
 {
+    if (notOnload == 1)
+    {
+        alert('等待伺服器配發點數中...');
+        return ;
+    }
+    notOnload = 1;
     // No user
     if (userAmount == 0)
     {
@@ -189,7 +199,8 @@ function sendAllotment(kind, receiver, quota, period, frequency)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("配發成功")
+                alert("配發成功");
+                window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:

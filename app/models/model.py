@@ -4,13 +4,13 @@ import datetime
 def partitionByTaskID(tasks, left, right):
     i = 0
     for j in range(right):
-        if tasks[j].taskID < tasks[right].taskID:
+        if tasks[j].taskID > tasks[right].taskID:
             tasks[i], tasks[j] = tasks[j], tasks[i]
             i = i + 1
     tasks[right], tasks[i] = tasks[i], tasks[right]
     return i
 
-#將task陣列sort
+#將task陣列以taskIDsort
 def sortTaskByTaskID(tasks, left, right):
     if left < right:
         privotLocation = partitionByTaskID(tasks, left, right)
@@ -282,16 +282,18 @@ class noticeTask(db.Model):
 
 class point(db.Model):
     __tablename__ = 'point'
-    pointID = db.Column(db.String(50), primary_key=True)
+    ID =db.Column(db.Integer, primary_key=True)
+    pointID = db.Column(db.String(50))
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=False)
     ownerID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=False)
-
+    time = db.Column(db.DateTime, nullable=True)
     db_point_pointRecord = db.relationship('pointRecord', backref='point')
 
-    def __init__(self, pointID, adminID, ownerID):
+    def __init__(self, pointID, adminID, ownerID,time_):
         self.pointID = pointID
         self.adminID = adminID
         self.ownerID = ownerID
+        self.time = time_
 
 
 class pointRecord(db.Model):

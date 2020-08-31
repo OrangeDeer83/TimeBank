@@ -10,7 +10,7 @@
 	overflow: auto;
 	margin-bottom: 10px;
 }
-#tabsFirst > div, #tabsSecond > div
+#tabsFirst > a, #tabsSecond > a
 {
 	text-align: center;
 	border-radius:8px;

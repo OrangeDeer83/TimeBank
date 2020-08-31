@@ -6,7 +6,7 @@ window.onload = function()
 var noticeAmount = 0;
 var pageAmount = 0;
 var currentPage = 1;
-var currentPageAmount = 1;
+var currentPageAmount = 0;
 const pageNumber = document.getElementById('pageNumber');
 const maxPageAmount = 20;
 
@@ -37,7 +37,7 @@ function getNoticeAmount()
 function showDiv()
 {
     const pointTable = document.getElementById('notificationTable');
-    pointTable.innerHTML = '';
+    pointTable.innerHTML = '<caption id="tableTitle">通知歷史紀錄</caption>';
     for (var i = 0; i < maxPageAmount && i < noticeAmount; i++)
     {
         pointTable.innerHTML += '<tr id="noticeDiv' + i + '" style="display:none;"><td>' +
@@ -68,7 +68,9 @@ function computePage(type)
     else
         pageNumber.innerHTML = currentPage + '/' + pageAmount;
 
-    if (currentPage < pageAmount || (noticeAmount % maxPageAmount) == 0)
+    if (noticeAmount == 0)
+        currentPageAmount = 0;
+    else if (currentPage < pageAmount || (noticeAmount % maxPageAmount) == 0)
         currentPageAmount = maxPageAmount;
     else
         currentPageAmount = noticeAmount % maxPageAmount;
@@ -80,6 +82,7 @@ function getDetail()
     var getNoticeRequest = new XMLHttpRequest();
     getNoticeRequest.open('POST', 'http://192.168.1.144:5000/notice/all_list');
     getNoticeRequest.setRequestHeader('Content-Type', 'application/json');
+    console.log(JSON.stringify({"startNum": (maxPageAmount * currentPage - maxPageAmount), "amount": currentPageAmount}));
     getNoticeRequest.send(JSON.stringify({"startNum": (maxPageAmount * currentPage - maxPageAmount), "amount": currentPageAmount}));
     getNoticeRequest.onload = function()
     {
@@ -88,6 +91,11 @@ function getDetail()
         switch (rst.rspCode)
         {
             case '20': case 20:
+                if (rst.noticeList.length != currentPageAmount)
+                {
+                    document.getElementById('notificationTable').innerHTML += '伺服器錯誤，數量不相符' + rst.noticeList.length + '/' + currentPageAmount;
+                    return ;
+                }
                 showDetail(rst.noticeList);
                 break;
             default:

@@ -64,7 +64,7 @@ function getDetail()
         switch (rst.rspCode)
         {
             case '20': case 20:
-                showDetail(rst.reportList);
+                showDetail(rst.reportList[0]);
                 break;
             default:
                 console.log('無法取得檢舉細節')
@@ -88,10 +88,10 @@ function showDetail(recordDetail)
     document.getElementById('taskContent').value = recordDetail.taskContent;
     document.getElementById('SRName').innerHTML = recordDetail.SRName;
     document.getElementById('SRPhone').innerHTML = recordDetail.SRPhone;
-    document.getElementById('SRRate').innerHTML = recordDetail.SRStar;
+    document.getElementById('SRRate').innerHTML = recordDetail.SRRate;
     document.getElementById('SRComment').value = recordDetail.SRComment;
     document.getElementById('SPName').innerHTML = recordDetail.SPName;
     document.getElementById('SPPhone').innerHTML = recordDetail.SPPhone;
-    document.getElementById('SPRate').innerHTML = recordDetail.SPStar;
+    document.getElementById('SPRate').innerHTML = recordDetail.SPRate;
     document.getElementById('SPComment').value = recordDetail.SPComment;
 }

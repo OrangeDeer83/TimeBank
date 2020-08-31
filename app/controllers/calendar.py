@@ -84,7 +84,7 @@ def one_month_list():
                                 Found = True
                                 break
                         #已經接到或是完成
-                        elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
+                        elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 4 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
                             #確定SP是自己
                             if taskCandidate_.task.SP[0].userID == userID:
                                 if dateStart > taskCandidate_.task.taskStartTime and dateStart < taskCandidate_.task.taskEndTime:
@@ -156,7 +156,7 @@ def one_date_list():
                     elif dateStart < taskCandidate_.task.taskStartTime and dateEnd > taskCandidate_.task.taskEndTime:
                         taskList.append(taskCandidate_.task)
                 #已經接到或是完成
-                elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
+                elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 4 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
                     print(taskCandidate_.task.taskStatus)
                     #確定SP是自己
                     if taskCandidate_.task.SP[0].userID == userID:

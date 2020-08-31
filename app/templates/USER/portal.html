@@ -48,7 +48,7 @@
                                             <div id="passwordError" class="error">請輸入密碼，8-30字元</div>
                                             <div id="loginError1" class="error">使用者帳號或密碼錯誤，請再試一次</div>
                                             <div id="loginError2" class="error">伺服器錯誤，請稍後再試</div>
-                                            <div id="loginError3" class="error">等待伺服器回應中...</div>
+                                            <div id="loginError3" class="waiting">等待伺服器回應中...</div>
                                         </div>
                                         <a href="{{url_for('USER.forgot_password')}}"><div id="loginForgot">忘記密碼？</div></a>
                                         <input class="loginItem loginButton" type="submit" value="登入" onclick="login(1)" />

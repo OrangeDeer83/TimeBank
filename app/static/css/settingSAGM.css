@@ -57,6 +57,7 @@
 .formButton:hover
 {
     background-color: var(--button-hover-background-color);
+    cursor: pointer;
 }
 
 .error

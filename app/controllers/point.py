@@ -29,7 +29,7 @@ def record_amount():
         if session.get('userType') == userType['USER']:
             userID = session.get('userID')
             try:
-                query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time).all()
+                query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time.desc()).all()
             except:
                 return jsonify({"rspCode": "30"})                                           #伺服器錯誤
             pointRecordIDList = []  
@@ -54,7 +54,7 @@ def record():
             recordStartID = value['pointRecordID']
             requestAmount = value ['requestAmount']
             try:
-                query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time).all()
+                query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time.desc()).all()
             except:
                 return jsonify({"rspCode": "30"})                                           #伺服器錯誤
             print(query_data)

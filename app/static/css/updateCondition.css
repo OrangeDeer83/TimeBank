@@ -1,7 +1,10 @@
 @charset "utf-8";
 
 /* SA/AA更新申請條件 */
-
+hr{
+    width: 400px;
+    align-self: left;
+}
 .updateDiv
 {
     background-color: var(--background-color);
@@ -111,6 +114,7 @@ select
 .formSave:hover
 {
     background-color: var(--button-hover-background-color);
+    cursor: pointer;
 }
 
 .formLine1 button

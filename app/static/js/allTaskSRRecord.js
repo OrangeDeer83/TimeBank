@@ -19,7 +19,7 @@ function showListDiv()
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
-        '<tr id="taskList' + i + '"><td>' +
+        '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="upPart">' +
                 '<div>雇員：<span id="taskSP' + i + '"></span></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
@@ -179,9 +179,15 @@ function putDetail(index)
     document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + thisPageList[index].taskEndTime;
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
     if (currentTask.taskSP === '' || currentTask.taskStatus == 4)
+    {
         document.getElementById("taskSP" + index).innerHTML = '此任務未成功被承接';
+        document.getElementById('reportButton' + index).style.display = 'none';
+    }
     else
+    {
         document.getElementById("taskSP" + index).innerHTML = currentTask.taskSP;
+        document.getElementById('reportButton' + index).removeAttribute('style');
+    }
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
     document.getElementById("SRComment" + index).innerHTML = currentTask.SRComment;

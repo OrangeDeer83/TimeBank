@@ -18,7 +18,7 @@ function showListDiv()
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
-        '<tr id="taskList' + i + '"><td>' +
+        '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
                 '<div class="bossName">雇主：<span id="taskSR' + i + '"></span></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
@@ -94,7 +94,10 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無審核中申請，請至承接任務頁面承接任務";
+    {
+        pageNumber.innerHTML = '1/1';
+        document.getElementById('eCheck').innerHTML = '<tr><td>尚無審核中申請，請至承接任務頁面承接任務</td></tr>';
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -116,6 +119,7 @@ function computeThisPageList()
 
 function showDetail()
 {
+    if (pageAmount == 0) return ;
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);

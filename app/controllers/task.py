@@ -566,11 +566,9 @@ def SR_edit_task():
         oldTask.taskName = newTaskName
     if newTaskStartTime != "":
         x =  datetime.datetime.strptime(newTaskStartTime[:19], "%Y-%m-%d %H:%M:%S")
-        print(x)
         oldTask.taskStartTime = x
     if newTaskEndTime != "":
         x =  datetime.datetime.strptime(newTaskEndTime[:19], "%Y-%m-%d %H:%M:%S")
-        print(x)
         oldTask.taskEndTime = x
     if newTaskLocation != "":
         oldTask.taskLocation = newTaskLocation
@@ -874,6 +872,7 @@ def task_finish_or_not():
                     db.session.add(notice_task)
                     db.session.commit()
                     task_.taskStatus = 13
+                    now_ = datetime.datetime.now()
                 elif task_.taskStatus == 16:
                     if datetime.datetime.now() < task_.taskEndTime:
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)
@@ -906,9 +905,14 @@ def task_finish_or_not():
                     task_.taskStatus = 6
                 task_.SR[0].userPoint -= task_.taskPoint
                 task_.SP[0].userPoint += task_.taskPoint
-                pointList = db.session.query(point).filter(point.ownerID == int(userID_)).limit(task_.taskPoint).all()                
+                pointList = db.session.query(point).filter(point.ownerID == int(userID_)).order_by(point.time).limit(task_.taskPoint).all()                
                 for p in pointList:
                     p.ownerID = task_.SP[0].userID
+                    p.time = now_
+                    pointRecord_ = pointRecord(pointID = p.ID, ownerID = task_.SP[0].userID, transferTime = now_)
+                    db.session.add(pointRecord_)
+                    db.session.commit()
+                    print(pointRecord_.pointRecordID)
                 db.session.commit()
                 #SR
                 transferRecord_ = transferRecord(userID = task_.SR[0].userID,time = datetime.datetime.now())

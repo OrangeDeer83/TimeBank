@@ -566,11 +566,9 @@ def SR_edit_task():
         oldTask.taskName = newTaskName
     if newTaskStartTime != "":
         x =  datetime.datetime.strptime(newTaskStartTime[:19], "%Y-%m-%d %H:%M:%S")
-        print(x)
         oldTask.taskStartTime = x
     if newTaskEndTime != "":
         x =  datetime.datetime.strptime(newTaskEndTime[:19], "%Y-%m-%d %H:%M:%S")
-        print(x)
         oldTask.taskEndTime = x
     if newTaskLocation != "":
         oldTask.taskLocation = newTaskLocation
@@ -879,6 +877,7 @@ def task_finish_or_not():
                     db.session.add(notice_task)
                     db.session.commit()
                     task_.taskStatus = 13
+                    now_ = datetime.datetime.now()
                 elif task_.taskStatus == 16:
                     if datetime.datetime.now() < task_.taskEndTime:
                         notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['taskFinish'], haveRead = 0)

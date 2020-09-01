@@ -36,11 +36,16 @@
     border-right: none;
 }
 
-.auditButton button:hover, .dealButton:hover, .pageButton button:hover
+.auditButton button:hover, .dealButton:hover, .pageButton button:hover, .button:hover
 {
     background-color: var(--button-hover-background-color);
     color: white;
     cursor: pointer;
+}
+
+button,.formAudit:focus
+{
+    outline: none;
 }
 
 #detail

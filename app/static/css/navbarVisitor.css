@@ -141,8 +141,14 @@
 {
     .loginFormContainer
     {
+        margin-top: calc(5vh);
         padding: calc(20vh - 50px) calc(50vw - 150px);
-        height: 10vh;
+        border: none;
+    }
+    #loginForm
+    {
+        height: 100%;
+        background-color: var(--background-color);
     }
     #loginForgot
     {

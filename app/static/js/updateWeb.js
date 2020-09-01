@@ -1,8 +1,40 @@
 window.onload = function()
 {
+    showListDiv();
     getIntroduction();
     getNewsAmount();
+}
 
+function showListDiv()
+{
+    for (var i = 1; i <= 10; i++)
+    {
+        document.getElementById('newsDiv').innerHTML += '' +
+        '<div class="news" id="news' + i + '">' +
+            '<div class="newsBar">' +
+                '<button class="button newsButton" id="edit' + i + '" onclick="changeSpan(' + i + ')">編 輯</button>' +
+                '<button class="button newsButton" id="delete' + i + '" onclick="deleteNews()">刪 除</button>' +
+                '<span id="newsOldTitle' + i + '"></span>' +
+            '</div>' +
+            '<form id="editNewsForm' + i + '" method="POST" enctype="multipart/form-data">' +
+                '<div class="newsSpan" id="newsSpan' + i + '">' +
+                    '<div class="uploadImgDiv" id="uploadImgDiv' + i + '">' +
+                        '<label for="uploadImg' + i + '">' +
+                            '<input class="uploadImg" id="uploadImg' + i + '" type="file" name="file" accept="image/*" onchange="previewImg()" />' +
+                            '<img class="newsImg" id="newsImg' + i + '" alt="news image" />' +
+                        '</label>' +
+                    '</div><!--' +
+                '---><div class="newsInput">' +
+                        '<input type="text" class="newsTitle"  name="title"id="newsTitle' + i + '" placeholder="請輸入標題..." />' +
+                        '<textarea class="newsText"  name="content"id="newsText' + i + '" placeholder="輸入最新消息..."></textarea>' +
+                    '</div>' +
+                    '<div>最大限制5MB</div>' +
+                    '<input type="submit" class="button newsButton newsStore" value="儲 存" />' +
+                    '<span class="newsEditUser" id="newsEditUser' + i + '">上次更新的是Damian</span>' +
+                '</div>' +
+            '</form>' +
+        '</div>';
+    }
 }
 
 // Introduction
@@ -24,15 +56,15 @@ function getIntroduction()
         {
             case "200": case 200:
                 console.log("網站介紹讀取成功");
+                document.getElementById("introduction").value = rst.webIntro;
+                document.getElementById('introductionEditUser').innerHTML = '上次更新的是' + rst.adminName;
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
                 break;
         }
-        introduction = rst.webIntro;
-        document.getElementById("introduction").value = introduction;
-        console.log(introduction);//
+        
     }
     if (introduction == "")
         console.log("網站介紹載入失敗或尚無資料。");
@@ -118,7 +150,7 @@ function getTitle(i)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("最新消息標題讀取成功");
+                //console.log("最新消息標題讀取成功");
                 break;
             case "300": case 300:
             case "400": case 400:
@@ -144,16 +176,16 @@ function getText(i)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("最新消息內容讀取成功");
+                //console.log("最新消息內容讀取成功");
+                document.getElementById("newsText" + (index + 1)).value = rst.content;
+                document.getElementById('newsEditUser' + (index + 1)).innerHTML = '上次更新的是' + rst.adminName;
+                document.getElementById("editNewsForm" + (index + 1)).action = "/portal/edit_news/" + thisPageList[index];
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
                 //return;
         }
-        //thisPageText.push(rst.content); console.log(rst.content);
-        document.getElementById("newsText" + (index + 1)).value = rst.content;
-        document.getElementById("editNewsForm" + (index + 1)).action = "/portal/edit_news/" + thisPageList[index];
     }
 }
 
@@ -208,9 +240,6 @@ function computePageNews()
     for (var i = 1; i <= thisPageList.length; i++)
     {
         document.getElementById("news" + i).style.display = "block";
-        /*document.getElementById("newsOldTitle" + i).innerHTML = thisPageTitles[i - 1];
-        document.getElementById("newsTitle" + i).value = thisPageTitles[i - 1];
-        document.getElementById("newsText" + i).value = thisPageText[i - 1];*/
     }
     for (var i = thisPageList.length + 1; i <= 10; i++)
         document.getElementById("news" + i).style.display = "none";

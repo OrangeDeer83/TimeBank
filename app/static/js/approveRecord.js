@@ -3,10 +3,10 @@ window.onload = function()
     getUserList();
 }
 
-var allList = [16];
+var allList = [17];
 // name, userName, userID, userSRRate, userSPRate, userPoint(pointAmount)
 // applyID, applyClass(className), oldQuota, applyTime, applyPeriod, applyFrequency, applyResult
-// applyStatus(applyResult), quota(resultQuota), judgeTime
+// applyStatus(applyResult), quota(resultQuota), judgeTime, judgeAdmin
 var userAmount = 0;
 var pageAmount = 1;
 var thisPageList = [];
@@ -53,6 +53,7 @@ function getUserList()
         {
             case "200": case 200:
                 allList[0] = rst.name;
+                if (allList[0].length == 0) return ;
                 allList[1] = rst.userName;
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;
@@ -68,6 +69,7 @@ function getUserList()
                 allList[13] = rst.applyStatus;
                 allList[14] = rst.quota;
                 allList[15] = rst.judgeTime;
+                allList[16] = rst.judgeAdmin;
                 computePage(0);
                 break;
             case "300": case 300:
@@ -91,7 +93,7 @@ function computePage(type)
                 allList[8].length != allList[9].length || allList[9].length != allList[10].length ||
                 allList[10].length != allList[11].length || allList[11].length != allList[12].length ||
                 allList[12].length != allList[13].length || allList[13].length != allList[14].length ||
-                allList[14].length != allList[15].length)
+                allList[14].length != allList[15].length || allList[15].length != allList[16].length)
             {
                 console.log("系統錯誤，錯誤的列表");
                 return ;
@@ -171,6 +173,7 @@ function putDetail(index)
     document.getElementById("applyResult" + index).innerHTML = allList[13][thisPageList[index]];
     document.getElementById("resultQuota" + index).innerHTML = allList[14][thisPageList[index]];
     document.getElementById("judgeTime" + index).innerHTML = allList[15][thisPageList[index]];
+    document.getElementById("judgeAdmin" + index).innerHTML = allList[16][thisPageList[index]];
 }
 
 function downloadPDF(index)

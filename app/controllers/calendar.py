@@ -16,19 +16,19 @@ def one_month_list():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": "40"})                                                                          #非法文字
+                return jsonify({"rspCode": 40})                                                                          #非法文字
             show_year = value['year']
             show_month = value['month']
             userID = session.get('userID')
             print(value)
             if show_month < 1 or show_month > 12:
-                return jsonify({"rspCode": "41"})                                                                          #月份錯誤
+                return jsonify({"rspCode": 41})                                                                          #月份錯誤
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": "42"})                                                                      #沒有該user
+                    return jsonify({"rspCode": 42})                                                                      #沒有該user
             except:
-                return jsonify({"rspCode": "30"})                                                                          #資料庫錯誤
+                return jsonify({"rspCode": 30})                                                                          #資料庫錯誤
             if show_month != 2:
                 days = days_of_month[show_month]
             else:
@@ -106,11 +106,11 @@ def one_month_list():
                 if not Found:
                     dateList.append(0)
             print(dateList)
-            return jsonify({"rspCode": "20", "dateList": dateList})                                                                         #成功取得
+            return jsonify({"rspCode": 20, "dateList": dateList})                                                                         #成功取得
         else:
-            return jsonify({"rspCode": "50"})                                                                                               #權限不符
+            return jsonify({"rspCode": 50})                                                                                               #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                                                                                 #method使用錯誤
+        return jsonify({"rspCode": 31})                                                                                                 #method使用錯誤
 
 #取得當日行事曆
 @Calendar.route('/one_date_list', methods=['POST'])
@@ -120,7 +120,7 @@ def one_date_list():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": "40"})                                                                          #非法文字
+                return jsonify({"rspCode": 40})                                                                          #非法文字
             show_year = value['year']
             show_month = value['month']
             show_day = value['day']
@@ -128,9 +128,9 @@ def one_date_list():
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": "41"})                                                                      #沒有該user
+                    return jsonify({"rspCode": 41})                                                                      #沒有該user
             except:
-                return jsonify({"rspCode": "30"})                                                                          #資料庫錯誤
+                return jsonify({"rspCode": 30})                                                                          #資料庫錯誤
             taskList = []
             dateStart = datetime.datetime(show_year, show_month, show_day, 0, 0, 0)
             dateEnd = datetime.datetime(show_year, show_month, show_day, 23, 59, 59)
@@ -187,18 +187,19 @@ def one_date_list():
                 elif task.taskStatus == 1:
                     taskListJson.append({"taskName": task.taskName + "(申請中)", "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
-                                        "taskLocation": task.taskLocation, "taskSRName": task.SR[0].userName, "taskSPName": "-"})
+                                        "taskLocation": task.taskLocation, "taskSRName": task.SR[0].name, "taskSPName": "-"})
                 elif task.taskStatus > 1 and task.taskStatus != 11 and task.taskStatus != 12:
                     if task.SP[0].userID == userID:
                         taskListJson.append({"taskName": task.taskName, "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
-                                        "taskLocation": task.taskLocation, "taskSRName": "-", "taskSPName": task.SP[0].userName})
+                                        "taskLocation": task.taskLocation, "taskSRName": task.SR[0].name, "taskSPName": "-"})
                     elif task.SR[0].userID == userID:
                         taskListJson.append({"taskName": task.taskName, "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
-                                        "taskLocation": task.taskLocation, "taskSRName": task.SR[0].userName, "taskSPName": "-"})
-            return jsonify({"rspCode": "20", "taskList": taskListJson})                                                 #成功取得
+                                        "taskLocation": task.taskLocation, "taskSRName": "-", "taskSPName": task.SP[0].name})
+
+            return jsonify({"rspCode": 20, "taskList": taskListJson})                                                 #成功取得
         else:
-            return jsonify({"rspCode": "50"})                                                                           #權限不符
+            return jsonify({"rspCode": 50})                                                                           #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                                                           #method使用錯誤
+        return jsonify({"rspCode": 31})                                                                           #method使用錯誤

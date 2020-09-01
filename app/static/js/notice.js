@@ -79,6 +79,11 @@ function computePage(type)
 
 function getDetail()
 {
+    if (currentPageAmount == 0)
+    {
+        document.getElementById('notificationTable').innerHTML = '<tr><td>目前沒有通知歷史紀錄</td></tr>';
+        return ;
+    }
     var getNoticeRequest = new XMLHttpRequest();
     getNoticeRequest.open('POST', 'http://192.168.1.144:5000/notice/all_list');
     getNoticeRequest.setRequestHeader('Content-Type', 'application/json');

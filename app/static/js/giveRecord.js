@@ -17,7 +17,7 @@ function showListDiv()
     for (var i = 0; i < maxPageAmount; i++)
     {
         document.getElementById('giveTable').innerHTML += '' +
-        '<tr id="list' + i + '"><td>' +
+        '<tr id="list' + i + '" style="display:none"><td>' +
             '<div class="introductionLeft">' +
                 '<div class="total">' +
                     '<div class="title1">使用者帳號：</div>' +
@@ -123,7 +123,11 @@ function computePage(type)
             break;
     }
     if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無配發紀錄";
+    {
+        pageNumber.innerHTML = "1/1";
+        document.getElementById('giveTable').innerHTML +='<tr><td>尚無配發紀錄</td></tr>';
+        return ;
+    }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
     computeThisPageList();
@@ -141,7 +145,7 @@ function computeThisPageList()
             thisPageList.push(maxPageAmount * (currentPage - 1) + i);
     else
         for (var i = 0; i < maxPageAmount; i++)
-                thisPageList.push(maxPageAmount * (currentPage - 1) + i);
+            thisPageList.push(maxPageAmount * (currentPage - 1) + i);
     showDetail();
 }
 

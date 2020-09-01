@@ -160,7 +160,7 @@ function checkNoticeIndication()
 {
     getNoticeIndication();
     // Check for new notice every second.
-    window.setInterval(getNoticeIndication, 5000);///////////////////////////////////////
+    window.setInterval(getNoticeIndication, 1500);///////////////////////////////////////
     // More then 10 sec not onload, reset the standard.
     window.setInterval(function(){ if (lastRequestOnload == 0)lastRequestOnload = 1;}, 10000);
 }

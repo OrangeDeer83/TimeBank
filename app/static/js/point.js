@@ -105,6 +105,11 @@ function computeThisPageList()
 // Get detail of this page from server.
 function getDetail()
 {
+    if (currentPageAmount == 0)
+    {
+        document.getElementById('pointTable').innerHTML = '<tr><td>目前沒有點數紀錄</td></tr>';
+        return ;
+    }
     var getRecordRequest = new XMLHttpRequest();
     getRecordRequest.open('POST', 'http://192.168.1.144:5000/point/record');
     getRecordRequest.setRequestHeader('Content-Type', 'application/json');

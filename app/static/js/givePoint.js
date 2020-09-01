@@ -188,7 +188,7 @@ function allotment(index)
 function sendAllotment(kind, receiver, quota, period, frequency)
 {
     var allotmentRequest = new XMLHttpRequest();
-    allotmentRequest.open("POST", "http://192.168.1.144:5000/allotment/allotment");
+    allotmentRequest.open("POST", "http://192.168.1.144:5000/allotment/");
     allotmentRequest.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}))
     allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}));

@@ -17,7 +17,7 @@
     </head>
 
     <body>
-        <header id="SAnavbar"></header>
+        <header id="navbar"></header>
         <div class="approveDiv">
             <div id="formTitleDiv"><h3 id="formTitle">核准系統 - 核准申請</h3></div>
             <div class="formColumn">
@@ -34,7 +34,7 @@
                 <div class="formLine">                    
                     <div id="formInformation1">
                         <div class="Information1">
-                            <div class="detail">申請人：<span id="Name0"></span></div>
+                            <div class="detail">申請人：<span id="name0"></span></div>
                             <div class="detail">使用者帳號：<span id="userName0"></span></div>
                             <div class="detail">現有點數：<span id="userPoint0"></span>點</div>
                             <div class="detail">雇主評分：<span id="scoreSR0"></span></div>
@@ -61,7 +61,7 @@
                     </div>
                     <div id="formInformation2">
                         <div class="Information1">
-                            <div class="detail">申請人：<span id="Name1"></span></div>
+                            <div class="detail">申請人：<span id="name1"></span></div>
                             <div class="detail">使用者帳號：<span id="userName1"></span></div>
                             <div class="detail">現有點數：<span id="userPoint1"></span>點</div>
                             <div class="detail">雇主評分：<span id="scoreSR1"></span></div>
@@ -101,7 +101,7 @@
             </div>
         </div>
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{navbarjs}}"></script>
         <script src="{{url_for('static', filename='js/approveSystem.js')}}"></script>
     </body>
 

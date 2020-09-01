@@ -46,16 +46,20 @@
                 <label>結束時間：<input type="text" class="newText" id="newTaskEndTime" placeholder="yyyy-mm-dd hh:mm:ss" /></label>
                 <label>任務額度：<input type="text" class="newText" id="newTaskQuota" min="0" max="99" placeholder="0~99" /></label>
                 <label>任務地點：<input type="text" class="newText" id="newTaskLocation" /></label>
-                <label>任務說明：<textarea id="newTaskContent"></textarea></label>
-                <input type="button" value="送出編輯" onclick="sendEdit();" />
-                <input type="button" value="取消" onclick="hideEditDiv();" /> 
+                <label style="vertical-align:text-top;">任務說明：<br><textarea id="newTaskContent"></textarea></label>
+                <div id="allButton">
+                    <input type="button" value="送出編輯" onclick="sendEdit();" />
+                    <input type="button" value="取消" onclick="hideEditDiv();" />
+                </div> 
             </div>
             <div class="formPage">
                 <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>
                 <span class="formPageNumber" id="pageNumber">1/1</span>
                 <button class="pageButton" id="nextPageButton" onclick="computePage(2)">下一頁</button>
             </div>
-        </div>    
+        </div>
+        <footer id="footer"></footer>
+        <script src="{{url_for('static', filename='js/footer.js')}}"></script>
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
         <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
         <script src="{{url_for('static', filename='js/allTaskSRPassed.js')}}"></script>

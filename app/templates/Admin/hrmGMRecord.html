@@ -12,11 +12,11 @@
 
         <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/navbarSA.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/hrmGM.css')}}">
+        <link rel="stylesheet" href="../static/css/hrmGM.css">
 
     </head>
     <body>
-        <header id="SAnavbar"></header>
+        <header id="navbar"></header>
         <div class="bodyContainer">
             <div class="addPart">
                 <table id="addTable">
@@ -27,22 +27,29 @@
                         </div>
                         <div class="addButton" onclick="addGMEmail()">新增</div>
                     </td></tr>
-                    <tr><td>系統提示：<span id="error"></span></td></tr>
+                    <tr><td>
+                        系統提示：<span id="error"></span>
+                        <div id="checkPassword">
+                            請輸入密碼<input type="password" id="deletePassword" placeholder="輸入密碼以刪除評論管理員" maxlength="30" onkeypress="if(event.keyCode == 13){checkPassword();}" />
+                            <div class="addButton" onclick="checkPassword()">送出</div>
+                        </div>
+                    </td></tr>
                 </table>
             </div>
             <div class="tabsPart">
                 <ul class="tabs">
-                    <li class="tabOne currentTabOne"><a class="tabOneA">申請列表</a></li>
-                    <li class="tabOne"><a class="tabOneA" href="{{url_for('Admin.GM_list')}}" target="_self">成員紀錄</a></li>
+                    <li class="tabOne"><a class="tabOneA" href="{{url_for('Admin.hrmGM_application')}}" target="_self">申請列表</a></li>
+                    <li class="tabOne currentTabOne"><a class="tabOneA">成員紀錄</a></li>
                 </ul>
             </div>
             <div class="tablePart">
-                <table id="applicantTable"></table>
+                <table id="applicantTable">
+                </table>
             </div>
         </div>
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{navbarjs}}"></script>
         <script src="{{url_for('static', filename='js/hrmGM.js')}}"></script>
-        <script src="{{url_for('static', filename='js/hrmGMApplication.js')}}"></script>
+        <script src="{{url_for('static', filename='js/hrmGMRecord.js')}}"></script>
     </body>
 </html>

@@ -282,6 +282,11 @@ function openRating(index)
         if (i != index)
             document.getElementById("taskList" + i).style.display = "none";
 }
+function hideRating()
+{
+    document.getElementById("rating").style.display = 'none';
+    document.getElementById("comment").value = '';
+}
 function sendGrade()
 {
     var index = gradingTask;

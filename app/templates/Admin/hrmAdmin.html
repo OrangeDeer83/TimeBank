@@ -16,7 +16,7 @@
 
 </head>
 <body>
-    <header id="SAnavbar"></header>
+    <header id="navbar"></header>
     <div class="bodyContainer">
         <div class="addPart">
             <div class="permissionDescription">
@@ -50,7 +50,7 @@
             </div>
             <div class="addButton" id="permissionRightDiv"><div id="addNewButton" onclick="addAdmin()">新增</div></div>
         </div>
-        <div class="deleteDiv" id="deleteDiv">
+        <div class="deleteDiv" id="checkSAPassword">
             <div class="deleteDiv1">
                 <label for="password" class="deleteDiv2">輸入密碼確認身分</label>
                 <input type="password" class="deleteDiv3" id="password" name="password" placeholder="您的密碼" maxlength="30" onkeypress="if (event.keyCode == 13) {checkPassword();}" />
@@ -62,13 +62,6 @@
         <div id="tablePart">
             <table id="infoTable">
                 <tbody>
-                    <tr class="list" id="list0"><td>
-                        <div class="authority" id="authority0">權限：</div>
-                        <div class="userName" id="userName0">管理員帳號：</div>
-                        <div id="reset">密碼：<input type="text" id="resetText" placeholder="輸入新密碼" /></div>
-                        <div class="delete" id="delete0" onclick="deleteAdmin(0)">刪除</div>
-                        <div id="resetButton"><input type="submit" value="更改密碼"></div>
-                    </td></tr>
                     <tr><td>
                         <div id="changePageDiv">
                             <button class="pageButton" id="prePageButton" onclick="computePage(1)">上一頁</button>

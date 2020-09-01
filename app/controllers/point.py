@@ -13,14 +13,14 @@ def total():
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": "401", "point": ""})                     #ID錯誤
+                    return jsonify({"rspCode": 401, "point": ""})                     #ID錯誤
             except:
-                return jsonify({"rspCode": "400", "point": ""})                         #資料庫錯誤
-            return jsonify({"rspCode": "200", "point": query_data.userPoint})              #成功取得
+                return jsonify({"rspCode": 400, "point": ""})                         #資料庫錯誤
+            return jsonify({"rspCode": 200, "point": query_data.userPoint})              #成功取得
         else:
-            return jsonify({"rspCode": "500", "point": ""})                             #權限不符
+            return jsonify({"rspCode": 500, "point": ""})                             #權限不符
     else:
-        return jsonify({"rspCode": "300", "point": ""})                                 #method
+        return jsonify({"rspCode": 300, "point": ""})                                 #method
 
 #取得點數紀錄數量
 @Point.route('/record_amount', methods=['GET'])
@@ -31,15 +31,15 @@ def record_amount():
             try:
                 query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time.desc()).all()
             except:
-                return jsonify({"rspCode": "30"})                                           #伺服器錯誤
+                return jsonify({"rspCode": 30})                                           #伺服器錯誤
             pointRecordIDList = []  
             for transferRecord_ in query_data:
                 pointRecordIDList.append(transferRecord_.transferRecordID)
-            return jsonify({"rspCode": "20", "pointRecordIDList": pointRecordIDList})
+            return jsonify({"rspCode": 20, "pointRecordIDList": pointRecordIDList})
         else:
-            return jsonify({"rspCode": "50"})                                               #權限不符
+            return jsonify({"rspCode": 50})                                               #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                                   #method使用錯誤  
+        return jsonify({"rspCode": 31})                                                   #method使用錯誤  
 
 #取得點數紀錄
 @Point.route('/record', methods=['POST'])
@@ -49,14 +49,15 @@ def record():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": "40"})                                           #非法字元
+                return jsonify({"rspCode": 40})                                           #非法字元
             userID = session.get('userID')
+            print(value)
             recordStartID = value['pointRecordID']
             requestAmount = value ['requestAmount']
             try:
                 query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time.desc()).all()
             except:
-                return jsonify({"rspCode": "30"})                                           #伺服器錯誤
+                return jsonify({"rspCode": 30})                                           #伺服器錯誤
             print(query_data)
             pointRecord = []
             count = 0
@@ -93,9 +94,8 @@ def record():
                                                 "amount": record.db_transferRecord_transferRecordTask[0].task.taskPoint, "time": str(record.time)})
                 if count == requestAmount:
                     break
-            print(pointRecord)
-            return jsonify({"rspCode": "20", "pointRecord": pointRecord})                                               #成功取得
+            return jsonify({"rspCode": 20, "pointRecord": pointRecord})                                               #成功取得
         else:
-            return jsonify({"rspCode": "50"})                                                                           #權限不符
+            return jsonify({"rspCode": 50})                                                                           #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                                                               #method使用錯誤
+        return jsonify({"rspCode": 31})                                                                               #method使用錯誤

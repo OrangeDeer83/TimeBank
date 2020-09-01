@@ -48,6 +48,11 @@
     background-color: var(--button-hover-background-color);
 }
 
+.formAudit:focus,.button
+{
+    outline: none;
+}
+
 #detail
 {
     padding: 20px;

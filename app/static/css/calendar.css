@@ -146,6 +146,7 @@ ul{list-style-type: none;}
     .scheduleDiv
     {
         margin-top: calc(10vh);
+        margin-bottom: calc(5vh);
         margin-left: 15%;
         width: 70%;
     }
@@ -175,7 +176,7 @@ ul{list-style-type: none;}
     }
     .formText
     {
-        height: 110px;
+        height: 150px;
         font-size: 18px;
     }
 }
@@ -184,11 +185,8 @@ ul{list-style-type: none;}
 {
     .scheduleDiv
     {
-        margin-top: calc(50vh - 265px);
+        margin-top: calc(10vh);
         margin-left: calc(50vw - 450px);
-    }
-    .scheduleDiv
-    {
         width: 900px;
     }
     .formLeftBody
@@ -215,7 +213,7 @@ ul{list-style-type: none;}
     }
     .formText
     {
-        height: 70px;
+        height: 150px;
     }
 }
 
@@ -223,7 +221,7 @@ ul{list-style-type: none;}
 {
     .scheduleDiv
     {
-        margin: calc(50vh - 300px) 0;
+        margin: calc(50vh - 300px) 0 calc(5vh) 0;
     }
     .scheduleDiv
     {
@@ -245,7 +243,7 @@ ul{list-style-type: none;}
     }
     .formText
     {
-        height: 70px;
+        height: 150px;
     }
 }
 
@@ -253,7 +251,7 @@ ul{list-style-type: none;}
 {
     .scheduleDiv
     {
-        margin: 0;
+        margin-bottom: calc(5vh);
     }
     .formLeftBody, .formRightBody
     {
@@ -263,7 +261,7 @@ ul{list-style-type: none;}
     .formRightBody
     {
         margin-top: 0;
-        height: auto;
+        height: 300px;
     }
     .formTopCalendar
     {
@@ -276,16 +274,16 @@ ul{list-style-type: none;}
     .formText
     {
         margin: auto;
-        width: 400px;
-    }
-    .formText
-    {
-        width: 100%;
-        height: 50px;
+        width: 93%;
+        height: 150px;
     }
     .formToDoList
     {
-        margin: 10px 0 30px;
+        margin: 10px 0 50px;
+    }
+    #footer
+    {
+        width: 100%;
     }
 }
 

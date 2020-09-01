@@ -42,7 +42,7 @@ serviceTerms.addEventListener("click", termsVerify);
 var passwordRegexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\w).{8,30}$/;
 var emailRegexp = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
 var phoneRegexp = /^(\+886|0)+([0-9]+)*[0-9]+((-+(\d)*)*)+((\#\d+)*)+$/;
-var birthRegexp = /^((18|19|20)[0-9]{2})[-\/.](0?[1-9]|1[012])[-\/.](0?[1-9]|[12][0-9]|3[01])$/; // Oldest person in the world: 1897/04/19
+var birthRegexp = /^((18|19|20)[0-9]{2})[-\/\.](0?[1-9]|1[012])[-\/\.](0?[1-9]|[12][0-9]|3[01])$/; // Oldest person in the world: 1897/04/19
 
 // Show/Hide error on html
 function showError(inputElement, errorDiv)

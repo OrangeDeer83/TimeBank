@@ -178,38 +178,6 @@ textarea
     padding: 5px;
 }
 
-#footerDiv
-{
-    padding: 10px 0;
-    background-color: #293F66;
-    color: white;
-}
-
-#footerDiv
-{
-    text-align: center;
-}
-
-.footerLinks
-{
-    list-style: none;
-}
-
-.footerLinks > li
-{
-    display: inline;
-}
-
-#time, #address
-{
-    display: inline;
-}
-
-.footerA
-{
-    color: rgb(253, 179, 179);
-}
-
 @media(min-width: 900px)
 {
     .formButton button

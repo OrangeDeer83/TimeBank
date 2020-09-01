@@ -36,7 +36,6 @@
                 </div>
             </nav>
         </header>
-
         <div class="registerDiv">
             <div id="formTitleDiv"><h3 id="formTitle">註冊</h3></div>
             <div class="formColumn">
@@ -46,7 +45,6 @@
                         <input type="text" class="formText" id="name" name="name" placeholder="最多20字元，之後可至設定修改" autofocus maxlength="20" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="nameError" class="error">請輸入您的名稱，至多20字元</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="userName" class="formLabel">使用者帳號</label></div>
                         <input type="text" class="formText" id="userName" name="userName" placeholder="最多20字元，且不得與他人重複，無法修改" maxlength="20" onkeypress="if(event.keyCode == 13){register();}" />
@@ -54,35 +52,30 @@
                         <div id="userNameError2" class="error">此名稱已有人使用，請再試一次</div>
                         <div id="userNameError3" class="error">伺服器錯誤，請稍後再試</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="userPassword" class="formLabel">密碼</label></div>
                         <input type="password" class="formText" id="userPassword" name="userPassword" placeholder="8-30字元(含數字、大小寫字母及特殊符號)" maxlength="30" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="passwordError1" class="error">請輸入密碼，8-30字元</div>
                         <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="checkPassword" class="formLabel">確認密碼</label></div>
                         <input type="password" class="formText" id="checkPassword" name="checkPassword" placeholder="再次輸入密碼" maxlength="30" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="passwordError3" class="error">請再次輸入您的密碼</div>
                         <div id="passwordError4" class="error">密碼不相符，請再試一次</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="userEmail" class="formLabel">電子郵件</label></div>
                         <input type="email" class="formText" id="userEmail" name="userEmail" placeholder="輸入您的電子郵件" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="emailError1" class="error">請輸入您的電子郵件</div>
                         <div id="emailError2" class="error">電子郵件格式錯誤</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="userPhone" class="formLabel">電話號碼</label></div>
                         <input type="tel" class="formText" name="userPhone" id="userPhone" placeholder="輸入您的電話號碼" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="phoneError1" class="error">請輸入您的電話號碼</div>
                         <div id="phoneError2" class="error">電話號碼格式錯誤</div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label class="formLabel">性別</label></div>
                         <div class="formRadios">
@@ -95,14 +88,12 @@
                             <div id="genderError" class="error">請選擇您的性別</div>
                         </div>
                     </div>
-
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="userBirthday" class="formLabel">出生日期</label></div>
                         <input type="date" class="formText" id="userBirthday" name="userBirthday" placeholder="年/月/日" onkeypress="if(event.keyCode == 13){register();}" />
                         <div id="birthError1" class="error">請輸入您的生日</div>
                         <div id="birthError2" class="error">請輸入正確日期</div>
                     </div>
-
                     <div class="formLine">
                         <input type="checkbox" id="serviceTerms" />
                         <label for="serviceTerms">已閱讀並同意<a href="#terms.html">服務條款</a></label>
@@ -110,7 +101,6 @@
                         <div id="registerError" class="error">伺服器錯誤，請稍後再試</div>
                         <div id="registerError2" class="error">等待伺服器回應中...</div>
                     </div>
-
                     <div class="formLine">
                         <input type="submit" class="formButton" value="送出" onclick="register()" />
                         <input type="reset" class="formButton" value="重新填寫" onclick="javascript:window.location.reload()" />
@@ -118,7 +108,8 @@
                 </div>
                 <script src="{{url_for('static', filename='js/register.js')}}"></script>
             </div>  
-        </div>  
+        </div>
+        <footer id="footer"></footer>
+        <script src="{{url_for('static', filename='js/footer.js')}}"></script>
     </body>
-  
 </html>

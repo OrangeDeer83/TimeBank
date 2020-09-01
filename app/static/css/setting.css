@@ -79,9 +79,19 @@
     display: inline-block;
 }
 
-.formButton, .formButton1, .formButton2
+.formButton
+{
+    margin-top: 15px;
+    width: 400px;
+}
+
+.formButton1
 {
     width: 80px;
+}
+
+.formButton, .formButton1
+{
     height: 30px;
     background-color: var(--button-background-color);
     color: var(--button-background-text-color);
@@ -91,7 +101,7 @@
     cursor: pointer;
 }
 
-.formButton:hover, .formButton2:hover
+.formButton:hover
 {
     background-color: var(--button-hover-background-color);
 }
@@ -121,9 +131,9 @@ textarea:focus
     .content
     {
         margin: auto;
-        margin-bottom: 20px;
+        margin-bottom: 125px;
         width: 1000px;
-        height: 600px;
+        min-height: 630px;
         border: var(--background-border);
     }
     .settingPhotoDiv
@@ -186,22 +196,11 @@ textarea:focus
     {
         margin-left: 10px;
     }
-
     .formButton1
     {
         margin-left: 130px;
     }
-
-    .formButton2
-    {
-        margin-left: 80px;
-    }
-    
-    .formLine1
-    {
-        margin-right: 95px;
-    }
-    .formLine, .formLine1
+    .formLine
     {
         padding-top: 20px;
     }
@@ -222,7 +221,8 @@ textarea:focus
     .content
     {
         width: 100%;
-        margin-top: 70px
+        margin-top: 70px;
+        margin-bottom: 150px;
     }
      #formTitle
     {
@@ -258,10 +258,6 @@ textarea:focus
     {
         width: 92%;
     }
-    .formButton2
-    {
-        width: 22.5%;
-    }
     .settingDiv
     {
         margin: 0;
@@ -272,16 +268,6 @@ textarea:focus
         width: 60%;
         text-align: center;
     }
-    .formLine1
-    {
-        margin-left: 10%;
-        width: 100%;
-        text-align: left;
-    }
-    #formLine2
-    {
-        margin-left: 37.5%;
-    }
     .formRadios
     {
         margin-left: 30%;
@@ -291,11 +277,6 @@ textarea:focus
     .radioText
     {
         margin: 0px 10px;
-    }
-    #formButton3
-    {  
-        margin-left: 60%;
-        width: 20%;
     }
     .formSave
     {
@@ -335,10 +316,6 @@ textarea:focus
     .photo
     {
         margin-left: 31%;
-    }
-    .formLine1, .formLine2
-    {
-        margin-left: 0;
     }
 }
 

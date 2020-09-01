@@ -18,7 +18,7 @@ function getUserList()
 {
     searchText = document.getElementById("searchUser").value
     var getListRequest = new XMLHttpRequest();
-    getListRequest.open("POST", "http://192.168.1.144:5000/apply/show_apply_status_0");
+    getListRequest.open("POST", "http://192.168.1.144:5000/apply/show_apply_list");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"name": searchText}));
     getListRequest.onload = function()
@@ -29,6 +29,7 @@ function getUserList()
         {
             case "200": case 200:
                 allList[0] = rst.name;
+                if (allList[0].length == 0) return ;
                 allList[1] = rst.userName;
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;

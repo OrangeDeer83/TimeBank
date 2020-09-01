@@ -90,9 +90,9 @@ function resetPassword()
     }
 
     var request = new XMLHttpRequest();
-    request.open("POST", "http://192.168.1.144:5000/account/USER/reset_password/" + getToken());
+    request.open("POST", "http://192.168.1.144:5000/account/USER/reset_password");
     request.setRequestHeader("Content-Type", "application/json");
-    request.send(JSON.stringify({"userPassword": newPassword.value}));
+    request.send(JSON.stringify({'token': getToken(), "userPassword": newPassword.value}));
     request.onload = function()
     {
         systemError2.style.display = "none";

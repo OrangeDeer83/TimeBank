@@ -317,15 +317,17 @@ class report(db.Model):
     reason = db.Column(db.String, nullable=False)
     reportStatus = db.Column(db.Integer, nullable=False)
     reportUserID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
     
     db_report_noticeReport = db.relationship('noticeReport', backref='report')
 
-    def __init__(self, taskID, adminID, reason, reportStatus, reportUserID):
+    def __init__(self, taskID, adminID, reason, reportStatus, reportUserID, time_):
         self.taskID = taskID
         self.adminID = adminID
         self.reason = reason
         self.reportStatus = reportStatus
         self.reportUserID = reportUserID
+        self.time = time_
 
 
 class task(db.Model):

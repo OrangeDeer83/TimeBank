@@ -2,6 +2,8 @@
 
 window.onload = function()
 {
+    showError(400);
+    document.getElementById('checkSAPassword').style.display = 'none';
     getAdminAmount();
 }
 
@@ -111,7 +113,7 @@ function showListDiv()
         '<tr class="list" id="list' + i + '" style="displat:none;"><td>' +
             '<div class="authority" id="authority' + i + '">權限：</div>' +
             '<div class="userName" id="userName' + i + '">使用者帳號：</div>' +
-            '<div id="reset">密碼：<input type="text" id="newPassword' + i + '" placeholder="輸入新密碼" /></div>' +
+            '<div id="reset">更改密碼：<input type="text" id="newPassword' + i + '" placeholder="輸入新密碼" /></div>' +
             '<div class="delete" id="delete' + i + '" onclick="deleteAdmin(' + i + ')">刪除</div>' +
             '<div id="resetButton"><input type="submit" value="更改密碼" onclick="changePassword(' + i + ')" /></div>' +
         '</td></tr>';
@@ -294,7 +296,7 @@ function changePassword(index)
         switch (rst.rspCode)
         {
             case '20': case 20:
-                showDetail(rst.noticeList);
+                document.getElementById('newPassword' + index).value = '';
                 break;
             case '18': case 18:
                 document.getElementById("checkSAPassword").style.display = "block";

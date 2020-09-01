@@ -9,7 +9,7 @@ adminPassword.addEventListener("input", adminPasswordVerify);
 
 function displayError(inputElement, index, type)
 {
-    console.log(inputElement+ index+ type)
+    //console.log(inputElement+ index+ type)
     if (type)
     {
         if (inputElement)
@@ -98,7 +98,7 @@ function adminLogin()
             switch (rst.rspCode)
             {
                 case "200": case 200:
-                    window.location.assign("/Admin/AdminList");
+                    window.location.reload();
                     break;
                 case "300": case 300:
                 case "400": case 400:

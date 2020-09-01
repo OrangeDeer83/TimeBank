@@ -1,7 +1,8 @@
 .bodyContain
 {
 	margin-top: 80px;
-	position: relative;
+	min-height: calc(100vh - 80px);
+	margin-bottom: 120px;	
 }
 #tabsFirst, #tabsSecond
 {
@@ -220,6 +221,9 @@ input[type="button"]:hover, .button:hover
 	{
 		width: 600px;
 		margin: auto;
+	}
+	#eRecord,#reportDiv
+	{
 		margin-bottom: 10px;
 	}
 }

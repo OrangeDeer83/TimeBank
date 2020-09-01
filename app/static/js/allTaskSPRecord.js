@@ -16,7 +16,7 @@ function showListDiv()
 {
     const table = document.getElementById('eRecord');
     table.innerHTML = '';
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < maxPageAmount; i++)
     {
         table.innerHTML += '' +
         '<tr id="taskList' + i + '" style="display:none"><td>' +
@@ -233,7 +233,7 @@ function showReportDiv(index)
     reportTaskIndex = index;
     document.getElementById('reportDiv').removeAttribute('style');
     document.getElementById('reportButton' + index).style.display = 'none';
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < maxPageAmount; i++)
         if (i != index)
             document.getElementById('taskList' + i).style.display = 'none';
 }
@@ -242,7 +242,7 @@ function hideReportDiv()
 {
     document.getElementById('reportDiv').style.display = 'none';
     document.getElementById('reportButton' + reportTaskIndex).removeAttribute('style');
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < maxPageAmount && i < thisPageList.length; i++)
         document.getElementById('taskList' + i).removeAttribute('style');
     document.getElementById('reportReason').value = '';
     reportTaskIndex = -1;

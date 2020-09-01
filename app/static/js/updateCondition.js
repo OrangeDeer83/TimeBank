@@ -292,7 +292,8 @@ function editQuota()
     {
         for (var i = 0; i < 5; i++)
         {
-            var newQuota = (document.getElementById("period" + indexList[i]).value) * 1;
+            console.log("period" + indexList[i])
+            var newQuota = (document.getElementById("period" + indexList[i])) * 1;
             if(0 <= newQuota && newQuota < 50)
             {
                 classList[userClass.selectedIndex - 1][indexList[i] + 1] = newQuota;

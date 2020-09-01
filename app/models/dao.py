@@ -94,7 +94,7 @@ def get_all_apply_status_0():
     return "SELECT `applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency` FROM `apply` WHERE `applyStatus` = 0 ORDER BY applyID"
 
 def get_apply_judge_user_info(userID):
-    return "SELECT `name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`FROM `account` WHERE `userID` = '{}'".format(userID)
+    return "SELECT `name`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`, `userName`, `userPoint`FROM `account` WHERE `userID` = '{}'".format(userID)
 
 
 def show_condition_data(conditionID):
@@ -201,8 +201,8 @@ def get_user_point(userID):
 def plus_user_point(plus,userID):
     return "UPDATE `account` SET `userPoint` = '{}' WHERE `account`.`userID` = '{}'".format(plus,userID)
 
-def make_point_sql(pointID,adminID,userID):
-    return "INSERT INTO `point` (`pointID`, `adminID`, `ownerID`) VALUES ('{}', '{}', '{}')".format(pointID,adminID,userID)
+def make_point_sql(pointID,adminID,userID,time_):
+    return "INSERT INTO `point` (`pointID`, `adminID`, `ownerID`, `time`) VALUES ('{}', '{}', '{}','{}')".format(pointID,adminID,userID,time_)
 
 def show_rest_time_by_applyID(applyID):
     return "SELECT restTime FROM apply WHERE applyID ='{}'".format(applyID)
@@ -212,12 +212,29 @@ def alter_apply_rest_time(applyID,rest):
 
 def task_status_4_dead_line(task_ID,newTaskStartTime):
     return "CREATE EVENT `task_status_4_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `task` SET `taskStatus` = '4' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 0 OR `task`.`taskStatus` = 1); DROP EVENT `task_status_4_dead_line-{}`; END;".format(task_ID,newTaskStartTime,task_ID,task_ID)
-# INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '11', '0');SET (@noticeID = SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');
-def task_status_5_dead_line(task_ID,newTaskEndTime):
-    return "CREATE EVENT `task_status_5_dead_line-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9); DROP EVENT `task_status_5_dead_line-{}`; END;".format(task_ID,newTaskEndTime,task_ID,task_ID)
+
+def drop_task_status_4_dead_line(task_ID):
+    return "DROP EVENT `task_status_4_dead_line-{}`;".format(task_ID)
+
+def thing_will_do_while_task_endTime_plus_1h(task_ID,newTaskEndTime):
+    sql = "CREATE EVENT `thing_will_do_while_task_endTime_plus_1h-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN ".format(task_ID,newTaskEndTime)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND (`task`.`taskStatus` = 2 OR `task`.`taskStatus` = 9 OR `task`.`taskStatus` = 10); ".format(task_ID)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '6' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 15 ;".format(task_ID)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '5' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 2; ".format(task_ID)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '3' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 16;".format(task_ID)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '7' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 14; ".format(task_ID)
+    sql = sql + "UPDATE `task` SET `taskStatus` = '3' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 16; ".format(task_ID)
+    sql = sql + "DROP EVENT `thing_will_do_while_task_endTime_plus_1h-{}`; END;".format(task_ID)
+    return sql
+
+def drop_thing_will_do_while_task_endTime_plus_1h(task_ID):
+    return "DROP EVENT `thing_will_do_while_task_endTime_plus_1h-{}`;".format(task_ID)
 
 def comment_status_0(task_ID,EndTime):
     return "CREATE EVENT `comment_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND NOT(`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL); DROP EVENT `comment_status_0-{}`; END;".format(task_ID,EndTime,task_ID,task_ID)
+
+def drop_comment_status_0(task_ID):
+    return "DROP EVENT `comment_status_0-{}`;".format(task_ID)
 
 def task_status_15_to_6(task_ID,newTaskEndTime):
     return "CREATE EVENT `task_status_15_to_6-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `task` SET `taskStatus` = '6' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 15 ; DROP EVENT `task_status_15_to_6-{}`; END;".format(task_ID,newTaskEndTime,task_ID,task_ID)
@@ -234,17 +251,20 @@ def task_status_14_to_7(task_ID,newTaskEndTime):
 def task_status_13_to_3(task_ID,newTaskEndTime):
     return "CREATE EVENT `task_status_13_to_3-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `task` SET `taskStatus` = '3' WHERE `task`.`taskID` = {} AND `task`.`taskStatus` = 13; DROP EVENT `task_status_13_to_3-{}`; END;".format(task_ID,newTaskEndTime,task_ID,task_ID)
 
-def task_will_start(SRID_,taskID_,taskStartTime,SPID):
-    return "CREATE EVENT `task_will_start-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '9', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '9', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); DROP EVENT `task_will_start-{}`; END;".format(taskID_,taskStartTime,SRID_,taskStartTime,taskID_,taskID_,SPID,taskStartTime,taskID_,taskID_)
+def task_will_start(SRID,taskID_,taskStartTime,SPID):
+    return "CREATE EVENT `task_will_start-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '9', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '9', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); DROP EVENT `task_will_start-{}`; END;".format(taskID_,taskStartTime,SRID,taskStartTime,taskID_,SPID,taskStartTime,taskID_,taskID_)
 
 def task_start(userID_,taskID_,taskStartTime,SPID):
-    return "CREATE EVENT `task_start-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '10', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '10', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); DROP EVENT `task_start-{}`; END;".format(taskID_,taskStartTime,userID_,taskStartTime,taskID_,taskStartTime,SPID,taskStartTime,taskID_,taskID_)
-
+    return "CREATE EVENT `task_start-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '10', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '10', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); DROP EVENT `task_start-{}`; END;".format(taskID_,taskStartTime,userID_,taskStartTime,taskID_,SPID,taskStartTime,taskID_,taskID_)
 
 def NoSP(userID_,taskID_,taskStartTime):
     return "CREATE EVENT `NoSP-{}-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '11', '0');   SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO `noticeTask` (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); DROP EVENT `NoSP-{}-{}`; END;".format(taskID_,userID_,taskStartTime,userID_,taskStartTime,taskID_,taskID_,userID_)
 
-def plzComment(userID_,taskID_,taskStartTime,SPID):
+def drop_NoSP(taskID_,userID_):
+    return " DROP EVENT `NoSP-{}-{}`;".format(taskID_,userID_)
+
+
+def plzComment(userID_,taskID_,taskStartTime,SPID):	
     return "CREATE EVENT `plzComment-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '17', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}'); INSERT INTO `notice` (`ID`, `userID`, `time`, `status`, `haveRead`) VALUES (NULL, '{}', '{}', '17', '0');SET @noticeID = ( SELECT MAX(ID) FROM notice);  INSERT INTO noticeTask (`ID`, `noticeID`, `taskID`) VALUES (NULL, @noticeID, '{}');DROP EVENT `plzComment-{}`; END;".format(taskID_,taskStartTime,userID_,taskStartTime,taskID_,SPID,taskStartTime,taskID_,taskID_)
 
 def taskEndTime_sql(userID_,taskID_,taskEndTime,SPID):

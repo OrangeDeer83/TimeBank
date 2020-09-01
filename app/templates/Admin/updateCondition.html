@@ -17,7 +17,7 @@
     </head>
 
     <body>
-        <header id="SAnavbar"></header>
+        <header id="navbar"></header>
         <div class="updateDiv">
             <div id="formTitleDiv"><h3 id="formTitle">更新申請條件</h3></div>
             <div class="formColumn">
@@ -48,7 +48,7 @@
                 </form>
                 <div class="formLine">
                     <div class="fromLine4">
-                        <div class="formLabelDiv"><label for="userName" class="formLabel">配發額度：</label></div>
+                        <div class="formLabelDiv"><label for="userName" class="formLabel">申請類別：</label></div>
                     </div>
                     <div class="formLine4" id="oldClassDiv">
                         <select class="quota" id="userClass">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="formLine">
                     <div class="formLine5">
-                        <div class="formLabelDiv"><label for="userName" class="formLabel">發放週期：</label></div>
+                        <div class="formLabelDiv"><label for="userName" class="formLabel">週期額度：</label></div>
                         <div class="formCycle">
                             <input type="checkbox" class="formQuota" id="ones" name="period" value=0 />
                             <label for="ones" class="formLabelDiv">一次性</label>
@@ -92,7 +92,7 @@
                             <input type="number" class="cycle" id="period4" name="cycle" placeholder="輸入額度1~50"  min="1" max="50" />
                         </div>
                         <div class="formLine" id="editButton">
-                            <input type="button" class="formSave" onclick="editQuota(4)" value="修改" />
+                            <input type="button" class="formSave" onclick="editQuota(0)" value="修改" />
                             <input type="button" class="formSave" id="formSave4" onclick="updateClassPeriodQuota()" value="儲存" />
                         </div>
                     </div>
@@ -101,7 +101,7 @@
             </div>
         </div>
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
-        <script src="{{url_for('static', filename='js/navbarSA.js')}}"></script>
+        <script src="{{navbarjs}}"></script>
         <script src="{{url_for('static', filename='js/updateCondition.js')}}"></script>
     </body>
 

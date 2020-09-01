@@ -4,6 +4,12 @@ from ..models import userType
 
 Admin = Blueprint('Admin', __name__)
 
+navbarSA = '/static/js/navbarSA.js'
+navbarAS = '/static/js/navbarAS.js'
+navbarAA = '/static/js/navbarAA.js'
+navbarAU = '/static/js/navbarAU.js'
+navbarAG = '/static/js/navbarAG.js'
+
 #Admin的根目錄
 @Admin.route('/')
 def index():
@@ -12,24 +18,20 @@ def index():
    else:
       return redirect(url_for('Admin.login'))
 
-#忘記密碼頁面
-@Admin.route('/forgotPassword')
-def forgot_password():
-   return render_template('/Admin/forgotPasswordAdmin.html')
-
-#輸入新密碼
-@Admin.route('/resetPassword/<token>')
-def reset_password(token):
-   return render_template('/Admin/resetPasswordAdmin.html')
-
 #登入頁面
 @Admin.route('/login')
 def login():
    print(session.get('userType'))
    if session.get('userType') == userType['SA']:
       return redirect(url_for('Admin.Admin_list'))
-   if session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['SA']]:
-      return redirect(url_for('Admin.setting'))
+   elif session.get('userType') == userType['AA']:
+      return redirect(url_for('Admin.approve_system'))
+   elif session.get('userType') == userType['AS']:
+      return redirect(url_for('Admin.give_point'))
+   elif session.get('userType') ==  userType['AU']:
+      return redirect(url_for('Admin.update_web'))
+   elif session.get('userType') ==  userType['AG']:
+      return redirect(url_for('Admin.hrmGM_application'))
    else:
       return render_template('/Admin/loginAdmin.html')
 
@@ -37,15 +39,15 @@ def login():
 @Admin.route('/setting')
 def setting():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/settingSA.html')
+      return render_template('/Admin/settingAdmin.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AA']:
-      return render_template('/Admin/settingAA.html')
+      return render_template('/Admin/settingAdmin.html', navbarjs = navbarAA)
    elif session.get('userType') == userType['AG']:
-      return render_template('/Admin/settingAG.html')
+      return render_template('/Admin/settingAdmin.html', navbarjs = navbarAG)
    elif session.get('userType') == userType['AS']:
-      return render_template('/Admin/settingAS.html')
-   elif session.get('userType') == userType['AS']:
-      return render_template('/Admin/settingAU.html')
+      return render_template('/Admin/settingAdmin.html', navbarjs = navbarAS)
+   elif session.get('userType') == userType['AU']:
+      return render_template('/Admin/settingAdmin.html', navbarjs = navbarAU)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -53,9 +55,9 @@ def setting():
 @Admin.route('/approveRecord')
 def approve_record():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/approveRecordSA.html')
+      return render_template('/Admin/approveRecord.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AA']:
-      return render_template('/Admin/approveRecordAA.html')
+      return render_template('/Admin/approveRecord.html', navbarjs = navbarAA)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -63,9 +65,9 @@ def approve_record():
 @Admin.route('/approveSystem')
 def approve_system():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/approveSystemSA.html')
+      return render_template('/Admin/approveSystem.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AA']:
-      return render_template('/Admin/approveSystemAA.html')
+      return render_template('/Admin/approveSystem.html', navbarjs = navbarAA)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -73,9 +75,9 @@ def approve_system():
 @Admin.route('/updateCondition')
 def update_condition():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/updateConditionSA.html')
+      return render_template('/Admin/updateCondition.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AA']:
-      return render_template('/Admin/updateConditionAA.html')
+      return render_template('/Admin/updateCondition.html', navbarjs = navbarAA)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -83,9 +85,9 @@ def update_condition():
 @Admin.route('/givePoint')
 def give_point():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/givePointSA.html')
+      return render_template('/Admin/givePoint.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AS']:
-      return render_template('/Admin/givePointAS.html')
+      return render_template('/Admin/givePoint.html', navbarjs = navbarAS)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -93,9 +95,9 @@ def give_point():
 @Admin.route('/giveRecord')
 def give_record():
    if session.get('userType') == userType['SA']:
-         return render_template('/Admin/giveRecordSA.html')
+         return render_template('/Admin/giveRecord.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AS']:
-      return render_template('/Admin/giveRecordAS.html')
+      return render_template('/Admin/giveRecord.html', navbarjs = navbarAS)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -104,9 +106,9 @@ def give_record():
 @Admin.route('/GMApplication')
 def hrmGM_application():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/hrmGMApplicationSA.html')
+      return render_template('/Admin/hrmGMApplication.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AG']:
-      return render_template('/Admin/hrmGMApplicationAG.html')
+      return render_template('/Admin/hrmGMApplication.html', navbarjs = navbarAG)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -114,9 +116,9 @@ def hrmGM_application():
 @Admin.route('/GMList')
 def GM_list():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/hrmGMRecordSA.html')
+      return render_template('/Admin/hrmGMRecord.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AG']:
-      return render_template('/Admin/hrmGMRecordAG.html')
+      return render_template('/Admin/hrmGMRecord.html', navbarjs = navbarAG)
    else:
       return redirect(url_for('Admin.login'))
 
@@ -124,7 +126,7 @@ def GM_list():
 @Admin.route('/AdminList')
 def Admin_list():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/hrmManager.html')
+      return render_template('/Admin/hrmAdmin.html')
    else:
       return redirect(url_for('Admin.login'))
 
@@ -132,8 +134,8 @@ def Admin_list():
 @Admin.route('/updateWeb')
 def update_web():
    if session.get('userType') == userType['SA']:
-      return render_template('/Admin/updateWebSA.html')
+      return render_template('/Admin/updateWeb.html', navbarjs = navbarSA)
    elif session.get('userType') == userType['AU']:
-      return render_template('/Admin/updateWebAU.html')
+      return render_template('/Admin/updateWeb.html', navbarjs = navbarAU)
    else:
       return redirect(url_for('Admin.login'))

@@ -2,7 +2,7 @@ const urlPath = 'http://192.168.1.144:5000';
 showNavbar();
 function showNavbar()
 {
-    document.getElementById("SAnavbar").innerHTML =
+    document.getElementById("navbar").innerHTML = '' +
     '<nav class="nav navbarBack">' +
     '<div class="navbarContainer">' +
         '<div class="navbarLeft">' +

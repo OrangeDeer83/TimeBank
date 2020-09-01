@@ -33,8 +33,8 @@ def create_account():
         if choose == "yes":
             cursor.execute("DELETE FROM adminAccount WHERE adminType = '7'")
             db.commit()
-            adminID = account_repeat(cursor)
-            sql = enter_info(adminID)
+            adminName = account_repeat(cursor)
+            sql = enter_info(adminName)
             try:
                 cursor.execute(sql)
                 db.commit()
@@ -54,30 +54,27 @@ def create_account():
 
 
 def account_repeat(cursor):
-    adminID = input("請輸入想要創建的新帳號（不可大於20個字元，且不得有符號）: ")
+    adminName = input("請輸入想要創建的新帳號（不可大於20個字元，且不得有符號）: ")
    
-    while re.search(r"^[\w\d]{1,20}$", adminID) == None:
-        adminID = input("帳號不得大於20個字元，且不得有符號！!\n請重新輸入新帳號: ")
-    cursor.execute("SELECT adminID FROM adminAccount WHERE adminID = '" + adminID + "'")
+    while re.search(r"^[\w\d]{1,20}$", adminName) == None:
+        adminName = input("帳號不得大於20個字元，且不得有符號！!\n請重新輸入新帳號: ")
+    cursor.execute("SELECT adminID FROM adminAccount WHERE adminName = '" + adminName + "'")
     data = cursor.fetchone()
     while not empty(data):
         adminID = input("帳號重複了！\n請重新輸入新帳號（不可大於20個字元，且不得有符號）: ")
-        while re.search(r"^[\w\d]{1,20}$", adminID) == None:
+        while re.search(r"^[\w\d]{1,20}$", adminName) == None:
             adminID = input("帳號不得大於20個字元，且不得有符號！!\n請重新輸入新帳號: ")
-        cursor.execute("SELECT adminID FROM adminAccount WHERE adminID = '" + adminID + "'")
+        cursor.execute("SELECT adminID FROM adminAccount WHERE adminID = '" + adminName + "'")
         data = cursor.fetchone()
-    return adminID
+    return adminName
 
-def enter_info(adminID):
-    adminName = input("請為新的帳號取一個名稱（不可大於20個字元）: ")
-    while re.search(r"^.{1,20}$", adminName) == None:
-        adminName = input("名稱長度不符合規範！\n請重新輸入新帳號的名稱（不可大於20個字元）: ")
+def enter_info(adminName):
     adminPassword = input("請輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、1個數字、1個符號）: ")
     while re.search(r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,30}$", adminPassword) == None:
         adminPassword = input("密碼不符合規範！\n請重新輸入您的密碼（8至20個字元，須包含至少1個大寫、1個小寫、一個數字、一個符號）:")
     salt = hash.generate_salt()
-    sql = "INSERT INTO adminAccount(adminID, adminName, adminPassword, adminType, salt) "
-    sql += "VALUES('" + str(adminID) + "', '" + str(adminName) + "', '" + str(hash.encrypt(adminPassword, salt)) + "', '7', '" + str(adminPhone) + "', '" + str(adminMail) + "', '" + str(salt) + "')"
+    sql = "INSERT INTO adminAccount(adminName, adminPassword, adminType, salt) "
+    sql += "VALUES('" + str(adminName) + "', '" + str(hash.encrypt(adminPassword, salt)) + "', '7', '" + str(salt) + "')"
     print(sql)
     return sql
 

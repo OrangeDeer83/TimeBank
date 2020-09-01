@@ -87,7 +87,7 @@ function gmLogin()
     else
     {
         var loginGMRequest = new XMLHttpRequest();
-        loginGMRequest.open("POST", "http://192.168.1.144:5000/account/Admin/login");
+        loginGMRequest.open("POST", "http://192.168.1.144:5000/account/GM/login");
         loginGMRequest.setRequestHeader("Content-Type", "application/json");
         loginGMRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginGMRequest.onload = function()

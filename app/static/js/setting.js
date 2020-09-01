@@ -355,7 +355,7 @@ function uploadGender()
 
 function birthdatTest(birthday)
 {
-    var birthRegexp = /^((18|19|20)[0-9]{2})[-\/.](0?[1-9]|1[012])[-\/.](0?[1-9]|[12][0-9]|3[01])$/; // Oldest person in the world: 1897/04/19
+    var birthRegexp = /^((18|19|20)[0-9]{2})[-\/\.](0?[1-9]|1[012])[-\/\.](0?[1-9]|[12][0-9]|3[01])$/; // Oldest person in the world: 1897/04/19
     if (birthday.match(birthRegexp) == null)
         return false;
     var year = 0, month = 0; day = 0;

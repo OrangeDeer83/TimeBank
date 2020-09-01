@@ -14,16 +14,24 @@ def upload_web_intro():
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
             return jsonify({"rspCode":"500"})
+        try:
+            adminID = session.get('adminID')
+            adminName = db.session.query(adminAccount.adminName).filter(adminAccount.adminID == adminID).first()[0]
+            if adminName == None:
+                return jsonify({"rspCode":"500"})
+        except:
+            return jsonify({"rspCode":"500"})
        #寫在webIntro.txt
         file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'webIntro.txt' , 'w',encoding ='UTF-8')
         try:
             json = request.get_json()
         except:
             return jsonify({"rspCode":"410"})
-        intro = json['intro']  
-        if file.write(intro):
-            file.close()
-            return jsonify({"rspCode": "200"})
+        intro = json['intro']
+        if file.write(adminName+"-"):
+            if file.write(intro):
+                file.close()
+                return jsonify({"rspCode": 200})
         else:       
             file.close()       
             #rspCode 400 檔案寫入失敗
@@ -42,11 +50,13 @@ def output_web_intro():
         except:
             #rspCode 400:webIntro.txt開啟失敗
             return jsonify({"rspCode" : "400","webIntro":''})
-        intro = jsonify({"rspCode":"200","webIntro":file.read()})
+        webIntro = file.read().split("-")[1]
+        adminName = file.read().split("-")[0]
+        intro = jsonify({"rspCode":"200","webIntro":webIntro,"adminName":adminName})
         file.close()
         return intro
     else:
-        return jsonify({"repCode":"300","webIntro":''})    
+        return jsonify({"repCode":"300","webIntro":'',"adminName":""})    
 
 #最新資訊資訊上傳   
 #用form傳title,content,file(jpg,jpeg,png)
@@ -56,6 +66,13 @@ def upload_news():
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
             session.clear()
             return redirect(url_for('Admin.update_web'))
+        try:
+            adminID = session.get('adminID')
+            adminName = db.session.query(adminAccount.adminName).filter(adminAccount.adminID == adminID).first()[0]
+            if adminName == None:
+                return jsonify({"rspCode":"500"})
+        except:
+            return jsonify({"rspCode":"500"})
         try:
             title = request.values['title']
             content = request.values['content']
@@ -102,6 +119,7 @@ def upload_news():
             #內文上傳
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
             fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w',encoding ='UTF-8')
+            fileContent.writable(adminName+"-")
             fileContent.write(content)
             fileContent.close()
             #return jsonify({"rspCode":"200"})
@@ -124,7 +142,7 @@ def output_newsImage(number):
         try:
             if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage' + "/{}.jpg".format(number)):
                 filename = number + '.jpg'
-                return jsonify({"rspCode": "200", "img": filename})
+                return jsonify({"rspCode": 200, "img": filename})
             else:
                 #這個編號沒檔案
                 return jsonify({"rspCode":"401","img":""})
@@ -144,14 +162,16 @@ def output_news_content(number):
             filename = number + '.txt'
             print(filename)
             file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
-            content = file.read()
+            file_ = file.read().split("-")
+            adminName = file_[0]
+            content = file_[1]
             file.close()
-            return jsonify({"rspCode": "200", "content": content})
+            return jsonify({"rspCode": 200, "content": content,"adminName":adminName})
         except:
             #內文顯示錯誤
-            return jsonify({"rspCode" : "400","content":""})
+            return jsonify({"rspCode" : 400,"content":"","adminName":""})
     else:
-        return jsonify({"rspCode":"300","content":""})
+        return jsonify({"rspCode":300,"content":"","adminName":""})
 #最新消息標題顯示
 #在網址帶入要顯示的編號
 #回傳rspCode,title
@@ -159,12 +179,12 @@ def output_news_content(number):
 def output_news_title(number):
     if request.method == 'GET':
         try:
-            return jsonify({"rspCode":"200","title":db.engine.execute(select_title(number)).fetchone()[0]})
+            return jsonify({"rspCode":200,"title":db.engine.execute(select_title(number)).fetchone()[0]})
         except:
             #最新消息顯示錯誤
-            return jsonify({"rspCode": "400","title":""})
+            return jsonify({"rspCode": 400,"title":""})
     else:
-        return jsonify({"rspCode":"300","title":""})
+        return jsonify({"rspCode":300,"title":""})
 #編輯最新消息
 #在網址帶入要編輯的編號
 #用form傳file(jpg,png,jpeg),title,content
@@ -172,21 +192,17 @@ def output_news_title(number):
 @Portal.route("/edit_news/<number>", methods = ['POST'])
 def edit_news(number):
     if request.method == 'POST':
-        print(1)
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
             session.clear()
-            print(2)
             return redirect(url_for('Admin.update_web'))
         #目前預設傳來的圖片叫做file
         try:
             fileImage = request.files['file']
-            print(3)
         except:
             return redirect(url_for('Admin.update_web'))
         try:
             title = request.values['title']
             content = request.values['content']
-            print(4)
         except:
             return redirect(url_for('Admin.update_web'))
         if len(title) > 30:
@@ -249,7 +265,7 @@ def delete_news(number):
     if request.method == 'GET':
         #刪除資料庫中資料
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
-           return jsonify({"rspCode":"500"})
+           return jsonify({"rspCode":500})
         try:
             delete_news = news.query.filter_by(newsID = int(number)).first()
             print(delete_news)
@@ -258,42 +274,42 @@ def delete_news(number):
                 db.session.commit()
             else:
                 #rspCode 400:資料庫資料刪除失敗
-                return jsonify({"rspCode" : "400"})
+                return jsonify({"rspCode" : 400})
         except: 
             #rspCode 400:資料庫資料刪除失敗
-            return jsonify({"rspCode" : "400"})
+            return jsonify({"rspCode" : 400})
         #刪除伺服器中檔案
         if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + 'newsImage' + "/{}.jpg".format(number)):
             newsImage = current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +'newsImage' + "/{}.jpg".format(number)
         else:
             #rspCode 401:圖片檔案不存在
-            return jsonify({"rspCode" : "401"})
+            return jsonify({"rspCode" : 401})
         newsContent = current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile' + "/newsContent/{}.txt".format(number)
         try:
             os.remove(newsImage)
         except:
             #rspCode 402:圖片刪除失敗
-            return jsonify({"rspCode" : "402"})
+            return jsonify({"rspCode" : 402})
         try:
             os.remove(newsContent)
-            return jsonify({"rspCode" : "200"})
+            return jsonify({"rspCode" : 200})
         except:
             #rspCode 403:內文刪除失敗
-            return jsonify({"rspCode" : "403"})
+            return jsonify({"rspCode" : 403})
     else:
-        return jsonify({"rspCode":"300"})
+        return jsonify({"rspCode":300})
 
 #顯示現在有的newsID
 #回傳 rspCode 、 number
 @Portal.route("/useful_numbers", methods = ['GET'])
 def useful_numbers():
     if request.method != "GET":
-        return jsonify({"rspCode":"300","numberList":"","max":""})
+        return jsonify({"rspCode":300,"numberList":"","max":""})
     try:
         number_list = []
         number = db.session.query(news.newsID).all()
         for num in number:
             number_list.append(num[0])
-        return jsonify({"rspCode":"200","numberList":number_list,"max":number_list[len(number_list)-1]})
+        return jsonify({"rspCode":200,"numberList":number_list,"max":number_list[len(number_list)-1]})
     except:
-        return jsonify({"rspCode":"400","numberList":"","max":""})
+        return jsonify({"rspCode":400,"numberList":"","max":""})

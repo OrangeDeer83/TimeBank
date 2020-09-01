@@ -13,34 +13,53 @@ def new_indicate():
             try:
                 query_data = notice.query.filter_by(userID = userID, haveRead = 0).all()
             except:
-                return jsonify({"rspCode": "30"})                           #資料庫錯誤
+                return jsonify({"rspCode": 30})                           #資料庫錯誤
             newNotice = len(query_data)
             for notice_ in query_data:
+                needToDelete = False
                 if notice_.status == noticeType['pleaseComment']:
-                    print(notice_.db_notice_noticeTask, notice_)
-                    if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
-                        print(notice_.db_notice_noticeTask[0].task.db_task_comment, "有評論嗎", notice_)
-                        if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
-                            newNotice = newNotice - 1
-                    elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
-                        if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SRComment:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
-                            newNotice = newNotice - 1
-            print(query_data)
-            print(newNotice)
+                    if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == -1:
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                            if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
+                                needToDelete = True
+                        elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
+                            if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SRComment:
+                                needToDelete = True
+                    else:
+                        needToDelete = True
+                elif notice_.status == noticeType['NoSP']:
+                    if notice_.db_notice_noticeTask[0].task.taskStatus != 4:
+                        needToDelete = True
+                elif notice_.status == noticeType['taskStart']:
+                    if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
+                        needToDelete = True
+                elif notice_.status == noticeType['taskWillStart']:
+                    if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
+                        needToDelete = True
+                elif notice_.status == noticeType['taskEndTime']:
+                    for noticeTask_ in notice_.db_notice_noticeTask[0].task.db_task_noticeTask:
+                        if noticeTask_.notice.status == noticeType['taskFinish']:
+                            needToDelete = True
+                            break
+                elif notice_.status == noticeType['SRFinish']:
+                    if notice_.db_notice_noticeTask[0].task.taskStatus not in [13, 14]:
+                        needToDelete = True
+                elif notice_.status == noticeType['SPFinish']:
+                    if notice_.db_notice_noticeTask[0].task.taskStatus not in [13, 14]:
+                        needToDelete = True
+                if needToDelete:
+                    db.session.delete(notice_.db_notice_noticeTask[0])
+                    db.session.delete(notice_)
+                    db.session.commit()
+                    newNotice = newNotice - 1
             if newNotice:
-                return jsonify({"rspCode": "20", "notice": 1})              #有新通知
+                return jsonify({"rspCode": 20, "notice": 1})              #有新通知
             else:
-                return jsonify({"rspCode": "20", "notice": 0})              #沒有新通知
+                return jsonify({"rspCode": 20, "notice": 0})              #沒有新通知
         else:
-            return jsonify({"rspCode": "50"})                               #權限不符
+            return jsonify({"rspCode": 50})                               #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                   #method使用錯誤
+        return jsonify({"rspCode": 31})                                   #method使用錯誤
 
 #取得新通知
 @Notice.route('/new_list', methods=['GET'])
@@ -51,18 +70,16 @@ def new_list():
             try:
                 query_data = notice.query.filter_by(userID = userID, haveRead = 0).all()
             except:
-                return jsonify({"rspCode": "30"})                                   #資料庫錯誤
+                return jsonify({"rspCode": 30})                                   #資料庫錯誤
             if query_data == None:
-                return jsonify({"rspCode": "20", "newNoticeList": ""})              #沒有新通知
+                return jsonify({"rspCode": 20, "newNoticeList": ""})              #沒有新通知
             newNoticeList = []
             for notice_ in query_data:
+                print(notice_)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
-                            db.session.delete(notice)
-                            db.session.commit()
                         #該USER為雇員
-                        elif notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             newNoticeList.append({"content": "「{}」任務將在一小時後開始。".format(\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
@@ -72,12 +89,8 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskStart']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                         #該USER為雇員
-                        elif notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             newNoticeList.append({"content": "「{}」任務開始，完成後請至雇員已通過頁面點選完成。".format(\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
@@ -87,34 +100,20 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['NoSP']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 12 or notice_.db_notice_noticeTask[0].task.SP == None:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
-                        else:
-                            newNoticeList.append({"content": "「{}」任務時間已到，仍無人承接，可至歷史紀錄查看任務細節。".format(\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
-                                "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
+                        newNoticeList.append({"content": "「{}」任務時間已到，仍無人承接，可至歷史紀錄查看任務細節。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskEndTime']:
-                        finished = False
-                        for noticeTask_ in notice_.db_notice_noticeTask[0].task.db_task_noticeTask:
-                            if noticeTask_.notice.status == noticeType['taskFinish']:
-                                finished = True
-                                db.session.delete(notice_.db_notice_noticeTask[0])
-                                db.session.delete(notice_)
-                                db.session.commit()
-                                break
-                        if not finished:
-                            #該USER為雇員
-                            if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
-                                newNoticeList.append({"content": "「{}」任務已結束。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SPAllTaskRecord'], "time": str(notice_.time)})
-                            #該USER為雇主
-                            elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
-                                newNoticeList.append({"content": "「{}」任務已結束。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
+                        #該USER為雇員
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                            newNoticeList.append({"content": "「{}」任務已結束。".format(\
+                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                "connectTo": noticePage['SPAllTaskRecord'], "time": str(notice_.time)})
+                        #該USER為雇主
+                        elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
+                            newNoticeList.append({"content": "「{}」任務已結束。".format(\
+                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['createTask']:
                         newNoticeList.append({"content": "已成功功建立任務「{}」。".format(\
                             notice_.db_notice_noticeTask[0].task.taskName),\
@@ -168,10 +167,6 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.SR[0].name,\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                     elif notice_.status == noticeType['SPFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             newNoticeList.append({"content": "「{}」{}已點選完成，請至雇主已接受頁面點選完成。".format(\
@@ -183,10 +178,6 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.SP[0].name,\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                     elif notice_.status == noticeType['taskFinish']:
                         #該USER為雇員
                         if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
@@ -199,33 +190,16 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['pleaseComment']:
-                        #還在評論狀態
-                        if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == -1:
-                            #該USER為雇員
-                            if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
-                                if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
-                                    db.session.delete(notice_.db_notice_noticeTask[0])
-                                    db.session.delete(notice_)
-                                    db.session.commit()
-                                else:
-                                    newNoticeList.append({"content": "您尚未對「{}」評論，請至雇員已通過頁面評論。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                            #該USER為雇主
-                            elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
-                                if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SRComment:
-                                    db.session.delete(notice_.db_notice_noticeTask[0])
-                                    db.session.delete(notice_)
-                                    db.session.commit()
-                                else:
-                                    newNoticeList.append({"content": "您尚未對「{}」評論，請至雇主已接受頁面評論。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
-                        #進入審核狀態
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
+                        #該USER為雇員
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                            newNoticeList.append({"content": "您尚未對「{}」評論，請至雇員已通過頁面評論。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
+                        #該USER為雇主
+                        elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
+                            newNoticeList.append({"content": "您尚未對「{}」評論，請至雇主已接受頁面評論。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['judgeComment']:
                         #評論通過
                         if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == 1:
@@ -293,9 +267,12 @@ def new_list():
                                 newNoticeList.append({"content": "「{}」任務的檢舉未通過，感謝您寶貴的意見。".format(\
                                     notice_.db_notice_noticeReport[0].report.task.taskName),\
                                     "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
-                    elif notice_.status == noticeType['judgeApply']:
+                elif notice_.db_notice_noticeApply:
+                    if notice_.status == noticeType['judgeApply']:
+                        print(1)
                         #通過
                         if notice_.db_notice_noticeApply[0].apply.applyStatus == 1:
+                            print(2)
                             if notice_.db_notice_noticeApply[0].apply.result:
                                 newNoticeList.append({"content": "點數申請{}：{}通過。".format(\
                                         notice_.db_notice_noticeApply[0].apply.applyCondition.className,\
@@ -307,14 +284,17 @@ def new_list():
                                         "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                         #未通過
                         elif notice_.db_notice_noticeApply[0].apply.applyStatus == 2:
+                            print(3)
                             #有原因
                             if notice_.db_notice_noticeApply[0].apply.result:
+                                print(4)
                                 newNoticeList.append({"content": "點數申請{}：{}未通過。".format(\
                                     notice_.db_notice_noticeApply[0].apply.applyCondition.className,\
                                     notice_.db_notice_noticeApply[0].apply.result),\
                                     "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                             #沒有原因
                             else:
+                                print(5)
                                 newNoticeList.append({"content": "點數申請{}未通過。".format(\
                                     notice_.db_notice_noticeApply[0].apply.applyCondition.className),\
                                     "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
@@ -332,11 +312,11 @@ def new_list():
                                 "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                 notice_.haveRead = 1
                 db.session.commit()
-            return jsonify({"rspCode": "20", "newNoticeList": newNoticeList})       #成功取得新通知
+            return jsonify({"rspCode": 20, "newNoticeList": newNoticeList})       #成功取得新通知
         else:
-            return jsonify({"rspCode": "50"})                                       #權限不符
+            return jsonify({"rspCode": 50})                                       #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                           #method使用錯誤
+        return jsonify({"rspCode": 31})                                           #method使用錯誤
 
 #取得所有通知的數量
 @Notice.route('/all_list_amount', methods=['GET'])
@@ -347,12 +327,12 @@ def all_list_amount():
             try:
                 query_data = notice.query.filter_by(userID = userID).all()
             except:
-                return jsonify({"rspCode": "30"})                                   #資料庫錯誤
-            return jsonify({"rspCode": "20", "allNoticeAmount": len(query_data)})   #成功取的數量
+                return jsonify({"rspCode": 30})                                   #資料庫錯誤
+            return jsonify({"rspCode": 20, "allNoticeAmount": len(query_data)})   #成功取的數量
         else:
-            return jsonify({"rspCode": "50"})                                       #權限不符
+            return jsonify({"rspCode": 50})                                       #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                           #method使用錯誤
+        return jsonify({"rspCode": 31})                                           #method使用錯誤
 
 #取得所有通知
 @Notice.route('/all_list', methods=['POST'])
@@ -362,24 +342,22 @@ def all_list():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": "40"})                                   #非法文字
+                return jsonify({"rspCode": 40})                                   #非法文字
             userID = session.get('userID')
             try:
                 query_data = notice.query.filter_by(userID = userID).order_by(notice.time.desc()).all()
             except:
-                return jsonify({"rspCode": "30"})                                   #資料庫錯誤
+                return jsonify({"rspCode": 30})                                   #資料庫錯誤
             startNum = value['startNum']
             amount = value['amount']
             noticeList = []
             for i in range(startNum, startNum + amount):
                 notice_ = query_data[i]
+                print(notice_, notice_.status)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
-                            db.session.delete(notice)
-                            db.session.commit()
                         #該USER為雇員
-                        elif notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             noticeList.append({"content": "「{}」任務將在一小時後開始。".format(\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
@@ -389,12 +367,8 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskStart']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 11:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                         #該USER為雇員
-                        elif notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             noticeList.append({"content": "「{}」任務開始，完成後請至雇員已通過頁面點選完成。".format(\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
@@ -404,34 +378,20 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['NoSP']:
-                        if notice_.db_notice_noticeTask[0].task.taskStatus == 12 or notice_.db_notice_noticeTask[0].task.SP == None:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
-                        else:
-                            noticeList.append({"content": "「{}」任務時間已到，仍無人承接，可至歷史紀錄查看任務細節。".format(\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
-                                "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
+                        noticeList.append({"content": "「{}」任務時間已到，仍無人承接，可至歷史紀錄查看任務細節。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskEndTime']:
-                        finished = False
-                        for noticeTask_ in notice_.db_notice_noticeTask[0].task.db_task_noticeTask:
-                            if noticeTask_.notice.status == noticeType['taskFinish']:
-                                finished = True
-                                db.session.delete(notice_.db_notice_noticeTask[0])
-                                db.session.delete(notice_)
-                                db.session.commit()
-                                break
-                        if not finished:
-                            #該USER為雇員
-                            if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
-                                noticeList.append({"content": "「{}」任務已結束。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SPAllTaskRecord'], "time": str(notice_.time)})
-                            #該USER為雇主
-                            elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
-                                noticeList.append({"content": "「{}」任務已結束。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
+                        #該USER為雇員
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                            noticeList.append({"content": "「{}」任務已結束。".format(\
+                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                "connectTo": noticePage['SPAllTaskRecord'], "time": str(notice_.time)})
+                        #該USER為雇主
+                        elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
+                            noticeList.append({"content": "「{}」任務已結束。".format(\
+                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['createTask']:
                         noticeList.append({"content": "已成功功建立任務「{}」。".format(\
                             notice_.db_notice_noticeTask[0].task.taskName),\
@@ -485,10 +445,6 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.SR[0].name,\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                     elif notice_.status == noticeType['SPFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             noticeList.append({"content": "「{}」{}已點選完成，請至雇主已接受頁面點選完成。".format(\
@@ -500,10 +456,6 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.SP[0].name,\
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
                     elif notice_.status == noticeType['taskFinish']:
                         #該USER為雇員
                         if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
@@ -516,33 +468,16 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['pleaseComment']:
-                        #還在評論狀態
-                        if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == -1:
-                            #該USER為雇員
-                            if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
-                                if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
-                                    db.session.delete(notice_.db_notice_noticeTask[0])
-                                    db.session.delete(notice_)
-                                    db.session.commit()
-                                else:
-                                    noticeList.append({"content": "您尚未對「{}」評論，請至雇員已通過頁面評論。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
-                            #該USER為雇主
-                            elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
-                                if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SRComment:
-                                    db.session.delete(notice_.db_notice_noticeTask[0])
-                                    db.session.delete(notice_)
-                                    db.session.commit()
-                                else:
-                                    noticeList.append({"content": "您尚未對「{}」評論，請至雇主已接受頁面評論。".format(\
-                                    notice_.db_notice_noticeTask[0].task.taskName),\
-                                    "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
-                        #進入審核狀態
-                        else:
-                            db.session.delete(notice_.db_notice_noticeTask[0])
-                            db.session.delete(notice_)
-                            db.session.commit()
+                        #該USER為雇員
+                        if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
+                            noticeList.append({"content": "您尚未對「{}」評論，請至雇員已通過頁面評論。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
+                        #該USER為雇主
+                        elif notice_.db_notice_noticeTask[0].task.SR[0].userID == userID:
+                            noticeList.append({"content": "您尚未對「{}」評論，請至雇主已接受頁面評論。".format(\
+                            notice_.db_notice_noticeTask[0].task.taskName),\
+                            "connectTo": noticePage['SRAllTaskAccepted'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['judgeComment']:
                         #評論通過
                         if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == 1:
@@ -649,8 +584,8 @@ def all_list():
                                 notice_.db_notice_noticeAllotment[0].transferRecordAllotment.times,\
                                 notice_.db_notice_noticeAllotment[0].transferRecordAllotment.allotment.frequency),\
                                 "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
-            return jsonify({"rspCode": "20", "noticeList": noticeList})             #成功取得通知
+            return jsonify({"rspCode": 20, "noticeList": noticeList})             #成功取得通知
         else:
-            return jsonify({"rspCode": "50"})                                           #權限不符
+            return jsonify({"rspCode": 50})                                           #權限不符
     else:
-        return jsonify({"rspCode": "31"})                                           #method使用錯誤
+        return jsonify({"rspCode": 31})                                           #method使用錯誤

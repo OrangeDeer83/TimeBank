@@ -40,9 +40,6 @@
                 <div class="text" id="file">
                     <h3>個人簡介</h3>
                     <textarea id="profile" cols="50" rows="10" placeholder="修改個人檔案"></textarea>
-                    <div class="formSave1">
-                        <input type="button" class="formButton2" value="儲存" onclick="upload(23)" />
-                    </div>
                 </div>
             </div>
             <div class="settingDiv">
@@ -53,67 +50,36 @@
                             <div class="formLabelDiv"><label for="userName" class="formLabel">名稱</label></div>
                             <input type="text" class="formText" id="name" name="userName" placeholder="最多20字元，之後可至設定修改"  maxlength="20" />
                             <div id="nameError" class="error">名稱，至多20字元</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(24)" />
-                            </div>
                         </div>
-
-                        <div class="formLine">
-                            <div class="formLabelDiv"><label for="userID" class="formLabel">使用者名稱</label></div>
-                            <input type="text" class="formText" id="userName" name="userID" placeholder="最多20字元，且不得與他人重複，無法修改" maxlength="20" />
-                            <div id="idError1" class="error">請輸入使用者名稱，至多20字元</div>
-                            <div id="idError2" class="error">此使用者名稱已有人使用，請再試一次</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(25)" />
-                            </div>
-                        </div>
-                        <div class="formLine1">
-                            <div class="formLine2">
-                                <div class="formLabelDiv"  id="formLine2"><label for="userPassword" class="formLabel">密碼</label></div>
+                        <div class="formLine">                          
+                                <div class="formLabelDiv"><label for="userPassword" class="formLabel">密碼</label></div>
                                 <input type="password" class="formText" id="oldPassword" name="userPassword" placeholder="8-30字元(含數字、大小寫字母及特殊符號)" maxlength="30" />
                                 <div id="passwordError1" class="error">請輸入密碼，至多30字元</div>
                                 <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
-                            </div>
                         </div>
-                        
-                        <div class="formLine1">
-                        	<div class="formLine2">
-                        		<div class="formLabelDiv" id="formLine2"><label for="userPassword" class="formLabel">新密碼</label></div>
+                        <div class="formLine">
+                        		<div class="formLabelDiv"><label for="userPassword" class="formLabel">新密碼</label></div>
 	                            <input type="password" class="formText" id="newPassword" name="userPassword" placeholder="8-30字元(含數字、大小寫字母及特殊符號)" maxlength="30" />
 	                            <div id="passwordError1" class="error">請輸入密碼，至多30字元</div>
 	                            <div id="passwordError2" class="error">密碼格式不符，請再試一次</div>
-                        	</div>
                         </div>
-
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="checkPassword" class="formLabel">確認密碼</label></div>
                             <input type="password" class="formText" id="checkPassword" name="checkPassword" placeholder="再次輸入密碼" maxlength="30" />
                             <div id="passwordError3" class="error">請再次輸入您的密碼</div>
                             <div id="passwordError4" class="error">密碼不相符，請再試一次</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(26)" />
-                            </div>
                         </div>
-
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="userEmail" class="formLabel">電子郵件</label></div>
                             <input type="email" class="formText" id="userEmail" name="userEmail" placeholder="輸入您的電子郵件" maxlength="50" />
                             <div id="emailError" class="error">請輸入您的電子郵件</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(27)" />
-                            </div>
                         </div>
-
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="userPhone" class="formLabel">電話號碼</label></div>
                             <input type="tel" class="formText" name="userPhone" id="userPhone" placeholder="輸入您的電話號碼" />
                             <div id="phoneError1" class="error">請輸入您的電話號碼</div>
                             <div id="phoneError2" class="error">手機號碼格式錯誤</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(28)" />
-                            </div>
                         </div>
-
                         <div class="formLine">
                             <div class="formLabelDiv"><label class="formLabel">性別</label></div>
                             <div class="formRadios">
@@ -124,28 +90,25 @@
                                 <input type="radio" id="genderOther" name="gender" value="genderOther" checked />
                                 <label for="genderOther" class="radioText">其他</label>
                             </div>  
-                            <div class="formSave" id="formButton3">
-	                            <input type="button" class="formButton" value="儲存" onclick="upload(29)" />
-	                        </div>                          
                         </div>
-
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="userBirthday" class="formLabel">出生日期</label></div>
                             <input type="date" class="formText" id="userBirthday" name="userBirthday" />
                             <div id="birthError1" class="error">請輸入您的生日</div>
                             <div id="birthError2" class="error">請輸入正確日期</div>
                             <div id="registerError" class="error">伺服器錯誤，請稍後再試</div>
-                            <div class="formSave">
-                                <input type="button" class="formButton" value="儲存" onclick="upload(30)" />
-                            </div>
+                        </div>
+                        <div class="formSave" id="formSave1">
+                            <input type="button" class="formButton" value="儲存" onclick="upload(30)" />
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <footer id="footer"></footer>
+        <script src="{{url_for('static', filename='js/footer.js')}}"></script>
         <script src="{{url_for('static', filename='js/clickToSpan.js')}}"></script>
         <script src="{{url_for('static', filename='js/navbarUser.js')}}"></script>
         <script src="{{url_for('static', filename='js/setting.js')}}"></script>
     </body>
-
 </html>

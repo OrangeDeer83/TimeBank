@@ -14,7 +14,6 @@ const maxPageAmount = 10;
 function showListDiv()
 {
     const table = document.getElementById('eRefused');
-    table.innerHTML = '';
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
@@ -34,18 +33,19 @@ function showListDiv()
     getTaskList();
 }
 
-/*const error = document.getElementById("error");
-function showError(rspCode)
+function showPrompt(index)
 {
-    error.style.color = "red";
-    switch (rspCode)
+    var prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch (index)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case 200: prompt.innerHTML = '已就緒...'; return ;
+        case 201: prompt.innerHTML = '尚無遭拒絕的申請'; return ;
+        case 300: prompt.innerHTML = '系統錯誤'; return ;
+        case 400: prompt.innerHTML = '等待伺服器回應...'; return ;
+        case 401: prompt.innerHTML = '無法取得任務列表'; return ;
     }
-}*/
-function showError() {;}
+}
 
 function getTaskList()
 {
@@ -55,13 +55,12 @@ function getTaskList()
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError(20036);
                 taskList = rst.taskRefused;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
@@ -69,10 +68,11 @@ function getTaskList()
                 break;
             case "300": case 300:
             case "400": case 400:
-                showError(30036);
+            default:
+                showPrompt(401);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 // Compute and react nextPage button, prePage button and number of pages.
@@ -95,7 +95,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = "1/1";
-        document.getElementById('eRefused').innerHTML = '<tr><td>尚無遭拒絕的申請</td></tr>';
+        showPrompt(201);
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -112,7 +112,6 @@ function computeThisPageList()
     else
         for (var i = 0; i < (taskAmount % maxPageAmount); i++)
             thisPageList.push(taskList[maxPageAmount * (currentPage - 1) + i]);
-
     showDetail();
 }
 

@@ -147,7 +147,7 @@ function getIntroduction()
                 break;
             case "300": case 300:
             case "400": case 400:
-                console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
+                //console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
                 document.getElementById("introduction").innerHTML = "伺服器錯誤...網站介紹讀取失敗";
                 break;
         }
@@ -168,7 +168,7 @@ function getNewsTitle(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("最新消息標題讀取成功");
+                //console.log("最新消息標題讀取成功");
                 document.getElementById("newsTitle" + index).innerHTML = rst.title;
                 break;
             case "300": case 300:
@@ -241,12 +241,12 @@ function getNewsContent(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("最新消息內容讀取成功");
+                //console.log("最新消息內容讀取成功");
                 document.getElementById("newsContent").value = rst.content;
                 break;
             case "300": case 300:
             case "400": case 400:
-                console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
+                //console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
                 document.getElementById("newsContent").value = "伺服器錯誤...內容讀取失敗";
         }
     }

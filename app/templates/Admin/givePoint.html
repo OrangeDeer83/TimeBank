@@ -20,10 +20,10 @@
         <header id="navbar"></header>
         <div class="bodyContainer">
             <div class="tabsPart">
-            <ul class="tabs">
-                    <li class="tabOne thisPage"><a href="{{url_for('Admin.give_point')}}" target="_self">配發點數</a></li>
-                    <li class="tabOne" id="tabTwo"><a href="{{url_for('Admin.give_record')}}" target="_self">配發紀錄</a></li>
-            </ul>
+                <ul class="tabs">
+                        <li class="tabOne thisPage"><a href="{{url_for('Admin.give_point')}}" target="_self">配發點數</a></li>
+                        <li class="tabOne" id="tabTwo"><a href="{{url_for('Admin.give_record')}}" target="_self">配發紀錄</a></li>
+                </ul>
             </div>
             <div class="tablePart">
                 <table id="giveTable">
@@ -62,6 +62,7 @@
                         </div>
                         <div class="giveBotton" onclick="allotment(10)">全部配發</div>
                     </td></tr>
+                    <tr><td>系統提示：<span id="systemPrompt"></span></td></tr>
                     <tr id="list0"><td>
                         <div class="introduction" id="introduction0">
                             <div class="total">

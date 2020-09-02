@@ -129,6 +129,7 @@ select
         width: 500px;
         height: 650px;       
         margin: auto;
+        margin-bottom: 20px;
         border-radius: 12px;        
     }
     .formColumn
@@ -147,7 +148,7 @@ select
     }
     .formCycle
     {
-        margin-left: 50px;
+        /*margin-left: 50px;*/
         padding: 5px;
     }
     .formText
@@ -216,7 +217,7 @@ select
 	}
     .updateDiv
     {
-        margin: 50px 0 0 0;
+        margin: 50px 0 20px 0;
         padding: 0;
         border: 0px;
     }

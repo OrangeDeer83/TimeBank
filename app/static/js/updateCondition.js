@@ -12,23 +12,22 @@ var classList = [];
 // Show all error.
 function showError(rspCode)
 {
-    console.log(rspCode);
-    error.style.color = "red";
+    error.removeAttribute('style');
     switch (rspCode)
     {
         case   200: error.innerHTML = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = "white";return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; return ;
         case 40010: error.innerHTML = "系統錯誤，變更申請對象失敗"; return ;
         case 40011: error.innerHTML = "系統錯誤，讀取申請對象失敗"; return ;
         case 40012: error.innerHTML = "系統錯誤，檔案上傳失敗"; return ;
-        case 40112: error.innerHTML = "錯誤的檔案類型，僅限PDF檔"; return ;
-        case 40212: error.innerHTML = "檔案過大，勿超過2MB"; return ;
-        case 40013: error.innerHTML = "無法確認檔案狀態"; return ;
+        case 40112: error.innerHTML = "錯誤的檔案類型，僅限PDF檔"; error.style.color = "red"; return ;
+        case 40212: error.innerHTML = "檔案過大，勿超過5MB"; error.style.color = "red"; return ;
+        case 40013: error.innerHTML = "無法確認檔案狀態"; error.style.color = "red"; return ;
         case 40014: error.innerHTML = "系統錯誤，讀取類別失敗"; return ;
         case 40015: error.innerHTML = "系統錯誤，讀取週期與額度失敗"; return ;
         case 40016: error.innerHTML = "系統錯誤，申請條件更新失敗"; return ;
-        case 40116: error.innerHTML = "請檢查輸入值，須介於0~99999之間"; return ;
+        case 40116: error.innerHTML = "請檢查輸入值，須介於0~50之間"; error.style.color = "red"; return ;
         case 40017: error.innerHTML = "刪除失敗"; return ;
         case 40018: error.innerHTML = "請選擇類別"; return ;
         case 40118: error.innerHTML = "系統錯誤，額度讀取失敗"; return ;
@@ -133,7 +132,7 @@ function showClass(allClass)
         classList[classQuotaLength][0] = allClass[i];
     }
     getAllPeriodQuota();
-    console.log(classList);
+    //console.log(classList);
 }
 // When user click 新增類別, show input text and button on the html.
 function showAddClass()
@@ -177,7 +176,7 @@ function getPeriodQuota(index)
     var getApplierRequest = new XMLHttpRequest();
     getApplierRequest.open("POST", "http://192.168.1.144:5000/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
-    console.log(classList[index][0]);
+    //console.log(classList[index][0]);
     getApplierRequest.send(JSON.stringify({"class": classList[index][0]}));
     getApplierRequest.onload = function()
     {
@@ -287,25 +286,25 @@ function updateFile()
 // Edit quota.
 function editQuota()
 {
-    var indexList = [0, 30, 90, 180, 365];
+    //var indexList = [0, 30, 90, 180, 365];
     if (userClass.selectedIndex != 0)
     {
         for (var i = 0; i < 5; i++)
         {
-            console.log("period" + indexList[i])
-            var newQuota = (document.getElementById("period" + indexList[i])) * 1;
+            var newQuota = document.getElementById("period" + i).value;
             if(0 <= newQuota && newQuota < 50)
             {
-                classList[userClass.selectedIndex - 1][indexList[i] + 1] = newQuota;
-                showQuota();
+                classList[userClass.selectedIndex - 1][i + 1] = newQuota;
             }
             else error.innerHTML = "請輸入位於0~50之間的數值";
         }
     }
-    console.log(classList[userClass.selectedIndex - 1]);
+    showQuota();
+    //console.log(classList[userClass.selectedIndex - 1]);
 }
 function updateClassPeriodQuota()
 {
+    editQuota();
     for (var i = 0; i < classList.length; i++)
         updateOneClassPeriodQuota(i);
 }
@@ -324,7 +323,6 @@ function updateOneClassPeriodQuota(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError("申請類別、配發週期與配發額度更新成功");
                 error.innerHTML = "更新完成";
                 return ;
             case "300": case 300:
@@ -333,7 +331,7 @@ function updateOneClassPeriodQuota(index)
                 alert("系統錯誤，申請條件更新失敗：" + classList[index][0]);
                 showError(40016); return ;
             case "401": case 401:
-                alert("請檢查輸入值，須介於0~99999之間：" + classList[index][0]);
+                alert("請檢查輸入值，須介於0~50之間：" + classList[index][0]);
                 showError(40116); return ;
         }
     }

@@ -37,7 +37,7 @@ function showNavbar()
                 '<li class="dropdown">' +
                     '<div class="navbarNotice" id="navbarNotice" onclick="clickToSpan(\'noticeSpan\');getNewNotice();">通知</div>' +
                     '<ul id="noticeSpan" class="dropdownMenu dropdownMenuRight unspanned">' +
-                        '<li><a><div>無新通知</div></a></li>' +
+                        '<li><a><div>等待伺服器回應中...</div></a></li>' +
                         '<li><a href="/USER/notice"><div>顯示所有通知</div></a></li>' +
                     '</ul>' +
                 '</li>' +
@@ -73,7 +73,6 @@ function getUserID()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log(rst.ID);
                 document.getElementById("navbarUserID").href = "/USER/info/" + rst.ID;
                 getPropic(rst.ID);
                 getCurrentPointAmount();
@@ -160,7 +159,7 @@ function checkNoticeIndication()
 {
     getNoticeIndication();
     // Check for new notice every second.
-    window.setInterval(getNoticeIndication, 1500);///////////////////////////////////////
+    window.setInterval(getNoticeIndication, 1500);
     // More then 10 sec not onload, reset the standard.
     window.setInterval(function(){ if (lastRequestOnload == 0)lastRequestOnload = 1;}, 10000);
 }
@@ -215,10 +214,11 @@ function getNewNotice()
                 putNewNotice(rst.newNoticeList)
                 break;
             default:
-                console.log('系統錯誤，無法讀取新通知');
+                document.getElementById('noticeSpan') = '<li><a><div>系統錯誤，無法讀取新通知</div></a></li>';
                 break;
         }
     }
+
 }
 function putNewNotice(noticeList)
 {
@@ -253,7 +253,7 @@ function numToUrl(type)
         case 6: return '/USER/SP/allTaskChecking';
         case 7: return '/USER/SP/allTaskRefused';
         case 8: return '/USER/SP/allTaskRecord';
-        case 9: return '/Admin/pointRecord';
+        case 9: return '/USER/pointRecord';
     }
 }
 

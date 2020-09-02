@@ -1,4 +1,4 @@
-// For hrmAdmin. (hrmManager)
+// For hrmAdmin.
 
 window.onload = function()
 {
@@ -13,7 +13,10 @@ function showError(type)
     switch (type)
     {
         case 200: // hide error.
-            error.innerHTML = "";
+            error.innerHTML = '已就緒...';
+            break;
+        case 205:
+            error.innerHTML = '成功修改密碼';
             break;
         case 400: // wait for server
             error.innerHTML = "等待伺服器回應中";
@@ -94,6 +97,7 @@ function getAdminAmount()
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 console.log("系統錯誤，管理員數量讀取失敗，請稍後再試");
                 return false;
         }
@@ -297,14 +301,23 @@ function changePassword(index)
         {
             case '20': case 20:
                 document.getElementById('newPassword' + index).value = '';
+                showError(205);
                 break;
-            case '18': case 18:
-                document.getElementById("checkSAPassword").style.display = "block";
+            case '18': case 18: // Didn't check SA password.
+                showError(4032);
+                break;
+            case '30': case 30: // Database error.
+            case '31': case 31: // Methods wrong.
+            case '40': case 40: // Illegal input.
+            case '41': case 41: // adminID is not exist.
+            case '42': case 42: // The account is not admin.
+            case '50': case 50: // Permission denied.
             default:
-                console.log('無法更改密碼');
+                showError(405);
                 break;
         }
     }
+    showError(400);
 }
 
 // Delete admin.

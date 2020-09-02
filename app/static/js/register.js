@@ -74,19 +74,19 @@ function idTest()
         hideError(userName, userNameError3);
         switch (rst.rspCode)
         {
-            case "200": // ID no repeat
+            case "200": case 200: // ID no repeat
                 hideError(userName, userNameError2);
                 return true;
-            case "300": // Database wrong.
+            case "300": case 300: // Database wrong.
                 showError(userName, userNameError3);
                 return false;
-            case "400": // ID repeat
+            case "400": case 400: // ID repeat
                 showError(userName, userNameError3);
                 return false;
-            case "401": // ID too long
+            case "401": case 401: // ID too long
                 showError(userName, userNameError1);
                 return false;
-            case "402": // ID repeat
+            case "402": case 402: // ID repeat
                 showError(userName, userNameError2);
                 return false;
             default: // Unkonwn response text

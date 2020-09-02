@@ -31,7 +31,6 @@ function getOldUserInfo()
 function putOldUserInfo(oldInfo)
 {
     document.getElementById("name").value = oldInfo.name;
-    document.getElementById("userName").value = oldInfo.userName;
     document.getElementById("userEmail").value = oldInfo.userMail;
     document.getElementById("userPhone").value = oldInfo.userPhone;
     document.getElementById("profile").value = oldInfo.userInfo;
@@ -82,7 +81,7 @@ function upload(index)
         case 100:
             uploadProfile();
             uploadName();
-            uploadUserName();
+            /*uploadUserName();*/
             uploadNewPassword();
             uploadUserEmail();
             uploadUserPhone();
@@ -110,7 +109,7 @@ function uploadProfile()
                 break;
             case "300": case 300:
             case "400": case 400:
-                alert("系統錯誤，名稱修改失敗");
+                alert("系統錯誤，個人簡介修改失敗");
                 break;
             case "401": case 401:
                 alert("名稱長度需在1~20字元之間，請再次確認");
@@ -147,7 +146,7 @@ function uploadName()
     }
 }
 
-function uploadUserName()
+/*function uploadUserName()
 {
     const userName = document.getElementById("userName");
 
@@ -183,7 +182,7 @@ function uploadUserName()
                 break;
         }
     }
-}
+}*/
 
 function uploadNewPassword()
 {

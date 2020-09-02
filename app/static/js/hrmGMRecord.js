@@ -13,12 +13,11 @@ const maxPageAmount = 20;
 
 function showError(rspCode)
 {
-    error.style.color = "#EECA00";
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = "white"; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = "white"; return ;
+        case   200: error.innerHTML = '已就緒...'; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; return ;
         case 40017: error.innerHTML = "系統錯誤，無法讀取評論管理員列表"; return ;
         case 40018: error.innerHTML = "系統錯誤，無法刪除評論管理員"; return ;
         case 40118: error.innerHTML = "無法刪除評論管理員，請稍後再試"; return ;
@@ -72,7 +71,6 @@ function getGMList()
             if (GMAmount == 0)
             {
                 error.innerHTML = "目前沒有評論管理員";
-                error.style.color = "#EECA00";
                 return ;
             }
             computePage(0);
@@ -160,15 +158,14 @@ function deleteManager(index)
                 alert("已刪除評論管理員：" + thisPageList[index].adminName);
                 window.location.reload();
                 break;
-            case "300": case 300:
-            case "400": case 400:
+            case "300": case 300: // Methods wrong.
+            case "400": case 400: // Database error.
                 showError(40012); break;
-            case "401": case 401:
-            case "402": case 402:
+            case "401": case 401: // Id is not exist.
+            case "402": case 402: // Id is wrong.
                 showError(40118); break;
-            case "403": case 403:
+            case "403": case 403: // Need to input Admin password.
                 showError(40318); break;
-            
         }
     }
     showError(400);
@@ -188,12 +185,12 @@ function checkPassword()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("密碼驗證成功");
+                error.innerHTML = "密碼驗證成功";
                 document.getElementById("checkPassword").style.display = "none"; break;
-            case "300": case 300:
-            case "400": case 400:
+            case "300": case 300: // Methods wrong.
+            case "400": case 400: // Database error.
                 showError(30022); break;
-            case "401": case 401:
+            case "401": case 401: // Wrong password.
                 showError(40122); break;
         }
     }

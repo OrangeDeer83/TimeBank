@@ -21,7 +21,7 @@ function displayError(inputElement, index, type)
         {
             case  0: break;
             case  1:
-                error0.innerHTML = "等待伺服器回應...";
+                error0.innerHTML = '等待伺服器回應...';
                 error0.style.display = "block"; break;
             case  2:
                 error0.innerHTML = "系統錯誤，請稍後再試";

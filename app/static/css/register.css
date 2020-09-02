@@ -91,6 +91,7 @@
     .registerDiv
     {
         margin: auto;
+        margin-bottom: 50px;
         width: 500px;   
         border-radius: 12px;
     }

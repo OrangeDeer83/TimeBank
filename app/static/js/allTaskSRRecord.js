@@ -15,7 +15,6 @@ const maxPageAmount = 10;
 function showListDiv()
 {
     const table = document.getElementById('bRecord');
-    table.innerHTML = '';
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
@@ -78,18 +77,20 @@ function showListDiv()
     getTaskList();
 }
 
-/*const error = document.getElementById("error");
-function showError(rspCode)
+function showPrompt(index)
 {
-    error.style.color = "red";
-    switch (rspCode)
+    var prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch (index)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case 200: prompt.innerHTML = '已就緒...'; return ;
+        case 201: prompt.innerHTML = '尚無雇主歷史紀錄'; return ;
+        case 300: prompt.innerHTML = '系統錯誤'; return ;
+        case 400: prompt.innerHTML = '等待伺服器回應...'; return ;
+        case 401: prompt.innerHTML = '無法取得任務列表'; return ;
+        case 402: prompt.innerHTML = '系統錯誤，無法送出檢舉'; return ;
     }
-}*/
-function showError() {;}
+}
 
 function getTaskList()
 {
@@ -99,24 +100,26 @@ function getTaskList()
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError(20033);
                 taskList = rst.taskRecord;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
                 computePage(0);
                 break;
-            case "300": case 300:
-            case "400": case 400:
-                showError(30033);
+            case "300": case 300: // Methods wrong.
+            case "400": case 400: // Database error.
+            case '401': case 401: // userID is not exist.
+            case '402': case 402: // no userID.
+            default:
+                showPrompt(401);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 // Compute and react nextPage button, prePage button and number of pages.
@@ -139,7 +142,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = "1/1";
-        document.getElementById('bRecord').innerHTML = '<tr><td>尚無雇主歷史紀錄</td></tr>';
+        showPrompt(201);
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -257,8 +260,11 @@ function hideReportDiv()
     reportTaskIndex = -1;
 }
 
+var sendReportOnload = 0;
 function sendReport()
 {
+    if (sendReportOnload == 1) return ;
+    sendReportOnload = 1;
     var reportRequest = new XMLHttpRequest();
     reportRequest.open("POST", "http://192.168.1.144:5000/report/send_report");
     reportRequest.setRequestHeader("Content-Type", "application/json");
@@ -270,11 +276,12 @@ function sendReport()
         switch (rst.rspCode)
         {
             case "20": case 20:
-                alert('檢舉已送出');
+                document.getElementById('systemPrompt').innerHTML = '檢舉已送出：' + thisPageList[reportTaskIndex].taskName;
+                sendReportOnload = 0;
                 hideReportDiv();
                 break;
             default:
-                alert('系統錯誤，無法送出檢舉');
+                showPrompt(402);
             }
     }
 }

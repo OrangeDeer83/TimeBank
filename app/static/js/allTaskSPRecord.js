@@ -15,7 +15,6 @@ const maxPageAmount = 10;
 function showListDiv()
 {
     const table = document.getElementById('eRecord');
-    table.innerHTML = '';
     for (var i = 0; i < maxPageAmount; i++)
     {
         table.innerHTML += '' +
@@ -78,18 +77,20 @@ function showListDiv()
     getTaskList();
 }
 
-/*const error = document.getElementById("error");
-function showError(rspCode)
+function showPrompt(index)
 {
-    error.style.color = "red";
-    switch (rspCode)
+    var prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch (index)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case 200: prompt.innerHTML = '已就緒...'; return ;
+        case 201: prompt.innerHTML = '尚無雇主歷史紀錄'; return ;
+        case 300: prompt.innerHTML = '系統錯誤'; return ;
+        case 400: prompt.innerHTML = '等待伺服器回應...'; return ;
+        case 401: prompt.innerHTML = '無法取得任務列表'; return ;
+        case 402: prompt.innerHTML = ''; return ;
     }
-}*/
-function showError() {;}
+}
 
 function getTaskList()
 {
@@ -99,13 +100,13 @@ function getTaskList()
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError(20033);
+                showPrompt(20033);
                 taskList = rst.taskRecord;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
@@ -113,10 +114,10 @@ function getTaskList()
                 break;
             case "300": case 300:
             case "400": case 400:
-                showError(30033);
+                showPrompt(30033);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 // Compute and react nextPage button, prePage button and number of pages.

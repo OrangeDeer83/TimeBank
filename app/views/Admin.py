@@ -21,7 +21,6 @@ def index():
 #登入頁面
 @Admin.route('/login')
 def login():
-   print(session.get('userType'))
    if session.get('userType') == userType['SA']:
       return redirect(url_for('Admin.Admin_list'))
    elif session.get('userType') == userType['AA']:

@@ -3,7 +3,7 @@ window.onload = function()
     getUserList();
 }
 
-var allList = [13];
+var allList = [14];
 // name, userName, userID, userSRRate, userSPRate, userPoint(pointAmount)
 // applyID, applyClass, applyQuota, applyTime, applyPeriod, applyFrequency, applyResult
 var userAmount = 0;
@@ -42,12 +42,14 @@ function getUserList()
                 allList[10] = rst.applyPeriod;
                 allList[11] = rst.applyFrequency;
                 allList[12] = rst.applyResult;
+                allList[13] = rst.applyPdfName;
+                console.log(allList[6])
                 computePage(0);
                 break;
             case "300": case 300:
             case "400": case 400:
             default:
-                console.log("無法取得列表");
+                pageNumber.innerHTML = "無法取得列表";
                 break;
         }
     }
@@ -63,9 +65,10 @@ function computePage(type)
                 allList[4].length != allList[5].length || allList[5].length != allList[6].length ||
                 allList[6].length != allList[7].length || allList[7].length != allList[8].length ||
                 allList[8].length != allList[9].length || allList[9].length != allList[10].length ||
-                allList[10].length != allList[11].length || allList[11].length != allList[12].length)
+                allList[10].length != allList[11].length || allList[11].length != allList[12].length ||
+                allList[12].length != allList[13].length)
             {
-                console.log("系統錯誤，錯誤的列表");
+                pageNumber.innerHTML = "系統錯誤，列表不全";
                 return ;
             }
             else
@@ -97,21 +100,25 @@ function computeThisPageList()
     if (currentPage < pageAmount)
         for (var i = 0; i < maxPageAmount; i++)
             thisPageList.push(maxPageAmount * (currentPage - 1) + i);
-    else
+    else if (i < allList[0].length % maxPageAmount == 0)
         for (var i = 0; i < maxPageAmount; i++)
+            thisPageList.push(maxPageAmount * (currentPage - 1) + i);
+    else
+        for (var i = 0; i < allList[0].length % maxPageAmount; i++)
             thisPageList.push(maxPageAmount * (currentPage - 1) + i);
     showDetail();
 }
 
 function showDetail()
 {
+    console.log(thisPageList)
     for (var i = 0; i < thisPageList.length; i++)
     {
         putDetail(i);
-        /*document.getElementById("list" + i).removeAttribute("style");*/
+        document.getElementById("formInformation" + (i + 1)).removeAttribute("style");
     }
-    /*for (var i = thisPageList.length; i < maxPageAmount; i++)
-        document.getElementById("list" + i).style.display = "none";*/
+    for (var i = thisPageList.length; i < maxPageAmount; i++)
+        document.getElementById("formInformation" + (i + 1)).style.display = "none";
 }
 
 function putDetail(index)
@@ -138,12 +145,30 @@ function putDetail(index)
     document.getElementById("applyQuota" + index).innerHTML = allList[8][thisPageList[index]];
     document.getElementById("changeQuota" + index).value = allList[8][thisPageList[index]];
     document.getElementById("applyTime" + index).innerHTML = allList[9][thisPageList[index]];
-    document.getElementById("applyPeriod" + index).innerHTML = allList[10][thisPageList[index]];
+    switch (allList[10][thisPageList[index]])
+    {
+        case '0': case 0:
+            document.getElementById("applyPeriod" + index).innerHTML = '一次性'; break;
+        case '30': case 30:
+            document.getElementById("applyPeriod" + index).innerHTML = '一個月一次'; break;
+        case '90': case 90:
+            document.getElementById("applyPeriod" + index).innerHTML = '三個月一次'; break;
+        case '180': case 180:
+            document.getElementById("applyPeriod" + index).innerHTML = '半年一次'; break;
+        case '365': case 365:
+            document.getElementById("applyPeriod" + index).innerHTML = '一年一次'; break;
+    }
     document.getElementById("applyFrequency" + index).innerHTML = allList[11][thisPageList[index]];
     document.getElementById("applyResult" + index).value = allList[12][thisPageList[index]];
+    if (allList[13][thisPageList[index]] != "None") {
+        document.getElementById("downloadBlock" + index).removeAttribute("style");
+        document.getElementById("download" + index).href = "/apply/apply_pdf_download/" + allList[6][thisPageList[index]];
+    }
+    else {
+        document.getElementById("downloadBlock" + index).style.display = 'none';
+    }
 }
-
-function downloadPDF(index)
+/*function downloadPDF(index)
 {
     var downloadPDFRequest = new XMLHttpRequest();
     downloadPDFRequest.open("POST", "http://192.168.1.144:5000/apply/apply_pdf_download");
@@ -166,7 +191,7 @@ function downloadPDF(index)
                 break;
         }
     }
-}
+}*/
 
 function approve(index, type)
 {

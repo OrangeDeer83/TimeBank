@@ -13,7 +13,7 @@ function showListDiv()
         '<div class="news" id="news' + i + '">' +
             '<div class="newsBar">' +
                 '<button class="button newsButton" id="edit' + i + '" onclick="changeSpan(' + i + ')">編 輯</button>' +
-                '<button class="button newsButton" id="delete' + i + '" onclick="deleteNews()">刪 除</button>' +
+                '<button class="button newsButton" id="delete' + i + '" onclick="deleteNews(' + i + ')">刪 除</button>' +
                 '<span id="newsOldTitle' + i + '"></span>' +
             '</div>' +
             '<form id="editNewsForm' + i + '" method="POST" enctype="multipart/form-data">' +
@@ -30,7 +30,7 @@ function showListDiv()
                     '</div>' +
                     '<div>最大限制5MB</div>' +
                     '<input type="submit" class="button newsButton newsStore" value="儲 存" />' +
-                    '<span class="newsEditUser" id="newsEditUser' + i + '">上次更新的是Damian</span>' +
+                    '<span class="newsEditUser" id="newsEditUser' + i + '"></span>' +
                 '</div>' +
             '</form>' +
         '</div>';
@@ -61,7 +61,7 @@ function getIntroduction()
                 break;
             case "300": case 300:
             case "400": case 400:
-                console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
+                document.getElementById('introductionEditUser').innerHTML = "系統錯誤，網站介紹讀取失敗，請稍後再試";
                 break;
         }
         
@@ -136,13 +136,12 @@ function getNewsAmount()
 }
 
 // getDetails from server each news
-function getTitle(i)
+function getTitle(index)
 {
     var getOldTitleRequest = new XMLHttpRequest();
-    getOldTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[i]);
+    getOldTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[index]);
     getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
     getOldTitleRequest.send();
-    var index = i; console.log(i + "" + index);
     getOldTitleRequest.onload = function()
     {
         console.log(getOldTitleRequest.responseText);
@@ -151,24 +150,22 @@ function getTitle(i)
         {
             case "200": case 200:
                 //console.log("最新消息標題讀取成功");
+                document.getElementById("newsOldTitle" + (index + 1)).innerHTML = rst.title;
+                document.getElementById("newsTitle" + (index + 1)).value = rst.title;
                 break;
             case "300": case 300:
             case "400": case 400:
                 console.log("系統錯誤，最新消息標題讀取失敗，請稍後再試");
                 //return;
         }
-        //thisPageTitles.push(rst.title);
-        document.getElementById("newsOldTitle" + (index + 1)).innerHTML = rst.title;
-        document.getElementById("newsTitle" + (index + 1)).value = rst.title;
     }
 }
-function getText(i)
+function getText(index)
 {
     var getTextRequest = new XMLHttpRequest();
-    getTextRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[i]);
+    getTextRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[index]);
     getTextRequest.setRequestHeader("Content-Type", "application/json");
     getTextRequest.send();
-    var index = i;
     getTextRequest.onload = function()
     {
         console.log(getTextRequest.responseText);
@@ -183,7 +180,7 @@ function getText(i)
                 break;
             case "300": case 300:
             case "400": case 400:
-                console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
+                document.getElementById("newsText" + (index + 1)).value = "系統錯誤，最新消息內容讀取失敗，請稍後再試";
                 //return;
         }
     }
@@ -320,6 +317,7 @@ function changeSpan(newIndex)
 function deleteNews(index)
 {
     var deleteNewsRequest = new XMLHttpRequest();
+    console.log(thisPageList)
     deleteNewsRequest.open("GET", "http://192.168.1.144:5000/portal/delete_news/" + thisPageList[index - 1]);
     deleteNewsRequest.setRequestHeader("Content-Type", "application/json");
     deleteNewsRequest.send();
@@ -330,7 +328,8 @@ function deleteNews(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("已刪除此最新消息")
+                alert("已刪除此最新消息");
+                window.location.reload();
                 return true;
             default:
                 console.log("系統錯誤，最新消息刪除失敗，請稍後再試");

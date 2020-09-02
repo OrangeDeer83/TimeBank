@@ -49,9 +49,9 @@ function showError(rspCode)
     error.style.color = "red";
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case   200: error.innerHTML = '已就緒...'; error.style.color = ""; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = ""; return ;
     }
 }*/
 function showError() {;}
@@ -223,7 +223,7 @@ function cancelTask(index)
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("任務取消已送出");
+                //alert("任務取消已送出");
                 window.location.reload();
                 break;
             case "300": case 300:

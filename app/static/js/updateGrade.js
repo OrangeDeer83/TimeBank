@@ -9,9 +9,9 @@ function showError(rspCode)
     error.style.color = "red";
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case   200: error.innerHTML = '已就緒...'; error.style.color = ""; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = ""; return ;
     }
 }*/
 function showError() {;}

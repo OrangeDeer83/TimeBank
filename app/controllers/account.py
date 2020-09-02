@@ -133,12 +133,10 @@ def USER_login():
             value = request.get_json()
         except:
             return jsonify({"rspCode": 403})          #非法字元
-        print(value) 
         userName = value['userName']
         userPassword = value['userPassword']
         try:
             query_data = account.query.filter(account.userName == func.binary(userName)).first()
-            print(query_data)
         except:
             return jsonify({"rspCode": 400})   #資料庫錯誤
         if query_data == None:    
@@ -160,7 +158,6 @@ def Admin_login():
             value = request.get_json()
         except:
             return jsonify({"rspCode": 403})          #非法字元
-        print(value)
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -190,7 +187,6 @@ def GM_login():
             value = request.get_json()
         except:
             return jsonify({"rspCode": 403})          #非法字元
-        print(value)
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -221,7 +217,6 @@ def USER_forgot_password():
         except:
             return jsonify({"rspCode": 403})          #非法字元
         userMail = value['userMail']
-        print(value)
         if len(userMail) > 50 or len(userMail) < 1:
             return ({"rspCode": 401})      #電子郵件長度不符
         elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", userMail) == None:
@@ -231,7 +226,6 @@ def USER_forgot_password():
                 query_data = account.query.filter(account.userMail == func.binary(userMail)).first()
             except:
                 return jsonify({"rspCode": 400})      #資料庫錯誤
-            print(query_data)
             if query_data:
                 userID = query_data.userID
                 #產生token
@@ -242,7 +236,7 @@ def USER_forgot_password():
                     print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
-                    print("寄信失敗\n"  )
+                    print("寄信失敗\n")
                     return jsonify({"rspCode": 404})     #重置信寄送失敗
             else:
                 return ({"rspCode": 403})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
@@ -253,12 +247,10 @@ def USER_forgot_password():
 @Account.route('/USER/reset_password', methods=['POST'])
 def USER_reset_password():
     if request.method == 'POST':
-        print(request.get_json())
         try:
             value = request.get_json()
         except:
             return jsonify({"rspCode": 403})          #非法字元
-        print(value)
         token = value['token']
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         if token_data:
@@ -273,15 +265,11 @@ def USER_reset_password():
                     update_account.salt = salt
                     db.session.commit()
                 except:
-                    print(400)
                     return jsonify({"rspCode": 400})          #資料庫錯誤
-                print(200)
                 return jsonify({"rspCode": 200})              #重設密碼成功
         else:
-            print(401)
             return jsonify({"rspCode": 401})                  #token驗證失敗
     else:
-        print(300)
         return jsonify({"rspCode": 300})                      #method使用錯誤
 
 #偵測管理員帳號重複(管理員用)
@@ -290,10 +278,9 @@ def SA_detect_repeated():
     if request.method == 'POST':
         try:
             value = request.get_json()
-        except:
+        except:     
             return jsonify({"rspCode": 403})          #非法字元
         adminName = value['adminName']
-        print(value)
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
             return jsonify({"rspCode": 401})  #帳號格式不符
         else:
@@ -357,7 +344,7 @@ def GM_register():
                         print("寄信成功\n")
                         return jsonify({"rspCode": 200})             #驗證信寄送成功
                     else:
-                        print("寄信失敗\n"  )
+                        print("寄信失敗\n")
                         return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 elif existMail.adminType == userType['GM_apply']:
                     token = GM_verify_token(current_app.config['SECRET_KEY'], existMail.adminID)
@@ -367,7 +354,7 @@ def GM_register():
                         print("寄信成功\n")
                         return jsonify({"rspCode": 201})             #電子郵件已申請過，驗證信再次寄出
                     else:
-                        print("寄信失敗\n"  )
+                        print("寄信失敗\n")
                         return jsonify({"rspCode": 408})             #驗證信寄送失敗
                 else:
                     return jsonify({"rspCode": 409})          #電子郵件與他人重複
@@ -387,7 +374,7 @@ def GM_register():
                     print("寄信成功\n")
                     return jsonify({"rspCode": 202})             #帳號申請成功，驗證信已寄出
                 else:
-                    print("寄信失敗\n"  )
+                    print("寄信失敗\n")
                     return jsonify({"rspCode": 410})             #驗證信寄送失敗
     else:
         return ({"rspCode": 300})                             #method使用錯誤
@@ -475,7 +462,7 @@ def Admin_forgot_password():
                     print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
-                    print("寄信失敗\n"  )
+                    print("寄信失敗\n")
                     return jsonify({"rspCode": 404})     #重置信寄送失敗
             else:
                 return jsonify({"rspCode": 403})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
@@ -525,7 +512,6 @@ def GM_forgot_password():
         except:
             return jsonify({"rspCode": 403})          #非法字元
         GMMail = value['GMMail']
-        print(value)
         if len(GMMail) > 50 or len(GMMail) < 1:
             return ({"rspCode": 401})      #電子郵件長度不符
         elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", GMMail) == None:
@@ -547,7 +533,7 @@ def GM_forgot_password():
                     print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
-                    print("寄信失敗\n"  )
+                    print("寄信失敗\n")
                     return jsonify({"rspCode": 404})     #重置信寄送失敗
             else:
                 return ({"rspCode": 403})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
@@ -562,7 +548,6 @@ def GM_reset_password():
             value = request.get_json()
         except:
             return jsonify({"rspCode": 403})          #非法字元
-        print(value)
         token = value['token']
         token_data = validate_token(current_app.config['SECRET_KEY'], token)
         try:
@@ -583,7 +568,6 @@ def GM_reset_password():
                 return jsonify({"rspCode": 400})              #資料庫錯誤
             return jsonify({"rspCode": 200})                  #重設密碼成功
     else:
-        print(300)
         return jsonify({"rspCode": 300})                      #method使用錯誤
 
 #設定使用者介紹
@@ -761,7 +745,6 @@ def setting_accountMail():
             value = request.get_json()
         except:
             return jsonify({"rspCode": 405})          #非法字元
-        print(value)
         if session.get('userType') == userType['USER']:
             userMail = value['userMail']
             userID = session.get('userID')
@@ -927,7 +910,6 @@ def setting_propic():
                 f.save(path)
                 return redirect(url_for('USER.setting'))                #成功修改
             else:
-                print(f.filename)
                 return redirect(url_for('USER.setting'))                #檔名錯誤
         else:
             session.clear()

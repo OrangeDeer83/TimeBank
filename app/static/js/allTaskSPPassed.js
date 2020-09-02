@@ -15,7 +15,6 @@ const maxPageAmount = 10;
 function showListDiv()
 {
     const table = document.getElementById('ePass');
-    table.innerHTML = '';
     for (var i = 0; i < 10; i++)
     {
         table.innerHTML += '' +
@@ -43,18 +42,22 @@ function showListDiv()
     getTaskList();
 }
 
-/*const error = document.getElementById("error");
-function showError(rspCode)
+function showPrompt(index)
 {
-    error.style.color = "red";
-    switch (rspCode)
+    var prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch (index)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = ""; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = ""; return ;
+        case 200: prompt.innerHTML = '已就緒...'; return ;
+        case 201: prompt.innerHTML = '尚無已通過的任務'; return ;
+        case 300: prompt.innerHTML = '系統錯誤'; return ;
+        case 400: prompt.innerHTML = '等待伺服器回應...'; return ;
+        case 401: prompt.innerHTML = '無法取得任務列表'; return ;
+        case 402: prompt.innerHTML = '無法取消任務'; return ;
+        case 403: prompt.innerHTML = '無法結束任務'; return ;
+        case 404: prompt.innerHTML = '系統錯誤，無法評論'; return ;
     }
-}*/
-function showError() {;}
+}
 
 function getTaskList()
 {
@@ -64,13 +67,12 @@ function getTaskList()
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError(20036);
                 taskList = rst.taskPassed;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
@@ -78,10 +80,10 @@ function getTaskList()
                 break;
             case "300": case 300:
             case "400": case 400:
-                showError(30036);
+                showPrompt(401);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 // Compute and react nextPage button, prePage button and number of pages.
@@ -104,7 +106,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = '1/1';
-        document.getElementById('ePass').innerHTML = '<tr><td>尚無已通過的任務</td></tr>';
+        showPrompt(201);
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -218,22 +220,22 @@ function cancelTask(index)
     cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     cancelTaskRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(cancelTaskRequest.responseText);
         rst = JSON.parse(cancelTaskRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("任務取消已送出");
+                //alert("任務取消已送出");
                 window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:
             default:
-                alert("無法取消任務");
+                showPrompt(402);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 function finishTask(index, type)
@@ -245,7 +247,7 @@ function finishTask(index, type)
     finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + ""}));
     finishTaskRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(finishTaskRequest.responseText);
         rst = JSON.parse(finishTaskRequest.responseText);
         switch (rst.rspCode)
@@ -259,10 +261,10 @@ function finishTask(index, type)
             case "300": case 300:
             case "400": case 400:
             default:
-                alert("無法結束任務");
+                showPrompt(403);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 function validated()
@@ -310,7 +312,7 @@ function sendGrade()
     sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + ""}));
     sendGradeRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(sendGradeRequest.responseText);
         rst = JSON.parse(sendGradeRequest.responseText);
         switch (rst.rspCode)
@@ -322,8 +324,8 @@ function sendGrade()
             case "300": case 300:
             case "400": case 400:
             default:
-                alert("系統錯誤，無法評論");
+                showPrompt(404);
             }
     }
-    showError(400);
+    showPrompt(400);
 }

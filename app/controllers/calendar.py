@@ -46,7 +46,7 @@ def one_month_list():
                 Found = False
                 for task in query_data.taskSR:
                     #確定不是取消跟刪除
-                    if task.taskStatus != 11 and task.taskStatus != 12:
+                    if task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
                         if dateStart > task.taskStartTime and dateStart < task.taskEndTime:
                             dateList.append(1)
                             Found = True
@@ -135,7 +135,7 @@ def one_date_list():
             dateStart = datetime.datetime(show_year, show_month, show_day, 0, 0, 0)
             dateEnd = datetime.datetime(show_year, show_month, show_day, 23, 59, 59)
             for task in query_data.taskSR:
-                if task.taskStatus != 11 and task.taskStatus != 12:
+                if task.taskStatus != 4 and task.taskStatus != 11 and task.taskStatus != 12:
                     if dateStart > task.taskStartTime and dateStart < task.taskEndTime:
                         taskList.append(task)
                     elif dateEnd > task.taskStartTime and dateEnd < task.taskEndTime:

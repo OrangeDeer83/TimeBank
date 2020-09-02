@@ -15,7 +15,6 @@ const maxPageAmount = 10;
 function showListDiv()
 {
     const table = document.getElementById('bPass');
-    table.innerHTML = '';
     for (var i = 0; i < maxPageAmount; i++)
     {
         table.innerHTML += '' +
@@ -51,45 +50,47 @@ function showListDiv()
     getTaskList();
 }
 
-/*const error = document.getElementById('error');
-function showError(rspCode)
+function showPrompt(index)
 {
-    error.style.color = 'red';
-    switch (rspCode)
+    var prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch (index)
     {
-        case   200: error.innerHTML = '已就緒...'; error.style.color = ''; return ;
-        case   300: error.innerHTML = '系統錯誤'; return ;
-        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = ''; return ;
+        case 200: prompt.innerHTML = '已就緒...'; return ;
+        case 201: prompt.innerHTML = '尚無已發布任務，請至新增任務頁面建立新任務'; return ;
+        case 300: prompt.innerHTML = '系統錯誤'; return ;
+        case 400: prompt.innerHTML = '等待伺服器回應...'; return ;
+        case 401: prompt.innerHTML = '無法取得任務列表'; return ;
+        case 402: prompt.innerHTML = '僱員選擇失敗'; return ;
     }
-}*/
-function showError() {;}
+}
 
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open('GET', 'http://192.168.1.144:5000/task/SR/output/release');
+    taskListRequest.open('GET', 'http://192.168.1.144:5000/task/SR/output/passed');
     taskListRequest.setRequestHeader('Content-Type', 'application/json');
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case '200': case 200:
-                showError(20029);
+                showPrompt(20029);
                 taskList = rst.taskList;
                 taskAmount = taskList.length;
                 pageAmount = Math.ceil(taskAmount / maxPageAmount);
                 computePage(0);
                 break;
-            case '300': case 300:
-            case '400': case 400:
-                showError(30029);
+            case '300': case 300: // Methods wrong.
+            case '400': case 400: // Database error.
+                showPrompt(401);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 // Compute and react nextPage button, prePage button and number of pages.
@@ -198,7 +199,7 @@ function selectSP(index)
     selectSPRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID, 'candidateID': candidate.value}));
     selectSPRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(selectSPRequest.responseText);
         rst = JSON.parse(selectSPRequest.responseText);
         switch (rst.rspCode)
@@ -210,10 +211,10 @@ function selectSP(index)
             case '300': case 300:
             case '400': case 400:
             default:
-                alert(thisPageList[index].taskName + '僱員選擇失敗');
+                showPrompt(402);
             }
     }
-    showError(400);
+    showPrompt(400);
 }
 
 var editTaskIndex = -1;
@@ -261,7 +262,7 @@ function sendEdit()
     editTaskRequest.open('POST', 'http://192.168.1.144:5000/task/SR/edit_task');
     editTaskRequest.setRequestHeader('Content-Type', 'application/json');
     editTaskRequest.send(JSON.stringify({'taskID': thisPageList[editTaskIndex].taskID, 'taskName': document.getElementById('newTaskName').value,
-    'taskStartTime': document.getElementById('newTaskStartTime').value, 'taskEndTime': document.getElementById('newTaskEndTime').value + ':00',
+    'taskStartTime': document.getElementById('newTaskStartTime').value, 'taskEndTime': document.getElementById('newTaskEndTime').value,
     'taskPoint': document.getElementById('newTaskQuota').value, 'taskLocation': document.getElementById('newTaskLocation').value,
     'taskContent': document.getElementById('newTaskContent').value,}));
     editTaskRequest.onload = function()
@@ -272,8 +273,8 @@ function sendEdit()
         {
             case '20': case 20:
                 console.log('任務編輯已送出');
-                updateEdit(editTaskIndex);
                 hideEditDiv();
+                window.location.reload();
                 editTaskIndex = -1;
                 break;
             default:
@@ -290,7 +291,7 @@ function deleteTask(index)
     deleteTaskRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID}));
     deleteTaskRequest.onload = function()
     {
-        showError(200);
+        showPrompt(200);
         console.log(deleteTaskRequest.responseText);
         rst = JSON.parse(deleteTaskRequest.responseText);
         switch (rst.rspCode)
@@ -302,8 +303,8 @@ function deleteTask(index)
             case '300': case 300:
             case '400': case 400:
             default:
-                alert('任務刪除失敗：' + thisPageList[index].taskName);
+                document.getElementById('systemPrompt').innerHTML = '任務刪除失敗：' + thisPageList[index].taskName;
             }
     }
-    showError(400);
+    showPrompt(400);
 }

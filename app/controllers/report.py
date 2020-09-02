@@ -139,7 +139,7 @@ def list():
             except:
                 SPStar = ""
                 SPComment = ""
-            reportList.append({"taskName":task_.taskName,"taskContent":task_.taskContent,"SRRate":SRStar,"SRName":task_.SR[0].name,\
+            reportList.append({"taskName":task_.taskName,"taskContent":task_.taskContent,"SRRate":SRStar,"SRName":task_.SR[0].name,"reportTime":str(report_.time),\
                                 "SRComment":SRComment,"SRPhone":task_.SR[0].userPhone,"SPRate":SPStar,"SPName":task_.SP[0].name,\
                                 "SPComment":SPComment,"SPPhone":task_.SP[0].userPhone,"reportUserName":report_.account.name,\
                                 "reportReason":report_.reason,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime)})

@@ -162,6 +162,10 @@ textarea:focus
         border-radius: 50%;
         cursor: pointer;
     }
+    #limit
+    {
+        margin-left: 10px;
+    }
     #file
     {
         margin: 10px 0 0 50px;

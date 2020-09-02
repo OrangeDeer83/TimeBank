@@ -74,8 +74,8 @@ def allotment_():
     #這裡的receiver如果kind不是all請給要配發的userID，all的話請給SA搜尋了什麼
     receiver = json['receiver']
     period = json['period']
-    frequency = json['frequency']
-    quota = json['quota']
+    frequency = str(json['frequency'])
+    quota = str(json['quota'])
     notAllow = []
     if not(period == '30' or period == '90' or period == '0' or period == '180' or period == '365'):
         notAllow.append("period")
@@ -93,7 +93,7 @@ def allotment_():
         notAllow.append("quota")
     if notAllow != []:
         #rspCode 401:有違法輸入
-        return jsonify({"rspCode":400,"notAllow":notAllow})
+        return jsonify({"rspCode":401,"notAllow":notAllow})
     allotmentTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     if kind == 'one':
         if receiver == '':
@@ -112,8 +112,12 @@ def allotment_():
             now_ = str(datetime.datetime.now())
             for num in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
-                db.engine.execute(make_point_sql(pointID,adminID,userID,now_))
-                db.session.commit()
+                point_ = point(pointID = pointID, adminID = adminID, ownerID = userID, time_  = str(datetime.datetime.now()))
+                db.session.add(point_)
+                db.session.commit() 
+                pointRecord_ = pointRecord(pointID = point_.ID, ownerID = userID, transferTime = str(datetime.datetime.now()))
+                db.session.add(pointRecord_)
+                db.session.commit()       
             transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
             db.session.add(transferRecord_)
             db.session.commit()
@@ -146,8 +150,12 @@ def allotment_():
                 now_ = str(datetime.datetime.now())
                 for num in range(int(quota)):
                     pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
-                    db.engine.execute(make_point_sql(pointID,adminID,userID,now_))
-                    db.session.commit()
+                    point_ = point(pointID = pointID, adminID = adminID, ownerID = userID, time_  = str(datetime.datetime.now()))
+                    db.session.add(point_)
+                    db.session.commit() 
+                    pointRecord_ = pointRecord(pointID = point_.ID, ownerID = userID, transferTime = str(datetime.datetime.now()))
+                    db.session.add(pointRecord_)
+                    db.session.commit()     
                 transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
                 db.session.add(transferRecord_)
                 db.session.commit()
@@ -198,7 +206,7 @@ def simple_allotment_history():
             frequency.append(allotment[3])
         return jsonify({"rspCode":200,"period":period,"frequency":frequency,"quota":quota,"time":time})
     except:
-        #以防萬一
+        #資料庫錯誤
         return jsonify({"rspCode":400,"period":"","frequency":frequency,"quota":"","time":""})
     
 #主動配發紀錄
@@ -227,7 +235,7 @@ def allotment_history():
         userSPRate = []
         #allotmentTime, quota, period, frequency, userName, userName, SRRate,
         #SRRateTimes, SPRate, SPRateTimes
-        allotmentData = db.session.query(allotment.allotmentTime, allotment.quota, allotment.period, allotment.frequency, account.userName, account.name, account.SRRate, account.SRRateTimes, account.SPRate, account.SPRateTimes).join(account).filter(allotment.userID == account.userID)
+        allotmentData = db.session.query(allotment.allotmentTime, allotment.quota, allotment.period, allotment.frequency, account.userName, account.name, account.SRRate, account.SRRateTimes, account.SPRate, account.SPRateTimes).join(account).filter(allotment.userID == account.userID).order_by(allotment.allotmentTime.desc())
         if target != '':
             allotmentData = allotmentData.filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target))))
         for allotment_ in allotmentData:
@@ -247,5 +255,5 @@ def allotment_history():
                 userSPRate.append(0)
         return jsonify({"rspCode":200,"time":time,"quota":quota,"period":period,"frequency":frequency,"userName":userName,"name":name,"userSRRate":userSPRate,"userSPRate":userSPRate})
     except:
-        #以防萬一
+        #資料庫錯誤
         return jsonify({"rspCode":400,"time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})

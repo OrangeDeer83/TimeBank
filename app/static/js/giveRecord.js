@@ -3,6 +3,20 @@ window.onload = function()
     showListDiv();
 }
 
+function showPrompt(index)
+{
+    const prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch(index)
+    {
+        case 200: prompt.innerHTML = '已就緒...'; break;
+        case 400: prompt.innerHTML = '等待伺服器回應中...'; break;
+        case 401: prompt.innerHTML = '系統錯誤，無法取得配發紀錄'; break;
+        case 402: prompt.innerHTML = ''; break;
+        case 403: prompt.innerHTML = ''; break;
+    }
+}
+
 var allList = [5]; // name, userName, userID, SRRate, SPRate, quota, time, frequency, period
 var userAmount = 0;
 var pageAmount = 0;
@@ -74,6 +88,7 @@ function getUserList()
         switch (rst.rspCode)
         {
             case "200": case 200:
+                showPrompt(200);
                 allList[0] = rst.userName;
                 allList[1] = rst.name;
                 /*allList[2] = rst.userID;*/
@@ -85,12 +100,14 @@ function getUserList()
                 allList[8] = rst.period;
                 computePage(0);
                 break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得列表");
+            case "300": case 300: // Methods wrong.
+            case "400": case 400: // Database error.
+            default:
+                showPrompt(401);
                 break;
         }
     }
+    showPrompt(400);
 }
 
 function computePage(type)

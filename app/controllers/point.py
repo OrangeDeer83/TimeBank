@@ -51,14 +51,12 @@ def record():
             except:
                 return jsonify({"rspCode": 40})                                           #非法字元
             userID = session.get('userID')
-            print(value)
             recordStartID = value['pointRecordID']
             requestAmount = value ['requestAmount']
             try:
                 query_data = transferRecord.query.filter_by(userID = userID).order_by(transferRecord.time.desc()).all()
             except:
                 return jsonify({"rspCode": 30})                                           #伺服器錯誤
-            print(query_data)
             pointRecord = []
             count = 0
             start = False

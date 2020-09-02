@@ -18,6 +18,7 @@ def new_indicate():
             for notice_ in query_data:
                 needToDelete = False
                 if notice_.status == noticeType['pleaseComment']:
+                    print(userID, notice_)
                     if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == -1:
                         if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
@@ -28,6 +29,7 @@ def new_indicate():
                     else:
                         needToDelete = True
                 elif notice_.status == noticeType['NoSP']:
+                    print(notice_)
                     if notice_.db_notice_noticeTask[0].task.taskStatus != 4:
                         needToDelete = True
                 elif notice_.status == noticeType['taskStart']:
@@ -75,7 +77,6 @@ def new_list():
                 return jsonify({"rspCode": 20, "newNoticeList": ""})              #沒有新通知
             newNoticeList = []
             for notice_ in query_data:
-                print(notice_)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
                         #該USER為雇員
@@ -115,7 +116,7 @@ def new_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['createTask']:
-                        newNoticeList.append({"content": "已成功功建立任務「{}」。".format(\
+                        newNoticeList.append({"content": "已成功建立任務「{}」。".format(\
                             notice_.db_notice_noticeTask[0].task.taskName),\
                             "connectTo": noticePage['SRAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['cancelAccepting']:
@@ -159,24 +160,24 @@ def new_list():
                     elif notice_.status == noticeType['SRFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             newNoticeList.append({"content": "「{}」{}已點選完成，請至雇員已通過頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SR[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                         elif notice_.db_notice_noticeTask[0].task.taskStatus == 14:
                             newNoticeList.append({"content": "「{}」{}已點選未完成，請至雇員已通過頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SR[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['SPFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             newNoticeList.append({"content": "「{}」{}已點選完成，請至雇主已接受頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SP[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                         elif notice_.db_notice_noticeTask[0].task.taskStatus == 14:
                             newNoticeList.append({"content": "「{}」{}已點選未完成，請至雇主已接受頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SP[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskFinish']:
                         #該USER為雇員
@@ -269,10 +270,8 @@ def new_list():
                                     "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                 elif notice_.db_notice_noticeApply:
                     if notice_.status == noticeType['judgeApply']:
-                        print(1)
                         #通過
                         if notice_.db_notice_noticeApply[0].apply.applyStatus == 1:
-                            print(2)
                             if notice_.db_notice_noticeApply[0].apply.result:
                                 newNoticeList.append({"content": "點數申請{}：{}通過。".format(\
                                         notice_.db_notice_noticeApply[0].apply.applyCondition.className,\
@@ -284,17 +283,14 @@ def new_list():
                                         "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                         #未通過
                         elif notice_.db_notice_noticeApply[0].apply.applyStatus == 2:
-                            print(3)
                             #有原因
                             if notice_.db_notice_noticeApply[0].apply.result:
-                                print(4)
                                 newNoticeList.append({"content": "點數申請{}：{}未通過。".format(\
                                     notice_.db_notice_noticeApply[0].apply.applyCondition.className,\
                                     notice_.db_notice_noticeApply[0].apply.result),\
                                     "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                             #沒有原因
                             else:
-                                print(5)
                                 newNoticeList.append({"content": "點數申請{}未通過。".format(\
                                     notice_.db_notice_noticeApply[0].apply.applyCondition.className),\
                                     "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
@@ -353,7 +349,7 @@ def all_list():
             noticeList = []
             for i in range(startNum, startNum + amount):
                 notice_ = query_data[i]
-                print(notice_, notice_.status)
+                print(notice_)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
                         #該USER為雇員
@@ -393,7 +389,7 @@ def all_list():
                                 notice_.db_notice_noticeTask[0].task.taskName),\
                                 "connectTo": noticePage['SRAllTaskRecord'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['createTask']:
-                        noticeList.append({"content": "已成功功建立任務「{}」。".format(\
+                        noticeList.append({"content": "已成功建立任務「{}」。".format(\
                             notice_.db_notice_noticeTask[0].task.taskName),\
                             "connectTo": noticePage['SRAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['cancelAccepting']:
@@ -437,24 +433,24 @@ def all_list():
                     elif notice_.status == noticeType['SRFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             noticeList.append({"content": "「{}」{}已點選完成，請至雇員已通過頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SR[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                         elif notice_.db_notice_noticeTask[0].task.taskStatus == 14:
                             noticeList.append({"content": "「{}」{}已點選未完成，請至雇員已通過頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SR[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['SPFinish']:
                         if notice_.db_notice_noticeTask[0].task.taskStatus == 13:
                             noticeList.append({"content": "「{}」{}已點選完成，請至雇主已接受頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SP[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                         elif notice_.db_notice_noticeTask[0].task.taskStatus == 14:
                             noticeList.append({"content": "「{}」{}已點選未完成，請至雇主已接受頁面點選完成。".format(\
-                                notice_.db_notice_noticeTask[0].task.SP[0].name,\
-                                notice_.db_notice_noticeTask[0].task.taskName),\
+                                notice_.db_notice_noticeTask[0].task.taskName,\
+                                notice_.db_notice_noticeTask[0].task.SR[0].name),\
                                 "connectTo": noticePage['SPAllTaskPassed'], "time": str(notice_.time)})
                     elif notice_.status == noticeType['taskFinish']:
                         #該USER為雇員
@@ -573,7 +569,6 @@ def all_list():
                                     "connectTo": noticePage['pointRecord'], "time": str(notice_.time)})
                 elif notice_.db_notice_noticeAllotment:
                     if notice_.status == noticeType['allotment']:
-                        print(notice_)
                         if notice_.db_notice_noticeAllotment[0].transferRecordAllotment.allotment.period == 0:
                             noticeList.append({"content": "管理員一次性配發了{}點給您。".format(\
                                 notice_.db_notice_noticeAllotment[0].transferRecordAllotment.allotment.quota),\

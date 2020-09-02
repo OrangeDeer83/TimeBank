@@ -234,6 +234,7 @@
         width: 800px;
         height: 660px;
         margin: auto;
+        margin-bottom: 20px;
         border-radius: 12px;
     }
     .formLine
@@ -348,6 +349,7 @@
     .approveDiv
     {
         margin: 0;
+        margin-bottom: 20px;
         height: 100%;
         border: 0px;
     }

@@ -3,6 +3,33 @@ window.onload = function()
     getUserList();
 }
 
+function showPrompt(index)
+{
+    const prompt = document.getElementById('systemPrompt');
+    prompt.removeAttribute('style');
+    switch(index)
+    {
+        case 200: prompt.innerHTML = '已就緒...'; break;
+        case 400: prompt.innerHTML = '等待伺服器回應中...'; break;
+        case 401: prompt.innerHTML = '系統錯誤，無法取得使用者列表'; break;
+        case 402: prompt.innerHTML = '等待伺服器配發點數中...'; break;
+        case 403: prompt.innerHTML = '未選擇使用者'; break;
+        case 404: prompt.innerHTML = '請輸入配發額度(1~50)';
+                  document.getElementById('quota').focus;
+                  prompt.style.color = 'red';
+                  break;
+        case 405: prompt.innerHTML = '請選擇配發週期';
+                  document.getElementById('period').focus;
+                  prompt.style.color = 'red';
+                  break;
+        case 406: prompt.innerHTML = '請輸入發放次數(2~20)';
+                  document.getElementById('frequency').focus;
+                  prompt.style.color = 'red';
+                  break;
+        case 407: prompt.innerHTML = '系統錯誤，配發失敗'; break;
+    }
+}
+
 var allList = [5]; // name, userName, userID, userSRRate, userSPRate, userPoint(pointAmount)
 var userAmount = 0;
 var pageAmount = 1;
@@ -27,6 +54,7 @@ function getUserList()
         switch (rst.rspCode)
         {
             case "200": case 200:
+                showPrompt(200);
                 allList[0] = rst.userName;
                 allList[1] = rst.name;
                 allList[2] = rst.userID;
@@ -35,12 +63,13 @@ function getUserList()
                 allList[5] = rst.userPoint;
                 computePage(0);
                 break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得列表");
+            case "300": case 300: // Methods wrong.
+            case "400": case 400: // Database error.
+                showPrompt(401);
                 break;
         }
     }
+    showPrompt(400);
 }
 
 function computePage(type)
@@ -145,38 +174,38 @@ function allotment(index)
 {
     if (notOnload == 1)
     {
-        alert('等待伺服器配發點數中...');
+        showPrompt(402);
         return ;
     }
-    notOnload = 1;
     // No user
     if (userAmount == 0)
     {
-        alert("未選擇使用者");
+        showPrompt(403);
         return ;
     }
     // Quota should between 1~50.
-    var quota = document.getElementById("quota").value;
+    var quota = Math.round(document.getElementById("quota").value);
     if (quota == "" || quota < 1 || quota > 50)
     {
-        alert("請輸入配發額度(1~50)");
+        showPrompt(404);
         return ;
     }
     // Must choose period.
     var period = periodSelect.options[periodSelect.selectedIndex].value;
     if (period == "none")
     {
-        alert("請選擇配發週期");
+        showPrompt(405);
         return ;
     }
     // frequency should between 2~50. Only period "0"'s frequency  is "1".
-    var frequency = document.getElementById("frequency").value;
+    var frequency = Math.round(document.getElementById("frequency").value);
     if (period != "0" && (frequency < 2 || frequency > 20))
     {
-        alert("請輸入發放次數(2~20)");
+        showPrompt(406);
         return ;
     }
     
+    notOnload = 1;
     if (index == 10)
     {
         sendAllotment("all", searchText, quota, period, frequency);
@@ -194,19 +223,22 @@ function sendAllotment(kind, receiver, quota, period, frequency)
     allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}));
     allotmentRequest.onload = function()
     {
+        notOnload = 0;
         console.log(allotmentRequest.responseText);
         rst = JSON.parse(allotmentRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
+                showPrompt(200);
                 alert("配發成功");
-                window.location.reload();
+                getUserList();
                 break;
             case "300": case 300:
             case "400": case 400:
             default:
-                alert("系統錯誤，配發失敗")
+                showPrompt(407);
                 break;
         }
     }
+    showPrompt(400);
 }

@@ -16,9 +16,9 @@ function showError(rspCode)
     error.style.color = "red";
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = "white"; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = "white"; return ;
+        case   200: error.innerHTML = '已就緒...'; error.style.color = "white"; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = "white"; return ;
         case 40011: error.innerHTML = "系統錯誤，讀取申請對象失敗"; return ;
         case 40013: error.innerHTML = "無法確認檔案狀態"; return ;
         case 40014: error.innerHTML = "系統錯誤，讀取類別失敗"; return ;
@@ -273,11 +273,11 @@ function sendApplication()
         }
     }
     var quota = document.getElementById("applyQuota").value;
-    if (quota < 0 || 99999 < quota)
+    if (quota < 0 || 50 < quota)
     var frequency = document.getElementById("applyFrequency").value;
-    if (frequency < 0 || 999999 < frequency)
+    if (frequency < 0 || 20 < frequency)
     {
-        error.innerHTML = "請輸入介於0~999999之間的領取次數";
+        error.innerHTML = "請輸入介於0~20之間的領取次數";
         return ;
     }
 

@@ -469,6 +469,7 @@ def show_apply_list():
         applyFrequency = []
         applyTime = []  
         applyResult = []
+        changeQuota = []
         if target == '':
             #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
             applyData = db.engine.execute(get_all_apply_status_0()).fetchall()
@@ -477,7 +478,7 @@ def show_apply_list():
             return jsonify({"rspCode":401,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
         else:
             #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
-            applyData = db.session.query(apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency).join(account).filter(apply.applyStatus == 0,apply.userID==account.userID).filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target)))).all()
+            applyData = db.session.query(apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency,apply.oldConditionID).join(account).filter(apply.applyStatus == 0,apply.userID==account.userID).filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target)))).all()
         try:
            for oneData in applyData:
                #`userName`,`SRRate`,SRRateTimes,`SPRate`,SPRateTimes`
@@ -498,9 +499,14 @@ def show_apply_list():
                     fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(oneData[0],oneData[0]),'r',encoding="utf-8")   
                     applyPdfName.append(fileTxt.read().split('"')[0])
                except:
-                  applyPdfName.append(None)
+                  applyPdfName.append("None")
                applyID.append(oneData[0])
                #`period`,`class`,`quota`
+               x=db.session.query(applyCondition.quota).filter(applyCondition.conditionID == userData[6]).first()
+               if x == None:
+                   changeQuota.append(x)
+               else:
+                   changeQuota.append(None)
                conditionData = db.engine.execute(show_condition_data(oneData[2])).fetchone()
                applyClass.append(conditionData[1])
                applyQuota.append(conditionData[2])
@@ -508,9 +514,9 @@ def show_apply_list():
                applyFrequency.append(oneData[5])
                applyTime.append(str(oneData[3]))
                applyResult.append(oneData[4])
-           return jsonify({"rspCode":200,"userPoint":userPoint,"userName":userName,"name":name,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
+           return jsonify({"rspCode":200,"changeQuota":changeQuota,"userPoint":userPoint,"userName":userName,"name":name,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
         except:
-            #rspCode 400:以防萬一
+            #資料庫錯誤
             return jsonify({"rspCode":400,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
         
     else:
@@ -572,7 +578,7 @@ def simple_personal_apply_history():
             fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply[7],apply[7]),'r',encoding="utf-8")
             applyPdfName.append(fileTxt.read().split('"')[0])
         except:
-            applyPdfName.append(None)
+            applyPdfName.append("None")
         if apply[5] != None:
             oldQuota.append(db.engine.execute(select_quota_by_conditionID(apply[5])).fetchone()[0])
         else:
@@ -588,11 +594,11 @@ def apply_pdf_download(number):
         return jsonify({"rspCode":300})
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
         return jsonify({"rspCode":500})
+    #json = request.get_json()
+    #applyID = str(json['applyID'])
+    applyID = number
     try:
-        applyID = number
-        filename = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(applyID, applyID), 'r', encoding='utf-8').read()
-        print(filename)
-        return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),filename,as_attachment=True)
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),'{}.pdf'.format(applyID),as_attachment=True)
     except:
         #rspCode 400:檔案不存在
         return jsonify({"rspCode":400})
@@ -647,7 +653,7 @@ def apply_judge():
             db.session.commit()
             for x in range(int(quota)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
-                db.engine.execute(make_point_sql(pointID,adminID,userID,str(datetime.datetime.now())))
+                #db.engine.execute(make_point_sql(pointID,adminID,userID,str(datetime.datetime.now())))
                 point_ = point(pointID = pointID, adminID = adminID, ownerID = userID, time_  = str(datetime.datetime.now()))
                 db.session.add(point_)
                 db.session.commit() 
@@ -695,8 +701,13 @@ def apply_judge():
                 db.engine.execute(alter_apply_rest_time(applyID,rest - period))
             for x in range(int(quotaChange)):
                 pointID = make_point()+"_{}".format(str(db.session.query(point).count() + 1))
-                db.engine.execute(make_point_sql(pointID,adminID,userID,str(datetime.datetime.now())))
-                db.session.commit()
+                point_ = point(pointID = pointID, adminID = adminID, ownerID = userID, time_  = str(datetime.datetime.now()))
+                db.session.add(point_)
+                db.session.commit() 
+                pointRecord_ = pointRecord(pointID = point_.ID, ownerID = userID, transferTime = str(datetime.datetime.now()))
+                db.session.add(pointRecord_)
+                db.session.commit()       
+                
             transferRecord_ = transferRecord(userID = userID,time = datetime.datetime.now())
             db.session.add(transferRecord_)
             db.session.commit()
@@ -737,7 +748,6 @@ def judgement_history():
         userPoint = []
         name = []
         applyStatus = []
-        applyPdf = []
         applyID = []
         applyClass = []
         applyQuota = []
@@ -746,9 +756,9 @@ def judgement_history():
         judgeTime = []
         applyPeriod = []
         result = []
-        applyStatus = []
         applyPdfName = []
         frequency = []
+        judgeAdmin = []
         try:
             json = request.get_json()
         except:
@@ -757,7 +767,7 @@ def judgement_history():
         className = json['class']
         period = json['period']
         status = json['status']
-        applyData = db.session.query(apply.conditionID ,apply.applyTime, apply.frequency, apply.result, apply.applyStatus, apply.oldConditionID, apply.judgeTime, apply.applyID,apply.userID,apply.applyStatus).filter(apply.applyStatus != 0).filter(apply.conditionID == applyCondition.conditionID).filter(apply.userID ==account.userID )
+        applyData = db.session.query(apply.conditionID ,apply.applyTime, apply.frequency, apply.result, apply.applyStatus, apply.oldConditionID, apply.judgeTime, apply.applyID,apply.userID,apply.applyStatus, apply.adminID).filter(apply.applyStatus != 0).filter(apply.conditionID == applyCondition.conditionID).filter(apply.userID ==account.userID )
         if Name != '':
             applyData = applyData.filter(or_(account.name.like('%{}%'.format(Name)),account.userName.like('%{}%'.format(Name))))
         if className != '':
@@ -789,8 +799,9 @@ def judgement_history():
                 fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(apply_[7],apply_[7]),'r',encoding="utf-8")
                 applyPdfName.append(fileTxt.read().split('"')[0])
             except:
-                applyPdfName.append(None)
+                applyPdfName.append("None")
             userID.append(apply_[8])
+            judgeAdmin.append(db.session.query(adminAccount.adminName).filter(adminAccount.adminID==apply_[9]).first()[0])
             #`userName`,`SRRate`,`SRRateTimes`,`SPRate`,`SPRateTimes`
             userData = db.engine.execute(get_apply_judge_user_info(apply_[8])).fetchone()
             try:
@@ -802,9 +813,13 @@ def judgement_history():
             except:
                 userSPRate.append(0)
             userName.append(userData[5])
-            userPoint.append(userData[6])
+            userPoint.append(str(userData[6]))
             name.append(userData[0])
-        return jsonify({"rspCode":200,"userID":userID,"userName":userName,"userPoint":userPoint,"applyStatus":applyStatus,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":name,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
+            #judgeAdmin str, userID str, userName str, userPoint str, applyStatus int,
+            # userSRRate float, userSPRate float, name str, applyPdfName str, applyID int, 
+            # applyClass str, applyQuota int, oldQuota int, applyTime str,
+            # judgeTime str, priotd str ,applyStatus int, applyResultstr, applyFrequency int
+        return jsonify({"rspCode":200,"judgeAdmin":judgeAdmin,"userID":userID,"userName":userName,"userPoint":userPoint,"applyStatus":applyStatus,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":name,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
     except:
         return jsonify({"rspCode":400,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
 
@@ -813,7 +828,7 @@ def judgement_history():
 def download_apply_description():
     if request.method != 'GET':
         return jsonify({"rspCode":300})
-    if session.get('userType') != userType['SA'] or session.get('userType') != userType['AA']  or session.get('userType') != userType['USER']:
+    if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']  or session.get('userType') == userType['USER']):
         return jsonify({"rspCode":500})
     try:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/','申請說明文件.pdf',as_attachment=True)

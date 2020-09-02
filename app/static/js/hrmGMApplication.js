@@ -12,12 +12,11 @@ var currentPage = 1;
 
 function showError(rspCode)
 {
-    error.style.color = "#EECA00";
     switch (rspCode)
     {
-        case   200: error.innerHTML = "已就緒..."; error.style.color = "white"; return ;
-        case   300: error.innerHTML = "系統錯誤"; return ;
-        case   400: error.innerHTML = "等待伺服器回應..."; error.style.color = "white"; return ;
+        case   200: error.innerHTML = '已就緒...'; return ;
+        case   300: error.innerHTML = '系統錯誤'; return ;
+        case   400: error.innerHTML = '等待伺服器回應...'; return ;
         case 40012: error.innerHTML = "系統錯誤，無法同意評論管理員申請"; return ;
         case 40112: error.innerHTML = "未知的評論管理員，請稍後再試"; return ;
         case 40013: error.innerHTML = "系統錯誤，無法拒絕評論管理員申請"; return ;
@@ -35,7 +34,7 @@ function showListDiv()
         table.innerHTML += '' +
         '<tr id="list' + i + '" style="display:none"><td>' +
             '<div class="managerName">管理員名稱：<span id="managerName' + i + '"></span></div>' +
-            '<div class="phone">電話號碼:<span id="managerPhone' + i + '"></span></div>' +
+            '<div class="phone">電話號碼：<span id="managerPhone' + i + '"></span></div>' +
             '<div class="email">電子郵件：<span id="managerEmail' + i + '"></span></div>' +
             '<div class="button">' +
                 '<input type="button" class="agree" onclick="approve(' + i + ')" value="同意" />' +
@@ -72,7 +71,6 @@ function getGMList()
             if (applicationAmount == 0)
             {
                 error.innerHTML = "目前沒有申請";
-                error.style.color = "#EECA00";
                 return ;
             }
             computePage(0);

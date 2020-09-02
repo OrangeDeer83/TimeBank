@@ -50,8 +50,9 @@ def output_web_intro():
         except:
             #rspCode 400:webIntro.txt開啟失敗
             return jsonify({"rspCode" : "400","webIntro":''})
-        webIntro = file.read().split("-")[1]
-        adminName = file.read().split("-")[0]
+        fileIndex = file.read().split("-")
+        webIntro = fileIndex[1]
+        adminName = fileIndex[0]
         intro = jsonify({"rspCode":"200","webIntro":webIntro,"adminName":adminName})
         file.close()
         return intro
@@ -119,8 +120,9 @@ def upload_news():
             #內文上傳
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
             fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w',encoding ='UTF-8')
-            fileContent.writable(adminName+"-")
-            fileContent.write(content)
+            content_ = adminName+"-"+content
+            print(content_,"++++++++++++++++")
+            fileContent.write(content_)
             fileContent.close()
             #return jsonify({"rspCode":"200"})
             return redirect(url_for('Admin.update_web'))
@@ -158,18 +160,22 @@ def output_newsImage(number):
 @Portal.route("/output_news_content/<number>", methods = ['GET'])
 def output_news_content(number):
     if request.method == 'GET':
-        try:
-            filename = number + '.txt'
-            print(filename)
-            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
-            file_ = file.read().split("-")
-            adminName = file_[0]
-            content = file_[1]
-            file.close()
-            return jsonify({"rspCode": 200, "content": content,"adminName":adminName})
-        except:
+        #try:
+        filename = number + '.txt'
+        file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
+        file_ = file.read().split("-")
+        adminName = file_[0]
+        content = ''
+        for num in range(len(file_)):
+            if num != 0:
+                if num != 1:
+                    content += '-'
+                content += file_[num]
+        file.close()
+        return jsonify({"rspCode": 200, "content": content,"adminName":adminName})
+        #except:
             #內文顯示錯誤
-            return jsonify({"rspCode" : 400,"content":"","adminName":""})
+        #    return jsonify({"rspCode" : 400,"content":"","adminName":""})
     else:
         return jsonify({"rspCode":300,"content":"","adminName":""})
 #最新消息標題顯示
@@ -196,6 +202,11 @@ def edit_news(number):
             session.clear()
             return redirect(url_for('Admin.update_web'))
         #目前預設傳來的圖片叫做file
+        try:
+            adminID = session.get('adminID')
+            adminName = db.session.query(adminAccount.adminName).filter(adminAccount.adminID == adminID).first()
+        except:
+            return redirect(url_for('Admin.update_web'))
         try:
             fileImage = request.files['file']
         except:
@@ -241,10 +252,15 @@ def edit_news(number):
         if content != '':
             try:
                 if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number)):
-                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding ='UTF-8')
-                    file.write(content)
+                    try:
+                        file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding ='UTF-8')
+                        content_ = str(adminName[0])+"-"+str(content)
+                    except:
+                        return "3"
+                    file.write(content_)
                     file.close()
                 else:
+                    return "1"
                     #return jsonify({"rspCode":"403"})
                     return redirect(url_for('Admin.update_web'))
             except:

@@ -46,7 +46,7 @@ function addGMEmail()
     }
 
     var addEmailRequest = new XMLHttpRequest();
-    addEmailRequest.open("POST", "http://192.168.1.144:5000/HRManage/load_GM_mail");
+    addEmailRequest.open("POST", "/HRManage/load_GM_mail");
     addEmailRequest.setRequestHeader("Content-Type", "application/json");
     addEmailRequest.send(JSON.stringify({"GMMail": newEmail.value}));
     addEmailRequest.onload = function()

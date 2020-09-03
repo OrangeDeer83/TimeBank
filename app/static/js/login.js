@@ -43,7 +43,7 @@ function userIDVerify()
     {
         userName.style.border = "1px solid #CCCCCC";
         idError.style.display = "none";
-        console.log("Avalible user id.");
+        //console.log("Avalible user id.");
         return true;
     }
 }
@@ -56,7 +56,7 @@ function userPasswordVerify()
     {
         userPassword.style.border = "1px solid #CCCCCC";
         passwordError.style.display = "none";
-        console.log("Avalible password.");
+        //console.log("Avalible password.");
         return true;
     }
 }
@@ -77,17 +77,17 @@ function showLoginError2()
 // Main function of login.
 function login()
 {
-    console.log("Submit id and password.");
+    //console.log("Submit id and password.");
     if (validated())
     {
-        console.log("Avalible id and password.");
+        //console.log("Avalible id and password.");
         var request = new XMLHttpRequest();
-        request.open("POST", "http://192.168.1.144:5000/account/USER/login");
-        console.log("XMLHttpRequest opened.");
+        request.open("POST", "/account/USER/login");
+        //console.log("XMLHttpRequest opened.");
 
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"userName": userName.value, "userPassword": userPassword.value}));
-        console.log("JSON sent.");
+        //console.log("JSON sent.");
         request.onload = function()
         {
             document.getElementById("loginError3").removeAttribute("style");
@@ -98,10 +98,12 @@ function login()
                 case "200": case 200:
                     window.location.assign("/USER/");
                     break;
-                case "400": case 400:
-                    console.log("Login failed!");
+                case "401": case 401:
+                case "402": case 402:
                     showLoginError1();
                     break;
+                case "300": case 300:
+                case "400": case 400:
                 default:
                     console.log("Login failed! Unknow response text code.");
                     showLoginError2();

@@ -118,7 +118,8 @@ ul{list-style-type: none;}
 {
     color: white;
     text-align: center;
-    margin: 70px 0;
+    margin: 80px 0;
+    overflow: auto;
 }
 
 .formText

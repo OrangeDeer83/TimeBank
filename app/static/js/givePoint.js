@@ -44,7 +44,7 @@ function getUserList()
 {
     searchText = document.getElementById("searchText").value
     var getListRequest = new XMLHttpRequest();
-    getListRequest.open("POST", "http://192.168.1.144:5000/allotment/show_user");
+    getListRequest.open("POST", "/allotment/show_user");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"target": searchText}));
     getListRequest.onload = function()
@@ -217,7 +217,7 @@ function allotment(index)
 function sendAllotment(kind, receiver, quota, period, frequency)
 {
     var allotmentRequest = new XMLHttpRequest();
-    allotmentRequest.open("POST", "http://192.168.1.144:5000/allotment/");
+    allotmentRequest.open("POST", "/allotment/");
     allotmentRequest.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}))
     allotmentRequest.send(JSON.stringify({"kind": kind, "receiver": receiver, "quota": quota, "period": period, "frequency": frequency}));

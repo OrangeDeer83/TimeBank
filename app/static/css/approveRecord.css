@@ -114,13 +114,18 @@
     background: var(--button-hover-background-color);
 }
 
-#formInformation1, #formInformation2
+#formInformation1
 {
+    width: 760px;
+    height: 450px;
     border: var(--button-background-border);
 }
 
 .applyDescription
 {
+    width: 150px;
+    height: 50px;
+    vertical-align: text-top;
     border: 1px solid #CCCCCC;
 	background-color: var(--background-color);
     resize: none;
@@ -129,12 +134,13 @@
 /* 申請內容的文字間格 */
 .detail
 {
-    padding: 5px;
+    padding: 7px 0;
 }    
 
 /* 上一頁及下一頁按鈕 */   
 .page
 {
+    margin-top: 10px;
 	display: flex;
     justify-content: space-between;
 }
@@ -214,15 +220,6 @@
     /* 申請內容-四欄式排版的外框架 */
     #formInformation1
     {
-        width: 760px;
-        height: 250px;
-        border-top: none;
-        margin: 0 0 0 20px;
-    }
-    #formInformation2
-    {
-        width: 760px;
-        height: 230px;
         border-top: none;
         margin: 0 0 0 20px;
     }
@@ -230,27 +227,15 @@
     /* 申請內容-四欄式排版 */
     .Information1
     {
-        width: 165px;
+        width: 50%;
         float:left;
-        margin: 20px 0 0 20px;
+        margin: 10px 20px;
     }
     .Information2
     {
-        width: 235px;
+        width: auto;
         float: left;
         margin: 20px 0 0 10px;
-    }
-    .Information3
-    {
-        width: 135px;
-        float:left;
-        margin: 20px 0 0 10px;
-    }
-    .Information4
-    {
-        width: 125px;
-        float:left;
-        margin: 20px 0 0 20px;
     }
     #applyReason0
     {
@@ -258,10 +243,8 @@
     }
     .applyDescription
     {
-        width: 100px;
-        height: 50px;
         background-color: var(--background-color);
-        color: white;
+        /*color: white;*/
         border: 1px solid #CCCCCC;
     }
     .applyButton

@@ -12,8 +12,8 @@ userEmail.addEventListener("input", userEmailVerify);
 
 function userEmailVerify()
 {
-    registerError1.style.display = "none";
-    registerError2.style.display = "none";
+    systemError1.style.display = "none";
+    systemError2.style.display = "none";
     if (userEmail.value.length >= 3)
     {
         userEmail.style.border = "1px solid #CCCCCC";
@@ -77,6 +77,7 @@ function forgotPasswordEmail()
                 userEmail.focus();
                 return false;
             case "403": case 403: // Didn't find the user of this email.
+            case "405": case 405:
                 userEmail.style.border = "1px solid red";
                 emailError3.style.display = "block";
                 userEmail.focus();
@@ -89,5 +90,5 @@ function forgotPasswordEmail()
                 return false;
         }
     }
-    systemError3.style.display = "block";
+    systemError3.setAttribute('style', 'display:block; color:black; background-color: rgba(0,0,0,0); border: 1px solid #666;')
 }

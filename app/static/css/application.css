@@ -209,6 +209,30 @@
     }
 }
 
+@media (max-width: 450px)
+{
+    #footer
+    {
+        margin-top: 70px;
+    }
+}
+
+@media (max-width: 280px)
+{
+    body
+    {
+        margin-top: 50px;
+    }
+    .formLine
+    {
+        margin: 20px 0;
+    }
+    #footer
+    {
+        margin-top: 200px;
+    }
+}
+
 #applyFrequencyDiv
 {
     display: none;

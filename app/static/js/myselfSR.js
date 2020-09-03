@@ -34,7 +34,7 @@ function getToken()
 function getRateAmount()
 {
     var getRateAmountRequest = new XMLHttpRequest();
-    getRateAmountRequest.open('POST', 'http://192.168.1.144:5000/profile/SR_rate_amount');
+    getRateAmountRequest.open('POST', '/profile/SR_rate_amount');
     getRateAmountRequest.setRequestHeader('Content-Type', 'application/json');
     getRateAmountRequest.send(JSON.stringify({'userID': getToken()}));
     getRateAmountRequest.onload = function()
@@ -99,7 +99,7 @@ function computePage(type)
 function getThisPageList()
 {
     var rateListRequest = new XMLHttpRequest();
-    rateListRequest.open('POST', 'http://192.168.1.144:5000/profile/SR_rate');
+    rateListRequest.open('POST', '/profile/SR_rate');
     rateListRequest.setRequestHeader('Content-Type', 'application/json');
     if (currentPage < pageAmount && (rateAmount % maxPageAmount) == 0)
         rateListRequest.send(JSON.stringify({'userID': getToken(), 'startNum': currentPage * 10 - 10, 'amount': maxPageAmount}));

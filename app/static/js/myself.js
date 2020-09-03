@@ -3,7 +3,7 @@ var userID;
 function getUserID()
 {
     var getIDRequest = new XMLHttpRequest();
-    getIDRequest.open("GET", "http://192.168.1.144:5000/account/get_ID");
+    getIDRequest.open("GET", "/account/get_ID");
     getIDRequest.setRequestHeader("Content-Type", "application/json");
     getIDRequest.send();
     getIDRequest.onload = function()
@@ -27,7 +27,7 @@ function getUserID()
 function getProfile()
 {
     var getProfileRequest = new XMLHttpRequest();
-    getProfileRequest.open("POST", "http://192.168.1.144:5000/profile/output/info");
+    getProfileRequest.open("POST", "/profile/output/info");
     getProfileRequest.setRequestHeader("Content-Type", "application/json");
     getProfileRequest.send(JSON.stringify({"userID": getToken()}));
     getProfileRequest.onload = function()
@@ -64,7 +64,7 @@ function getPropicMyself()
 {
     var propicID = getToken();
     var getPropicRequest = new XMLHttpRequest();
-    getPropicRequest.open("POST", "http://192.168.1.144:5000/account/propic_exist");
+    getPropicRequest.open("POST", "/account/propic_exist");
     getPropicRequest.setRequestHeader("Content-Type", "application/json");
     getPropicRequest.send(JSON.stringify({"userID": propicID}));
     getPropicRequest.onload = function()

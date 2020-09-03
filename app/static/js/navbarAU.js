@@ -1,4 +1,3 @@
-const urlPath = 'http://192.168.1.144:5000';
 showNavbar();
 function showNavbar()
 {

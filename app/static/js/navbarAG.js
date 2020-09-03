@@ -1,4 +1,3 @@
-const urlPath = 'http://192.168.1.144:5000';
 showNavbar();
 function showNavbar()
 {
@@ -16,8 +15,8 @@ function showNavbar()
             '</div>' +
             '<div class="navbarCenter">' +
                 '<div class="navbarBrand">' +
-                    '<img class="navbarBrandImg" id="navbarBrandImg1" alt="AG" src="' + urlPath + '/static/img/AGWhite.png" />' +
-                    '<img class="navbarBrandImg" id="navbarBrandImg2" alt="AG" src="' + urlPath + '/static/img/AGColor.png" />' +
+                    '<img class="navbarBrandImg" id="navbarBrandImg1" alt="AG" src="/static/img/AGWhite.png" />' +
+                    '<img class="navbarBrandImg" id="navbarBrandImg2" alt="AG" src="/static/img/AGColor.png" />' +
                 '</div>' +
             '</div>' +
             '<div class="navbarRight">' +

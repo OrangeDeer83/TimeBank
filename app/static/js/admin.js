@@ -70,13 +70,12 @@ var adminAmount = 0;
 var pageAmount = 1;
 var thisPageList = [];
 var currentPage = 1;
-var pageNumber = document.getElementById("pageNumber");
 
 // Get amount of admins.
 function getAdminAmount()
 {
     var getAdminAmountRequest = new XMLHttpRequest();
-    getAdminAmountRequest.open("GET", "http://192.168.1.144:5000/HRManage/Admin_list");
+    getAdminAmountRequest.open("GET", "/HRManage/Admin_list");
     getAdminAmountRequest.setRequestHeader("Content-Type", "application/json");
     getAdminAmountRequest.send();
     getAdminAmountRequest.onload = function()
@@ -87,7 +86,7 @@ function getAdminAmount()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("管理員數量讀取成功");
+                //console.log("管理員數量讀取成功");
                 adminList = rst.AdminList;
                 adminAmount = adminList.length;
                 pageAmount = Math.ceil(adminAmount / 10);
@@ -135,6 +134,7 @@ function showListDiv()
 // Compute and react nextPage button, prevOage button and number of pages.
 function computePage(type)
 {
+    console.log(pageAmount)
     // type 0: just compute,
     //      1: changePageButton Prev click,
     //      2: changePageButton next click.
@@ -149,8 +149,8 @@ function computePage(type)
             else currentPage++;
             break;
     }
-     pageNumber.innerHTML = currentPage + "/" + pageAmount;
-     computeThisPageList();
+    document.getElementById("pageNumber").innerHTML = currentPage + "/" + pageAmount;
+    computeThisPageList();
 }
 
 // Compute the index of this page.
@@ -229,7 +229,7 @@ function addAdmin()
     }
 
     var addAdminRequest = new XMLHttpRequest();
-    addAdminRequest.open("POST", "http://192.168.1.144:5000/HRManage/create/Admin");
+    addAdminRequest.open("POST", "/HRManage/create/Admin");
     addAdminRequest.setRequestHeader("Content-Type", "application/json");
     console.log(adminType + adminUserName.value + adminPassword.value);
     addAdminRequest.send(JSON.stringify({"adminType": adminType, "adminName": adminUserName.value, "adminPassword": adminPassword.value}));
@@ -290,7 +290,7 @@ function changePassword(index)
     }
 
     var changePasswordRequest = new XMLHttpRequest();
-    changePasswordRequest.open('POST', 'http://192.168.1.144:5000/HRManage/changePassword');
+    changePasswordRequest.open('POST', '/HRManage/changePassword');
     changePasswordRequest.setRequestHeader('Content-Type', 'application/json');
     changePasswordRequest.send(JSON.stringify({'adminID': thisPageList[index].adminID, 'newPassword': newPassword}));
     changePasswordRequest.onload = function()
@@ -324,7 +324,7 @@ function changePassword(index)
 function deleteAdmin(index)
 {
     var deleteRequest = new XMLHttpRequest();
-    deleteRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin");
+    deleteRequest.open("POST", "/HRManage/delete/Admin");
     deleteRequest.setRequestHeader("Content-Type", "application/json");
     deleteRequest.send(JSON.stringify({"adminID": thisPageList[index].adminID}));
     deleteRequest.onload = function()
@@ -358,7 +358,7 @@ function deleteAdmin(index)
 function checkPassword()
 {
     var checkPasswordRequest = new XMLHttpRequest();
-    checkPasswordRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin/check_password");
+    checkPasswordRequest.open("POST", "/HRManage/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("password").value}));
     checkPasswordRequest.onload = function()
@@ -389,7 +389,7 @@ function checkPassword()
 function checkUserName()
 {
     var checkUserNameRequest = new XMLHttpRequest();
-    checkUserNameRequest.open("POST", "http://192.168.1.144:5000/account/Admin/detect_repeated");
+    checkUserNameRequest.open("POST", "/account/Admin/detect_repeated");
     checkUserNameRequest.setRequestHeader("Content-Type", "application/json");
     checkUserNameRequest.send(JSON.stringify({"adminName": adminUserName.value}));
     checkUserNameRequest.onload = function()

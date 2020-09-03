@@ -20,7 +20,6 @@ def one_month_list():
             show_year = value['year']
             show_month = value['month']
             userID = session.get('userID')
-            print(value)
             if show_month < 1 or show_month > 12:
                 return jsonify({"rspCode": 41})                                                                          #月份錯誤
             try:
@@ -105,7 +104,6 @@ def one_month_list():
                                     break
                 if not Found:
                     dateList.append(0)
-            print(dateList)
             return jsonify({"rspCode": 20, "dateList": dateList})                                                                         #成功取得
         else:
             return jsonify({"rspCode": 50})                                                                                               #權限不符
@@ -125,10 +123,11 @@ def one_date_list():
             show_month = value['month']
             show_day = value['day']
             userID = session.get('userID')
+            print(value)
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": 41})                                                                      #沒有該user
+                    return jsonify({"rspCode": 41})                                                                      #userID錯誤，沒有該user
             except:
                 return jsonify({"rspCode": 30})                                                                          #資料庫錯誤
             taskList = []
@@ -169,7 +168,6 @@ def one_date_list():
                         elif dateStart < taskCandidate_.task.taskStartTime and dateEnd > taskCandidate_.task.taskEndTime:
                             taskList.append(taskCandidate_.task)
             sortTaskByTaskStartTime(taskList, 0, len(taskList) - 1)
-            print(taskList)
             taskListJson = []
             for task in taskList:
                 if task.taskStartTime < dateStart:
@@ -197,7 +195,6 @@ def one_date_list():
                         taskListJson.append({"taskName": task.taskName, "taskStartTime": str(task.taskStartTime)[11:19],\
                                         "taskEndTime": str(task.taskEndTime)[11:19], "taskContent": task.taskContent,\
                                         "taskLocation": task.taskLocation, "taskSRName": "-", "taskSPName": task.SP[0].name})
-
             return jsonify({"rspCode": 20, "taskList": taskListJson})                                                 #成功取得
         else:
             return jsonify({"rspCode": 50})                                                                           #權限不符

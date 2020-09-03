@@ -55,7 +55,7 @@ function showListDiv()
 function getGMList()
 {
     var getALRequest = new XMLHttpRequest();
-    getALRequest.open("GET", "http://192.168.1.144:5000/HRManage/GM_list");
+    getALRequest.open("GET", "/HRManage/GM_list");
     getALRequest.setRequestHeader("Content-Type", "application/json");
     getALRequest.send();
     getALRequest.onload = function()
@@ -144,7 +144,7 @@ function showThisPageList()
 function deleteManager(index)
 {
     var deleteManagerRequest = new XMLHttpRequest();
-    deleteManagerRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/GM");
+    deleteManagerRequest.open("POST", "/HRManage/delete/GM");
     deleteManagerRequest.setRequestHeader("Content-Type", "application/json");
     deleteManagerRequest.send(JSON.stringify({"GMID": thisPageList[index].adminID, "adminID": "39"}));
     deleteManagerRequest.onload = function()
@@ -174,7 +174,7 @@ function deleteManager(index)
 function checkPassword()
 {
     var checkPasswordRequest = new XMLHttpRequest();
-    checkPasswordRequest.open("POST", "http://192.168.1.144:5000/HRManage/delete/Admin/check_password");
+    checkPasswordRequest.open("POST", "/HRManage/delete/Admin/check_password");
     checkPasswordRequest.setRequestHeader("Content-Type", "application/json");
     checkPasswordRequest.send(JSON.stringify({"SAID": "5", "SAPassword": document.getElementById("deletePassword").value}));
     checkPasswordRequest.onload = function()

@@ -106,7 +106,7 @@ function giveDay(type)
 function getMonthList(year, month, day)
 {
     var selectDayRequest = new XMLHttpRequest();
-    selectDayRequest.open("POST", "http://192.168.1.144:5000/calendar/one_month_list");
+    selectDayRequest.open("POST", "/calendar/one_month_list");
     selectDayRequest.setRequestHeader("Content-Type", "application/json");
     selectDayRequest.send(JSON.stringify({"year": year, "month": month}));
     selectDayRequest.onload = function()
@@ -121,7 +121,7 @@ function getMonthList(year, month, day)
                 selectDay(day, 1);
                 break;
             default:
-                console.log("無法取得當月有任務日期");
+                alert('系統錯誤，行事曆故障');
                 break;
         }
     }
@@ -168,7 +168,7 @@ function selectDay(day, type)
     }
 
     var selectDayRequest = new XMLHttpRequest();
-    selectDayRequest.open("POST", "http://192.168.1.144:5000/calendar/one_date_list");
+    selectDayRequest.open("POST", "/calendar/one_date_list");
     selectDayRequest.setRequestHeader("Content-Type", "application/json");
     selectDayRequest.send(JSON.stringify({"year": pageYear, "month": pageMonth, "day": day}));
     selectDayRequest.onload = function()
@@ -189,7 +189,7 @@ function selectDay(day, type)
                     putDayList(day, rst.taskList, 3);
                 break;
             default:
-                console.log("無法取得當日任務列表");
+                putDayList(null, null, 4)
                 break;
         }
     }
@@ -198,7 +198,7 @@ function selectDay(day, type)
 function putDayList(day, taskList, type)
 {
     // type: 0 -> no task, 1 -> one date one list, 2 -> first list of two days two lists
-    //       3 -> second list of two day two list.
+    //       3 -> second list of two day two list, 4 -> system error
 
     if (type == 0)
     {
@@ -237,4 +237,6 @@ function putDayList(day, taskList, type)
         for ( i = 0; i < taskList.length; i++)
             toDoList.innerHTML += '<div class="formLine"><textarea  class="formText" readonly>' + type + i + '</textarea></div>';
     }
+    else
+        toDoList.innerHTML = '<div class="formLine"><textarea  class="formText formTextTitle" readonly>' + '系統錯誤，無法讀取行程' + '</textarea></div>';
 }

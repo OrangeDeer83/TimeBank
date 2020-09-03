@@ -44,7 +44,7 @@ function showListDiv()
             '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
             '<div class="taskBottom">' +
                 '<div class="point">任務點數：<span id="taskQuota' + i + '"></span></div>' +
-                '<div class="bottonTask" id="taskTaskButton' + i + '" onclick="takeTask(' + i + ')">接任務</div>' +
+                '<div class="bottonTask" id="takeTaskButton' + i + '" onclick="takeTask(' + i + ')" style="display:none">接任務</div>' +
             '</div>' +
         '</td></tr>';
     }
@@ -54,7 +54,7 @@ function showListDiv()
 function getTaskList()
 {
     var getTaskRequest = new XMLHttpRequest();
-    getTaskRequest.open("POST", "http://192.168.1.144:5000/profile/output/task");
+    getTaskRequest.open("POST", "/profile/output/task");
     getTaskRequest.setRequestHeader("Content-Type", "application/json");
     getTaskRequest.send(JSON.stringify({"userID": getToken()}));
     getTaskRequest.onload = function()
@@ -131,6 +131,8 @@ function showDetail()
     }
     for (var i = thisPageList.length; i < maxPageAmount; i++)
         document.getElementById("taskList" + i).style.display = "none";
+
+    checkUserID();
 }
 
 function putDetail(index)
@@ -140,10 +142,41 @@ function putDetail(index)
     document.getElementById("taskQuota" + index).innerHTML = thisPageList[index].taskPoint;
 }
 
+function checkUserID()
+{
+    var getIDRequest = new XMLHttpRequest();
+    getIDRequest.open("GET", "/account/get_ID");
+    getIDRequest.setRequestHeader("Content-Type", "application/json");
+    getIDRequest.send();
+    getIDRequest.onload = function()
+    {
+        console.log(getIDRequest.responseText);
+        rst = JSON.parse(getIDRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                if (rst.ID == getToken())// Himself, Herself
+                {
+                    for (var i = 0; i < 10; i++)
+                        document.getElementById('takeTaskButton' + i).style.display = 'none';
+                }
+                else
+                {
+                    for (var i = 0; i < 10; i++)
+                        document.getElementById('takeTaskButton' + i).removeAttribute('style');
+                }
+            case "300": case 300:
+            case "400": case 400:
+                console.log("無法取得userID");
+                break;
+        }
+    }
+}
+
 function takeTask(index)
 {
     var taskTaskRequest = new XMLHttpRequest();
-    taskTaskRequest.open("POST", "http://192.168.1.144:5000/task/SP/taken_task");
+    taskTaskRequest.open("POST", "/task/SP/taken_task");
     taskTaskRequest.setRequestHeader("Content-Type", "application/json");
     taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID,"userID": getToken()}));
     taskTaskRequest.onload = function()
@@ -155,14 +188,16 @@ function takeTask(index)
             case "200": case 200:
                 alert("成功送出承接任務之申請：" + thisPageList[index].taskName);
                 break;
-            case "300": case 300:
-            case "400": case 400:
-                break;
             case "401": case 401:
                 alert("此任務已申請過：" + thisPageList[index].taskName);
                 break;
+            case "300": case 300:
+            case "400": case 400:
             default:
-                alert("系統錯誤，請稍後再試");
+                if (rst.taskConflit.length != 0)
+                    document.getElementById('systemPrompt').innerHTML = '與其他任務時間重疊，請再次確認：' + rst.taskConflit[0].taskName;
+                else alert("系統錯誤，請稍後再試");
+                break;
             }
     }
 }

@@ -35,7 +35,7 @@ function showError(rspCode)
 function getGroup()
 {
     var getGroupRequest = new XMLHttpRequest();
-    getGroupRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_group");
+    getGroupRequest.open("GET", "/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -52,6 +52,7 @@ function getGroup()
             case "300": case 300:
                 showError(300); return ;
             case "400": case 400:
+            default:
                 showError(40011); return ;
         }
     }
@@ -62,7 +63,7 @@ function getGroup()
 function getApplier()
 {
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -91,7 +92,7 @@ function getApplier()
 function getClass()
 {
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_class");
+    getApplierRequest.open("GET", "/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -102,12 +103,13 @@ function getClass()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("類別讀取成功");
+                //console.log("類別讀取成功");
                 showClass(rst.allClass);
                 return ;
             case "300": case 300:
                 showError(300); return ;
             case "400": case 400:
+            default:
                 showError(40014); return ;
         }
     }
@@ -146,7 +148,7 @@ function getPeriodQuota(index)
     }
     
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("POST", "http://192.168.1.144:5000/apply/output_allow_period");
+    getApplierRequest.open("POST", "/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send(JSON.stringify({"class": classList[index]}));
     getApplierRequest.onload = function()
@@ -163,6 +165,7 @@ function getPeriodQuota(index)
             case "300": case 300:
                 showError(300); return ;
             case "400": case 400:
+            default:
                 showError(40015); return ;
         }
     }
@@ -282,7 +285,7 @@ function sendApplication()
     }
 
     var sendApplicationRequest = new XMLHttpRequest();
-    sendApplicationRequest.open("POST", "http://192.168.1.144:5000/application/json");
+    sendApplicationRequest.open("POST", "/application/json");
     sendApplicationRequest.setRequestHeader("Content-Type", "application/json");
     sendApplicationRequest.send(JSON.stringify({"frequency": frequency, "period": period, "result": applyReason, "class": selectedClass, "quota": quota, "file": ""}));
     sendApplicationRequest.onload = function()

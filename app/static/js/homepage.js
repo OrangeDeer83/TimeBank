@@ -17,7 +17,7 @@ var currentNews = 0;
 function getNewsAmount()
 {
     var getNewsAmountRequest = new XMLHttpRequest();
-    getNewsAmountRequest.open("GET", "http://192.168.1.144:5000/portal/useful_numbers");
+    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -27,7 +27,7 @@ function getNewsAmount()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("最新消息數量讀取成功");
+                //console.log("最新消息數量讀取成功");
                 maxNewsNum = rst.max;
                 existNews = rst.numberList;
                 newsAmount = existNews.length;
@@ -36,6 +36,7 @@ function getNewsAmount()
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 console.log("系統錯誤，最新消息數量讀取失敗，請稍後再試");
                 return false;
         }
@@ -130,7 +131,7 @@ function getNewestNewsTitle()
 function getIntroduction()
 {
     var getIntroductionRequest = new XMLHttpRequest();
-    getIntroductionRequest.open("GET", "http://192.168.1.144:5000/portal/output_webIntro");
+    getIntroductionRequest.open("GET", "/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     getIntroductionRequest.onload = function()
@@ -140,13 +141,14 @@ function getIntroduction()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                console.log("網站介紹讀取成功");
+                //console.log("網站介紹讀取成功");
                 introduction = rst.webIntro;
-                console.log(introduction);
+                //console.log(introduction);
                 document.getElementById("introduction").innerHTML = introduction;
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 //console.log("系統錯誤，網站介紹讀取失敗，請稍後再試");
                 document.getElementById("introduction").innerHTML = "伺服器錯誤...網站介紹讀取失敗";
                 break;
@@ -158,7 +160,7 @@ function getIntroduction()
 function getNewsTitle(index)
 {
     var getTitleRequest = new XMLHttpRequest();
-    getTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[index]);
+    getTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[index]);
     getTitleRequest.setRequestHeader("Content-Type", "application/json");
     getTitleRequest.send();
     getTitleRequest.onload = function()
@@ -173,6 +175,7 @@ function getNewsTitle(index)
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 console.log("系統錯誤，最新消息標題讀取失敗，請稍後再試");
                 //return;
         }
@@ -231,7 +234,7 @@ function spanNews(index)
 function getNewsContent(index)
 {
     var getContentRequest = new XMLHttpRequest();
-    getContentRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[index]);
+    getContentRequest.open("GET", "/portal/output_news_content/" + thisPageList[index]);
     getContentRequest.setRequestHeader("Content-Type", "application/json");
     getContentRequest.send();
     getContentRequest.onload = function()
@@ -246,6 +249,7 @@ function getNewsContent(index)
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 //console.log("系統錯誤，最新消息內容讀取失敗，請稍後再試");
                 document.getElementById("newsContent").value = "伺服器錯誤...內容讀取失敗";
         }

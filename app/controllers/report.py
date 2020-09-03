@@ -19,15 +19,13 @@ def send_report():
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])
-        reason_ = json['reportReason']
+        reason_ = json['reportReason']  
     except:
-        return jsonify({"rspCode":31})
+        return jsonify({"rspCode":49})
     task_ = db.session.query(task).filter(task.taskID == taskID_).first()
     if task_ == None:
         #沒有此task
         return jsonify({"rspCode":41})
-    elif db.session.query(report).filter(report.reportUserID == userID_).filter(report.taskID == taskID_).first() != None:
-        return jsonify({"rspCode":44})
     elif task_.SP[0].userID == userID_ or task_.SR[0].userID == userID_:
         if task_.taskStatus in [3,5,6,7,8,13,14,15,16]:
             newReport = report(taskID = taskID_, adminID = None, reason = reason_, reportStatus = 0, reportUserID = userID_,time_ = str(datetime.datetime.now()))
@@ -40,7 +38,7 @@ def send_report():
             db.session.add(notice_report)
             db.session.commit()
             return jsonify({"rspCode":20})
-        #任務必須案過完成未完成才可檢舉
+        #任務不可被檢舉
         return jsonify({"rspCode":42})
     else:
         #userID不是本任務相關人士

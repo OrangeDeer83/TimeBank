@@ -14,8 +14,8 @@ def output_info():
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": 401, "userID": "", "name": "", "userGender": "", "userAge": "", "userInfo": ""})       #非法字元
-            print(value)
             userID = value['userID']
+            print(type(userID))
             try:
                 query_data = account.query.filter_by(userID = userID).first()
             except:
@@ -38,7 +38,6 @@ def output_task():
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": 402, "taskWaiting": ""})       #非法字元
-            print(value, 123)
             userID = value['userID']
             try:
                 query_data = account.query.filter_by(userID = userID).first()
@@ -74,7 +73,7 @@ def SP_rate_amount():
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": 42})                                                                    #該userID不存在
+                    return jsonify({"rspCode": 40})                                                                    #該userID不存在
             except:
                 return jsonify({"rspCode": 30})                                                                        #資料庫錯誤
             commentList = []
@@ -117,7 +116,7 @@ def SP_rate():
             rateListJson = []
             for i in range(startNum, startNum + amount):
                 rateListJson.append({"commentBy": commentList[i].task.SR[0].name, "rate": int(commentList[i].SRComment[0]),\
-                                            "comment": commentList[i].SRComment[2:]})
+                                        "comment": commentList[i].SRComment[2:]})
             print(rateListJson)
             return jsonify({"rspCode": 20, "rateList": rateListJson})                                                    #取得成功
         else:

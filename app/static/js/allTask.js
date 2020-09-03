@@ -54,7 +54,7 @@ function showPrompt(index)
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/task_can_be_taken");
+    taskListRequest.open("GET", "/task/SP/output/task_can_be_taken");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -145,7 +145,7 @@ function putDetail(index)
 function takeTask(index)
 {
     var taskTaskRequest = new XMLHttpRequest();
-    taskTaskRequest.open("POST", "http://192.168.1.144:5000/task/SP/taken_task");
+    taskTaskRequest.open("POST", "/task/SP/taken_task");
     taskTaskRequest.setRequestHeader("Content-Type", "application/json");
     taskTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     taskTaskRequest.onload = function()

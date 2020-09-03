@@ -18,7 +18,6 @@ def new_indicate():
             for notice_ in query_data:
                 needToDelete = False
                 if notice_.status == noticeType['pleaseComment']:
-                    print(userID, notice_)
                     if notice_.db_notice_noticeTask[0].task.db_task_comment[0].commentStatus == -1:
                         if notice_.db_notice_noticeTask[0].task.SP[0].userID == userID:
                             if notice_.db_notice_noticeTask[0].task.db_task_comment[0].SPComment:
@@ -29,7 +28,6 @@ def new_indicate():
                     else:
                         needToDelete = True
                 elif notice_.status == noticeType['NoSP']:
-                    print(notice_)
                     if notice_.db_notice_noticeTask[0].task.taskStatus != 4:
                         needToDelete = True
                 elif notice_.status == noticeType['taskStart']:
@@ -324,6 +322,7 @@ def all_list_amount():
                 query_data = notice.query.filter_by(userID = userID).all()
             except:
                 return jsonify({"rspCode": 30})                                   #資料庫錯誤
+            print(query_data)
             return jsonify({"rspCode": 20, "allNoticeAmount": len(query_data)})   #成功取的數量
         else:
             return jsonify({"rspCode": 50})                                       #權限不符
@@ -349,7 +348,7 @@ def all_list():
             noticeList = []
             for i in range(startNum, startNum + amount):
                 notice_ = query_data[i]
-                print(notice_)
+                print(notice_, notice_.status)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
                         #該USER為雇員

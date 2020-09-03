@@ -78,7 +78,7 @@ function getUserList()
 {
     searchText = document.getElementById("searchText").value
     var getListRequest = new XMLHttpRequest();
-    getListRequest.open("POST", "http://192.168.1.144:5000/allotment/allotment_history");
+    getListRequest.open("POST", "/allotment/allotment_history");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"target": searchText}));
     getListRequest.onload = function()

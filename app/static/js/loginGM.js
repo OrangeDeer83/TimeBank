@@ -9,7 +9,7 @@ adminPassword.addEventListener("input", adminPasswordVerify);
 
 function displayError(inputElement, index, type)
 {
-    console.log(inputElement+ index+ type)
+    //console.log(inputElement+ index+ type)
     if (type)
     {
         if (inputElement)
@@ -87,7 +87,7 @@ function gmLogin()
     else
     {
         var loginGMRequest = new XMLHttpRequest();
-        loginGMRequest.open("POST", "http://192.168.1.144:5000/account/GM/login");
+        loginGMRequest.open("POST", "/account/GM/login");
         loginGMRequest.setRequestHeader("Content-Type", "application/json");
         loginGMRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginGMRequest.onload = function()
@@ -100,13 +100,15 @@ function gmLogin()
                 case "200": case 200:
                     window.location.assign("/GM/updateGrade");
                     break;
-                case "300": case 300:
-                case "400": case 400:
-                    displayError(false, 2, true);
-                    break;
                 case "401": case 401:
                 case "402": case 402:
+                case "403": case 403:
                     displayError(adminPassword, 3, true);
+                    break;
+                case "300": case 300:
+                case "400": case 400:
+                default:
+                    displayError(false, 2, true);
                     break;
             }
         }

@@ -95,7 +95,7 @@ function showPrompt(index)
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/record");
+    taskListRequest.open("GET", "/task/SP/output/record");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -179,6 +179,15 @@ function putDetail(index)
     document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
     document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + thisPageList[index].taskEndTime;
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
+    var taskStatus = currentTask.taskStatus
+    if (taskStatus == 0 || taskStatus == 1 || taskStatus == 4 || taskStatus == 9 || taskStatus == 10 || taskStatus == 11)
+    {
+        document.getElementById('reportButton' + index).style.display = 'none';
+    }
+    else
+    {
+        document.getElementById('reportButton' + index).removeAttribute('style');
+    }
     document.getElementById("taskSR" + index).innerHTML = currentTask.taskSR;
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
@@ -252,7 +261,7 @@ function hideReportDiv()
 function sendReport()
 {
     var reportRequest = new XMLHttpRequest();
-    reportRequest.open("POST", "http://192.168.1.144:5000/report/send_report");
+    reportRequest.open("POST", "/report/send_report");
     reportRequest.setRequestHeader("Content-Type", "application/json");
     reportRequest.send(JSON.stringify({'taskID': thisPageList[reportTaskIndex].taskID, 'reportReason': document.getElementById('reportReason').value}));
     reportRequest.onload = function()
@@ -264,6 +273,9 @@ function sendReport()
             case "20": case 20:
                 alert('檢舉已送出');
                 hideReportDiv();
+                break;
+            case "42": case 42:
+                alert('此任務無法檢舉');
                 break;
             default:
                 alert('系統錯誤，無法送出檢舉');

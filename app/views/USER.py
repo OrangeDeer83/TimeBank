@@ -1,6 +1,7 @@
 #coding:utf-8
 from flask import Blueprint, render_template, session, url_for, redirect
-from ..models import userType
+from ..models import userType, db
+from ..models.model import account
 
 USER = Blueprint('USER', __name__)
 
@@ -165,7 +166,14 @@ def create_task():
 @USER.route('/info/<userID>')
 def info(userID):
     if session.get('userType') == userType['USER']:
-        return render_template('/USER/myselfTask.html')
+        try:
+            query_data = account.query.filter_by(userID = int(userID)).first()
+        except:
+            return "資料庫錯誤"
+        if query_data:
+            return render_template('/USER/myselfTask.html')
+        else:
+            return redirect(url_for('USER.info', userID = session.get('userID')))
     else:
         return redirect(url_for('USER.index'))
 

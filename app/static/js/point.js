@@ -15,7 +15,7 @@ const maxPageAmount = 20;
 function getRecordAmount()
 {
     var recordAmountRequest = new XMLHttpRequest();
-    recordAmountRequest.open('GET', 'http://192.168.1.144:5000/point/record_amount');
+    recordAmountRequest.open('GET', '/point/record_amount');
     recordAmountRequest.setRequestHeader('Content-Type', 'application/json');
     recordAmountRequest.send();
     recordAmountRequest.onload = function()
@@ -111,7 +111,7 @@ function getDetail()
         return ;
     }
     var getRecordRequest = new XMLHttpRequest();
-    getRecordRequest.open('POST', 'http://192.168.1.144:5000/point/record');
+    getRecordRequest.open('POST', '/point/record');
     getRecordRequest.setRequestHeader('Content-Type', 'application/json');
     getRecordRequest.send(JSON.stringify({"pointRecordID": thisPageList[0], "requestAmount": thisPageList.length}));
     getRecordRequest.onload = function()

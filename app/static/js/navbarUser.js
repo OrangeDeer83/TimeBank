@@ -1,4 +1,3 @@
-const urlPath = 'http://192.168.1.144:5000';
 var haveNewNotice = 0;
 var lastRequestOnload = 1;
 showNavbar();
@@ -13,7 +12,7 @@ function showNavbar()
                 '<ul class="dropdownMenu dropdownMenuLeft unspanned" id="menuIconSpan">' +
                     '<li class="hiddenLarge">' +
                         '<a class="navbarPointA" href="/USER/pointRecord">' +
-                            '<img class="navbarPointImg" alt="Point" src="' + urlPath + '/static/img/point3.png" />' +
+                            '<img class="navbarPointImg" alt="Point" src="/static/img/point3.png" />' +
                             '<span id="navbarPoint1">0</span>' +
                         '</a>' +
                     '</li>' +
@@ -28,8 +27,8 @@ function showNavbar()
         '</div>' +
         '<div class="navbarCenter">' +
             '<a class="navbarBrand" href="/USER">' +
-                '<img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="' + urlPath + '/static/img/brandWhite.png" />' +
-                '<img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="' + urlPath + '/static/img/brandColor.png" />' +
+                '<img class="navbarBrandImg" id="navbarBrandImg1" alt="TimeBank" src="/static/img/brandWhite.png" />' +
+                '<img class="navbarBrandImg" id="navbarBrandImg2" alt="TimeBank" src="/static/img/brandColor.png" />' +
             '</a>' +
         '</div>' +
         '<div class="navbarRight">' +
@@ -43,7 +42,7 @@ function showNavbar()
                 '</li>' +
                 '<li class="hiddenSmall">' +
                     '<a class="navbarPointA" href="/USER/pointRecord">' +
-                        '<img class="navbarPointImg" alt="Point" src="' + urlPath + '/static/img/point3.png" />' +
+                        '<img class="navbarPointImg" alt="Point" src="/static/img/point3.png" />' +
                         '<span id="navbarPoint">0</span>' +
                     '</a>' +
                 '</li>' +
@@ -63,7 +62,7 @@ function showNavbar()
 function getUserID()
 {
     var getIDRequest = new XMLHttpRequest();
-    getIDRequest.open("GET", "http://192.168.1.144:5000/account/get_ID");
+    getIDRequest.open("GET", "/account/get_ID");
     getIDRequest.setRequestHeader("Content-Type", "application/json");
     getIDRequest.send();
     getIDRequest.onload = function()
@@ -88,7 +87,7 @@ function getUserID()
 function getPropic(navbarUserId)
 {
     var getPropicRequest = new XMLHttpRequest();
-    getPropicRequest.open("POST", "http://192.168.1.144:5000/account/propic_exist");
+    getPropicRequest.open("POST", "/account/propic_exist");
     getPropicRequest.setRequestHeader("Content-Type", "application/json");
     getPropicRequest.send(JSON.stringify({"userID": navbarUserId}));
     getPropicRequest.onload = function()
@@ -133,7 +132,7 @@ function getPropic(navbarUserId)
 function getCurrentPointAmount()
 {
     var getCurrentPointAmountRequest = new XMLHttpRequest();
-    getCurrentPointAmountRequest.open("GET", "http://192.168.1.144:5000/point/total");
+    getCurrentPointAmountRequest.open("GET", "/point/total");
     getCurrentPointAmountRequest.setRequestHeader("Content-Type", "application/json");
     getCurrentPointAmountRequest.send();
     getCurrentPointAmountRequest.onload = function()
@@ -169,7 +168,7 @@ function getNoticeIndication()
     
     lastRequestOnload = 0;
     var noticeIndicateRequest = new XMLHttpRequest();
-    noticeIndicateRequest.open('GET', 'http://192.168.1.144:5000/notice/new_indicate');
+    noticeIndicateRequest.open('GET', '/notice/new_indicate');
     noticeIndicateRequest.setRequestHeader('Content-Type', 'application/json');
     noticeIndicateRequest.send();
     noticeIndicateRequest.onload = function()
@@ -200,7 +199,7 @@ function getNewNotice()
     lastRequestOnload = 0;
     
     var getNewNoticeRequest = new XMLHttpRequest();
-    getNewNoticeRequest.open('GET', 'http://192.168.1.144:5000/notice/new_list');
+    getNewNoticeRequest.open('GET', '/notice/new_list');
     getNewNoticeRequest.setRequestHeader('Content-Type', 'application/json');
     getNewNoticeRequest.send();
     getNewNoticeRequest.onload = function()
@@ -264,7 +263,7 @@ function logout()
 {
     var request = new XMLHttpRequest();
 
-    request.open("GET", "http://192.168.1.144:5000/logout");
+    request.open("GET", "/logout");
 
     if (request.readyState == 4 && request.status == 200)
     {

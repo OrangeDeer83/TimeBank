@@ -39,7 +39,7 @@ function showError(rspCode)
 function getGroup()
 {
     var getGroupRequest = new XMLHttpRequest();
-    getGroupRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_group");
+    getGroupRequest.open("GET", "/apply/output_apply_group");
     getGroupRequest.setRequestHeader("Content-Type", "application/json");
     getGroupRequest.send();
     getGroupRequest.onload = function()
@@ -66,7 +66,7 @@ function getGroup()
 function getApplier()
 {
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_condition_pdf");
+    getApplierRequest.open("GET", "/apply/output_apply_condition_pdf");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -96,7 +96,7 @@ function getApplier()
 function getClass()
 {
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("GET", "http://192.168.1.144:5000/apply/output_apply_class");
+    getApplierRequest.open("GET", "/apply/output_apply_class");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     getApplierRequest.send();
     getApplierRequest.onload = function()
@@ -174,7 +174,7 @@ function getAllPeriodQuota()
 function getPeriodQuota(index)
 {
     var getApplierRequest = new XMLHttpRequest();
-    getApplierRequest.open("POST", "http://192.168.1.144:5000/apply/output_allow_period");
+    getApplierRequest.open("POST", "/apply/output_allow_period");
     getApplierRequest.setRequestHeader("Content-Type", "application/json");
     //console.log(classList[index][0]);
     getApplierRequest.send(JSON.stringify({"class": classList[index][0]}));
@@ -254,7 +254,7 @@ function showQuota()
 function updateGroup()
 {
     var updateGroupRequest = new XMLHttpRequest();
-    updateGroupRequest.open("POST", "http://192.168.1.144:5000/apply/update_apply_group");
+    updateGroupRequest.open("POST", "/apply/update_apply_group");
     updateGroupRequest.setRequestHeader("Content-Type", "application/json");
     updateGroupRequest.send(JSON.stringify({"groupName": document.getElementById("group").value}));
     updateGroupRequest.onload = function()
@@ -311,7 +311,7 @@ function updateClassPeriodQuota()
 function updateOneClassPeriodQuota(index)
 {
     var updateCPQRequest = new XMLHttpRequest();
-    updateCPQRequest.open("POST", "http://192.168.1.144:5000/apply/update_add_apply_quota");
+    updateCPQRequest.open("POST", "/apply/update_add_apply_quota");
     updateCPQRequest.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({"class": classList[index][0], "once": classList[index][1], "one": classList[index][2], "three": classList[index][3], "six": classList[index][4], "year": classList[index][5]}));
     updateCPQRequest.send(JSON.stringify({"class": classList[index][0], "once": classList[index][1]+"", "one": classList[index][2]+"", "three": classList[index][3]+"", "six": classList[index][4]+"", "year": classList[index][5]+""}));
@@ -343,7 +343,7 @@ function deleteClass()
 {
     index = userClass.selectedIndex - 1;
     var deleteClassRequest = new XMLHttpRequest();
-    deleteClassRequest.open("POST", "http://192.168.1.144:5000/apply/delete_apply_class");
+    deleteClassRequest.open("POST", "/apply/delete_apply_class");
     deleteClassRequest.setRequestHeader("Content-Type", "application/json");
     deleteClassRequest.send(JSON.stringify({"class": classList[index][0]}));
     deleteClassRequest.onload = function()

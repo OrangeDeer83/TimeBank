@@ -69,7 +69,7 @@ def USER_register():
         try:
             value = request.get_json()
         except:
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 412})          #非法字元
         user = []
         user.append(value['name'])
         user.append(value['userName'])
@@ -78,6 +78,7 @@ def USER_register():
         user.append(value['userPhone'])
         user.append(value['userGender'])
         user.append(value['userBirthday'])
+        print(value['userBirthday'], type(value['userGender']))
         if len(user[0]) > 20 or len(user[0]) < 1:
             return jsonify({"rspCode": 401})      #名稱長度不符
         elif re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", user[1]) == None:
@@ -157,7 +158,7 @@ def Admin_login():
         try:
             value = request.get_json()
         except:
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 404})          #非法字元
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -175,7 +176,7 @@ def Admin_login():
             session['userType'] = query_data.adminType
             return jsonify({"rspCode": 200})                  #登入成功
         else:
-            return jsonify({"rspCode": 402})                  #登入失敗，密碼錯誤
+            return jsonify({"rspCode": 403})                  #登入失敗，密碼錯誤
     else:
         return jsonify({"rspCode": 300})                      #method使用錯誤
 
@@ -215,7 +216,7 @@ def USER_forgot_password():
         try:
             value = request.get_json()
         except:
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 405})          #非法字元
         userMail = value['userMail']
         if len(userMail) > 50 or len(userMail) < 1:
             return ({"rspCode": 401})      #電子郵件長度不符
@@ -356,8 +357,19 @@ def GM_register():
                     else:
                         print("寄信失敗\n")
                         return jsonify({"rspCode": 408})             #驗證信寄送失敗
+                elif existMail.adminType == userType['STOP']:
+                    print(123)
+                    token = GM_verify_token(current_app.config['SECRET_KEY'], existMail.adminID)
+                    token_cut = str(token).split("'")[1]
+                    status = GM_verify_mail(token_cut, GMMail)
+                    if status == {}:
+                        print("寄信成功\n")
+                        return jsonify({"rspCode": 202})             #電子郵件已申請過，驗證信再次寄出
+                    else:
+                        print("寄信失敗\n")
+                        return jsonify({"rspCode": 409})             #驗證信寄送失敗
                 else:
-                    return jsonify({"rspCode": 409})          #電子郵件與他人重複
+                    return jsonify({"rspCode": 410})          #電子郵件與他人重複
             else:
                 try:
                     salt = generate_salt()
@@ -372,10 +384,10 @@ def GM_register():
                 status = GM_verify_mail(token_cut, GMMail)
                 if status == {}:
                     print("寄信成功\n")
-                    return jsonify({"rspCode": 202})             #帳號申請成功，驗證信已寄出
+                    return jsonify({"rspCode": 203})             #帳號申請成功，驗證信已寄出
                 else:
                     print("寄信失敗\n")
-                    return jsonify({"rspCode": 410})             #驗證信寄送失敗
+                    return jsonify({"rspCode": 411})             #驗證信寄送失敗
     else:
         return ({"rspCode": 300})                             #method使用錯誤
 
@@ -391,7 +403,7 @@ def GM_verify(token):
         except:
             return redirect(url_for('GM.verify', result=1))
         if query_data:
-            if query_data.adminType == userType['GM_apply']:
+            if query_data.adminType == userType['GM_apply'] or query_data.adminType == userType['STOP']:
                 try:
                     query_data.adminType = userType['GM_waiting']
                     db.session.commit()
@@ -411,25 +423,6 @@ def GM_verify(token):
             return redirect(url_for('GM.verify', result=7))
     else:        
         return redirect(url_for('GM.verify', result=8))
-
-    if request.metohd == 'POST':
-        if session.get('userType') == userType['SA'] or session.get('userType') == userType['AG']:
-            try:
-                value = request.get_json()
-            except:
-                return jsonify({"rspCode": 403})          #非法字元
-            GMID = value['GMID']
-            try:
-                query_data = adminAccount.query.filter_by(adminID = GMID).first()
-                query_data.adminType = userType['GM']
-                db.session.commit()
-            except:
-                return jsonify({"rspCode": 400})                  #資料庫錯誤
-            return jsonify({"rspCode": 200})                      #同意GM成功
-        else:
-            return jsonify({"rspCode": 500})                      #權限不符
-    else:
-        return jsonify({"rspCode": 300})                          #method使用錯誤
 
 '''
 #管理員申請重設密碼信
@@ -653,28 +646,6 @@ def setting_accountName():
             except:
                 return jsonify({"rspCode": 400})      #資料庫錯誤
             return jsonify({"rspCode": 200})          #一般使用者使用者名稱修改成功
-        #驗證身分為管理員
-        elif session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['GM'], userType['SA']]:
-            adminID = session.get('adminID')
-            adminName = value['adminName']
-            if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
-                return jsonify({"rspCode": 401})      #使用者名稱格式不符
-            try:
-                query_data = adminAccount.query.filter(adminAccount.adminName == func.binary(adminName)).first()
-            except:
-                return jsonify({"rspCode": 400})      #資料庫錯誤
-            if query_data:
-                if query_data.adminID == adminID:
-                    return jsonify({"rspCode": 402})  #使用者名稱並未做更動
-                else:
-                    return jsonify({"rspCode": 403})      #使用者名稱與他人重複
-            try:
-                query_data = adminAccount.query.filter_by(adminID = adminID).first()
-                query_data.adminName = adminName
-                db.session.commit()
-            except:
-                return jsonify({"rspCode": 400})      #資料庫錯誤
-            return jsonify({"rspCode": 201})          #管理員使用者名稱修改成功
         else:
             return jsonify({"rspCode": 500})          #權限不符
     else:
@@ -768,29 +739,6 @@ def setting_accountMail():
             except:
                 return jsonify({"rspCode": 400})      #資料庫錯誤
             return jsonify({"rspCode": 200})          #電子郵件修改成功
-        elif session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['GM'], userType['SA']]:
-            adminMail = value['adminMail']
-            adminID = session.get('adminID')
-            if len(adminMail) > 50 or len(adminMail) < 1:
-                return jsonify({"rspCode": 401})      #電子郵件長度不符
-            elif re.search(r"^[\w\-\.]+\@[\w\-\.]+\.[0-9a-zA-Z]+$", adminMail) == None:
-                return jsonify({"rspCode": 402})      #電子郵件格式不符
-            try:
-                existMail = adminAccount.query.filter(adminAccount.adminMail == func.binary(adminMail)).first()
-            except:
-                return jsonify({"rspCode": 400})      #資料庫錯誤
-            if existMail:
-                if existMail.adminID == adminID:
-                    return jsonify({"rspCode": 403})  #電子郵件並未做更動
-                else:
-                    return jsonify({"rspCode": 404})  #電子郵件已被使用
-            try:
-                query_data = adminAccount.query.filter_by(adminID = adminID).first()
-                query_data.adminMail = adminMail
-                db.session.commit()
-            except:
-                return jsonify({"rspCode": 400})      #資料庫錯誤
-            return jsonify({"rspCode": 200})          #電子郵件修改成功
         else:
             return jsonify({"rspCode": 500})          #權限不符
     else:
@@ -818,20 +766,6 @@ def setting_accountPhone():
             except:
                 return jsonify({"rspCode": 400})      #資料庫錯誤
             return jsonify({"rspCode": 200})          #手機號碼修改成功
-        elif session.get('userType') in [userType['AA'], userType['AS'], userType['AU'], userType['AG'], userType['GM'], userType['SA']]:
-            adminPhone = value['adminPhone']
-            adminID = session.get('adminID')
-            if re.search(r"^(\+886|0)+([0-9]+)*[0-9]+((-+(\d)*)*)+((\#\d+)*)+$", adminPhone) == None:
-                return jsonify({"rspCode": 401})      #手機號碼格式不符
-            try:
-                query_data = adminAccount.query.filter_by(adminID = adminID).first()
-                if query_data.adminPhone == adminPhone:
-                    return jsonify({"rspCode": 402})  #手機號碼並未做更動
-                query_data.adminPhone = adminPhone
-                db.session.commit()
-            except:
-                return jsonify({"rspCode": 400})      #資料庫錯誤
-            return jsonify({"rspCode": 200})          #手機號碼修改成功 
         else:
             return jsonify({"rspCode": 500})          #權限不符
     else:

@@ -73,7 +73,7 @@ function uploadNewPassword()
     if (!validated()) return ;
 
     var uploadNewPasswordRequest = new XMLHttpRequest();
-    uploadNewPasswordRequest.open('POST', 'http://192.168.1.144:5000/account/setting/accountPassword');
+    uploadNewPasswordRequest.open('POST', '/account/setting/accountPassword');
     uploadNewPasswordRequest.setRequestHeader('Content-Type', 'application/json');
     uploadNewPasswordRequest.send(JSON.stringify({'adminPassword': newPassword.value, 'adminOldPassword': oldPassword.value}));
     uploadNewPasswordRequest.onload = function()
@@ -91,11 +91,6 @@ function uploadNewPassword()
                 newPassword.value = '';
                 checkPassword.value = '';
                 break;
-            case '300': case 300:
-            case '400': case 400:
-                document.getElementById('settingButton').value = '系統錯誤';
-                document.getElementById('settingButton').removeAttribute('onclick');
-                break;
             case '401': case 401:
                 error1.innerHTML = '舊密碼錯誤，請再次確認';
                 error1.style.display = 'block';
@@ -107,6 +102,12 @@ function uploadNewPassword()
             case '403': case 403:
                 error2.innerHTML = '格式不符，請再次確認';
                 error2.style.display = 'block';
+                break;
+            case '300': case 300:
+            case '400': case 400:
+            default:
+                document.getElementById('settingButton').value = '系統錯誤';
+                document.getElementById('settingButton').removeAttribute('onclick');
                 break;
         }
     }

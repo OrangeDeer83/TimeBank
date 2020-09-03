@@ -50,7 +50,7 @@ function showPrompt(index)
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SP/output/refused");
+    taskListRequest.open("GET", "/task/SP/output/refused");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()

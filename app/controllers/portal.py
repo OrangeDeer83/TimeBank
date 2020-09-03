@@ -53,11 +53,14 @@ def output_web_intro():
         fileIndex = file.read().split("-")
         webIntro = fileIndex[1]
         adminName = fileIndex[0]
-        intro = jsonify({"rspCode":"200","webIntro":webIntro,"adminName":adminName})
+        if session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']:
+            intro = jsonify({"rspCode":"200","webIntro":webIntro,"adminName":adminName})
+        else:
+            intro = jsonify({"rspCode":"200","webIntro":webIntro})
         file.close()
         return intro
     else:
-        return jsonify({"repCode":"300","webIntro":'',"adminName":""})    
+        return jsonify({"repCode":"300","webIntro":''})    
 
 #最新資訊資訊上傳   
 #用form傳title,content,file(jpg,jpeg,png)
@@ -66,14 +69,14 @@ def upload_news():
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
             session.clear()
-            return redirect(url_for('Admin.update_web'))
+            return "權限不符"
         try:
             adminID = session.get('adminID')
             adminName = db.session.query(adminAccount.adminName).filter(adminAccount.adminID == adminID).first()[0]
             if adminName == None:
-                return jsonify({"rspCode":"500"})
+                return "權限不符"
         except:
-            return jsonify({"rspCode":"500"})
+            return "權限不福"
         try:
             title = request.values['title']
             content = request.values['content']
@@ -87,19 +90,19 @@ def upload_news():
         if title == '' or content == '' or fileImage.filename == '':
             #rspCode 400:標題,內文,圖片有空值
             #return jsonify({"rspCode" : "400"})
-            return redirect(url_for('Admin.update_web'))
+            return "標題,內文,圖片有空值"
         #檢查tittle有沒有太大
         if len(title) > 30:
             #rspCode 405:title太長
             #return ({"rspCode":"405"})
-            return redirect(url_for('Admin.update_web'))
+            return "title太長"
         time = str(datetime.datetime.now()).rsplit('.',1)[0]
         try:
             db.engine.execute(insert_news(title,time))
         except:
             #rspCode 404:標題上傳錯誤
             #return jsonify({"rspCode":"404"})
-            return redirect(url_for('Admin.update_web'))
+            return "標題上傳錯誤"
         #目前預設傳來的圖片叫做file,允許jpg,gpeg,png
         #檢查fileImage
         if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
@@ -111,17 +114,16 @@ def upload_news():
             except:
                 #rspCode 402:圖片上傳錯誤
                 #return jsonify({"rspCode":"402"})
-                return redirect(url_for('Admin.update_web'))
+                return "圖片上傳錯誤"
         else:   
             #rspCode 401:圖片檔名錯誤
             #return jsonify({"rspCode" : "401"})
-            return redirect(url_for('Admin.update_web'))
+            return "圖片檔名錯誤"
         try:    
             #內文上傳
             fileContentName = str(db.engine.execute(max_newsID()).fetchone()[0]) + '.txt' 
             fileContent = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' +  'newsContent/' + fileContentName, 'w',encoding ='UTF-8')
             content_ = adminName+"-"+content
-            print(content_,"++++++++++++++++")
             fileContent.write(content_)
             fileContent.close()
             #return jsonify({"rspCode":"200"})
@@ -130,10 +132,10 @@ def upload_news():
             fileContent.close()
             #rspCode 403:內文上傳錯誤
             #return jsonify({"rspCode":"403"})
-            return redirect(url_for('Admin.update_web'))
+            return "內文上傳錯誤"
     else:
         #return jsonify({"repCode":"300"})
-        return redirect(url_for('Admin.update_web'))
+        return "method使用錯誤"
 
 #最新資訊圖片顯示
 #在網址帶入要顯示的編號
@@ -147,12 +149,12 @@ def output_newsImage(number):
                 return jsonify({"rspCode": 200, "img": filename})
             else:
                 #這個編號沒檔案
-                return jsonify({"rspCode":"401","img":""})
+                return jsonify({"rspCode":400,"img":""})
         except:
             #圖片檔名獲取錯誤
-            return jsonify({"rspCode" : "400","img":""})
+            return jsonify({"rspCode" : 400,"img":""})
     else:
-        return jsonify({"rspCode":"300","img":""})
+        return jsonify({"rspCode":300,"img":""})
 
 #最新資訊內文顯示
 #在網址帶入要顯示的編號
@@ -160,24 +162,27 @@ def output_newsImage(number):
 @Portal.route("/output_news_content/<number>", methods = ['GET'])
 def output_news_content(number):
     if request.method == 'GET':
-        #try:
-        filename = number + '.txt'
-        file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
-        file_ = file.read().split("-")
-        adminName = file_[0]
-        content = ''
-        for num in range(len(file_)):
-            if num != 0:
-                if num != 1:
-                    content += '-'
-                content += file_[num]
-        file.close()
-        return jsonify({"rspCode": 200, "content": content,"adminName":adminName})
-        #except:
+        try:
+            filename = number + '.txt'
+            file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/newsContent/' + filename, 'r', encoding="utf-8")
+            file_ = file.read().split("-")
+            adminName = file_[0]
+            content = ''
+            for num in range(len(file_)):
+                if num != 0:
+                    if num != 1:
+                        content += '-'
+                    content += file_[num]
+            file.close()
+            if session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']:
+                return jsonify({"rspCode": 200, "content": content,"adminName":adminName})
+            else:
+                return jsonify({"rspCode": 200, "content": content})
+        except:
             #內文顯示錯誤
-        #    return jsonify({"rspCode" : 400,"content":"","adminName":""})
+            return jsonify({"rspCode" : 400,"content":""})
     else:
-        return jsonify({"rspCode":300,"content":"","adminName":""})
+        return jsonify({"rspCode":300,"content":""})
 #最新消息標題顯示
 #在網址帶入要顯示的編號
 #回傳rspCode,title
@@ -200,26 +205,26 @@ def edit_news(number):
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AU']):
             session.clear()
-            return redirect(url_for('Admin.update_web'))
+            return "權限不符"
         #目前預設傳來的圖片叫做file
         try:
             adminID = session.get('adminID')
             adminName = db.session.query(adminAccount.adminName).filter(adminAccount.adminID == adminID).first()
         except:
-            return redirect(url_for('Admin.update_web'))
+            return redirect(url_for('權限不符'))
         try:
             fileImage = request.files['file']
         except:
-            return redirect(url_for('Admin.update_web'))
+            return redirect(url_for('圖片檔名錯誤'))
         try:
             title = request.values['title']
             content = request.values['content']
         except:
-            return redirect(url_for('Admin.update_web'))
+            return redirect(url_for('輸入錯誤'))
         if len(title) > 30:
             #rspCode 404:title太長
             #return jsonify({"rspCode":"404"})
-            return redirect(url_for('Admin.update_web'))
+            return 輸入錯誤
         if fileImage.filename != '':
             #允許jpg,gpeg,png
             if fileImage.mimetype == 'image/jpg' or fileImage.mimetype == 'image/png' or fileImage.mimetype == 'image/jpeg':
@@ -232,11 +237,11 @@ def edit_news(number):
                 except:
                     #rspCode 401:圖片更新失敗
                     #return jsonify({"rspCode":"401"})
-                    return redirect(url_for('Admin.update_web'))
+                    return "圖片更新失敗"
             else:
                 #rspCode 400:圖片檔名錯誤
                 #return jsonify({"rspCode" : "400"})
-                return redirect(url_for('Admin.update_web'))
+                return "圖片更新失敗"
             
         if title != '':
             try:
@@ -244,35 +249,30 @@ def edit_news(number):
                     db.engine.execute(update_title(title,number))
                else:
                     #return jsonify({"rspCode":"402"})
-                    return redirect(url_for('Admin.update_web'))
+                    return "標題更新失敗"
             except:
                 #rspCode 402:標題更新失敗
                 #return jsonify({"rspCode":"402"})
-                return redirect(url_for('Admin.update_web'))
+                return "標題更新失敗"
         if content != '':
             try:
                 if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number)):
-                    try:
-                        file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding ='UTF-8')
-                        content_ = str(adminName[0])+"-"+str(content)
-                    except:
-                        return "3"
+                    file = open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/' + "newsContent/{}.txt".format(number),'w',encoding ='UTF-8')
+                    content_ = str(adminName[0])+"-"+str(content)
                     file.write(content_)
                     file.close()
                 else:
-                    return "1"
                     #return jsonify({"rspCode":"403"})
-                    return redirect(url_for('Admin.update_web'))
+                    return "內文更新失敗"
             except:
                 #rspCode 403:內文更新失敗
                 #return jsonify({"rspCode":"403"})
-                return redirect(url_for('Admin.update_web'))
+                return "內文更新失敗"
         #return jsonify({"rspCode":"200"})
         return redirect(url_for('Admin.update_web'))
     else:
         #return jsonify({"rspCode":"300"})
-        return redirect(url_for('Admin.update_web'))
-        
+        return "伺服器錯誤"
 #刪除最新消息
 #在網址帶上要刪除的編號 變GET
 #回傳rspCode 

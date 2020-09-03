@@ -13,7 +13,7 @@ const maxPageAmount = 20;
 function getNoticeAmount()
 {
     var noticeAmountRequest = new XMLHttpRequest();
-    noticeAmountRequest.open('GET', 'http://192.168.1.144:5000/notice/all_list_amount');
+    noticeAmountRequest.open('GET', '/notice/all_list_amount');
     noticeAmountRequest.setRequestHeader('Content-Type', 'application/json');
     noticeAmountRequest.send();
     noticeAmountRequest.onload = function()
@@ -85,7 +85,7 @@ function getDetail()
         return ;
     }
     var getNoticeRequest = new XMLHttpRequest();
-    getNoticeRequest.open('POST', 'http://192.168.1.144:5000/notice/all_list');
+    getNoticeRequest.open('POST', '/notice/all_list');
     getNoticeRequest.setRequestHeader('Content-Type', 'application/json');
     console.log(JSON.stringify({"startNum": (maxPageAmount * currentPage - maxPageAmount), "amount": currentPageAmount}));
     getNoticeRequest.send(JSON.stringify({"startNum": (maxPageAmount * currentPage - maxPageAmount), "amount": currentPageAmount}));

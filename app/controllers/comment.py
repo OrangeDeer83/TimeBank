@@ -19,7 +19,7 @@ def output_notice_comment():
         userID_ = int(session('userID'))
     except:
         #尚未登入
-        return jsonify({"rspCode":403})
+        return jsonify({"rspCode":500})
     if session.get('userType') != userType['USER']:
         return jsonify({"rspCode":500})
     json = request.get_json()
@@ -41,11 +41,11 @@ def output_notice_comment():
         #還不可評論
         return jsonify({"rspCode":403,"taskName":"","userName":""})
     try:
-        userName = db.session.query(account.userName).filter(account.userID == userID_).first()[0]
+        userName = db.session.query(account.name).filter(account.userID == userID_).first()[0]
     except:
         #userID錯誤
         return jsonify({"rspCode":401,"taskName":"","userName":""})
-    return jsonify({"rspCode":200,"taskName":taskName,"userName":userName})
+    return jsonify({"rspCode":200,"taskName":taskName,"name":userName})
 
 #評論
 #傳taskID,comment,star
@@ -62,6 +62,7 @@ def comment_action():
         return jsonify({"rspCode":500,"taskConflit":""})
     json = request.get_json()
     taskID_ = json['taskID']
+    print(json)
     if not(json['star'] in ['1','2','3','4','5']):
         #star不合法
         return jsonify({"rspCode":403})
@@ -76,7 +77,7 @@ def comment_action():
     except:
         #taskID錯誤
         return jsonify({"rspCode":400})
-    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(days=1) or datetime.datetime.now() < task_.taskEndTime:
+    if datetime.datetime.now() > task_.taskEndTime + datetime.timedelta(days=1) or datetime.datetime.now() < task_.taskStartTime:
         #不在可評價時間
         return jsonify({"rspCode":405})
     if task_.taskStatus in [3,6,7,8,13,14,15,16]: 
@@ -142,7 +143,7 @@ def GM_output_judge_comment_page():
                     , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":200,"commentAmount":str(len(commentList))})
     except:
-        return jsonify({"commentList":"","rspCode":401})
+        return jsonify({"commentList":"","rspCode":400})
 
 #審核評論
 #傳taskID,status(0:否決, 1:確認)
@@ -159,10 +160,14 @@ def judge_commentaction():
         status = json['status']
     except:
         return jsonify({"rspCode":410})
-    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).filter(comment.commentStatus == 0).first()
+    comment_ = db.session.query(comment).filter(comment.taskID == taskID_).first()
     if comment_ == None:
-        #comment不存在或還不可檢查
+        #comment不存在
         return jsonify({"rspCode":400})
+    elif comment_.commentStatus == -1:
+        return jsonify({"rspCode":404})
+    elif comment_.commentStatus != 0:
+        return jsonify({"rspCode":403})
     if status == '0':
         SR_user = db.session.query(task).filter(task.taskID == taskID_).first().SR[0]
         SP_user = db.session.query(task).filter(task.taskID == taskID_).first().SP[0]

@@ -43,7 +43,7 @@ var introduction = "";
 function getIntroduction()
 {
     var getIntroductionRequest = new XMLHttpRequest();
-    getIntroductionRequest.open("GET", "http://192.168.1.144:5000/portal/output_webIntro");
+    getIntroductionRequest.open("GET", "/portal/output_webIntro");
     getIntroductionRequest.setRequestHeader("Content-Type", "application/json");
     getIntroductionRequest.send();
     
@@ -74,7 +74,7 @@ function getIntroduction()
 function storeIntroduction()
 {
     var sendIntroduction = new XMLHttpRequest();
-    sendIntroduction.open("POST", "http://192.168.1.144:5000/portal/upload_web_intro");
+    sendIntroduction.open("POST", "/portal/upload_web_intro");
     sendIntroduction.setRequestHeader("Content-Type", "application/json");
     sendIntroduction.send(JSON.stringify({"intro": document.getElementById("introduction").value}));
      
@@ -109,7 +109,7 @@ var changePage = document.getElementById("changePage");
 function getNewsAmount()
 {
     var getNewsAmountRequest = new XMLHttpRequest();
-    getNewsAmountRequest.open("GET", "http://192.168.1.144:5000/portal/useful_numbers");
+    getNewsAmountRequest.open("GET", "/portal/useful_numbers");
     getNewsAmountRequest.setRequestHeader("Content-Type", "application/json");
     getNewsAmountRequest.send();
     getNewsAmountRequest.onload = function()
@@ -139,7 +139,7 @@ function getNewsAmount()
 function getTitle(index)
 {
     var getOldTitleRequest = new XMLHttpRequest();
-    getOldTitleRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_title/" + thisPageList[index]);
+    getOldTitleRequest.open("GET", "/portal/output_news_title/" + thisPageList[index]);
     getOldTitleRequest.setRequestHeader("Content-Type", "application/json");
     getOldTitleRequest.send();
     getOldTitleRequest.onload = function()
@@ -163,7 +163,7 @@ function getTitle(index)
 function getText(index)
 {
     var getTextRequest = new XMLHttpRequest();
-    getTextRequest.open("GET", "http://192.168.1.144:5000/portal/output_news_content/" + thisPageList[index]);
+    getTextRequest.open("GET", "/portal/output_news_content/" + thisPageList[index]);
     getTextRequest.setRequestHeader("Content-Type", "application/json");
     getTextRequest.send();
     getTextRequest.onload = function()
@@ -318,7 +318,7 @@ function deleteNews(index)
 {
     var deleteNewsRequest = new XMLHttpRequest();
     console.log(thisPageList)
-    deleteNewsRequest.open("GET", "http://192.168.1.144:5000/portal/delete_news/" + thisPageList[index - 1]);
+    deleteNewsRequest.open("GET", "/portal/delete_news/" + thisPageList[index - 1]);
     deleteNewsRequest.setRequestHeader("Content-Type", "application/json");
     deleteNewsRequest.send();
     deleteNewsRequest.onload = function()
@@ -348,7 +348,7 @@ function deleteNews(index)
     reader.readAsDataURL(img.files[0]);
 
     var editNewsRequest = new XMLHttpRequest();
-    editNewsRequest.open("POST", "http://192.168.1.144:5000/portal/edit_news/" + thisPageList[currentIndex - 1]);
+    editNewsRequest.open("POST", "/portal/edit_news/" + thisPageList[currentIndex - 1]);
     editNewsRequest.setRequestHeader("Content-Type", "application/json");
     editNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     editNewsRequest.onload = function()
@@ -391,7 +391,7 @@ function addNews()
     reader.readAsDataURL(img.files[0]);
 
     var addNewsRequest = new XMLHttpRequest();
-    addNewsRequest.open("POST", "http://192.168.1.144:5000/portal/upload_news/");
+    addNewsRequest.open("POST", "/portal/upload_news/");
     addNewsRequest.setRequestHeader("Content-Type", "application/json");
     addNewsRequest.send(JSON.stringify({"title": newsTitle, "content": newsText, "file": reader.result}));
     addNewsRequest.onload = function()

@@ -20,6 +20,7 @@ var passwordError3 = document.getElementById("passwordError3");
 var passwordError4 = document.getElementById("passwordError4");
 var emailError1 = document.getElementById("emailError1");
 var emailError2 = document.getElementById("emailError2");
+var emailError3 = document.getElementById("emailError3");
 var phoneError1 = document.getElementById("phoneError1");
 var phoneError2 = document.getElementById("phoneError2");
 var genderError = document.getElementById("genderError");
@@ -47,7 +48,7 @@ var birthRegexp = /^((18|19|20)[0-9]{2})[-\/\.](0?[1-9]|1[012])[-\/\.](0?[1-9]|[
 // Show/Hide error on html
 function showError(inputElement, errorDiv)
 {
-    console.log(inputElement.name + errorDiv)
+    //console.log(inputElement.name + errorDiv)
     inputElement.style.border = "1px solid red";
     errorDiv.style.display = "block";
     inputElement.focus();
@@ -62,10 +63,10 @@ function hideError(inputElement, errorDiv)
 function idTest()
 {
     var checkID = new XMLHttpRequest();
-    checkID.open("POST", "http://192.168.1.144:5000/account/USER/detect_repeated");
+    checkID.open("POST", "/account/USER/detect_repeated");
     checkID.setRequestHeader("Content-Type", "application/json");
     checkID.send(JSON.stringify({"userName": userName.value}));
-    console.log("CheckID JSON sent.");
+    //console.log("CheckID JSON sent.");
     setTimeout(function(){}, 300);
     checkID.onload = function()
     {
@@ -94,7 +95,7 @@ function idTest()
                 return false;
         }
     }
-    showError(userName, userNameError3);
+    //showError(userName, userNameError3);
     return false;
 }
 
@@ -158,61 +159,61 @@ function validated()
     if (nameOfUser.value.length < 1 || nameOfUser.value.length > 20)
     {
         showError(nameOfUser, nameError);
-        console.log("Wrong user name.");
+        //console.log("Wrong user name.");
         return false;
     }
     if (userName.value.length < 1 || userName.value.length > 20)
     {
         showError(userName, userNameError1);
-        console.log("Wrong userName.");
+        //console.log("Wrong userName.");
         return false;
     }
     if (userPassword.value.length < 8 || userPassword.value.length > 30)
     {
         showError(userPassword, passwordError1);
-        console.log("Wrong user password.");
+        //console.log("Wrong user password.");
         return false;
     }
     else if (userPassword.value.match(passwordRegexp) == null)
     {
         showError(userPassword, passwordError2);
-        console.log("Wrong user password format.");
+        //console.log("Wrong user password format.");
         return false;
     }
     if (checkPassword.value.length < 8 || checkPassword.value.length > 30)
     {
         showError(checkPassword, passwordError3);
-        console.log("Wrong user check password.");
+        //console.log("Wrong user check password.");
         return false;
     }
     else if (checkPassword.value != userPassword.value)
     {
         showError(checkPassword, passwordError4);
-        console.log("Wrong user password.");
+        //console.log("Wrong user password.");
         return false;
     }
     if (userEmail.value.length < 3)
     {
         showError(userEmail, emailError1);
-        console.log("Wrong user email.");
+        //console.log("Wrong user email.");
         return false;
     }
     else if (userEmail.value.match(emailRegexp) == null)
     {
         showError(userEmail, emailError2);
-        console.log("Wrong user email format.");
+        //console.log("Wrong user email format.");
         return false;
     }
     if (userPhone.value.length < 8)
     {
         showError(userPhone, phoneError1);
-        console.log("Wrong user phone.");
+        //console.log("Wrong user phone.");
         return false;
     }
     else if (userPhone.value.match(phoneRegexp) == null)
     {
         showError(userPhone, phoneError2);
-        console.log("wrong user phone format." + userPhone.value.match(phoneRegexp));
+        //console.log("wrong user phone format." + userPhone.value.match(phoneRegexp));
         return false;
     }
     if (checkGender() == -1)
@@ -223,13 +224,13 @@ function validated()
     if (userBirthday.value.length < 1)
     {
         showError(userBirthday, birthError1);
-        console.log("Wrong user birthday.");
+        //console.log("Wrong user birthday.");
         return false;
     }
     else if (!birthTest(userBirthday.value))
     {
         showError(userBirthday, birthError2);
-        console.log("Imposible user birthday.");
+        //console.log("Imposible user birthday.");
         return false;
     }
     if (serviceTerms.checked != true)
@@ -279,6 +280,7 @@ function checkPasswordVerify()
 function userEmailVerify()
 {
     registerError.style.display = "none";
+    hideError(userEmail, emailError3);
     if (userEmail.value.length >= 3)
         hideError(userEmail, emailError1);
     if (userEmail.value.match(emailRegexp) != null)
@@ -325,7 +327,7 @@ function register()
     {
         console.log("Avalible input.");
         var request = new XMLHttpRequest();
-        request.open("POST", "http://192.168.1.144:5000/account/USER/register");
+        request.open("POST", "/account/USER/register");
         console.log("XMLHttpRequest opened.");
         request.setRequestHeader("Content-Type", "application/json");
         request.send(JSON.stringify({"name": nameOfUser.value, "userName": userName.value, "userPassword": userPassword.value, "userMail": userEmail.value, "userPhone": userPhone.value, "userGender": checkGender(), "userBirthday": userBirthday.value}));
@@ -358,6 +360,9 @@ function register()
                 case "404": case 404: // Length of email is illegal.
                 case "405": case 405: // Format of email is illegal
                     showError(userEmail, emailError2);
+                    return false;
+                case "411": case 411: // Email repeat.
+                    showError(userEmail, emailError3);
                     return false;
                 case "406": case 406: // Format of phone is illegal.
                     showError(userPhone, phoneError2);

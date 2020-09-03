@@ -90,7 +90,7 @@ function resetPassword()
     }
 
     var request = new XMLHttpRequest();
-    request.open("POST", "/account/USER/reset_password");
+    request.open("POST", "/account/GM/reset_password");
     request.setRequestHeader("Content-Type", "application/json");
     request.send(JSON.stringify({'token': getToken(), "userPassword": newPassword.value}));
     request.onload = function()

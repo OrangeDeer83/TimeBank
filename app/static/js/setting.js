@@ -6,7 +6,7 @@ window.onload = function()
 function getOldUserInfo()
 {
     var uploadFrofileRequest = new XMLHttpRequest();
-    uploadFrofileRequest.open("GET", "http://192.168.1.144:5000/account/output/setting_info");
+    uploadFrofileRequest.open("GET", "/account/output/setting_info");
     uploadFrofileRequest.setRequestHeader("Content-Type", "application/json");
     uploadFrofileRequest.send();
     uploadFrofileRequest.onload = function()
@@ -35,24 +35,35 @@ function putOldUserInfo(oldInfo)
     document.getElementById("userPhone").value = oldInfo.userPhone;
     document.getElementById("profile").value = oldInfo.userInfo;
     document.getElementById("userBirthday").value = oldInfo.userBirthday;
-    switch (oldInfo)
+    console.log(oldInfo.userGender)
+    switch (oldInfo.userGender)
     {
-        case "0":
-            document.getElementById("genderMale").selected = true;
+        case "0": case 0:
+            document.getElementById("genderMale").checked = true;
             break;
-        case "1":
-            document.getElementById("genderFemale").selected = true;
+        case "1": case 1:
+            document.getElementById("genderFemale").checked = true;
             break;
-        case "2":
-            document.getElementById("genderElse").selected = true;
+        case "2": case 2:
+            document.getElementById("genderElse").checked = true;
             break;
     }
     getPropicMyself(oldInfo.userID);
 }
 
-function upload(index)
+var finished = 0;
+function upload()
 {
-    switch (index)
+    finished = 0;
+    uploadProfile();
+    uploadName();
+    /*uploadUserName();*/
+    uploadNewPassword();
+    uploadUserEmail();
+    uploadUserPhone();
+    uploadGender();
+    uploadUserBirthday();
+    /*switch (index)
     {
         case 23:
             uploadProfile();
@@ -78,41 +89,38 @@ function upload(index)
         case 30:
             uploadUserBirthday();
             break;
-        case 100:
-            uploadProfile();
-            uploadName();
-            /*uploadUserName();*/
-            uploadNewPassword();
-            uploadUserEmail();
-            uploadUserPhone();
-            uploadGender();
-            uploadUserBirthday();
-    }
+    }*/
 }
 
 function uploadProfile()
 {
     const profile = document.getElementById("profile");
     var uploadProfileRequest = new XMLHttpRequest();
-    uploadProfileRequest.open("POST", "http://192.168.1.144:5000/account/setting/userInfo");
+    uploadProfileRequest.open("POST", "/account/setting/userInfo");
     uploadProfileRequest.setRequestHeader("Content-Type", "application/json");
     uploadProfileRequest.send(JSON.stringify({"userInfo": profile.value}));
     uploadProfileRequest.onload = function()
     {
+        finished++;
         console.log(uploadProfileRequest.responseText);
         rst = JSON.parse(uploadProfileRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("個人簡介修改成功");
-                window.location.reload();
+                //alert("個人簡介修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "401": case 401:
+                //alert("個人簡介未作修改");
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "300": case 300:
             case "400": case 400:
+            default:
                 alert("系統錯誤，個人簡介修改失敗");
-                break;
-            case "401": case 401:
-                alert("名稱長度需在1~20字元之間，請再次確認");
                 break;
         }
     }
@@ -122,25 +130,35 @@ function uploadName()
 {
     const name = document.getElementById("name");
     var uploadNameRequest = new XMLHttpRequest();
-    uploadNameRequest.open("POST", "http://192.168.1.144:5000/account/setting/name");
+    uploadNameRequest.open("POST", "/account/setting/name");
     uploadNameRequest.setRequestHeader("Content-Type", "application/json");
     uploadNameRequest.send(JSON.stringify({"name": name.value}));
     uploadNameRequest.onload = function()
     {
+        finished++;
         console.log(uploadNameRequest.responseText);
         rst = JSON.parse(uploadNameRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("名稱修改成功");
-                window.location.reload();
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                alert("系統錯誤，名稱修改失敗");
+                //alert("名稱修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "401": case 401:
                 alert("名稱長度需在1~20字元之間，請再次確認");
+                break;
+            case "402": case 402:
+                //alert("名稱未更改");
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            case "403": case 403:
+            default:
+                alert("系統錯誤，名稱修改失敗");
                 break;
         }
     }
@@ -157,7 +175,7 @@ function uploadName()
     }
 
     var uploadUserNameRequest = new XMLHttpRequest();
-    uploadUserNameRequest.open("POST", "http://192.168.1.144:5000/account/setting/accountName");
+    uploadUserNameRequest.open("POST", "/account/setting/accountName");
     uploadUserNameRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserNameRequest.send(JSON.stringify({"userName": userName.value}));
     uploadUserNameRequest.onload = function()
@@ -168,7 +186,7 @@ function uploadName()
         {
             case "200": case 200:
                 alert("使用者名稱修改成功");
-                window.location.reload();
+                //window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:
@@ -186,10 +204,14 @@ function uploadName()
 
 function uploadNewPassword()
 {
+    finished++;
     const oldPassword = document.getElementById("oldPassword");
     const newPassword = document.getElementById("newPassword");
     const checkPassword = document.getElementById("checkPassword");
     const passwordRegexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\w).{8,30}$/;
+
+    if (oldPassword.value.length == 0 && newPassword.value.length == 0 && checkPassword.value.length == 0)
+        return ;
 
     if (newPassword.value.match(passwordRegexp) == null)
     {
@@ -204,7 +226,7 @@ function uploadNewPassword()
     }
 
     var uploadNewPasswordRequest = new XMLHttpRequest();
-    uploadNewPasswordRequest.open("POST", "http://192.168.1.144:5000/account/setting/accountPassword");
+    uploadNewPasswordRequest.open("POST", "/account/setting/accountPassword");
     uploadNewPasswordRequest.setRequestHeader("Content-Type", "application/json");
     uploadNewPasswordRequest.send(JSON.stringify({"userPassword": newPassword.value, "userOldPassword": oldPassword.value}));
     uploadNewPasswordRequest.onload = function()
@@ -214,18 +236,27 @@ function uploadNewPassword()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("密碼修改成功");
-                window.location.reload();
+                //alert("密碼修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "401": case 401:
+                alert("舊密碼錯誤，請再次確認");
+                break;
+            case "402": case 402:
+                //alert("密碼未更改");
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "403": case 403:
+                alert("密碼長度需在8~30字元之間，且包含數字、大小寫字母及特殊符號，請再次確認");
                 break;
             case "300": case 300:
             case "400": case 400:
+            case "404": case 404:
+            default:
                 alert("系統錯誤，密碼修改失敗");
-                break;
-            case "401": case 401:
-                alert("密碼長度需在8~30字元之間，且包含數字、大小寫字母及特殊符號，請再次確認");
-                break;
-            case "402": case 402:
-                alert("舊密碼錯誤，請再次確認");
                 break;
         }
     }
@@ -243,32 +274,39 @@ function uploadUserEmail()
     }
 
     var uploadUserEmailRequest = new XMLHttpRequest();
-    uploadUserEmailRequest.open("POST", "http://192.168.1.144:5000/account/setting/accountMail");
+    uploadUserEmailRequest.open("POST", "/account/setting/accountMail");
     uploadUserEmailRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserEmailRequest.send(JSON.stringify({"userMail": userEmail.value}));
     uploadUserEmailRequest.onload = function()
     {
+        finished++;
         console.log(uploadUserEmailRequest.responseText);
         rst = JSON.parse(uploadUserEmailRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("電子信箱修改成功");
-                window.location.reload();
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                alert("系統錯誤，電子信箱修改失敗");
+                //alert("電子信箱修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "401": case 401:
             case "402": case 402:
                 alert("電子信箱格式不符，長度不得超過50字元，請再次確認");
                 break;
             case "403": case 403:
-                alert("電子信箱並未修改，請再次確認");
+                //alert("電子信箱並未修改，請再次確認");
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "404": case 404:
                 alert("此電子信箱已被使用");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            case "405": case 405:
+            default:
+                alert("系統錯誤，電子信箱修改失敗");
                 break;
         }
     }
@@ -286,25 +324,34 @@ function uploadUserPhone()
     }
 
     var uploadUserPhoneRequest = new XMLHttpRequest();
-    uploadUserPhoneRequest.open("POST", "http://192.168.1.144:5000/account/setting/accountPhone");
+    uploadUserPhoneRequest.open("POST", "/account/setting/accountPhone");
     uploadUserPhoneRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserPhoneRequest.send(JSON.stringify({"userPhone": userPhone.value}));
     uploadUserPhoneRequest.onload = function()
     {
+        finished++;
         console.log(uploadUserPhoneRequest.responseText);
         rst = JSON.parse(uploadUserPhoneRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("電話號碼修改成功");
-                window.location.reload();
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                alert("系統錯誤，電話號碼修改失敗");
+                //alert("電話號碼修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "401": case 401:
                 alert("電話號碼格式不符，請再次確認");
+                break;
+            case "402": case 402:
+                //alert("電話號碼未更改");
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            case "403": case 403:
+                alert("系統錯誤，電話號碼修改失敗");
                 break;
         }
     }
@@ -328,25 +375,35 @@ function uploadGender()
     }
 
     var uploadUserGenderRequest = new XMLHttpRequest();
-    uploadUserGenderRequest.open("POST", "http://192.168.1.144:5000/account/setting/userGender");
+    uploadUserGenderRequest.open("POST", "/account/setting/userGender");
     uploadUserGenderRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserGenderRequest.send(JSON.stringify({"userGender": checkGender}));
     uploadUserGenderRequest.onload = function()
     {
+        finished++;
         console.log(uploadUserGenderRequest.responseText);
         rst = JSON.parse(uploadUserGenderRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("性別修改成功");
-                window.location.reload();
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                alert("系統錯誤，性別修改失敗");
+                //alert("性別修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "401": case 401:
                 alert("未知的性別，請再次確認");
+                break;
+            case "402": case 402:
+                //alert("性別未更改");
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "300": case 300:
+            case "400": case 400:
+            case "403": case 403:
+            default:
+                alert("系統錯誤，性別修改失敗");
                 break;
         }
     }
@@ -405,25 +462,38 @@ function uploadUserBirthday()
     }
     
     var uploadUserBirthdayRequest = new XMLHttpRequest();
-    uploadUserBirthdayRequest.open("POST", "http://192.168.1.144:5000/account/setting/userBirthday");
+    uploadUserBirthdayRequest.open("POST", "/account/setting/userBirthday");
     uploadUserBirthdayRequest.setRequestHeader("Content-Type", "application/json");
     uploadUserBirthdayRequest.send(JSON.stringify({"userBirthday": userBirthday.value}));
     uploadUserBirthdayRequest.onload = function()
     {
+        finished++;
         console.log(uploadUserBirthdayRequest.responseText);
         rst = JSON.parse(uploadUserBirthdayRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("生日修改成功");
-                window.location.reload();
+                //alert("生日修改成功");
+                //window.location.reload();
+                if (finished == 7)
+                    alert("設定已完成");
+                break;
+            case "401": case 401:
+                alert("生日格式不符，請再次確認，避免輸入過於古老的日期");
+                break;
+            case "402": case 402:
+                alert("生日格式不符，請再次確認，避免輸入未來的日期");
+                break;
+            case "403": case 403:
+                //alert("生日未更改");
+                if (finished == 7)
+                    alert("設定已完成");
                 break;
             case "300": case 300:
             case "400": case 400:
+            case "404": case 404:
+            default:
                 alert("系統錯誤，生日修改失敗");
-                break;
-            case "401": case 401:
-                alert("生日格式不符，請再次確認，避免輸入未來或過於古老的日期");
                 break;
         }
     }
@@ -432,7 +502,7 @@ function uploadUserBirthday()
 function getPropicMyself(userID)
 {
     var getPropicRequest = new XMLHttpRequest();
-    getPropicRequest.open("POST", "http://192.168.1.144:5000/account/propic_exist");
+    getPropicRequest.open("POST", "/account/propic_exist");
     getPropicRequest.setRequestHeader("Content-Type", "application/json");
     getPropicRequest.send(JSON.stringify({"userID": userID}));
     getPropicRequest.onload = function()

@@ -11,7 +11,7 @@ const pageNumber = document.getElementById('pageNumber');
 function getReportAmount()
 {
     var reportAmountRequest = new XMLHttpRequest();
-    reportAmountRequest.open('GET', 'http://192.168.1.144:5000/report/list_amount');
+    reportAmountRequest.open('GET', '/report/list_amount');
     reportAmountRequest.setRequestHeader('Content-Type', 'application/json');
     reportAmountRequest.send();
     reportAmountRequest.onload = function()
@@ -26,13 +26,15 @@ function getReportAmount()
                 computePage(0);
                 break;
             default:
-                console.log('無法取得檢舉數量')
+                alert('系統錯誤，無法取得檢舉清單');
             }
     }
 }
 
 function computePage(type)
 {
+    if (currentReport >= reportAmount)
+        currentReport = reportAmount - 1;
     switch (type)
     {
         case 1:
@@ -53,8 +55,9 @@ function computePage(type)
 
 function getDetail()
 {
+    if (reportAmount == 0) return ;
     var reportDetailRequest = new XMLHttpRequest();
-    reportDetailRequest.open('POST', 'http://192.168.1.144:5000/report/list');
+    reportDetailRequest.open('POST', '/report/list');
     reportDetailRequest.setRequestHeader('Content-Type', 'application/json');
     reportDetailRequest.send(JSON.stringify({'reportID': reportList[currentReport]}));
     reportDetailRequest.onload = function()
@@ -67,7 +70,7 @@ function getDetail()
                 showDetail(rst.reportList[0]);
                 break;
             default:
-                console.log('無法取得檢舉細節')
+                alert('無法取得檢舉清單');
             }
     }
 }
@@ -94,7 +97,7 @@ function showDetail(reportDetail)
 function report(type)
 {
     var approveRequest = new XMLHttpRequest();
-    approveRequest.open('POST', 'http://192.168.1.144:5000/report/approve');
+    approveRequest.open('POST', '/report/approve');
     approveRequest.setRequestHeader('Content-Type', 'application/json');
     approveRequest.send(JSON.stringify({'reportID': reportList[currentReport], 'reportStatus': type}));
     approveRequest.onload = function()
@@ -104,10 +107,14 @@ function report(type)
         switch (rst.rspCode)
         {
             case '20': case 20:
-                window.location.reload();
+                getReportAmount();
+                break;
+            case '42': case 42:
+                alert('此檢舉已被審理');
+                getReportAmount();
                 break;
             default:
-                console.log('無法審核檢舉')
+                alert('系統錯誤，無法審核檢舉');
             }
     }
 }

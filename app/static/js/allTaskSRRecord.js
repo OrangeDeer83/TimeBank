@@ -95,7 +95,7 @@ function showPrompt(index)
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SR/output/record");
+    taskListRequest.open("GET", "/task/SR/output/record");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -181,9 +181,14 @@ function putDetail(index)
     document.getElementById("taskName" + index).innerHTML = currentTask.taskName;
     document.getElementById("taskTime" + index).innerHTML = currentTask.taskStartTime + " ~ " + thisPageList[index].taskEndTime;
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
-    if (currentTask.taskSP === '' || currentTask.taskStatus == 4)
+    var taskStatus = currentTask.taskStatus
+    if (currentTask.taskSP === '' || taskStatus == 4)
     {
         document.getElementById("taskSP" + index).innerHTML = '此任務未成功被承接';
+        document.getElementById('reportButton' + index).style.display = 'none';
+    }
+    else if (taskStatus == 0 || taskStatus == 1 || taskStatus == 9 || taskStatus == 10 || taskStatus == 11)
+    {
         document.getElementById('reportButton' + index).style.display = 'none';
     }
     else
@@ -266,7 +271,7 @@ function sendReport()
     if (sendReportOnload == 1) return ;
     sendReportOnload = 1;
     var reportRequest = new XMLHttpRequest();
-    reportRequest.open("POST", "http://192.168.1.144:5000/report/send_report");
+    reportRequest.open("POST", "/report/send_report");
     reportRequest.setRequestHeader("Content-Type", "application/json");
     reportRequest.send(JSON.stringify({'taskID': thisPageList[reportTaskIndex].taskID, 'reportReason': document.getElementById('reportReason').value}));
     reportRequest.onload = function()
@@ -279,6 +284,9 @@ function sendReport()
                 document.getElementById('systemPrompt').innerHTML = '檢舉已送出：' + thisPageList[reportTaskIndex].taskName;
                 sendReportOnload = 0;
                 hideReportDiv();
+                break;
+            case "42": case 42:
+                alert('此任務無法檢舉');
                 break;
             default:
                 showPrompt(402);

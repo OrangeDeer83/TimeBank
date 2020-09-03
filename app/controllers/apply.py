@@ -11,6 +11,8 @@ Apply = Blueprint('apply', __name__)
 @Apply.route('/update_apply_group', methods = ['POST'])
 def update_apply_group():
     if request.method == 'POST':
+        if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']   ):
+           return jsonify({"rspCode":500,"allClass":""})
         try:
             json = request.get_json()
             groupName = json['groupName']
@@ -43,6 +45,7 @@ def output_apply_group():
         return jsonify({"rspCode":300,"groupName":""})
 
 #顯示可申請類別
+
 #回復rspCode,allClass
 @Apply.route("/output_apply_class" ,methods = ['GET'])
 def output_apply_class():
@@ -91,12 +94,12 @@ def upload_apply_condition_pdf():
         #目前預設傳來的東西叫做file,允許pdf
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
             session.clear()
-            return redirect(url_for('Admin.update_condition'))
+            return "檔案類型不許可"
         try:
             filePdf = request.files['file']
         except:
             #檔案傳輸方式錯誤、或是檔案超過2MB
-            return redirect(url_for('Admin.update_condition'))
+            return "檔案傳輸方式錯誤、或是檔案超過2MB"
         #檢查fileImage
         if filePdf.mimetype == 'application/pdf':
             try:
@@ -105,12 +108,12 @@ def upload_apply_condition_pdf():
                 return redirect(url_for('Admin.update_condition'))
             except:
                 #rspCode 400:圖片上傳錯誤
-                return redirect(url_for('Admin.update_condition'))
+                return "圖片上傳錯誤"
         else:
             #檔案類型或名稱不許可
-            return redirect(url_for('Admin.update_condition'))
+            return "檔案類型不許可"
     else:
-        return redirect(url_for('Admin.update_condition'))
+        return "檔案傳輸方式錯誤、或是檔案超過2MB"
 #回傳申請文件名
 #回傳rspCode,fileName
 @Apply.route("/output_apply_condition_pdf", methods = ['GET'])
@@ -135,7 +138,7 @@ def ouput_apply_condition_pdf():
 #回傳rspCode,notAllow
 @Apply.route('/update_add_apply_quota' ,methods = ['POST'])
 def update_add_apply_quota():
-    #try:
+    try:
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
            return jsonify({"rspCode":500,"notAllow":notAllow})
         if request.method == 'POST':
@@ -150,6 +153,7 @@ def update_add_apply_quota():
             three = json['three']
             six = json['six']
             year = json['year']
+            print(json)
             #檢查輸入
             if className == '' or className == '其他':
                 notAllow.append("class")
@@ -249,9 +253,9 @@ def update_add_apply_quota():
             return jsonify({"rspCode":200,"notAllow":""})
         else:
             return jsonify({"rspCode":300,"notAllow":""})
-    #except:
+    except:
         #rspCode 400:某個地方爆掉但不知道哪裡
-        #return jsonify({"rspCode":400,"notAllow":""})
+        return jsonify({"rspCode":400,"notAllow":""})
 
 #回傳要求的quota和condition id
 #要json傳class,period
@@ -266,6 +270,7 @@ def output_quota_conditionID():
                 json = request.get_json() 
             except:
                 return jsonify({"conditionID":"","quota":"","rspCode":410})
+            print(json)
             if json['class'] == '其他':
                 #其他沒id和quota
                 return jsonify({"conditionID":"","quota":"","rspCode":201})
@@ -363,7 +368,8 @@ def user_add_apply():
                 nextTime = int(request.values['applyPeriod'])
             else:
                 notAllow.append('applyPeriod')
-            result = request.values['applyReason']        
+            result = request.values['applyReason']
+            print(request.values['applyFrequency'],request.values['applyPeriod'],request.values['applyQuota'])       
             if(request.values['class'] != '其他'):
                 try:
                     if notAllow != []:
@@ -591,9 +597,9 @@ def simple_personal_apply_history():
 @Apply.route('/apply_pdf_download/<number>', methods = ['GET'])
 def apply_pdf_download(number):
     if request.method != 'GET':
-        return jsonify({"rspCode":300})
+        return "伺服器錯誤"
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-        return jsonify({"rspCode":500})
+        return "權限不符"
     #json = request.get_json()
     #applyID = str(json['applyID'])
     applyID = number
@@ -601,7 +607,7 @@ def apply_pdf_download(number):
         return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(applyID),'{}.pdf'.format(applyID),as_attachment=True)
     except:
         #rspCode 400:檔案不存在
-        return jsonify({"rspCode":400})
+        return "檔案不存在"
 
 #決定申請是否通過
 #要json傳 applyID,applyStatus(案的是核准就給1沒過給2),quotaChange(核准額度有變給值，沒有傳空)
@@ -623,6 +629,7 @@ def apply_judge():
     applyID = json['applyID']
     applyStatus = json['applyStatus']
     quotaChange = json['quotaChange']
+    print(json)
     notAllow = []
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
@@ -767,6 +774,7 @@ def judgement_history():
         className = json['class']
         period = json['period']
         status = json['status']
+        print(json)
         applyData = db.session.query(apply.conditionID ,apply.applyTime, apply.frequency, apply.result, apply.applyStatus, apply.oldConditionID, apply.judgeTime, apply.applyID,apply.userID,apply.applyStatus, apply.adminID).filter(apply.applyStatus != 0).filter(apply.conditionID == applyCondition.conditionID).filter(apply.userID ==account.userID )
         if Name != '':
             applyData = applyData.filter(or_(account.name.like('%{}%'.format(Name)),account.userName.like('%{}%'.format(Name))))
@@ -818,7 +826,7 @@ def judgement_history():
             #judgeAdmin str, userID str, userName str, userPoint str, applyStatus int,
             # userSRRate float, userSPRate float, name str, applyPdfName str, applyID int, 
             # applyClass str, applyQuota int, oldQuota int, applyTime str,
-            # judgeTime str, priotd str ,applyStatus int, applyResultstr, applyFrequency int
+            # judgeTime str, period str ,applyStatus int, applyResultstr, applyFrequency int
         return jsonify({"rspCode":200,"judgeAdmin":judgeAdmin,"userID":userID,"userName":userName,"userPoint":userPoint,"applyStatus":applyStatus,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":name,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
     except:
         return jsonify({"rspCode":400,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
@@ -827,11 +835,11 @@ def judgement_history():
 @Apply.route("/download/申請說明文件",methods = ['GET'])
 def download_apply_description():
     if request.method != 'GET':
-        return jsonify({"rspCode":300})
+        return "伺服器錯誤"
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']  or session.get('userType') == userType['USER']):
-        return jsonify({"rspCode":500})
+        return "權限不符"
     try:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/','申請說明文件.pdf',as_attachment=True)
     except:
-        return jsonify({"rspCode":400})
+        return "檔案不存在"
 

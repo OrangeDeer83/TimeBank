@@ -59,7 +59,7 @@ function showError() {;}
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/task/SR/output/accept");
+    taskListRequest.open("GET", "/task/SR/output/accept");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -212,7 +212,7 @@ function getDate(time) {
 function cancelTask(index)
 {
     var cancelTaskRequest = new XMLHttpRequest();
-    cancelTaskRequest.open("POST", "http://192.168.1.144:5000/task/SR/cancel_task");
+    cancelTaskRequest.open("POST", "/task/SR/cancel_task");
     cancelTaskRequest.setRequestHeader("Content-Type", "application/json");
     cancelTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID}));
     cancelTaskRequest.onload = function()
@@ -238,7 +238,7 @@ function cancelTask(index)
 function finishTask(index, type)
 {
     var finishTaskRequest = new XMLHttpRequest();
-    finishTaskRequest.open("POST", "http://192.168.1.144:5000/task/task_finish_or_not");
+    finishTaskRequest.open("POST", "/task/task_finish_or_not");
     finishTaskRequest.setRequestHeader("Content-Type", "application/json");
     console.log(type)
     finishTaskRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "status": type + ""}));
@@ -304,7 +304,7 @@ function sendGrade()
         }
     }
     var sendGradeRequest = new XMLHttpRequest();
-    sendGradeRequest.open("POST", "http://192.168.1.144:5000/comment/comment_action");
+    sendGradeRequest.open("POST", "/comment/comment_action");
     sendGradeRequest.setRequestHeader("Content-Type", "application/json");
     sendGradeRequest.send(JSON.stringify({"taskID": thisPageList[index].taskID, "comment": comment.value, "star": star + ""}));
     sendGradeRequest.onload = function()

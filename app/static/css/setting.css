@@ -330,3 +330,15 @@ textarea:focus
         margin-left: 25%;
     }
 }
+
+@media (max-width: 450px)
+{
+    .formLine
+    {
+        margin: 20px 0;
+    }
+    .radioText
+    {
+        margin: 0;
+    }
+}

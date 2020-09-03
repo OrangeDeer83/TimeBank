@@ -18,7 +18,6 @@ def create_admin():
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": 403})          #非法字元
-            print(value)
             adminType = value['adminType']
             if int(adminType) > userType['AG'] or int(adminType) < userType['AS']:
                 return jsonify({"rspCode": 401})          #adminType異常
@@ -30,16 +29,13 @@ def create_admin():
                 return jsonify({"rspCode": 403})          #密碼格式不符
             try:
                 query_data = adminAccount.query.filter_by(adminName = adminName).first()
-                print(query_data)
             except:
                 return jsonify({"rspCode": 400})          #資料庫錯誤
             if query_data == None:
                 try:
                     salt = generate_salt()
-                    print(salt)
                     new_adminAccount = adminAccount(adminName=adminName, adminPassword=encrypt(adminPassword, salt)\
                                                     , adminType=adminType, adminPhone=None,adminMail=None, salt=salt)
-                    print(new_adminAccount)
                     db.session.add(new_adminAccount)
                     db.session.commit()
                 except:
@@ -61,14 +57,14 @@ def delete_admin():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": 403})          #非法字元
+                return jsonify({"rspCode": 404})          #非法字元
             adminID = value['adminID']
             SAID = session.get('adminID')
             try:
                 SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
             except:
                 return jsonify({"rspCode": 400})              #資料庫錯誤
-            if session.get('AdminConfirm') == SA_data.adminPassword:
+            if session.get('adminConfirm') == SA_data.adminPassword:
                 try:
                     query_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
                     if query_data == None:
@@ -97,7 +93,7 @@ def delete_Admin_check_password():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": 403})          #非法字元
+                return jsonify({"rspCode": 402})          #非法字元
             print(value)
             SAID = session.get('adminID')
             SAPassword = value['SAPassword']
@@ -106,7 +102,7 @@ def delete_Admin_check_password():
             except:
                 return jsonify({"rspCode": 400})              #資料庫錯誤
             if check_same(SAPassword, SA_data.adminPassword, SA_data.salt):
-                session['AdminConfirm'] = SA_data.adminPassword
+                session['adminConfirm'] = SA_data.adminPassword
                 return jsonify({"rspCode": 200})              #密碼驗證成功
             else:
                 return jsonify({"rspCode": 401})              #密碼輸入錯誤
@@ -131,7 +127,7 @@ def load_GM_mail():
                 query_data = adminAccount.query.filter_by(adminMail = GMMail).first()
             except:
                 return jsonify({"rspCode": 400})              #資料庫錯誤
-            if query_data:
+            if query_data and   query_data.adminType != userType['STOP']:
                 return jsonify({"rspCode": 402})              #email與他人重複
             try:
                 adminName = generate_salt()[:20]
@@ -161,7 +157,7 @@ def Admin_list():
         Admin_list = []
         for Admin in query_data:
             Admin_list.append({"adminType": Admin.adminType, "adminName": Admin.adminName,\
-                            "adminID": Admin.adminID, "adminPhone": Admin.adminPhone, "adminMail": Admin.adminMail})
+                            "adminID": Admin.adminID})
         return jsonify({"rspCode": 200, "AdminList": Admin_list})         #成功
     else:
         return jsonify({"rspCode": 500, "AdminList": ""})                 #權限不符
@@ -228,7 +224,7 @@ def reject_GM():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": 403})          #非法字元
+                return jsonify({"rspCode": 402})          #非法字元
             GMID = value['GMID']
             try:
                 query_data = adminAccount.query.filter_by(adminID = GMID).first()
@@ -253,7 +249,7 @@ def delete_GM():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": 403})          #非法字元
+                return jsonify({"rspCode": 405})          #非法字元
             GMID = value['GMID']
             adminID = session.get('adminID')
             try:
@@ -263,7 +259,7 @@ def delete_GM():
                     return jsonify({"rspCode": 404})                  #adminID不存在
             except:
                 return jsonify({"rspCode": 400})                      #資料庫錯誤
-            if session.get('AdminConfirm') == Admin_data.adminPassword:
+            if session.get('adminConfirm') == Admin_data.adminPassword:
                 try:
                     query_data = adminAccount.query.filter(adminAccount.adminID == GMID).first()
                     if query_data == None:
@@ -290,7 +286,7 @@ def delete_GM_check_password():
             try:
                 value = request.get_json()
             except:
-                return jsonify({"rspCode": 403})          #非法字元
+                return jsonify({"rspCode": 402})          #非法字元
             adminID = session.get('adminID')
             adminPassword = value['SAPassword']
             try:
@@ -298,7 +294,7 @@ def delete_GM_check_password():
             except:
                 return jsonify({"rspCode": 400})              #資料庫錯誤
             if check_same(adminPassword, Admin_data.adminPassword, Admin_data.salt):
-                session['AdminConfirm'] = Admin_data.adminPassword
+                session['adminConfirm'] = Admin_data.adminPassword
                 return jsonify({"rspCode": 200})              #密碼驗證成功
             else:
                 return jsonify({"rspCode": 401})              #密碼輸入錯誤
@@ -322,7 +318,7 @@ def changePassword():
                 SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
             except:
                 return jsonify({"rspCode": 30})              #資料庫錯誤
-            if session.get('AdminConfirm') == SA_data.adminPassword:
+            if session.get('adminConfirm') == SA_data.adminPassword:
                 try:
                     query_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
                     if query_data == None:

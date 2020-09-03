@@ -48,7 +48,10 @@
                     <div class="formLine">
                         <div class="formLabelDiv"><label for="taskContent" class="formLabel">任務說明</label></div>
                         <textarea id="taskContent" name="taskContent" placeholder="詳細說明任務內容與工作所要達到的目標（選填，建議填寫完整以避免糾紛）"></textarea>
-                    </div> 
+                    </div>
+                    <div class="formLine">
+                        <div>系統提示：<span id="systemPrompt">已就緒...</span></div>
+                    </div>
                     <div class="formButtons">
                         <input type="button" class="formButton" value="新增任務" onclick="createTask()" />
                         <input type="reset" class="formButton" value="取消" onclick="window.location.reload()" />

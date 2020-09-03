@@ -11,7 +11,7 @@ const pageNumber = document.getElementById('pageNumber');
 function getReportAmount()
 {
     var reportAmountRequest = new XMLHttpRequest();
-    reportAmountRequest.open('GET', 'http://192.168.1.144:5000/report/report_history_list_amount');
+    reportAmountRequest.open('GET', '/report/report_history_list_amount');
     reportAmountRequest.setRequestHeader('Content-Type', 'application/json');
     reportAmountRequest.send();
     reportAmountRequest.onload = function()
@@ -54,7 +54,7 @@ function computePage(type)
 function getDetail()
 {
     var detailRequest = new XMLHttpRequest();
-    detailRequest.open('POST', 'http://192.168.1.144:5000/report/report_history_list');
+    detailRequest.open('POST', '/report/report_history_list');
     detailRequest.setRequestHeader('Content-Type', 'application/json');
     detailRequest.send(JSON.stringify({'reportID': reportList[currentReport]}));
     detailRequest.onload = function()

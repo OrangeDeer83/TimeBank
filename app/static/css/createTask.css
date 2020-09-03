@@ -3,7 +3,7 @@
 /* USER新增任務 */
 .taskDiv
 {
-	background-color: var(--background-color);
+    background-color: var(--background-color);
     color: var(--background-text-color);
     border: var(--background-border);
     font-weight: var(--background-font-weight);
@@ -79,7 +79,7 @@
     .taskDiv
     {
         width: 500px;
-        height: 520px;     
+        /*height: 520px;*/
         margin: auto;
         border-radius: 12px;
     }
@@ -94,13 +94,13 @@
         text-align: right;
     }
     .formText
-	{		   
-	    width: 300px;	    
-	}
-	#taskContent
-	{
+    {
         width: 300px;
-	}
+    }
+    #taskContent
+    {
+        width: 300px;
+    }
     .error
     {
         margin: 0 50px 0 150px;
@@ -117,29 +117,29 @@
 
 @media (max-width: 499px)
 {
-	body
-	{
-		margin-top: 50px;
+    body
+    {
+        margin-top: 50px;
         height: 100%;
         background-color: var(--background-color);
-	}
+    }
     .taskDiv
     {
         margin: 0;
-        height: 550px;
+        /*height: 550px;*/
         border: 0px;
     }
     #formTitle
-	{
-	    margin: 5px 0;
-	}
-	.formLine
-	{
-	    padding-top: 5px;
-	}
+    {
+        margin: 5px 0;
+    }
+    .formLine
+    {
+        padding-top: 5px;
+    }
     .formText,#taskContent
     {
-    	width: 70%;
+        width: 70%;
         text-align: center;
     }
     .error

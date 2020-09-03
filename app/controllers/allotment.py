@@ -77,6 +77,7 @@ def allotment_():
     frequency = str(json['frequency'])
     quota = str(json['quota'])
     notAllow = []
+    print(json['receiver'],type(json['receiver']))
     if not(period == '30' or period == '90' or period == '0' or period == '180' or period == '365'):
         notAllow.append("period")
     if not(frequency.isdigit()):
@@ -173,7 +174,7 @@ def allotment_():
             return jsonify({"rspCode":400,"notAllow":"userID or adminID"})
     else:
         #kind錯誤
-        return jsonify({"rspCode":400,"notAllow":"kind"})
+        return jsonify({"rspCode":401,"notAllow":"kind"})
 
 #簡易個人配發紀錄
 #要json傳userID

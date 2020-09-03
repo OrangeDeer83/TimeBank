@@ -16,9 +16,9 @@ def SR_output_record():
                 try:
                     query_data = account.query.filter_by(userID = userID).first()
                     if query_data == None:
-                        return jsonify({"rspCode": 401, "taskRecord": ""})                                   #沒有該帳號                                     #userID錯誤
+                        return jsonify({"rspCode": 401})                                   #沒有該帳號                                     #userID錯誤
                 except:
-                    return jsonify({"rspCode": 400, "taskRecord": ""})                                       #資料庫錯誤
+                    return jsonify({"rspCode": 400})                                       #資料庫錯誤
                 taskRecord = []
                 for task in query_data.taskSR:
                     if task.taskStatus in [3, 5, 6, 7, 8]:
@@ -31,11 +31,12 @@ def SR_output_record():
                 sortTaskByTaskID(taskRecord, 0, len(taskRecord) - 1)
                 taskRecordJson = []
                 for task in taskRecord:
-                    print(task)
                     if len(task.SP) == 0:
                         SPname = ""
+                        SPID = ""
                     else:
                         SPname = task.SP[0].name
+                        SPID = task.SP[0].userID
                     if len(task.db_task_comment) > 0:
                         if task.db_task_comment[0].SPComment == None:
                             SPScore = ""
@@ -58,14 +59,15 @@ def SR_output_record():
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
                                             "taskStatus": task.taskStatus, "taskSP": SPname, "taskSR": task.SR[0].name,\
-                                            "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
+                                            "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SPID":SPID,\
+                                            "SRScore": SRScore})
                 return jsonify({"rspCode": 200, "taskRecord": taskRecordJson})                    #成功取得
             else:
-                return jsonify({"rspCode": 402, "taskRecord": ""})                                #沒有userID
+                return jsonify({"rspCode": 402})                                #沒有userID
         else:
-            return jsonify({"rspCode": 500, "taskRecord": ""})                                    #權限不符
+            return jsonify({"rspCode": 500})                                    #權限不符
     else:
-        return jsonify({"rspCode": 300, "taskRecord": ""})                                        #method使用錯誤
+        return jsonify({"rspCode": 300})                                        #method使用錯誤
 
 #取得SP已通過的任務
 @Task.route('/SP/output/passed', methods=['GET'])
@@ -93,16 +95,18 @@ def SP_output_passed():
                         commentStatus = 0
                     taskStartTime = time.mktime(task.taskStartTime.timetuple()) * 1000
                     taskEndTime = time.mktime(task.taskEndTime.timetuple()) * 1000
+                    print(taskStartTime)
+                    print(taskEndTime)
                     taskPassedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": taskStartTime, "taskEndTime": taskEndTime,\
                                             "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
-                                            "commentStatus": commentStatus})
+                                            "commentStatus": commentStatus, "SRID":task.SR[0].userID})
                 return jsonify({"rspCode": 200, "taskPassed": taskPassedJson})                                        #成功取得
             else:
-                return jsonify({"rspCode": 402, "taskRecord": ""})                                                    #沒有userID
+                return jsonify({"rspCode": 402})                                                    #沒有userID
         else:
-            return jsonify({"rspCode": 500, "taskRecord": ""})                                                        #權限不符
+            return jsonify({"rspCode": 500})                                                        #權限不符
     else:
         return jsonify({"rspCode": 300, "taskPassed": ""})                                                            #method使用錯誤
 
@@ -116,9 +120,9 @@ def SP_output_checking():
                 try:
                     query_data = taskCandidate.query.filter_by(userID = userID).order_by(taskCandidate.taskID).all()
                     if query_data == None:
-                        return jsonify({"rspCode": 401, "taskChecking": ""})                                              #userID錯誤
+                        return jsonify({"rspCode": 401})                                              #userID錯誤
                 except:
-                    return jsonify({"rspCode": 400, "taskChecking": ""})                                                  #資料庫錯誤
+                    return jsonify({"rspCode": 400})                                                  #資料庫錯誤
                 taskChecking = []
                 for candidate in query_data:
                     if candidate.task.taskStatus == 1:
@@ -129,14 +133,14 @@ def SP_output_checking():
                     taskCheckingJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                            "taskStatus": task.taskStatus, "taskSR": task.SR[0].name})
+                                            "taskStatus": task.taskStatus, "taskSR": task.SR[0].name,"SRID":task.SR[0].userID})
                 return jsonify({"rspCode": 200, "taskChecking": taskCheckingJson})                                        #成功取得
             else:
-                return jsonify({"rspCode": 402, "taskRecord": ""})                                #沒有userID
+                return jsonify({"rspCode": 402})                                               #沒有userID
         else:
-            return jsonify({"rspCode": 500, "taskRecord": ""})                                    #權限不符
+            return jsonify({"rspCode": 500})                                                    #權限不符
     else:
-        return jsonify({"rspCode": 300, "taskChecking": ""})                                                      #method使用錯誤
+        return jsonify({"rspCode": 300})                                                      #method使用錯誤
 
 #取得SP遭拒絕的任務
 @Task.route('/SP/output/refused', methods=['GET'])
@@ -161,12 +165,13 @@ def SP_output_refused():
                     taskRefusedJson.append({"taskID": task.taskID, "taskName": task.taskName, "taskContent": task.taskContent,\
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
-                                            "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name})
+                                            "taskStatus": task.taskStatus, "taskSP": task.SP[0].name, "taskSR": task.SR[0].name,\
+                                            "SRID":task.SR[0].userID})
                 return jsonify({"rspCode": 200, "taskRefused": taskRefusedJson})                                        #成功取得
             else:
-                return jsonify({"rspCode": 402, "taskRecord": ""})                                #沒有userID
+                return jsonify({"rspCode": 402})                                #沒有userID
         else:
-            return jsonify({"rspCode": 500, "taskRecord": ""})                                    #權限不符
+            return jsonify({"rspCode": 500})                                    #權限不符
     else:
         return jsonify({"rspCode": 300, "taskRefused": ""})                                                     #method使用錯誤
 
@@ -180,9 +185,9 @@ def SP_output_record():
                 try:
                     query_data = account.query.filter_by(userID = userID).first()
                     if query_data == None:
-                        return jsonify({"rspCode": 401, "taskRecord": ""})                                              #userID錯誤
+                        return jsonify({"rspCode": 401})                                              #userID錯誤
                 except:
-                    return jsonify({"rspCode": 400, "taskRecord": ""})                                                  #資料庫錯誤
+                    return jsonify({"rspCode": 400})                                                  #資料庫錯誤
                 taskRecord = []
                 for task in query_data.taskSP:
                     if task.taskStatus in [3, 4, 5, 6, 7, 8]:
@@ -197,8 +202,10 @@ def SP_output_record():
                 for task in taskRecord:
                     if len(task.SP) == 0:
                         SPname = ""
+                        SPID = ""
                     else:
                         SPname = task.SP[0].name
+                        SPID = task.SP[0].userID
                     if len(task.db_task_comment) > 0:
                         if task.db_task_comment[0].SPComment == None:
                             SPScore = ""
@@ -221,14 +228,15 @@ def SP_output_record():
                                             "taskPoint": task.taskPoint, "taskLocation": task.taskLocation,\
                                             "taskStartTime": str(task.taskStartTime), "taskEndTime": str(task.taskEndTime),\
                                             "taskStatus": task.taskStatus, "taskSP": SPname, "taskSR": task.SR[0].name,\
-                                            "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore})
+                                            "SPComment": SPComment, "SPScore": SPScore, "SRComment": SRComment, "SRScore": SRScore,\
+                                            "SPID": SPID, "SRID": task.SR[0].userID})
                 return jsonify({"rspCode": 200, "taskRecord": taskRecordJson})                                        #成功取得
             else:
-                return jsonify({"rspCode": 402, "taskRecord": ""})                                #沒有userID
+                return jsonify({"rspCode": 402})                                #沒有userID
         else:
-            return jsonify({"rspCode": 500, "taskRecord": ""})                                    #權限不符
+            return jsonify({"rspCode": 500})                                    #權限不符
     else:
-        return jsonify({"rspCode": 300, "taskRecord": ""})                                                     #method使用錯誤
+        return jsonify({"rspCode": 300})                                                     #method使用錯誤
 #新增任務
 #要json傳taskName,taskStartTime,taskEndTime,taskPoint,taskLocation,taskContent
 #回傳rspCode,notAllow
@@ -260,7 +268,7 @@ def SR_add_task():
     if newTaskStartTime == '':
         return jsonify({"rspCode":401,"notAllow":"","taskConflit":"","pointConflit":""})
     elif newTaskStartTime < str(datetime.datetime.now()):
-        return jsonify({"rspCode":401,"notAllow":"","taskConflit":"","pointConflit":""})
+        return jsonify({"rspCode":402,"notAllow":"","taskConflit":"","pointConflit":""})
     try:
         x=datetime.datetime.strptime(newTaskStartTime, "%Y-%m-%d %H:%M:%S")
         y=datetime.datetime.strptime(newTaskEndTime, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes = 1)
@@ -298,8 +306,7 @@ def SR_add_task():
             if not(userTaskSP_.taskStatus == 0 or userTaskSP_.taskStatus == 1 or userTaskSP_.taskStatus == 2):
                 continue
             if not(str(userTaskSP_.taskStartTime) > newTaskEndTime or str(userTaskSP_.taskEndTime) < newTaskStartTime):
-                taskConflict.append({"taskID":"{}".format(userTaskSP_.taskID)})
-                taskConflict.append({"taskName":"{}".format(userTaskSP_.taskName)})
+                taskConflict.append({"taskID":"{}".format(userTaskSP_.taskID),"taskName":"{}".format(userTaskSP_.taskName)})
     #身為候選人有沒有時間
     userCandidate = user.db_account_taskCandidate
     for userCandidate_ in userCandidate:    
@@ -307,8 +314,7 @@ def SR_add_task():
         if not(task_.taskStatus == 0 or task_.taskStatus == 1):
             continue
         if not(str(task_.taskStartTime) > newTaskEndTime or str(task_.taskEndTime) < newTaskStartTime):
-                taskConflict.append({"taskID":"{}".format(task_.taskID)})
-                taskConflict.append({"taskName":"{}".format(task_.taskName)})
+                taskConflict.append({"taskID":"{}".format(task_.taskID),"taskName":"{}".format(task_.taskName)})
     if userAllPoint+ int(newTaskPoint) > db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]:
         pointConflict = ("-{}".format(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]))
     if notAllow != [] or pointConflict != '' or taskConflict != []:
@@ -325,12 +331,7 @@ def SR_add_task():
     EndTime = str(addTask.taskEndTime + datetime.timedelta(minutes=1))
     db.engine.execute(task_status_4_dead_line(task_ID,newTaskStartTime))
     db.engine.execute(thing_will_do_while_task_endTime_plus_1h(task_ID,EndTime))
-    #db.engine.execute(task_status_15_to_6(task_ID,EndTime))
-    #db.engine.execute(task_status_2_to_5(task_ID,EndTime))
-    #db.engine.execute(task_status_16_to_3(task_ID,EndTime))
-    #db.engine.execute(task_status_14_to_7(task_ID,EndTime))
-    #db.engine.execute(task_status_13_to_3(task_ID,EndTime))
-    EndTime = str(addTask.taskEndTime + datetime.timedelta(minutes=3))
+    EndTime = str(addTask.taskEndTime + datetime.timedelta(hours = 24))
     db.engine.execute(comment_status_0(task_ID,EndTime))
     #notice 
     notice_ = notice(userID = userID_,time = datetime.datetime.now(), status = noticeType['createTask'], haveRead = 0)
@@ -363,7 +364,6 @@ def SP_output_task_can_be_taken():
     taskID = []
     task_list=[]
     taskData = db.session.query(task).filter(task.taskStatus.in_([0,1])).order_by(task.taskStartTime,task.taskPoint.desc()).all()
-    #user = db.session.query(account).filter(account.userID == userID).first()
     for task_ in taskData:
         #flag = 0
         #檢查是不是自己發的
@@ -376,7 +376,7 @@ def SP_output_task_can_be_taken():
                     continue
         task_list.append({"taskID":str(task_.taskID),"taskName":task_.taskName,"taskStartTime":str(task_.taskStartTime),\
                         "taskEndTime":str(task_.taskEndTime),"taskPoint":str(task_.taskPoint),"SRName":task_.SR[0].name,\
-                        "taskLocation":task_.taskLocation,"taskContent":task_.taskContent})
+                        "taskLocation":task_.taskLocation,"taskContent":task_.taskContent,"SRID":task_.SR[0].userID})
     return ({"rspCode":200,"taskList":task_list})
 #承接接任務
 #用json傳taskID
@@ -488,8 +488,8 @@ def SR_passed():
                                 ,"taskPoint":str(task_.taskPoint),"taskContent":task_.taskContent,"taskLocation":task_.taskLocation,"CandidateList":candidateList,"cadidateAmount":str(candidateNum)})
 
         return jsonify({"rspCode":200,"taskList":task_list,"taskAmount":str(len(task_list))})
-    except:
-        return jsonify({"rspCode":400,"taskList":"","taskAmount":""})
+    except: 
+        return jsonify({"rspCode":400,"taskList":"","taskAmount":""})   
 
 #編輯任務
 #傳 taskID,taskName,taskStartTime,taskEndTime,taskPoint,taskLocation,taskContent
@@ -666,9 +666,9 @@ def SR_decide_SP():
         notice_task = noticeTask(noticeID = notice_.ID, taskID = task_.taskID)
         db.session.add(notice_task)
         db.session.commit()
-        db.engine.execute(task_will_start(task_.SR[0].userID,task_.taskID,str(task_.taskStartTime - datetime.timedelta(minutes=1)),task_.SP[0].userID))
+        db.engine.execute(task_will_start(task_.SR[0].userID,task_.taskID,str(task_.taskStartTime - datetime.timedelta(hours = 1)),task_.SP[0].userID))
         db.engine.execute(task_start(task_.SR[0].userID,task_.taskID,task_.taskStartTime,task_.SP[0].userID))	
-        db.engine.execute(plzComment(task_.SR[0].userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(minutes= 2)),task_.SP[0].userID))
+        db.engine.execute(plzComment(task_.SR[0].userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours = 23)),task_.SP[0].userID))
         db.engine.execute(taskEndTime_sql(task_.SR[0].userID,task_.taskID,str(task_.taskEndTime),task_.SP[0].userID))
         return jsonify({"rspCode":200})
     except:
@@ -701,10 +701,10 @@ def SR_accept():
                         taskList.append({"taskName":task_.taskName,"taskStartTime": taskStartTime,"taskEndTime": taskEndTime,\
                                         "taskPoint":str(task_.taskPoint),"taskSPName":task_.SP[0].name,"taskLocation":task_.taskLocation,\
                                         "taskContent":task_.taskContent,"taskID":str(task_.taskID),"taskStatus":str(task_.taskStatus),\
-                                        "commentStatus": commentStatus})
+                                        "commentStatus": commentStatus,"SPID":task_.SP[0].userID})
         return jsonify({"rspCode":200,"taskList":taskList,"taskAmount":str(len(taskList))})
     except:
-        return jsonify({"rspCode":"400","taskList":"","taskAmount":""})
+        return jsonify({"rspCode":400,"taskList":"","taskAmount":""})
 
 #雇主刪除任務
 #傳taskID
@@ -743,6 +743,16 @@ def delete_task():
     notice_task = noticeTask(noticeID = notice_.ID, taskID = int(taskID_))
     db.session.add(notice_task)
     db.session.commit()
+    db.engine.execute(drop_thing_will_do_while_task_endTime_plus_1h(str(taskID_)))
+    db.engine.execute(drop_task_status_4_dead_line(str(taskID_)))
+    db.engine.execute(drop_comment_status_0(str(taskID_)))
+    notice_task_list = db.session.query(task).filter(task.taskID == taskID_).first().db_task_noticeTask
+    for notice_task in notice_task_list:
+        if notice_task.notice.status == 1:
+            notice_delete = notice_task.notice
+            db.session.delete(noticeTask)
+            db.session.commit()
+            db.session.delete(notice_delete)
     return jsonify({"rspCode":200})
 
 #雇主取消

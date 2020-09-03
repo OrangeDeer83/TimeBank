@@ -68,7 +68,7 @@ function showPrompt(index)
 function getTaskList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open('GET', 'http://192.168.1.144:5000/task/SR/output/passed');
+    taskListRequest.open('GET', '/task/SR/output/passed');
     taskListRequest.setRequestHeader('Content-Type', 'application/json');
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -194,7 +194,7 @@ function selectSP(index)
     }
 
     var selectSPRequest = new XMLHttpRequest();
-    selectSPRequest.open('POST', 'http://192.168.1.144:5000/task/SR/decide_SP');
+    selectSPRequest.open('POST', '/task/SR/decide_SP');
     selectSPRequest.setRequestHeader('Content-Type', 'application/json');
     selectSPRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID, 'candidateID': candidate.value}));
     selectSPRequest.onload = function()
@@ -259,7 +259,7 @@ function updateEdit(index)
 function sendEdit()
 {
     var editTaskRequest = new XMLHttpRequest();
-    editTaskRequest.open('POST', 'http://192.168.1.144:5000/task/SR/edit_task');
+    editTaskRequest.open('POST', '/task/SR/edit_task');
     editTaskRequest.setRequestHeader('Content-Type', 'application/json');
     editTaskRequest.send(JSON.stringify({'taskID': thisPageList[editTaskIndex].taskID, 'taskName': document.getElementById('newTaskName').value,
     'taskStartTime': document.getElementById('newTaskStartTime').value, 'taskEndTime': document.getElementById('newTaskEndTime').value,
@@ -286,7 +286,7 @@ function sendEdit()
 function deleteTask(index)
 {
     var deleteTaskRequest = new XMLHttpRequest();
-    deleteTaskRequest.open('POST', 'http://192.168.1.144:5000/task/SR/delete_task');
+    deleteTaskRequest.open('POST', '/task/SR/delete_task');
     deleteTaskRequest.setRequestHeader('Content-Type', 'application/json');
     deleteTaskRequest.send(JSON.stringify({'taskID': thisPageList[index].taskID}));
     deleteTaskRequest.onload = function()

@@ -11,7 +11,7 @@ const pageNumber = document.getElementById('pageNumber');
 function getGradeList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open('GET', 'http://192.168.1.144:5000/comment/rate_history_list_amount');
+    taskListRequest.open('GET', '/comment/rate_history_list_amount');
     taskListRequest.setRequestHeader('Content-Type', 'application/json');
     taskListRequest.send();
     taskListRequest.onload = function()
@@ -26,7 +26,7 @@ function getGradeList()
                 computePage();
                 break;
             default:
-                console.log('無法取得評論紀錄數量')
+                alert('系統錯誤，無法讀取評論歷史');
             }
     }
 }
@@ -54,7 +54,7 @@ function computePage(type)
 function getDetail()
 {
     var detailRequest = new XMLHttpRequest();
-    detailRequest.open('POST', 'http://192.168.1.144:5000/comment/rate_history_list');
+    detailRequest.open('POST', '/comment/rate_history_list');
     detailRequest.setRequestHeader('Content-Type', 'application/json');
     detailRequest.send(JSON.stringify({'taskID': gradeList[currentGrade], 'taskAmount': 1}));
     detailRequest.onload = function()
@@ -67,7 +67,7 @@ function getDetail()
                 showDetail(rst);
                 break;
             default:
-                console.log('無法取得評論細節')
+                alert('系統錯誤，無法讀取評論歷史');
             }
     }
 }

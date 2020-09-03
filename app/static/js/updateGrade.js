@@ -3,19 +3,6 @@ window.onload = function()
     getGradeList();
 }
 
-/*const error = document.getElementById("error");
-function showError(rspCode)
-{
-    error.style.color = "red";
-    switch (rspCode)
-    {
-        case   200: error.innerHTML = '已就緒...'; error.style.color = ""; return ;
-        case   300: error.innerHTML = '系統錯誤'; return ;
-        case   400: error.innerHTML = '等待伺服器回應...'; error.style.color = ""; return ;
-    }
-}*/
-function showError() {;}
-
 var gradeList = [];
 var gradeAmount = 0;
 var currentGrade = 0;
@@ -24,32 +11,32 @@ const pageNumber = document.getElementById("pageNumber");
 function getGradeList()
 {
     var taskListRequest = new XMLHttpRequest();
-    taskListRequest.open("GET", "http://192.168.1.144:5000/comment/GM/output/judge_comment_page");
+    taskListRequest.open("GET", "/comment/GM/output/judge_comment_page");
     taskListRequest.setRequestHeader("Content-Type", "application/json");
     taskListRequest.send();
     taskListRequest.onload = function()
     {
-        showError(200);
         console.log(taskListRequest.responseText);
         rst = JSON.parse(taskListRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
-                showError(20042);
                 gradeList = rst.commentList;
                 gradeAmount = gradeList.length;
                 computePage();
                 break;
             case "300": case 300:
             case "400": case 400:
-                showError(30042);
+            default:
+                alert('系統錯誤，無法顯示待審核評論');
             }
     }
-    showError(400);
 }
 
 function computePage(type)
 {
+    if (currentGrade >= gradeAmount)
+        currentGrade = gradeAmount - 1;
     switch (type)
     {
         case 1:
@@ -87,12 +74,11 @@ function showDetail()
 function grade(type)
 {
     var updateGradeRequest = new XMLHttpRequest();
-    updateGradeRequest.open("POST", "http://192.168.1.144:5000/comment/judge_commentaction");
+    updateGradeRequest.open("POST", "/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[currentGrade].taskID, "status": type, "adminID": "5"})); // adminID only for beta
     updateGradeRequest.onload = function()
     {
-        showError(200);
         console.log(updateGradeRequest.responseText);
         rst = JSON.parse(updateGradeRequest.responseText);
         switch (rst.rspCode)
@@ -100,16 +86,18 @@ function grade(type)
             case "200": case 200:
                 if (type == 1) alert("評論已確認");
                 else alert("評論已否決");
+                getGradeList();
+                break;
+            case "403": case 403:
+                alert('此評論已審核過');
                 window.location.reload();
                 break;
             case "300": case 300:
             case "400": case 400:
             default:
-                showError(30041);
                 alert("系統錯誤，評論審核失敗");
             }
     }
-    showError(400);
 }
 
 var count, success;
@@ -128,28 +116,27 @@ function gradeAll(type)
 function sendGradeAll(index, type)
 {
     var updateGradeRequest = new XMLHttpRequest();
-    updateGradeRequest.open("POST", "http://192.168.1.144:5000/comment/judge_commentaction");
+    updateGradeRequest.open("POST", "/comment/judge_commentaction");
     updateGradeRequest.setRequestHeader("Content-Type", "application/json");
     updateGradeRequest.send(JSON.stringify({"taskID": gradeList[index].taskID, "status": type, "adminID": "1"})); // adminID only for beta
     updateGradeRequest.onload = function()
     {
-        showError(200);
         console.log(updateGradeRequest.responseText);
         rst = JSON.parse(updateGradeRequest.responseText);
         switch (rst.rspCode)
         {
             case "200": case 200:
+            case "403": case 403:
                 counting(1);
                 break;
             case "300": case 300:
             case "400": case 400:
             default:
                 success = gradeList[index].taskID;
-                console.log(gradeList[index].taskID + " grade send false");
+                alert(gradeList[index].taskID + " grade send false");
                 counting(0);
             }
     }
-    showError(400);
 }
 // Until success == gradeAmount, alert message.
 function counting(type)
@@ -160,7 +147,7 @@ function counting(type)
     {
         if (gradeAllType == 1) alert("已確認所有評論");
         else alert("已否決所有評論");
-        //window.location.reload();
+        window.location.reload();
     }
     else if (count == gradeAmount)
     {

@@ -38,11 +38,9 @@ function getUserList()
     var searchStatus = '';
     if (searchResultInput[searchResultInput.selectedIndex].value != '申請結果')
         searchStatus = searchResultInput[searchResultInput.selectedIndex].value;
-    console.log(JSON.stringify({"name": searchTextInput.value, "status": searchStatus,
-    "class": searchClass, "period": searchPeriod}))
     
     var getListRequest = new XMLHttpRequest();
-    getListRequest.open("POST", "http://192.168.1.144:5000/apply/judgement_history");
+    getListRequest.open("POST", "/apply/judgement_history");
     getListRequest.setRequestHeader("Content-Type", "application/json");
     getListRequest.send(JSON.stringify({"name": searchTextInput.value, "class": searchClass, "period": searchPeriod, "status": searchStatus}));
     getListRequest.onload = function()
@@ -186,7 +184,7 @@ function putDetail(index)
             document.getElementById("applyPeriod" + index).innerHTML = '一年一次'; break;
     }
     document.getElementById("applyFrequency" + index).innerHTML = allList[11][thisPageList[index]];
-    document.getElementById("applyResult" + index).value = allList[12][thisPageList[index]];
+    document.getElementById("applyReason" + index).value = allList[12][thisPageList[index]];
     document.getElementById("applyResult" + index).innerHTML = allList[13][thisPageList[index]];
     document.getElementById("resultQuota" + index).innerHTML = allList[14][thisPageList[index]];
     document.getElementById("judgeTime" + index).innerHTML = allList[15][thisPageList[index]];
@@ -203,7 +201,7 @@ function putDetail(index)
 function downloadPDF(index)
 {
     var downloadPDFRequest = new XMLHttpRequest();
-    downloadPDFRequest.open("POST", "http://192.168.1.144:5000/apply/apply_pdf_download");
+    downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
     downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
     downloadPDFRequest.onload = function()

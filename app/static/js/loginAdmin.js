@@ -87,7 +87,7 @@ function adminLogin()
     else
     {
         var loginAdminRequest = new XMLHttpRequest();
-        loginAdminRequest.open("POST", "http://192.168.1.144:5000/account/Admin/login");
+        loginAdminRequest.open("POST", "/account/Admin/login");
         loginAdminRequest.setRequestHeader("Content-Type", "application/json");
         loginAdminRequest.send(JSON.stringify({ "adminName": adminName.value, "adminPassword": adminPassword.value }));
         loginAdminRequest.onload = function()
@@ -100,13 +100,15 @@ function adminLogin()
                 case "200": case 200:
                     window.location.reload();
                     break;
-                case "300": case 300:
-                case "400": case 400:
-                    displayError(false, 2, true);
-                    break;
                 case "401": case 401:
                 case "402": case 402:
+                case "403": case 403:
                     displayError(adminPassword, 3, true);
+                    break;
+                case "300": case 300:
+                case "400": case 400:
+                default:
+                    displayError(false, 2, true);
                     break;
             }
         }

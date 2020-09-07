@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 import hashlib, random
 
 def encrypt(data, salt):
@@ -29,6 +29,3 @@ def check_same(password, encrypted_password, salt):
     if (encrypt(password, salt) == encrypted_password):
         return True
     return False
-
-if __name__ == "__main__":
-    print(encrypt("1234567890", generate_salt()))

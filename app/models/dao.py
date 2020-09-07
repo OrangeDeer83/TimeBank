@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from .hash import *
 import datetime
 def empty(data):
@@ -56,6 +56,7 @@ def delete_news_(number):
     return "DELETE FROM `news` WHERE `news`.`newsID` = {}".format(number)
 
 def add_apply_condition(period,className,quota):
+    quota =str(quota)
     return "INSERT INTO `applyCondition` (`period`, `className`, `quota`,`available`) VALUES ('{}', '{}', '{}',1)".format(period,className,quota)
 
 def list_alive_apply_className():

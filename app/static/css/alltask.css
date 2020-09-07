@@ -1,7 +1,7 @@
 .bodyContain
 {
 	margin-top: 80px;
-	position: relative;
+    height: calc(100vh - 80px);
 }
 
 /* 按鈕選單 */
@@ -14,20 +14,20 @@
 {
 	text-align: center;
 	border-radius:8px;
-	background-color:#e4bca7;
+	background-color:#c76e3d;
 	color: var(--button-background-text-color);
 }
 #takeTask
 {
-	background-color:#c76e3d !important;
+	background-color:#e4bca7 !important;
 }
 #tabsFirst a, #tabsSecond a
 {
 	color: var(--button-background-text-color);
 }
-#tabsSecond > div:hover,#addTask:hover,#takeTask:hover
+#tabsSecond > a:hover,#addTask:hover,#takeTask:hover
 {
-	background-color:#c76e3d;
+	background-color:#e4bca7;
 	cursor: pointer;
 }
 #addTask, #takeTask
@@ -84,7 +84,6 @@
     text-align: center;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
 }
 
 .pageButton
@@ -99,22 +98,27 @@
     cursor: pointer;
 }
 
+#footer
+{
+	margin-top: 650px;
+}
+
 /*RWD*/
 @media (max-width: 599px)
 {
-	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	#tabsFirst > a, #tabsSecond > a
 	{
 		width: 90px;
 		padding: 3px;
 		margin-right: 5px;
 		margin-left: 5px;
 	}
-	#tabsSecond > div, #tabsThird li
+	#tabsSecond > a
 	{
 		padding: 1px;
 		width: 70px;
 	}
-	#tabsSecond > div
+	#tabsSecond > a
 	{
 		margin-left: 0;
 		width: 80px;
@@ -130,19 +134,19 @@
 	{
 		font-size: 20px;
 	}
-	#tabsFirst > div, #tabsSecond > div, #tabsThird li
+	#tabsFirst > a, #tabsSecond > a
 	{
 		width: 120px;
 		padding: 5px;
 		margin-right: 8px;
 		margin-left: 8px;
 	}
-	#tabsSecond > div,#tabsThird li
+	#tabsSecond > a
 	{
 		padding: 3px;
 		width: 100px;
 	}
-	#tabsSecond > div
+	#tabsSecond > a
 	{
 		margin-left: 0;
 		width: 120px;
@@ -160,5 +164,13 @@
 	{
 		width: 600px;
 		margin: auto;
+	}
+}
+
+@media (min-width: 450px)
+{
+	#footer
+	{
+		margin-top: 750px;
 	}
 }

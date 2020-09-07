@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint , jsonify ,request, send_from_directory ,session
 from ..models.model import *
 from ..models.dao import *
@@ -15,13 +15,13 @@ Allotment = Blueprint('allotment', __name__)
 @Allotment.route('/show_user', methods = ['POST'])
 def show_user():
     if request.method != 'POST':
-        return jsonify({"rspCode":300,"name":"","userID":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":300})
     try:
         json = request.get_json()
     except:
-        return jsonify({"rspCode":410,"name":"","userID":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":410})
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AS']):
-        return jsonify({"rspCode":500,"name":"","userID":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":500})
     #搜尋的東西
     target = json['target']
     userID = []
@@ -37,7 +37,7 @@ def show_user():
         userData = userData.order_by(account.userID)
     except:
         #rspCode 400:查資料失敗
-            return jsonify({"rspCode":400,"name":"","userID":"","userSRRate":"","userSPRate":""})
+            return jsonify({"rspCode":400})
     
     for user in userData:
         userID.append(user[0])
@@ -63,13 +63,13 @@ def allotment_():
     try:
         json = request.get_json()
     except:
-        return jsonify({"rspCode":410,"notAllow":""}) 
+        return jsonify({"rspCode":410}) 
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AS']):
-        return jsonify({"rspCode":500,"notAllow":""}) 
+        return jsonify({"rspCode":500}) 
     try:
         adminID = session.get('adminID')
     except:
-        return jsonify({"rspCode":500,"notAllow":""}) 
+        return jsonify({"rspCode":500}) 
     #only all or one
     kind = json['kind']
     #這裡的receiver如果kind不是all請給要配發的userID，all的話請給SA搜尋了什麼
@@ -78,7 +78,6 @@ def allotment_():
     frequency = str(json['frequency'])
     quota = str(json['quota'])
     notAllow = []
-    print(json['receiver'],type(json['receiver']))
     if not(period == '30' or period == '90' or period == '0' or period == '180' or period == '365'):
         notAllow.append("period")
     if not(frequency.isdigit()):
@@ -97,6 +96,7 @@ def allotment_():
         #rspCode 401:有違法輸入
         return jsonify({"rspCode":401,"notAllow":notAllow})
     allotmentTime = str(datetime.datetime.now()).rsplit('.',1)[0]
+    quota = str(int(quota))
     if kind == 'one':
         if receiver == '':
             #可能是userID不存在或是adminID不存在
@@ -170,7 +170,7 @@ def allotment_():
                 notice_allotment = noticeAllotment(noticeID = notice_.ID, transferRecordAllotmentID = transferRecordAllotment_.transferRecordAllotmentID)
                 db.session.add(notice_allotment)
                 db.session.commit()
-            return jsonify({"rspCode":200,"notAllow":""})
+            return jsonify({"rspCode":200})
         except:
             return jsonify({"rspCode":400,"notAllow":"userID or adminID"})
     else:
@@ -183,14 +183,14 @@ def allotment_():
 @Allotment.route("/simple_allotment_history", methods = ['POST'])
 def simple_allotment_history():
     if request.method != 'POST':
-        return jsonify({"rspCode":300,"period":"","frequency":"","quota":"","time":""})
+        return jsonify({"rspCode":300})
     try:
         try:
             json = request.get_json()
         except:
-            return jsonify({"rspCode":410,"notAllow":""}) 
+            return jsonify({"rspCode":410}) 
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AS']):
-            return jsonify({"rspCode":500,"notAllow":""}) 
+            return jsonify({"rspCode":500}) 
             json = request.get_json()
         userID = json['userID']
         time = []
@@ -198,7 +198,7 @@ def simple_allotment_history():
         period = []
         frequency = []
         if not(userID.isdigit()):
-             return jsonify({"rspCode":400,"period":"","frequency":frequency,"quota":"","time":""})
+             return jsonify({"rspCode":400})
         #allotmentTime, quota, period, frequency
         allotmentData = db.engine.execute(select_allotment_simple_history_by_userID(userID))
         for allotment in allotmentData:
@@ -209,7 +209,7 @@ def simple_allotment_history():
         return jsonify({"rspCode":200,"period":period,"frequency":frequency,"quota":quota,"time":time})
     except:
         #資料庫錯誤
-        return jsonify({"rspCode":400,"period":"","frequency":frequency,"quota":"","time":""})
+        return jsonify({"rspCode":400})
     
 #主動配發紀錄
 #要json傳target(搜尋了什麼，沒有就傳空值)
@@ -218,14 +218,14 @@ def simple_allotment_history():
 @Allotment.route('/allotment_history', methods = ['POST'])
 def allotment_history():
     if request.method != 'POST':
-        return jsonify({"rspCode":300,"time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":300})
     try:
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AS']):
-            return jsonify({"rspCode":500,"time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
+            return jsonify({"rspCode":500})
         try:
             json = request.get_json()
         except:
-            return jsonify({"rspCode":410,"time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
+            return jsonify({"rspCode":410})
         target = json['target']
         period = []
         frequency = []
@@ -258,4 +258,4 @@ def allotment_history():
         return jsonify({"rspCode":200,"time":time,"quota":quota,"period":period,"frequency":frequency,"userName":userName,"name":name,"userSRRate":userSPRate,"userSPRate":userSPRate})
     except:
         #資料庫錯誤
-        return jsonify({"rspCode":400,"time":"","quota":"","period":"","frequency":"","userName":"","name":"","userSRRate":"","userSPRate":""})
+        return jsonify({"rspCode":400})

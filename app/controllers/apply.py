@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint ,url_for, jsonify ,request ,current_app, send_from_directory ,session, redirect
 from ..models.model import *
 from ..models.dao import *
@@ -13,7 +13,7 @@ Apply = Blueprint('apply', __name__)
 def update_apply_group():
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']   ):
-           return jsonify({"rspCode":500,"allClass":""})
+           return jsonify({"rspCode":500})
         try:
             json = request.get_json()
             groupName = json['groupName']
@@ -41,9 +41,9 @@ def output_apply_group():
             return jsonify({"rspCode":200,"groupName":groupName})
         except:
             #rspCode 400:檔案讀取失敗
-            return jsonify({"rspCode":400,"groupName":""})
+            return jsonify({"rspCode":400})
     else:
-        return jsonify({"rspCode":300,"groupName":""})
+        return jsonify({"rspCode":300})
 
 #顯示可申請類別
 
@@ -52,7 +52,7 @@ def output_apply_group():
 def output_apply_class():
     if request.method == 'GET':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-           return jsonify({"rspCode":500,"allClass":""})
+           return jsonify({"rspCode":500})
         try:
             dbClassData = db.engine.execute(list_alive_apply_className()).fetchall()
             allClass = []
@@ -61,9 +61,9 @@ def output_apply_class():
             return jsonify({"rspCode":200,"allClass":allClass})
         except:
             #rspCode 400:顯示失敗
-            return jsonify({"rspCode":400,"allClass":""})
+            return jsonify({"rspCode":400})
     else:
-        return jsonify({"rspCode":300,"allClass":""})
+        return jsonify({"rspCode":300})
  
 #刪除申請類別
 #要json輸入className
@@ -122,17 +122,17 @@ def ouput_apply_condition_pdf():
     if request.method == 'GET':
         try:
             if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-                return jsonify({"rspCode":500,"fileName":""})
+                return jsonify({"rspCode":500})
             if os.path.isfile(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/'+'申請說明文件.pdf'):
                 return jsonify({"rspCode":200,"fileName":"申請說明文件.pdf"})
             else:
                 #檔案不存在
-                return jsonify({"rspCode":401,"fileName":""})
+                return jsonify({"rspCode":401})
         except:
             #rspCode 400:回傳失敗
-            return jsonify({"rspCode":400,"fileName":""})
+            return jsonify({"rspCode":400})
     else:
-        return jsonify({"rspCode":300,"fileName":""})
+        return jsonify({"rspCode":300})
 
 #新增與更新
 #要json傳class,once,one,three,six,year(後面幾個是quota,0為移除)
@@ -154,7 +154,6 @@ def update_add_apply_quota():
             three = json['three']
             six = json['six']
             year = json['year']
-            print(json)
             #檢查輸入
             if className == '' or className == '其他':
                 notAllow.append("class")
@@ -251,12 +250,12 @@ def update_add_apply_quota():
             else:
                 if db.engine.execute(show_quota_by_period_className_alive(className,365)).fetchone() != None:
                      db.engine.execute(let_apply_condition_die_className_period(className,365))
-            return jsonify({"rspCode":200,"notAllow":""})
+            return jsonify({"rspCode":200})
         else:
-            return jsonify({"rspCode":300,"notAllow":""})
+            return jsonify({"rspCode":300})
     except:
         #rspCode 400:某個地方爆掉但不知道哪裡
-        return jsonify({"rspCode":400,"notAllow":""})
+        return jsonify({"rspCode":400})
 
 #回傳要求的quota和condition id
 #要json傳class,period
@@ -265,30 +264,29 @@ def update_add_apply_quota():
 def output_quota_conditionID():
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-           return jsonify({"conditionID":"","quota":"","rspCode":500})
+           return jsonify({"rspCode":500})
         try:
             try:
                 json = request.get_json() 
             except:
-                return jsonify({"conditionID":"","quota":"","rspCode":410})
-            print(json)
+                return jsonify({"rspCode":410})
             if json['class'] == '其他':
                 #其他沒id和quota
                 return jsonify({"conditionID":"","quota":"","rspCode":201})
             elif json['class'] == '' or json['period'] == '':
                 #class或period未填
-                return jsonify({"conditionID":"","quota":"","rspCode":400})
+                return jsonify({"rspCode":400})
             dbData = db.engine.execute(show_quota_conditionID_by_class_period(json['class'],json['period'])).fetchone()
             if dbData != None:
                 return jsonify({"conditionID":str(dbData[0]),"quota":str(dbData[1]),"rspCode":200})
             else:
                 #rspCode 402:沒有此資料
-                return jsonify({"conditionID":"","quota":"","rspCode":402})
+                return jsonify({"rspCode":402})
         except:
             #抓取資料失敗
-            return jsonify({"conditionID":"","quota":"","rspCode":401})
+            return jsonify({"rspCode":401})
     else:
-        return jsonify({"conditionID":"","quota":"","rspCode":300})
+        return jsonify({"rspCode":300})
 
 #根據所選的class回復period##注意
 #要json傳class
@@ -298,11 +296,11 @@ def return_period_by_class():
     try:
         if request.method == 'POST':
             if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA'] or session.get('userType') == userType['USER']):
-                return jsonify({"periodList":"","quotaList":"","rspCode":500})
+                return jsonify({"rspCode":500})
             try:
                 json = request.get_json()
             except:
-                return jsonify({"periodList":"","quotaList":"","rspCode":410}) 
+                return jsonify({"rspCode":410}) 
             className = json['class']
             if className == '其他':
                 return jsonify({"periodList":"0,30,90,180,365","quotaList":"","rspCode":200})
@@ -332,119 +330,102 @@ def return_period_by_class():
                     #rspCode 201:此class沒有可被申請的週期
                     return jsonify({"quotaList":"","periodList":"","rspCode":201})
         else:
-            return jsonify({"quotaList":"","periodList":"","rspCode":300})
+            return jsonify({"rspCode":300})
     except:
             #rspCode 400:某個地方爆掉
-            return jsonify({"periodList":"","quotaList":"","rspCode":400})
+            return jsonify({"rspCode":400})
 
 #使用者新增申請
 #要form傳frequency,period,result,class,quota,file(pdf)
 #回傳rspCode,notAllow
 @Apply.route("/USER/add_apply", methods = ['POST'])
 def user_add_apply():
-    try:
-        if request.method == 'POST':
-            if not(session.get('userType') == userType['USER']):
-                session.clear()
-                return "身分錯誤"#redirect(url_for('USER.application'))
-            notAllow = []
-            try:
-                userID = session.get('userID')
-            except:
-                session.clear()
-                return "session錯誤"#redirect(url_for('USER.application'))
-            time = str(datetime.datetime.now()).rsplit('.',1)[0]
-            #檢查各變數與檔案
-            if request.values['applyFrequency'].isdigit():
-                if int(request.values['applyFrequency']) < 2 or str(request.values['applyFrequency']) > 20:
-                    frequency = int(request.values['applyFrequency'])
-                else:
-                    frequency = 0
-                    notAllow.append('applyFrequency')
+    if request.method == 'POST':
+        if not(session.get('userType') == userType['USER']):
+            session.clear()
+            return "身分錯誤"
+        notAllow = []
+        try:
+            userID = session.get('userID')
+        except:
+            session.clear()
+            return "身分錯誤"
+        time = str(datetime.datetime.now()).rsplit('.',1)[0]
+        #檢查各變數與檔案
+        if request.values['applyFrequency'].isdigit():
+            if int(request.values['applyFrequency']) < 2 or str(request.values['applyFrequency']) > 20:
+                frequency = int(request.values['applyFrequency'])
             else:
                 frequency = 0
                 notAllow.append('applyFrequency')
-            if request.values['applyPeriod'] in ['0','30','90','180','365']:
-                restTime = int(request.values['applyPeriod']) * frequency
-                nextTime = int(request.values['applyPeriod'])
-            else:
-                notAllow.append('applyPeriod')
-            result = request.values['applyReason']
-            print(request.values['applyFrequency'],request.values['applyPeriod'],request.values['applyQuota'])       
-            if(request.values['class'] != '其他'):
-                try:
-                    if notAllow != []:
-                        #rspCode 403:有輸入不符合格式
-                        return "輸入不符"#jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                        #return redirect(url_for('USER.application'))
-                    conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
-                except:
-                    #rspCode 401:找不到conditionID
-                    #return jsonify({"rspCode":401,"notALlow":""})
-                    return "找不到conditionID"#redirect(url_for('USER.application'))
-            else:
-                if result == '':
-                    #rspCode 402:其他要填原因
-                    #return jsonify({"rspCode":402,"notALlow":""})
-                    return "其他要填原因"#redirect(url_for('USER.application'))
-                #檢查其他的quota
-                if request.values['applyQuota'].isdigit():
-                    if int(request.values['applyQuota']) >= 1 and int(request.values['applyQuota']) <= 50:
-                        quota = request.values['applyQuota']
-                    else:
-                        notAllow.append('applyQuota')
+        else:
+            frequency = 0
+            notAllow.append('applyFrequency')
+        if request.values['applyPeriod'] in ['0','30','90','180','365']:
+            restTime = int(request.values['applyPeriod']) * frequency
+            nextTime = int(request.values['applyPeriod'])
+        else:
+            notAllow.append('applyPeriod')
+        result = request.values['applyReason']   
+        if(request.values['class'] != '其他'):
+            try:
+                if notAllow != []:
+                    return "輸入不符"
+                conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
+            except:
+                return "找不到conditionID"
+        else:
+            if result == '':
+                #rspCode 402:其他要填原因
+                return "其他要填原因"
+            #檢查其他的quota
+            if request.values['applyQuota'].isdigit():
+                if int(request.values['applyQuota']) >= 1 and int(request.values['applyQuota']) <= 50:
+                    quota = request.values['applyQuota']
+                    quota = int(quota)
+                    quota = str(qouta)
                 else:
                     notAllow.append('applyQuota')
-                if notAllow != []:
-                    #rspCode 403:有輸入不符合格式
-                    #return jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                    return str(notAllow)#redirect(url_for('USER.application'))
-                #檢查有沒有一樣的其他了
-                if db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone() != None:
-                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
-                #沒有才建新的
-                else:
-                    db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
-                    conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
- 
+            else:
+                notAllow.append('applyQuota')
+            if notAllow != []:
+                return str(notAllow)
+            #檢查有沒有一樣的其他了
+            if db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone() != None:
+                conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
+            #沒有才建新的
+            else:
+                db.engine.execute(set_up_apply_condition('其他',nextTime,quota))
+                conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
+        try:
+            file = request.files['applyDocument']
+        except:
+            return "pdf上傳錯誤"
+        #建立apply
+        db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
+        #檢查有沒有傳檔案
+        if file.filename != "":
             try:
-                file = request.files['applyDocument']
+                #檢查fileName
+                if file.mimetype == 'application/pdf':
+                    originFileName = '{}'.format(file.filename)
+                    num = str(db.engine.execute(find_max_applyId_by_user_ID(userID)).fetchone()[0])
+                    os.makedirs(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num))
+                    fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(num,num), 'w', encoding="utf-8")
+                    fileTxt.write(file.filename)
+                    fileTxt.close()
+                    #儲存檔案到指定位置
+                    filename = '{}.pdf'.format(num)
+                    file.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num),filename))
             except:
+                #rspCode 404:pdf上傳錯誤
                 apply_condition = db.session.query(applyCondition).filter(applyCondition.conditionID == conditionID).first()
                 db.session.delete(apply_condition)
                 db.session.commit()
-                
-                return redirect(url_for('USER.application'))
-            #建立apply
-            db.engine.execute(add_apply(frequency,restTime,nextTime,userID,conditionID,result,time))   
-            #檢查有沒有傳檔案
-            if file.filename != "":
-                try:
-                    print(file.filename)
-                    #檢查fileName
-                    if file.mimetype == 'application/pdf':
-                        originFileName = '{}'.format(file.filename)
-                        num = str(db.engine.execute(find_max_applyId_by_user_ID(userID)).fetchone()[0])
-                        os.makedirs(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num))
-                        fileTxt =open(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}/{}.txt'.format(num,num), 'w', encoding="utf-8")
-                        fileTxt.write(file.filename)
-                        fileTxt.close()
-                        #儲存檔案到指定位置
-                        filename = '{}.pdf'.format(num)
-                        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'] + '/app/static/uploadFile/apply_pdf/{}'.format(num),filename))
-                except:
-                    #rspCode 404:pdf上傳錯誤
-                    #return jsonify({"rspCode":"404","notALlow":""})
-                    return "pdf上傳錯誤"#redirect(url_for('USER.application'))
-            #return jsonify({"rspCode":200,"notALlow":""})
-            return redirect(url_for('USER.application'))
-        else:
-            #return jsonify({"rspCode":300,"notALlow":""})
-            return "method使用錯誤"#redirect(url_for('USER.application'))
-    except:
-        #rspCode 400:某個地方爆掉但不知道哪裡
-        #return jsonify({"rspCode":400,"notALlow":""})
-        return "某個地方爆掉但不知道哪裡"#redirect(url_for('USER.application'))
+                return "pdf上傳錯誤"
+        return redirect(url_for('USER.application'))
+    else:
+        return "method使用錯誤"
 
 
 #審核申請資料顯示
@@ -456,11 +437,11 @@ def user_add_apply():
 def show_apply_list():
     if request.method == 'POST':
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
-            return jsonify({"rspCode":500,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+            return jsonify({"rspCode":500})
         try:
             json = request.get_json()
         except:
-            return jsonify({"rspCode":410,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+            return jsonify({"rspCode":410})
         target = json['name']
         userID = []
         userName = [] 
@@ -482,7 +463,7 @@ def show_apply_list():
             applyData = db.engine.execute(get_all_apply_status_0()).fetchall()
         elif len(target) > 20:
             #target不符合
-            return jsonify({"rspCode":401,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+            return jsonify({"rspCode":401})
         else:
             #`applyID`,`userID`,`conditionID`,`applyTime`,`result`,`frequency`
             applyData = db.session.query(apply.applyID,apply.userID,apply.conditionID,apply.applyTime,apply.result,apply.frequency,apply.oldConditionID).join(account).filter(apply.applyStatus == 0,apply.userID==account.userID).filter(or_(account.name.like('%{}%'.format(target)),account.userName.like('%{}%'.format(target)))).all()
@@ -524,10 +505,10 @@ def show_apply_list():
            return jsonify({"rspCode":200,"changeQuota":changeQuota,"userPoint":userPoint,"userName":userName,"name":name,"userSRRate":userSRRate,"userSPRate":userSPRate,"applyPdfName":applyPdfName,"applyID":applyID,"applyClass":applyClass,"applyQuota":applyQuota,"applyPeriod":applyPeriod,"applyFrequency":applyFrequency,"applyTime":applyTime,"applyResult":applyResult,"userID":userID})
         except:
             #資料庫錯誤
-            return jsonify({"rspCode":400,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+            return jsonify({"rspCode":400})
         
     else:
-            return jsonify({"rspCode":300,"userName":"","name":"","userSRRate":"","userSPRate":"","applyPdfName":"","applyID":"","applyClass":"","applyQuota":"","applyPeriod":"","applyFrequency":"","applyTime":"","applyResult":"","userID":""})
+            return jsonify({"rspCode":300})
 
 #審核申請頁面中的簡略紀錄
 #要json傳applyID
@@ -536,20 +517,20 @@ def show_apply_list():
 @Apply.route('/simple_personal_apply_history',methods =['POST'])
 def simple_personal_apply_history():
     if request.method != 'POST':
-        return jsonify({"rspCode":300,"applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+        return jsonify({"rspCode":300})
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
-        return jsonify({"rspCode":500,"applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+        return jsonify({"rspCode":500})
     try:
         json = request.get_json()
     except:
-        return jsonify({"rspCode":410,"applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+        return jsonify({"rspCode":410})
     applyID = json['applyID']
     if applyID =="":
          #rspCode 400:applyID不存在
-        return jsonify({"rspCode":400,"applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+        return jsonify({"rspCode":400})
     if db.engine.execute(get_userID_by_applyID(applyID)).fetchone() == None:
         #rspCode 400:applyID不存在
-        return jsonify({"rspCode":400,"applyTime":"","frequency":"","result":"","status":"","judgeTime":"","period":"","className":"","quota":"","oldQuota":"","applyPdfName":"","applyID":"","userID":"","name":""})
+        return jsonify({"rspCode":400})
     userID = db.engine.execute(get_userID_by_applyID(applyID)).fetchone()[0]
     userName = db.engine.execute(select_user_name(userID)).fetchone()[0]
     #conditionID
@@ -618,15 +599,15 @@ def apply_judge():
     if request.method != 'POST':
         return jsonify({"rspCode":300})
     if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
-        return jsonify({"rspCode":500,"notAllow":""}) 
+        return jsonify({"rspCode":500}) 
     try:
         json = request.get_json()
     except:
-        return jsonify({"rspCode":410,"notAllow":""})
+        return jsonify({"rspCode":410})
     try:
         adminID = session.get('adminID')
     except:
-        return jsonify({"rspCode":500,"notAllow":""}) 
+        return jsonify({"rspCode":500}) 
     applyID = json['applyID']
     applyStatus = json['applyStatus']
     quotaChange = json['quotaChange']
@@ -638,7 +619,7 @@ def apply_judge():
     elif db.engine.execute(get_conditionID(applyID)).fetchone() == None:
         notAllow.append('applyID')
     elif db.session.query(apply).filter(apply.applyStatus == 0).filter(apply.applyID == applyID).first() == None:
-        return jsonify({"rspCode":401,"notAllow":""})
+        return jsonify({"rspCode":401})
     if not(applyStatus == '1' or applyStatus == '2'):
         notAllow.append('applyStatus')
     if quotaChange == '':
@@ -735,7 +716,7 @@ def apply_judge():
     notice_apply = noticeApply(noticeID = notice_.ID, applyID = int(applyID))
     db.session.add(notice_apply)
     db.session.commit()
-    return jsonify({"rspCode":200,"notAllow":""})
+    return jsonify({"rspCode":200})
 
 
 #核准紀錄
@@ -746,10 +727,10 @@ def apply_judge():
 @Apply.route('/judgement_history', methods = ['POST'])
 def judgement_history():
     if request.method != 'POST':
-        return jsonify({"rspCode":300,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
+        return jsonify({"rspCode":300})
     try:
         if not(session.get('userType') == userType['SA'] or session.get('userType') == userType['AA']):
-            return jsonify({"rspCode":500,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
+            return jsonify({"rspCode":500})
         userID = []
         userSRRate = []
         userSPRate = []
@@ -771,12 +752,11 @@ def judgement_history():
         try:
             json = request.get_json()
         except:
-            return jsonify({"rspCode":410,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
+            return jsonify({"rspCode":410})
         Name = json['name']
         className = json['class']
         period = json['period']
         status = json['status']
-        print(json)
         applyData = db.session.query(apply.conditionID ,apply.applyTime, apply.frequency, apply.result, apply.applyStatus, apply.oldConditionID, apply.judgeTime, apply.applyID,apply.userID,apply.applyStatus, apply.adminID).filter(apply.applyStatus != 0).filter(apply.conditionID == applyCondition.conditionID).filter(apply.userID ==account.userID )
         if Name != '':
             applyData = applyData.filter(or_(account.name.like('%{}%'.format(Name)),account.userName.like('%{}%'.format(Name))))
@@ -831,7 +811,7 @@ def judgement_history():
             # judgeTime str, period str ,applyStatus int, applyResultstr, applyFrequency int
         return jsonify({"rspCode":200,"judgeAdmin":judgeAdmin,"userID":userID,"userName":userName,"userPoint":userPoint,"applyStatus":applyStatus,"userSRRate":userSRRate,"userSPRate":userSPRate,"name":name,"applyPdfName":applyPdfName,"applyID":applyID,"className":applyClass,"quota":applyQuota,"oldQuota":oldQuota,"applyTime":applyTime,"judgeTime":judgeTime,"period":applyPeriod,"applyResult":result,"applyStatus":applyStatus,"applyFrequency":frequency})
     except:
-        return jsonify({"rspCode":400,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
+        return jsonify({"rspCode":400})
 
 #下載申請說明文件
 @Apply.route("/download/申請說明文件", methods = ['GET'])

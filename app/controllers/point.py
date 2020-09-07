@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, request, session, jsonify
 from ..models.model import *
 from ..models import userType
@@ -14,14 +14,14 @@ def total():
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": 401, "point": ""})                     #ID錯誤
+                    return jsonify({"rspCode": 401})                     #ID錯誤
             except:
-                return jsonify({"rspCode": 400, "point": ""})                         #資料庫錯誤
+                return jsonify({"rspCode": 400})                         #資料庫錯誤
             return jsonify({"rspCode": 200, "point": query_data.userPoint})              #成功取得
         else:
-            return jsonify({"rspCode": 500, "point": ""})                             #權限不符
+            return jsonify({"rspCode": 500})                             #權限不符
     else:
-        return jsonify({"rspCode": 300, "point": ""})                                 #method
+        return jsonify({"rspCode": 300})                                 #method
 
 #取得點數紀錄數量
 @Point.route('/record_amount', methods=['GET'])

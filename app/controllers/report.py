@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models import db, userType,noticeType
@@ -97,9 +97,9 @@ def approve():
 @Report.route("list_amount", methods = ['GET'])
 def list_amount():
     if request.method != 'GET':
-        return jsonify({"rspCode":30,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":30})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":31,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":31})
     try:
         report_list = db.session.query(report.reportID).filter(report.reportStatus == 0).all()
         reportList = []
@@ -107,7 +107,7 @@ def list_amount():
             reportList.append(report_[0])
         return jsonify({"rspCode":20,"reportList":reportList,"reportAmount":str(len(reportList))})
     except:
-        return jsonify({"rspCode":48,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":48})
 
 @Report.route("/list", methods = ['POST'])
 def list():
@@ -144,7 +144,7 @@ def list():
                                 "reportReason":report_.reason,"taskStartTime":str(task_.taskStartTime),"taskEndTime":str(task_.taskEndTime)})
         return jsonify({"reportList":reportList,"rspCode":20})
     except:
-        return jsonify({"reportList":"","rspCode":48})
+        return jsonify({"rspCode":48})
 
 #檢舉審核紀錄
 #POST
@@ -153,14 +153,14 @@ def list():
 @Report.route("report_history_list", methods = ['POST'])
 def report_history_list():
     if request.method != 'POST':
-        return jsonify({"rspCode":30,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":30})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":31,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":31})
     try:
         json = request.get_json()
         startID = int(json['reportID'])
     except:
-        return jsonify({"reportList":"","rspCode":49})
+        return jsonify({"rspCode":49})
     try:
         report_list = db.session.query(report).filter(report.reportStatus != 0).filter(report.reportID == startID).all()
         reportList = []
@@ -187,14 +187,14 @@ def report_history_list():
                                 "taskEndTime":str(task_.taskEndTime),"reportTime":str(report_.time)})
         return jsonify({"reportList":reportList,"rspCode":20})
     except:
-        return jsonify({"reportList":"","rspCode":48})
+        return jsonify({"rspCode":48})
 
 @Report.route("report_history_list_amount", methods = ['GET'])
 def report_history_list_amount():
     if request.method != 'GET':
-        return jsonify({"rspCode":30,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":30})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":31,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":31})
     try:
         report_list = db.session.query(report.reportID).filter(report.reportStatus != 0).all()
         reportList = []
@@ -202,4 +202,4 @@ def report_history_list_amount():
             reportList.append(report_[0])
         return jsonify({"rspCode":20,"reportList":reportList,"reportAmount":str(len(reportList))})
     except:
-        return jsonify({"rspCode":48,"reportList":"","reportAmount":""})
+        return jsonify({"rspCode":48})

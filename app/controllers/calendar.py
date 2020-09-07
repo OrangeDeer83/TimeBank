@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, jsonify, request, session
 from ..models.model import *
 from ..models import userType
@@ -124,7 +124,6 @@ def one_date_list():
             show_month = value['month']
             show_day = value['day']
             userID = session.get('userID')
-            print(value)
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
@@ -157,7 +156,6 @@ def one_date_list():
                         taskList.append(taskCandidate_.task)
                 #已經接到或是完成
                 elif taskCandidate_.task.taskStatus > 1 and taskCandidate_.task.taskStatus != 4 and taskCandidate_.task.taskStatus != 11 and taskCandidate_.task.taskStatus != 12:
-                    print(taskCandidate_.task.taskStatus)
                     #確定SP是自己
                     if taskCandidate_.task.SP[0].userID == userID:
                         if dateStart > taskCandidate_.task.taskStartTime and dateStart < taskCandidate_.task.taskEndTime:

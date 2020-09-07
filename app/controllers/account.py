@@ -1,3 +1,4 @@
+
 #coding: utf-8
 from flask import Blueprint, render_template, session, url_for, jsonify, request, current_app, redirect
 import re, datetime, smtplib, random, os
@@ -18,11 +19,11 @@ def get_ID():
             if session.get('userID'):
                 return jsonify({"rspCode": 200, "ID": session.get('userID')})             #成功取得使用者ID
             else:
-                return jsonify({"rspCode": 400, "ID": ""})                                #尚未登入
+                return jsonify({"rspCode": 400})                                #尚未登入
         else:
-            return jsonify({"rspCode" : "500", "ID": ""})                                   #權限不符
+            return jsonify({"rspCode" : "500"})                                   #權限不符
     else:
-        return jsonify({"rspCode": 300, "ID": ""})                                    #method使用錯誤
+        return jsonify({"rspCode": 300})                                    #method使用錯誤
 
 #登出
 @Account.route('/logout', methods=['GET'])
@@ -78,7 +79,6 @@ def USER_register():
         user.append(value['userPhone'])
         user.append(value['userGender'])
         user.append(value['userBirthday'])
-        print(value['userBirthday'], type(value['userGender']))
         if len(user[0]) > 20 or len(user[0]) < 1:
             return jsonify({"rspCode": 401})      #名稱長度不符
         elif re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", user[1]) == None:
@@ -234,10 +234,8 @@ def USER_forgot_password():
                 token_cut = str(token).split("'")[1]
                 status = USER_forgot_password_mail(token_cut, userMail)
                 if status == {}:
-                    print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
-                    print("寄信失敗\n")
                     return jsonify({"rspCode": 404})     #重置信寄送失敗
             else:
                 return ({"rspCode": 403})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
@@ -342,31 +340,24 @@ def GM_register():
                     token_cut = str(token).split("'")[1]
                     status = GM_verify_mail(token_cut, GMMail)
                     if status == {}:
-                        print("寄信成功\n")
                         return jsonify({"rspCode": 200})             #驗證信寄送成功
                     else:
-                        print("寄信失敗\n")
                         return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 elif existMail.adminType == userType['GM_apply']:
                     token = GM_verify_token(current_app.config['SECRET_KEY'], existMail.adminID)
                     token_cut = str(token).split("'")[1]
                     status = GM_verify_mail(token_cut, GMMail)
                     if status == {}:
-                        print("寄信成功\n")
                         return jsonify({"rspCode": 200})             #電子郵件已申請過，驗證信再次寄出
                     else:
-                        print("寄信失敗\n")
                         return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 elif existMail.adminType == userType['STOP']:
-                    print(123)
                     token = GM_verify_token(current_app.config['SECRET_KEY'], existMail.adminID)
                     token_cut = str(token).split("'")[1]
                     status = GM_verify_mail(token_cut, GMMail)
                     if status == {}:
-                        print("寄信成功\n")
                         return jsonify({"rspCode": 200})             #電子郵件已申請過，驗證信再次寄出
                     else:
-                        print("寄信失敗\n")
                         return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 else:
                     return jsonify({"rspCode": 408})          #電子郵件與他人重複
@@ -383,10 +374,8 @@ def GM_register():
                 token_cut = str(token).split("'")[1]
                 status = GM_verify_mail(token_cut, GMMail)
                 if status == {}:
-                    print("寄信成功\n")
                     return jsonify({"rspCode": 200})             #帳號申請成功，驗證信已寄出
                 else:
-                    print("寄信失敗\n")
                     return jsonify({"rspCode": 407})             #驗證信寄送失敗
     else:
         return ({"rspCode": 300})                             #method使用錯誤
@@ -452,7 +441,6 @@ def Admin_forgot_password():
                 token_cut = str(token).split("'")[1]
                 status = Admin_forgot_password_mail(token_cut, adminMail)
                 if status == {}:
-                    print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
                     print("寄信失敗\n")
@@ -523,10 +511,8 @@ def GM_forgot_password():
                 token_cut = str(token).split("'")[1]
                 status = GM_forgot_password_mail(token_cut, GMMail)
                 if status == {}:
-                    print("寄信成功\n")
                     return jsonify({"rspCode": 200})     #重置信寄送成功
                 else:
-                    print("寄信失敗\n")
                     return jsonify({"rspCode": 404})     #重置信寄送失敗
             else:
                 return ({"rspCode": 403})         #電子郵件輸入錯誤，沒有找到對應的電子郵件
@@ -876,17 +862,13 @@ def output_setting_info():
             try:
                 query_data = account.query.filter_by(userID = userID).first()
                 if query_data == None:
-                    return jsonify({"rspCode": 401, "userID": "", "userName": "", "name": "", "userPhone": "",\
-                                    "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})              #ID錯誤
+                    return jsonify({"rspCode": 401})              #ID錯誤
             except:
-                return jsonify({"rspCode": 400, "userID": "", "userName": "", "name": "", "userPhone": "",\
-                                "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                  #資料庫錯誤
+                return jsonify({"rspCode": 400})                  #資料庫錯誤
             return jsonify({"rspCode": 200, "userID": userID, "userName": query_data.userName, "name": query_data.name,\
                             "userPhone": query_data.userPhone, "userMail": query_data.userMail, "userGender": query_data.userGender,\
                             "userBirthday": str(query_data.userBirthday), "userInfo": query_data.userInfo})             #成功取得個人資料
         else:
-            return jsonify({"rspCode": 500, "userID": "", "userName": "", "name": "", "userPhone": "",\
-                            "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                      #權限不符
+            return jsonify({"rspCode": 500})                      #權限不符
     else:
-        return jsonify({"rspCode": 300, "userID": "", "userName": "", "name": "", "userPhone": "",\
-                        "userMail": "", "userGender": "", "userBirthday": "", "userInfo": ""})                          #method使用錯誤
+        return jsonify({"rspCode": 300})                          #method使用錯誤

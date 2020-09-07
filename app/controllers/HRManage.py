@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, request, session, jsonify
 import re
 from sqlalchemy.sql import func
@@ -90,12 +90,10 @@ def delete_admin():
 def delete_Admin_check_password():
     if request.method == 'POST':
         if session.get('userType') == userType['SA']:
-            print(123)
             try:
                 value = request.get_json()
             except:
                 return jsonify({"rspCode": 402})          #非法字元
-            print(value)
             SAID = session.get('adminID')
             SAPassword = value['SAPassword']
             try:
@@ -161,7 +159,7 @@ def Admin_list():
                             "adminID": Admin.adminID})
         return jsonify({"rspCode": 200, "AdminList": Admin_list})         #成功
     else:
-        return jsonify({"rspCode": 500, "AdminList": ""})                 #權限不符
+        return jsonify({"rspCode": 500})                 #權限不符
 
 #取得現有GM列表
 @HRManage.route('/GM_list', methods=['GET'])
@@ -173,7 +171,7 @@ def GM_list():
             GM_list.append({"adminID": GM.adminID, "adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
         return jsonify({"rspCode": 200, "GMList": GM_list})               #成功
     else:
-        return jsonify({"rspCode": 500, "GMList": ""})                    #權限不符
+        return jsonify({"rspCode": 500})                    #權限不符
 
 #取得GM申請列表
 @HRManage.route('/GM_apply_list', methods=['GET'])
@@ -185,7 +183,7 @@ def GM_apply_list():
             apply_list.append({"adminID": GM.adminID, "adminName": GM.adminName, "adminPhone": GM.adminPhone, "adminMail": GM.adminMail})
         return jsonify({"rspCode": 200, "applyList": apply_list})         #成功
     else:
-        return jsonify({"rspCode": 500, "applyList": ""})                 #權限不符
+        return jsonify({"rspCode": 500})                 #權限不符
 
 #同意GM申請
 @HRManage.route('/approveGM', methods=['POST'])
@@ -201,17 +199,15 @@ def approveGM():
                 query_data = adminAccount.query.filter_by(adminID = GMID).first()
                 if query_data.adminType == userType['GM_waiting']:
                     status = GM_approve_mail(query_data.adminMail)
-                    if status == {}:
-                        print("寄信成功\n")
-                    else:
-                        print("寄信失敗\n")
                     query_data.adminType = userType['GM']
                     db.session.commit()
+                    while status != {}:
+                        status = GM_approve_mail(query_data.adminMail)
+                    return jsonify({"rspCode": 200})                      #同意GM成功，且通知信寄送成功
                 else:
                     return jsonify({"rspCode": 401})              #該帳號並非待審核GM，前端可能遭竄改
             except:
                 return jsonify({"rspCode": 400})                  #資料庫錯誤
-            return jsonify({"rspCode": 200})                      #同意GM成功
         else:
             return jsonify({"rspCode": 500})                      #權限不符
     else:
@@ -255,7 +251,6 @@ def delete_GM():
             adminID = session.get('adminID')
             try:
                 Admin_data = adminAccount.query.filter(adminAccount.adminID == adminID).first()
-                print(Admin_data)
                 if Admin_data == None:
                     return jsonify({"rspCode": 404})                  #adminID不存在
             except:
@@ -314,7 +309,6 @@ def changePassword():
             except:
                 return jsonify({"rspCode": 40})          #非法字元
             adminID = value['adminID']
-            print(type(adminID))
             SAID = session.get('adminID')
             try:
                 SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
@@ -334,7 +328,7 @@ def changePassword():
                     db.session.commit()
                 except:
                     return jsonify({"rspCode": 30})          #資料庫錯誤
-                return jsonify({"rspCode": 20})              #密碼更改成功
+                return jsonify({"rspCode": 20})              #刪除成功
             else:
                 return ({"rspCode": 18})                 #尚未輸入第一次密碼
         else:

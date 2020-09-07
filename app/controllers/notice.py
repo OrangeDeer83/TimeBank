@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models import db, userType, noticeType, noticePage
@@ -323,7 +323,6 @@ def all_list_amount():
                 query_data = notice.query.filter_by(userID = userID).all()
             except:
                 return jsonify({"rspCode": 30})                                   #資料庫錯誤
-            print(query_data)
             return jsonify({"rspCode": 20, "allNoticeAmount": len(query_data)})   #成功取的數量
         else:
             return jsonify({"rspCode": 50})                                       #權限不符
@@ -349,7 +348,6 @@ def all_list():
             noticeList = []
             for i in range(startNum, startNum + amount):
                 notice_ = query_data[i]
-                print(notice_, notice_.status)
                 if notice_.db_notice_noticeTask:
                     if notice_.status == noticeType['taskWillStart']:
                         #該USER為雇員

@@ -1,4 +1,4 @@
-#coding:utf-8
+#coding: utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models.dao import *
@@ -28,24 +28,24 @@ def output_notice_comment():
     try:
         task_= db.session.query(task).filter(taskID_ == task.taskID).first()
         if task_ == None :
-            return jsonify({"rspCode":400,"taskName":"","userName":""})
+            return jsonify({"rspCode":400})
     except:
         #taskID錯誤
-        return jsonify({"rspCode":400,"taskName":"","userName":""})
+        return jsonify({"rspCode":400})
     taskName = task_.taskName
     if task_.taskStatus in [3,6,7,8,13,14,15,16]:
         if task_.SR[0].userID != userID_:
             if task_.SP[0].userID != userID_:
                     #不是此task的SR或SP
-                    return jsonify({"rspCode":402,"taskName":"","userName":""})
+                    return jsonify({"rspCode":402})
     else:
         #還不可評論
-        return jsonify({"rspCode":403,"taskName":"","userName":""})
+        return jsonify({"rspCode":403})
     try:
         userName = db.session.query(account.name).filter(account.userID == userID_).first()[0]
     except:
         #userID錯誤
-        return jsonify({"rspCode":401,"taskName":"","userName":""})
+        return jsonify({"rspCode":401})
     return jsonify({"rspCode":200,"taskName":taskName,"name":userName})
 
 #評論
@@ -56,14 +56,13 @@ def comment_action():
     if request.method != 'POST':
         return jsonify({"rspCode":300})
     if session.get('userType') != userType['USER']:
-        return jsonify({"rspCode":500,"taskConflit":""})
+        return jsonify({"rspCode":500})
     try:
         userID_ = int(session.get('userID'))
     except:
-        return jsonify({"rspCode":500,"taskConflit":""})
+        return jsonify({"rspCode":500})
     json = request.get_json()
     taskID_ = json['taskID']
-    print(json)
     if not(json['star'] in ['1','2','3','4','5']):
         #star不合法
         return jsonify({"rspCode":403})
@@ -119,7 +118,7 @@ def GM_output_judge_comment_page():
         return jsonify({"rspCode":300})
     if session.get('userType') != userType['GM']:
         #此帳號不是GM
-        return jsonify({"commentList":"","rspCode":500})
+        return jsonify({"rspCode":500})
     comment_list = db.session.query(comment).filter(comment.commentStatus == 0).all()
     commentList = []
     try:
@@ -144,7 +143,7 @@ def GM_output_judge_comment_page():
                     , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone})
         return jsonify({"commentList":commentList,"rspCode":200,"commentAmount":str(len(commentList))})
     except:
-        return jsonify({"commentList":"","rspCode":400})
+        return jsonify({"rspCode":400})
 
 #審核評論
 #傳taskID,status(0:否決, 1:確認)
@@ -219,9 +218,9 @@ def judge_commentaction():
 @Comment.route("/rate_history_list_amount", methods = ['GET'])
 def rate_history_list_amount():
     if request.method != 'GET':
-        return jsonify({"rspCode":30,"taskIDList":"","taskIDAmount":""})
+        return jsonify({"rspCode":30})
     if session.get('userType') != userType['GM']:
-        return jsonify({"rspCode":31,"taskIDList":"","taskIDAmount":""})
+        return jsonify({"rspCode":31})
     try:
         taskIDList = []
         list_ = db.session.query(comment.taskID,comment.SRComment,comment.SPComment).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
@@ -230,7 +229,7 @@ def rate_history_list_amount():
                 taskIDList.append(commentID[0])
         return jsonify({"rspCode":20,"taskIDList":taskIDList,"taskIDAmount":len(taskIDList)})
     except:
-        return jsonify({"rspCode":48,"taskIDList":"","taskIDAmount":""})
+        return jsonify({"rspCode":48})
 
 #評論歷史紀錄 md 十個
 #POST

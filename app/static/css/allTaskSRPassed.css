@@ -39,7 +39,7 @@
 	background-color:#c76e3d;
 	cursor: pointer;
 }
-input[type="button"]:hover, .button:hover
+input[type="button"]:hover, .button:hover, .SPPersonalPage:hover
 {
 	background-color: var(--button-hover-background-color);
 	cursor: pointer;
@@ -149,7 +149,7 @@ textarea
     padding: 5px;
     cursor: pointer;
 }
-input[type="button"]
+input[type="button"], .SPPersonalPage
 {
     padding: 3px 5px; 
     border: var(--button-background-border);
@@ -157,7 +157,8 @@ input[type="button"]
     border-radius: 5px; 
     cursor: pointer;
     background-color: var(--button-background-color);
-    color:  var(--button-background-text-color);
+	color:  var(--button-background-text-color);
+	font-size: 14px;
 }
 label
 {

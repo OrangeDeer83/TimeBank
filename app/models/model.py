@@ -1,3 +1,4 @@
+#coding:utf-8
 from . import db
 import datetime
 
@@ -111,9 +112,9 @@ class allotment(db.Model):
     userID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=False)
     allotmentStatus = db.Column(db.Integer, nullable=False)
     frequency = db.Column(db.Integer, nullable=False)
-    period = db.Column(db.Integer, nullable=True)
-    restTime = db.Column(db.Integer, nullable=True)
-    nextTime = db.Column(db.Integer, nullable=True)
+    period = db.Column(db.Integer, nullable=False)
+    restTime = db.Column(db.Integer, nullable=False)
+    nextTime = db.Column(db.Integer, nullable=False)
     quota = db.Column(db.Integer, nullable=False)
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=False)
     allotmentTime = db.Column(db.DateTime, nullable = False)
@@ -137,8 +138,8 @@ class apply(db.Model):
     applyID = db.Column(db.Integer, primary_key=True)
     applyStatus = db.Column(db.Integer, nullable=False)
     frequency = db.Column(db.Integer, nullable=False)
-    restTime = db.Column(db.Integer, nullable=True)
-    nextTime = db.Column(db.Integer, nullable=True)
+    restTime = db.Column(db.Integer, nullable=False)
+    nextTime = db.Column(db.Integer, nullable=False)
     adminID = db.Column(db.String(20), db.ForeignKey('adminAccount.adminID'), nullable=True)
     userID = db.Column(db.String(20), db.ForeignKey('account.userID'), nullable=True)
     conditionID = db.Column(db.Integer, db.ForeignKey('applyCondition.conditionID'), nullable=False)

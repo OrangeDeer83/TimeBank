@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models import db, userType,noticeType
@@ -317,8 +318,10 @@ def SR_add_task():
                 taskConflict.append({"taskID":"{}".format(task_.taskID),"taskName":"{}".format(task_.taskName)})
     if userAllPoint+ int(newTaskPoint) > db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]:
         pointConflict = ("-{}".format(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]))
-    if notAllow != [] or pointConflict != '' or taskConflict != []:
-        return jsonify({"rspCode":400,"notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
+    if notAllow != [] or taskConflict != []:
+        return jsonify({"rspCode":400,"notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":""})
+    elif  pointConflict != '':
+          return jsonify({"rspCode":403,"notAllow":"","taskConflit":"","pointConflit":pointConflict})
     addTask = task(taskContent= newTaskContent,taskName=newTaskName ,taskStartTime= newTaskStartTime,taskEndTime = newTaskEndTime,taskPoint = newTaskPoint,taskLocation = newTaskLocation ,taskStatus = 0)
     SR = db.session.query(account).filter(account.userID == userID_).first()
     addTask.SR=[SR]
@@ -509,6 +512,7 @@ def SR_edit_task():
         json = request.get_json()
     except:
         return jsonify({"rspCode":49,"notAllow":"","taskConflit":"","pointConflit":""})
+    print(json)
     taskID_ = json['taskID']
     task_taeget = db.session.query(task).filter(task.taskID == int(taskID_),task.taskStatus == 0).first()
     if db.session.query(task).filter(task.taskID == int(taskID_)).first() == None:
@@ -536,7 +540,7 @@ def SR_edit_task():
         newTaskEndTime = str(oldTask.taskEndTime)
     if newTaskStartTime != '':
         if newTaskStartTime < str(datetime.datetime.now()):
-            return ({"rspCode":43,"notAllow":"","taskConflit":"","pointConflit":""})
+            return ({"rspCode":44,"notAllow":"","taskConflit":"","pointConflit":""})
     try:
         if len(newTaskStartTime) != 19 or len(newTaskEndTime) != 19:
             return ({"rspCode":43,"notAllow":"","taskConflit":"","pointConflit":""})
@@ -544,7 +548,7 @@ def SR_edit_task():
         y=datetime.datetime.strptime(newTaskEndTime, "%Y-%m-%d %H:%M:%S") - datetime.timedelta(minutes = 1)
         if newTaskEndTime != '':
             if x >= y:
-                return ({"rspCode":43,"notAllow":"","taskConflit":"","pointConflit":""})
+                return ({"rspCode":44,"notAllow":"","taskConflit":"","pointConflit":""})
     except:
         return ({"rspCode":43,"notAllow":"","taskConflit":"","pointConflit":""})
     if not(newTaskPoint.isdigit()):
@@ -588,10 +592,11 @@ def SR_edit_task():
             taskConflict.append({"taskID":str(task_.taskID),"taskName":task_.taskName})
     if userAllPoint+ int(newTaskPoint) > db.session.query(account.userPoint).filter(account.userID == userID_).first()[0]:
         pointConflict = ("-{}".format(str(userAllPoint + int(newTaskPoint) - db.session.query(account.userPoint).filter(account.userID == userID_).first()[0])))
-    if notAllow != [] or pointConflict != '' or taskConflict != []:
+    if notAllow != [] or taskConflict != []:
         #有不合法輸入
-        return jsonify({"rspCode":42,"notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":pointConflict})
-
+        return jsonify({"rspCode":42,"notAllow":notAllow,"taskConflit":taskConflict,"pointConflit":""})
+    elif  pointConflict != '':
+         return jsonify({"rspCode":45,"notAllow":"","taskConflit":"","pointConflit":pointConflict})
     if newTaskContent != "":
         oldTask.taskContent = newTaskContent
     if newTaskName != "":
@@ -654,7 +659,7 @@ def SR_decide_SP():
         if flag == 0:
             #此人不是候選人
             return jsonify({"rspCode":401})
-        if task_.taskStatus == 2:
+        if not(task_.taskStatus == 1 or task_.taskStatus == 0):
             return jsonify({"rspCode":403})
         task_.taskStatus = 2
         SP_ = db.session.query(account).filter(account.userID == candidateID_).first()
@@ -670,6 +675,7 @@ def SR_decide_SP():
         db.engine.execute(task_start(task_.SR[0].userID,task_.taskID,task_.taskStartTime,task_.SP[0].userID))	
         db.engine.execute(plzComment(task_.SR[0].userID,task_.taskID,str(task_.taskEndTime + datetime.timedelta(hours = 23)),task_.SP[0].userID))
         db.engine.execute(taskEndTime_sql(task_.SR[0].userID,task_.taskID,str(task_.taskEndTime),task_.SP[0].userID))
+        print(taskID_ , candidateID_ )
         return jsonify({"rspCode":200})
     except:
         return jsonify({"rspCode":400})
@@ -859,6 +865,7 @@ def SP_cancel_task():
                     db.session.commit()
                     return jsonify({"rspCode":200})
         except:
+            #任務不可取消
             return jsonify({"rspCode":402}) 
     elif task_.SP[0].userID != int(userID_):
         return jsonify({"rspCode":401})   
@@ -908,6 +915,7 @@ def task_finish_or_not():
     json = request.get_json()
     taskID_ = json['taskID']
     status = json['status']
+    print(json)
     task_ = db.session.query(task).filter(task.taskID == taskID_).first()
     if task_ == None:
         #任務不存在

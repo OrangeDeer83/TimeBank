@@ -19,7 +19,7 @@ function showListDiv()
         table.innerHTML += '' +
         '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
-                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>雇主：<a id="taskSR' + i + '"></a></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
                 '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
                 '<div>任務額度：<span id="taskQuota' + i + '"></span></div>' +
@@ -138,6 +138,7 @@ function putDetail(index)
     document.getElementById("taskTime" + index).innerHTML = thisPageList[index].taskStartTime + " ~ " + thisPageList[index].taskEndTime;
     document.getElementById("taskQuota" + index).innerHTML = thisPageList[index].taskPoint;
     document.getElementById("taskSR" + index).innerHTML = thisPageList[index].SRName;
+    document.getElementById("taskSR" + index).href = '/USER/info/' + thisPageList[index].SRID;
     document.getElementById("taskLocation" + index).innerHTML = thisPageList[index].taskLocation;
     document.getElementById("taskContent" + index).innerHTML = thisPageList[index].taskContent;
 }
@@ -157,9 +158,15 @@ function takeTask(index)
         {
             case "200": case 200:
                 document.getElementById('systemPrompt').innerHTML = "成功送出承接任務之申請：" + thisPageList[index].taskName;
+                alert("成功送出承接任務之申請：" + thisPageList[index].taskName);
                 break;
             case "401": case 401:
                 document.getElementById('systemPrompt').innerHTML = "此任務已申請過：" + thisPageList[index].taskName;
+                alert("此任務已申請過：" + thisPageList[index].taskName);
+                break;
+            case "404": case 404:
+                document.getElementById('systemPrompt').innerHTML = "與其他任務時間重疊";
+                alert("與其他任務時間重疊");
                 break;
             case "300": case 300: // Methods wrong.
             case "400": case 400: // Database error.

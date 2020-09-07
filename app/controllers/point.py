@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint, request, session, jsonify
 from ..models.model import *
 from ..models import userType

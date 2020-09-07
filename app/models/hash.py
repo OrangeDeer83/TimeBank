@@ -1,3 +1,4 @@
+#coding:utf-8
 import hashlib, random
 
 def encrypt(data, salt):

@@ -259,7 +259,7 @@ function getCurrentIndex()
 function previewImg()
 {
     var currentIndex = getCurrentIndex();
-    console.log(currentIndex);//
+    //console.log(currentIndex);
     var img = document.getElementById("uploadImg" + currentIndex);
     var newsImg = document.getElementById("newsImg" + currentIndex);
     var reader = new FileReader;

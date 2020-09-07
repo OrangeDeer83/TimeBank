@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint ,url_for, jsonify ,request ,current_app, send_from_directory ,session, redirect
 from ..models.model import *
 from ..models.dao import *
@@ -345,17 +346,17 @@ def user_add_apply():
         if request.method == 'POST':
             if not(session.get('userType') == userType['USER']):
                 session.clear()
-                return redirect(url_for('USER.application'))
+                return "身分錯誤"#redirect(url_for('USER.application'))
             notAllow = []
             try:
                 userID = session.get('userID')
             except:
                 session.clear()
-                return redirect(url_for('USER.application'))
+                return "session錯誤"#redirect(url_for('USER.application'))
             time = str(datetime.datetime.now()).rsplit('.',1)[0]
             #檢查各變數與檔案
             if request.values['applyFrequency'].isdigit():
-                if int(request.values['applyFrequency']) > 0 and len(request.values['applyFrequency']) < 6:
+                if int(request.values['applyFrequency']) < 2 or str(request.values['applyFrequency']) > 20:
                     frequency = int(request.values['applyFrequency'])
                 else:
                     frequency = 0
@@ -374,21 +375,21 @@ def user_add_apply():
                 try:
                     if notAllow != []:
                         #rspCode 403:有輸入不符合格式
-                        return jsonify({"notAllow":notAllow,"rdpCode":"403"})
+                        return "輸入不符"#jsonify({"notAllow":notAllow,"rdpCode":"403"})
                         #return redirect(url_for('USER.application'))
                     conditionID = db.engine.execute(show_conditionID(request.values['class'],request.values['applyPeriod'])).fetchone()[0]
                 except:
                     #rspCode 401:找不到conditionID
                     #return jsonify({"rspCode":401,"notALlow":""})
-                    return redirect(url_for('USER.application'))
+                    return "找不到conditionID"#redirect(url_for('USER.application'))
             else:
                 if result == '':
                     #rspCode 402:其他要填原因
                     #return jsonify({"rspCode":402,"notALlow":""})
-                    return redirect(url_for('USER.application'))
+                    return "其他要填原因"#redirect(url_for('USER.application'))
                 #檢查其他的quota
                 if request.values['applyQuota'].isdigit():
-                    if int(request.values['applyQuota']) > 0 and len(request.values['applyQuota']) < 6:
+                    if int(request.values['applyQuota']) >= 1 and int(request.values['applyQuota']) <= 50:
                         quota = request.values['applyQuota']
                     else:
                         notAllow.append('applyQuota')
@@ -397,7 +398,7 @@ def user_add_apply():
                 if notAllow != []:
                     #rspCode 403:有輸入不符合格式
                     #return jsonify({"notAllow":notAllow,"rdpCode":"403"})
-                    return redirect(url_for('USER.application'))
+                    return str(notAllow)#redirect(url_for('USER.application'))
                 #檢查有沒有一樣的其他了
                 if db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone() != None:
                     conditionID = db.engine.execute(find_other_apply_condition_id(nextTime,quota)).fetchone()[0]
@@ -434,16 +435,16 @@ def user_add_apply():
                 except:
                     #rspCode 404:pdf上傳錯誤
                     #return jsonify({"rspCode":"404","notALlow":""})
-                    return redirect(url_for('USER.application'))
+                    return "pdf上傳錯誤"#redirect(url_for('USER.application'))
             #return jsonify({"rspCode":200,"notALlow":""})
             return redirect(url_for('USER.application'))
         else:
             #return jsonify({"rspCode":300,"notALlow":""})
-            return redirect(url_for('USER.application'))
+            return "method使用錯誤"#redirect(url_for('USER.application'))
     except:
         #rspCode 400:某個地方爆掉但不知道哪裡
         #return jsonify({"rspCode":400,"notALlow":""})
-        return redirect(url_for('USER.application'))
+        return "某個地方爆掉但不知道哪裡"#redirect(url_for('USER.application'))
 
 
 #審核申請資料顯示
@@ -629,7 +630,6 @@ def apply_judge():
     applyID = json['applyID']
     applyStatus = json['applyStatus']
     quotaChange = json['quotaChange']
-    print(json)
     notAllow = []
     judgeTime = str(datetime.datetime.now()).rsplit('.',1)[0]
     #檢查ID 和 status
@@ -637,6 +637,8 @@ def apply_judge():
         notAllow.append('applyID')
     elif db.engine.execute(get_conditionID(applyID)).fetchone() == None:
         notAllow.append('applyID')
+    elif db.session.query(apply).filter(apply.applyStatus == 0).filter(apply.applyID == applyID).first() == None:
+        return jsonify({"rspCode":401,"notAllow":""})
     if not(applyStatus == '1' or applyStatus == '2'):
         notAllow.append('applyStatus')
     if quotaChange == '':
@@ -832,7 +834,7 @@ def judgement_history():
         return jsonify({"rspCode":400,"userID":"","userSRRate":"","userSPRate":"","name":"","applyPdfName":"","applyID":"","className":"","quota":"","oldQuota":"","applyTime":"","judgeTime":"","period":"","applyResult":"","applyStatus":"","applyFrequency":""})
 
 #下載申請說明文件
-@Apply.route("/download/申請說明文件",methods = ['GET'])
+@Apply.route("/download/申請說明文件", methods = ['GET'])
 def download_apply_description():
     if request.method != 'GET':
         return "伺服器錯誤"
@@ -843,3 +845,18 @@ def download_apply_description():
     except:
         return "檔案不存在"
 
+#取得所有申請類別(包含已刪除)
+@Apply.route("/history_className_list", methods = ['GET'])
+def hsitory_className_list():
+    if request.method != 'GET':
+        return jsonify({"rspCode": 31})                             #method使用錯誤
+    if session.get('userType') not in [userType['SA'], userType['AA']]:
+        return jsonify({"rspCode": 50})                            #權限不符
+    try:
+        query_data = db.session.query(applyCondition.className.distinct()).filter(applyCondition.className != "其他").all()
+        historyClassName = []
+        for className in query_data:
+            historyClassName.append(className[0])
+    except:
+        return jsonify({"rspCode": 30})                             #資料庫錯誤
+    return jsonify({"rspCode": 20, "classList": historyClassName})  #成功取得

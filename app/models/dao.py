@@ -1,3 +1,4 @@
+#coding:utf-8
 from .hash import *
 import datetime
 def empty(data):
@@ -230,8 +231,8 @@ def thing_will_do_while_task_endTime_plus_1h(task_ID,newTaskEndTime):
 def drop_thing_will_do_while_task_endTime_plus_1h(task_ID):
     return "DROP EVENT `thing_will_do_while_task_endTime_plus_1h-{}`;".format(task_ID)
 
-def comment_status_0(task_ID,EndTime):
-    return "CREATE EVENT `comment_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND NOT(`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL); UPDATE `comment` SET `commentStatus` = '2' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND (`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL); DROP EVENT `comment_status_0-{}`; END;".format(task_ID,EndTime,task_ID,task_ID)
+def comment_status_0(task_ID,EndTime):  
+    return "CREATE EVENT `comment_status_0-{}` ON SCHEDULE AT '{}' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN UPDATE `comment` SET `commentStatus` = '0' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND NOT(`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL); UPDATE `comment` SET `commentStatus` = '2' WHERE `comment`.`taskID` = {} AND `comment`.`commentStatus` = -1 AND (`comment`.`SRComment` is NULL AND `comment`.`SPComment` is NULL); DROP EVENT `comment_status_0-{}`; END;".format(task_ID,EndTime,task_ID,task_ID,task_ID)
 
 def drop_comment_status_0(task_ID):
     return "DROP EVENT `comment_status_0-{}`;".format(task_ID)

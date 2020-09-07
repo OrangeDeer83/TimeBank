@@ -7,7 +7,7 @@ def empty(data):
     return True
 
 def create_account():
-    db = pymysql.connect("192.168.1.147", "root", "root", "timeBank")
+    db = pymysql.connect("192.168.1.147", "root", "root", "timeBankTest")
     cursor = db.cursor()
 
     cursor.execute("SELECT adminName FROM adminAccount WHERE adminType = '7'")

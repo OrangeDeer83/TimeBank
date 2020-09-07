@@ -237,13 +237,13 @@ function gmRegister()
             {
                 case "200": case 200:
                     alert("至電子信箱確認身份後，即可加入");
-                    window.location.reload(); break;
+                    break;
                 case "201": case 201:
                     alert("此電子郵件已申請過，再次寄出驗證信，請至信箱確認");
-                    window.location.reload(); break;
+                    break;
                 case "202": case 202:
                     alert("申請成功，驗證信已寄出，請至電子信箱確認");
-                    window.location.reload(); break;
+                    break;
                 case "300": case 300:
                 case "400": case 400:
                     displayError(false, 2, true); break;

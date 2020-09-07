@@ -3,6 +3,60 @@ window.onload = function()
     getOldUserInfo();
 }
 
+function getPropicMyself(userID)
+{
+    var getPropicRequest = new XMLHttpRequest();
+    getPropicRequest.open("POST", "/account/propic_exist");
+    getPropicRequest.setRequestHeader("Content-Type", "application/json");
+    getPropicRequest.send(JSON.stringify({"userID": userID}));
+    getPropicRequest.onload = function()
+    {
+        console.log(getPropicRequest.responseText);
+        rst = JSON.parse(getPropicRequest.responseText);
+        var d = new Date();
+		var time = "";
+		if (d.getHours() < 10) {
+			time += "0" + d.getHours();
+		}
+		else{
+			time += d.getHours();
+		}
+		if (d.getMinutes() < 10) {
+			time += "0" + d.getMinutes();
+		}
+		else{
+			time += d.getMinutes();
+		}
+		if (d.getSeconds() < 10) {
+			time += "0" +d.getSeconds();
+		}
+		else{
+			time += d.getSeconds();
+		}
+        switch (rst.rspCode)
+        {
+            case "200": case 200:
+                if (rst.exist == "1") document.getElementById("profilePicture").src = "/static/img/propic/" + userID + ".jpg?v=" + time;
+                else document.getElementById("profilePicture").src = "/static/img/propic/default.jpg";
+                break;
+            case "300": case 300:
+            case "400": case 400:
+                console.log("無法取得照片存在");
+                break;
+        }
+    }
+}
+
+function previewImg()
+{
+    var img = document.getElementById('profilePicture');
+    var newImg = document.getElementById('upload_img');
+    var reader = new FileReader;
+    reader.readAsDataURL(newImg.files[0]);
+    reader.onload = function()
+    {   img.src = this.result; }
+}
+
 function getOldUserInfo()
 {
     var uploadFrofileRequest = new XMLHttpRequest();
@@ -494,50 +548,6 @@ function uploadUserBirthday()
             case "404": case 404:
             default:
                 alert("系統錯誤，生日修改失敗");
-                break;
-        }
-    }
-}
-
-function getPropicMyself(userID)
-{
-    var getPropicRequest = new XMLHttpRequest();
-    getPropicRequest.open("POST", "/account/propic_exist");
-    getPropicRequest.setRequestHeader("Content-Type", "application/json");
-    getPropicRequest.send(JSON.stringify({"userID": userID}));
-    getPropicRequest.onload = function()
-    {
-        console.log(getPropicRequest.responseText);
-        rst = JSON.parse(getPropicRequest.responseText);
-        var d = new Date();
-		var time = "";
-		if (d.getHours() < 10) {
-			time += "0" + d.getHours();
-		}
-		else{
-			time += d.getHours();
-		}
-		if (d.getMinutes() < 10) {
-			time += "0" + d.getMinutes();
-		}
-		else{
-			time += d.getMinutes();
-		}
-		if (d.getSeconds() < 10) {
-			time += "0" +d.getSeconds();
-		}
-		else{
-			time += d.getSeconds();
-		}
-        switch (rst.rspCode)
-        {
-            case "200": case 200:
-                if (rst.exist == "1") document.getElementById("profilePicture").src = "/static/img/propic/" + userID + ".jpg?v=" + time;
-                else document.getElementById("profilePicture").src = "/static/img/propic/default.jpg";
-                break;
-            case "300": case 300:
-            case "400": case 400:
-                console.log("無法取得照片存在");
                 break;
         }
     }

@@ -21,7 +21,7 @@ function showListDiv()
         table.innerHTML += '' +
         '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
-                '<div>雇員：<span id="taskSP' + i + '"></span></div>' +
+                '<div>雇員：<a id="taskSP' + i + '"></a></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
                 '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
                 '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
@@ -104,7 +104,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = '1/1';
-        document.getElementById('ePass').innerHTML = '<tr><td>尚無已接受之任務</td></tr>';
+        document.getElementById('ePass').innerHTML = '<tr><td>系統狀態：尚無已接受之任務</td></tr>';
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -146,6 +146,7 @@ function putDetail(index)
     document.getElementById("taskTime" + index).innerHTML = getDate(startTime) + " ~ " + getDate(endTime);
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
     document.getElementById("taskSP" + index).innerHTML = currentTask.taskSPName;
+    document.getElementById("taskSP" + index).href = '/USER/info/' + thisPageList[index].SPID;
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("content" + index).innerHTML = currentTask.taskContent;
 

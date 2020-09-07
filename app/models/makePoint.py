@@ -1,3 +1,4 @@
+#coding:utf-8
 import random, string
 
 def make_point():

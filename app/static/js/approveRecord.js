@@ -1,5 +1,6 @@
 window.onload = function()
 {
+    getClassList();
     getUserList();
 }
 
@@ -7,17 +8,46 @@ var allList = [18];
 // name, userName, userID, userSRRate, userSPRate, userPoint(pointAmount)
 // applyID, applyClass(className), oldQuota, applyTime, applyPeriod, applyFrequency, applyResult
 // applyStatus(applyResult), quota(resultQuota), judgeTime, judgeAdmin
-var userAmount = 0;
-var pageAmount = 1;
-var thisPageList = [];
-var currentPage = 1;
+var applyAmount = 0;
+var currentApply = 0;
 const pageNumber = document.getElementById("pageNumber");
-const maxPageAmount = 2;
 var searchText;
 
 function search()
 {
     getUserList();
+}
+
+function getClassList()
+{
+    var getClassListRequest = new XMLHttpRequest();
+    getClassListRequest.open("GET", "/apply/history_className_list");
+    getClassListRequest.setRequestHeader("Content-Type", "application/json");
+    getClassListRequest.send();
+    getClassListRequest.onload = function()
+    {
+        console.log(getClassListRequest.responseText);
+        rst = JSON.parse(getClassListRequest.responseText);
+        switch (rst.rspCode)
+        {
+            case "20": case 20:
+                putClassName(rst.classList);
+                break;
+            default:
+                pageNumber.innerHTML = "無法取得類別列表";
+                break;
+        }
+    }
+}
+
+function putClassName(classList)
+{
+    const searchClass = document.getElementById('searchClass');
+    for (var i = 0; i < classList.length; i++)
+    {
+        searchClass.add(new Option(classList[i], classList[i]));
+    }
+    searchClass.add(new Option('其他', '其他'));
 }
 
 function getUserList()
@@ -51,7 +81,6 @@ function getUserList()
         {
             case "200": case 200:
                 allList[0] = rst.name;
-                if (allList[0].length == 0) return ;
                 allList[1] = rst.userName;
                 allList[2] = rst.userID;
                 allList[3] = rst.userSRRate;
@@ -100,110 +129,116 @@ function computePage(type)
             }
             else
             {
-                userAmount = allList[0].length;
-                pageAmount = Math.ceil(userAmount / maxPageAmount);
+                applyAmount = allList[0].length;
             }
             break;
         case 1:
-            if (currentPage == 1) return false;
-            else currentPage--;
+            if (currentApply == 0) return false;
+            else currentApply--;
             break;
         case 2:
-            if (currentPage == pageAmount) return false;
-            else currentPage++;
+            if (currentApply == applyAmount - 1) return false;
+            else currentApply++;
             break;
     }
-    if (pageAmount == 0)
-        pageNumber.innerHTML = "尚無使用者申請";
-    else
-        pageNumber.innerHTML = currentPage + "/" + pageAmount;
-    computeThisPageList();
-}
-
-// Compute the index of this page.
-function computeThisPageList()
-{
-    thisPageList.length = 0;
-    if (currentPage < pageAmount)
-        for (var i = 0; i < maxPageAmount; i++)
-            thisPageList.push(maxPageAmount * (currentPage - 1) + i);
-    else if (i < allList[0].length % maxPageAmount == 0)
-        for (var i = 0; i < maxPageAmount; i++)
-            thisPageList.push(maxPageAmount * (currentPage - 1) + i);
-    else
-        for (var i = 0; i < allList[0].length % maxPageAmount; i++)
-            thisPageList.push(maxPageAmount * (currentPage - 1) + i);
-    showDetail();
-}
-
-function showDetail()
-{
-    for (var i = 0; i < thisPageList.length; i++)
+    if (applyAmount == 0)
     {
-        putDetail(i);
-        document.getElementById("formInformation" + (i + 1)).removeAttribute("style");
+        pageNumber.innerHTML = "查無使用者申請紀錄";
+        clearDetail();
+        return ;
     }
-    for (var i = thisPageList.length; i < maxPageAmount; i++)
-        document.getElementById("formInformation" + (i + 1)).style.display = "none";
+    else
+    {
+        pageNumber.innerHTML = (currentApply + 1) + "/" + applyAmount;
+        putDetail();
+    }
 }
 
-function putDetail(index)
+function putDetail()
 {
-    index;
-    document.getElementById("name" + index).innerHTML = allList[0][thisPageList[index]];
-    document.getElementById("userName" + index).innerHTML = allList[1][thisPageList[index]];
-    var SRRate = Math.round(allList[3][thisPageList[index]] * 100) / 100;
+    document.getElementById("name").innerHTML = allList[0][currentApply];
+    document.getElementById("userName").innerHTML = allList[1][currentApply];
+    var SRRate = Math.round(allList[3][currentApply] * 100) / 100;
     if (SRRate == 0)
-        document.getElementById("SRRate" + index).innerHTML = "無";
+        document.getElementById("SRRate").innerHTML = "無";
     else if (SRRate * 10 % 10 != 0)
-        document.getElementById("SRRate" + index).innerHTML = SRRate;
+        document.getElementById("SRRate").innerHTML = SRRate;
     else
-        document.getElementById("SRRate" + index).innerHTML = SRRate + ".0";
-    var SPRate = Math.round(allList[4][thisPageList[index]] * 100) / 100;
+        document.getElementById("SRRate").innerHTML = SRRate + ".0";
+    var SPRate = Math.round(allList[4][currentApply] * 100) / 100;
     if (SPRate == 0)
-        document.getElementById("SPRate" + index).innerHTML = "無";
+        document.getElementById("SPRate").innerHTML = "無";
     else if (SPRate * 10 % 10 != 0)
-        document.getElementById("SPRate" + index).innerHTML = SPRate;
+        document.getElementById("SPRate").innerHTML = SPRate;
     else
-        document.getElementById("SPRate" + index).innerHTML = SPRate + ".0";
-    document.getElementById('userPoint' + index).innerHTML = allList[5][thisPageList[index]];
-    document.getElementById("applyClass" + index).innerHTML = allList[7][thisPageList[index]];
-    document.getElementById("applyQuota" + index).innerHTML = allList[8][thisPageList[index]];
-    document.getElementById("applyTime" + index).innerHTML = allList[9][thisPageList[index]];
-    switch (allList[10][thisPageList[index]])
+        document.getElementById("SPRate").innerHTML = SPRate + ".0";
+    document.getElementById('userPoint').innerHTML = allList[5][currentApply];
+    document.getElementById("applyClass").innerHTML = allList[7][currentApply];
+    document.getElementById("applyQuota").innerHTML = allList[8][currentApply];
+    document.getElementById("applyTime").innerHTML = allList[9][currentApply];
+    switch (allList[10][currentApply])
     {
         case '0': case 0:
-            document.getElementById("applyPeriod" + index).innerHTML = '一次性'; break;
+            document.getElementById("applyPeriod").innerHTML = '一次性'; break;
         case '30': case 30:
-            document.getElementById("applyPeriod" + index).innerHTML = '一個月一次'; break;
+            document.getElementById("applyPeriod").innerHTML = '一個月一次'; break;
         case '90': case 90:
-            document.getElementById("applyPeriod" + index).innerHTML = '三個月一次'; break;
+            document.getElementById("applyPeriod").innerHTML = '三個月一次'; break;
         case '180': case 180:
-            document.getElementById("applyPeriod" + index).innerHTML = '半年一次'; break;
+            document.getElementById("applyPeriod").innerHTML = '半年一次'; break;
         case '365': case 365:
-            document.getElementById("applyPeriod" + index).innerHTML = '一年一次'; break;
+            document.getElementById("applyPeriod").innerHTML = '一年一次'; break;
     }
-    document.getElementById("applyFrequency" + index).innerHTML = allList[11][thisPageList[index]];
-    document.getElementById("applyReason" + index).value = allList[12][thisPageList[index]];
-    document.getElementById("applyResult" + index).innerHTML = allList[13][thisPageList[index]];
-    document.getElementById("resultQuota" + index).innerHTML = allList[14][thisPageList[index]];
-    document.getElementById("judgeTime" + index).innerHTML = allList[15][thisPageList[index]];
-    document.getElementById("judgeAdmin" + index).innerHTML = allList[16][thisPageList[index]];
-    if (allList[17][thisPageList[index]] != "None") {
-        document.getElementById("downloadBlock" + index).removeAttribute("style");
-        document.getElementById("download" + index).href = "/apply/apply_pdf_download/" + allList[6][thisPageList[index]];
+    document.getElementById("applyFrequency").innerHTML = allList[11][currentApply];
+    document.getElementById("applyReason").value = allList[12][currentApply];
+    if (allList[13][currentApply] == 1)
+    {
+        document.getElementById("applyResult").innerHTML = '核准';
+        document.getElementById("resultQuotaDiv").removeAttribute('style');
+    }
+    else
+    {
+        document.getElementById("applyResult").innerHTML = '否決';
+        document.getElementById("resultQuotaDiv").style.display = 'none';
+    }
+    document.getElementById("resultQuota").innerHTML = allList[14][currentApply];
+    document.getElementById("judgeTime").innerHTML = allList[15][currentApply];
+    document.getElementById("judgeAdmin").innerHTML = allList[16][currentApply];
+    if (allList[17][currentApply] != "None") {
+        document.getElementById("downloadBlock").removeAttribute("style");
+        document.getElementById("download").href = "/apply/apply_pdf_download/" + allList[6][currentApply];
     }
     else {
-        document.getElementById("downloadBlock" + index).style.display = 'none';
+        document.getElementById("downloadBlock").style.display = 'none';
     }
 }
 
-function downloadPDF(index)
+function clearDetail()
+{
+    document.getElementById("name").innerHTML = '';
+    document.getElementById("userName").innerHTML = '';
+    document.getElementById("SRRate").innerHTML = '';
+    document.getElementById("SPRate").innerHTML = '';
+    document.getElementById('userPoint').innerHTML = '';
+    document.getElementById("applyClass").innerHTML = '';
+    document.getElementById("applyQuota").innerHTML = '';
+    document.getElementById("applyTime").innerHTML = '';
+    document.getElementById("applyPeriod").innerHTML = '';
+    document.getElementById("applyFrequency").innerHTML = '';
+    document.getElementById("applyReason").value = '';
+    document.getElementById("applyResult").innerHTML = '';
+    document.getElementById("resultQuota").innerHTML = '';
+    document.getElementById("judgeTime").innerHTML = '';
+    document.getElementById("judgeAdmin").innerHTML = '';
+    document.getElementById("downloadBlock").style.display = 'none';
+}
+
+/*function downloadPDF()
 {
     var downloadPDFRequest = new XMLHttpRequest();
     downloadPDFRequest.open("POST", "/apply/apply_pdf_download");
     downloadPDFRequest.setRequestHeader("Content-Type", "application/json");
-    downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][thisPageList[index]]}));
+    downloadPDFRequest.send(JSON.stringify({"applyID": allList[6][currentApply]}));
     downloadPDFRequest.onload = function()
     {
         console.log(downloadPDFRequest.responseText);
@@ -220,4 +255,4 @@ function downloadPDF(index)
                 break;
         }
     }
-}
+}*/

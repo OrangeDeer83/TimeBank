@@ -20,7 +20,7 @@ function showListDiv()
         table.innerHTML += '' +
         '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="upPart">' +
-                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>雇主：<a id="taskSR' + i + '"></a></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
                 '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
                 '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div> ' +
@@ -140,7 +140,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = '1/1';
-        document.getElementById('eRecord').innerHTML = '<tr><td>尚無歷史紀錄</td></tr>';
+        document.getElementById('eRecord').innerHTML = '<tr><td>系統狀態：尚無歷史紀錄</td></tr>';
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -189,6 +189,7 @@ function putDetail(index)
         document.getElementById('reportButton' + index).removeAttribute('style');
     }
     document.getElementById("taskSR" + index).innerHTML = currentTask.taskSR;
+    document.getElementById("taskSR" + index).href = '/USER/info/' + thisPageList[index].SRID;
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("taskContent" + index).innerHTML = currentTask.taskContent;
     document.getElementById("SRComment" + index).innerHTML = currentTask.SRComment;

@@ -20,7 +20,7 @@ function showListDiv()
         table.innerHTML += '' +
         '<tr id="taskList' + i + '" style="display:none"><td>' +
             '<div class="introduction">' +
-                '<div>雇主：<span id="taskSR' + i + '"></span></div>' +
+                '<div>雇主：<a id="taskSR' + i + '"></a></div>' +
                 '<div>任務名稱：<span id="taskName' + i + '"></span></div>' +
                 '<div>任務時間：<span id="taskTime' + i + '"></span></div>' +
                 '<div>任務額度：<span id="taskQuota' + i + '"></span>點</div>' +
@@ -149,6 +149,7 @@ function putDetail(index)
     document.getElementById("taskTime" + index).innerHTML = getDate(startTime) + " ~ " + getDate(endTime);
     document.getElementById("taskQuota" + index).innerHTML = currentTask.taskPoint;
     document.getElementById("taskSR" + index).innerHTML = currentTask.taskSR;
+    document.getElementById("taskSR" + index).href = '/USER/info/' + thisPageList[index].SRID;
     document.getElementById("taskLocation" + index).innerHTML = currentTask.taskLocation;
     document.getElementById("content" + index).innerHTML = currentTask.taskContent;
 

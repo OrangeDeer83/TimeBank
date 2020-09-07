@@ -210,14 +210,14 @@ function getNewNotice()
         {
             case "20": case 20:
                 haveNewNotice = 0;
-                putNewNotice(rst.newNoticeList)
+                putNewNotice(rst.newNoticeList);
                 break;
             default:
-                document.getElementById('noticeSpan') = '<li><a><div>系統錯誤，無法讀取新通知</div></a></li>';
+                document.getElementById('noticeSpan').innerHTML = '<li><a><div>系統錯誤，無法讀取新通知</div></a></li>';
                 break;
         }
     }
-
+    document.getElementById('noticeSpan').innerHTML = '<li><a><div>等待伺服器回應中...</div></a></li><li><a href="/USER/notice"><div>顯示所有通知</div></a></li>';
 }
 function putNewNotice(noticeList)
 {

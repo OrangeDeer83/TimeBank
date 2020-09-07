@@ -41,6 +41,7 @@ function showListDiv()
                         '</select>' +
                     '</div>' +
                     '<div class="title chooseButton">' +
+                        '<a class="SPPersonalPage" id="SPPersonalPage'+ i + '" onclick="showPersonalPage(' + i + ')">雇員資訊</a>' +
                         '<input type="button" name="submitBottom" value="選擇" onclick="selectSP(' + i + ')" />' +
                     '</div>' +
                 '</div>' +
@@ -113,7 +114,7 @@ function computePage(type)
     if (pageAmount == 0)
     {
         pageNumber.innerHTML = '1/1';
-        document.getElementById('bPass').innerHTML = '<tr><td>尚無已發布任務，請至新增任務頁面建立新任務</td></tr>';
+        document.getElementById('bPass').innerHTML = '<tr><td>系統狀態：尚無已發布任務，請至新增任務頁面建立新任務</td></tr>';
     }
     else
         pageNumber.innerHTML = currentPage + "/" + pageAmount;
@@ -175,6 +176,15 @@ function putDetail(index)
             document.getElementById('applySP' + index).add(new Option(currentTask.CandidateList[i][0], currentTask.CandidateList[i][1]));
     }
     else document.getElementById('applySP' + index)[0] = new Option('尚無申請', '');
+}
+
+function showPersonalPage(index)
+{
+    const candidateList = document.getElementById('applySP' + index);
+    const selectedIndex = candidateList.selectedIndex;
+    const candidate = candidateList[selectedIndex];
+    if (selectedIndex > 0)
+        window.location.assign('/USER/info/' + candidate.value);
 }
 
 function selectSP(index)

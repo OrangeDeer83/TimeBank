@@ -58,18 +58,18 @@
                         </div>
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="applyQuoda" class="formLabel">申請額度</label></div>
-                            <input type="text" class="formText" id="applyQuota" name="applyQuota" placeholder="會自動填寫 (若類別為其他請自行填入)"/>
+                            <input type="number" class="formText" id="applyQuota" name="applyQuota" placeholder="會自動填寫 (若類別為其他請自行填入 1~50)" min="1" max="50" />
                         </div>
                         <div class="formLine" id="applyFrequencyDiv">
                             <div class="formLabelDiv"><label for="applyFrequency" class="formLabel">領取次數</label></div>
-                            <input type="text" class="formText" id="applyFrequency" name="applyFrequency" placeholder="請輸入領取次數"/>
+                            <input type="number" class="formText" id="applyFrequency" name="applyFrequency" placeholder="請輸入領取次數(2~20)" max="20" />
                         </div>
                         <div class="formLine">
                             <div class="formLabelDiv"><label for="applyDocument" class="formLabel">證明文件</label></div>
                             <span class="formText" id="uploadFile">
                                 <input type="file" id="applyDocument" name="applyDocument" accept="application/pdf" />
                                 <div class="uploadPDF">
-                                        <label for="applyDocument">上傳檔案(限PDF檔)</label>
+                                        <label for="applyDocument" id="uploadFileLabel">上傳檔案(限PDF檔)</label>
                                 </div>
                             </span>
                         </div>

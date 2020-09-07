@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models.dao import *
@@ -124,7 +125,7 @@ def GM_output_judge_comment_page():
     try:
         for comment_ in comment_list:
             task_ = db.session.query(task).filter(task.taskID == comment_.taskID).first()
-            if comment_.commentStatus == 0:
+            if comment_.commentStatus == 0: 
                 try:
                     SRStar = comment_.SRComment.split(',')[0]
                     SRComment = comment_.SRComment.split(',')[1]
@@ -223,9 +224,10 @@ def rate_history_list_amount():
         return jsonify({"rspCode":31,"taskIDList":"","taskIDAmount":""})
     try:
         taskIDList = []
-        list_ = db.session.query(comment.taskID).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
-        for commentID in list_:  
-            taskIDList.append(commentID[0])
+        list_ = db.session.query(comment.taskID,comment.SRComment,comment.SPComment).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).all()
+        for commentID in list_:
+            if commentID[1] != None or commentID[2] != None:  
+                taskIDList.append(commentID[0])
         return jsonify({"rspCode":20,"taskIDList":taskIDList,"taskIDAmount":len(taskIDList)})
     except:
         return jsonify({"rspCode":48,"taskIDList":"","taskIDAmount":""})
@@ -237,15 +239,15 @@ def rate_history_list_amount():
 @Comment.route("/rate_history_list", methods = ['POST'])
 def rate_history_list():
     if request.method != 'POST':
-        return jsonify({"commentList":"","rspCode":30,"commentAmount":""})
+        return jsonify({"rspCode":30})
     if session.get('userType') != userType['GM']:
         #此帳號不是GM
-        return jsonify({"commentList":"","rspCode":31,"commentAmount":""})
+        return jsonify({"rspCode":31})
     try:
         json = request.get_json()
         taskID_ = int(json['taskID'])
     except:
-        return jsonify({"commentList":"","rspCode":49,"commentAmount":""})
+        return jsonify({"rspCode":49})
     comment_list = db.session.query(comment).filter(or_(comment.commentStatus == 2,comment.commentStatus == 1)).filter(comment.taskID >= taskID_).limit(1).all()
     commentList = []
     try:
@@ -268,9 +270,8 @@ def rate_history_list():
                 ,"SRName":task_.SR[0].name,"SRComment":SRComment, "SPID":str(task_.SP[0].userID), "SPName":task_.SP[0].name\
                 , "SPStar":SPStar, "SPComment":SPComment,"SRPhone":task_.SR[0].userPhone,"SPPhone":task_.SP[0].userPhone,"gmID":str(comment_.adminID)\
                 ,"approveResult":str(comment_.commentStatus),"rspCode":20})
-        return jsonify({"commentList":commentList,"rspCode":20,"commentAmount":str(len(commentList))})
     except:
         #資料有問題
-        return jsonify({"commentList":"","rspCode":41,"commentAmount":""})
+        return jsonify({"rspCode":41})
 
 

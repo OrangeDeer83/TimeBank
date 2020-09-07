@@ -108,7 +108,7 @@
         margin: auto;
         margin-bottom: calc(20vh);
         width: 500px;
-        height: 520px;
+        /*height: 570px;*/
         border-radius: 12px;
     }
     .formLabelDiv, .formTextDiv
@@ -148,7 +148,7 @@
 {
     .pointDiv
     {
-        margin-top: calc(50vh - 300px);
+        margin-top: 50px;
     }
 }
 
@@ -156,13 +156,13 @@
 {
     body
     {
-        margin-top: 120px;
+        margin-top: 70px;
         height: 100%;
         background-color: var(--background-color);
     }
     .pointDiv
     {
-        height: 550px;
+        /*height: 550px;*/
         border: none;
     }
     .formColumn
@@ -207,13 +207,9 @@
         width: 50%;
         height: 25px;
     }
-}
-
-@media (max-width: 450px)
-{
     #footer
     {
-        margin-top: 70px;
+        margin-top: 100px;
     }
 }
 

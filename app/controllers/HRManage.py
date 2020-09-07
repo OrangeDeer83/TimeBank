@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint, request, session, jsonify
 import re
 from sqlalchemy.sql import func
@@ -313,6 +314,7 @@ def changePassword():
             except:
                 return jsonify({"rspCode": 40})          #非法字元
             adminID = value['adminID']
+            print(type(adminID))
             SAID = session.get('adminID')
             try:
                 SA_data = adminAccount.query.filter(adminAccount.adminID == SAID).first()
@@ -332,7 +334,7 @@ def changePassword():
                     db.session.commit()
                 except:
                     return jsonify({"rspCode": 30})          #資料庫錯誤
-                return jsonify({"rspCode": 20})              #刪除成功
+                return jsonify({"rspCode": 20})              #密碼更改成功
             else:
                 return ({"rspCode": 18})                 #尚未輸入第一次密碼
         else:

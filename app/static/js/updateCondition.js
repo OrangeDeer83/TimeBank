@@ -354,7 +354,7 @@ function deleteClass()
         switch (rst.rspCode)
         {
             case "200": case 200:
-                alert("條件已刪除");
+                alert("類別已刪除");
                 window.location.reload();
                 return ;
             case "300": case 300:

@@ -187,7 +187,7 @@ def GM_login():
         try:
             value = request.get_json()
         except:
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 404})          #非法字元
         adminName = value['adminName']
         adminPassword = value['adminPassword']
         try:
@@ -280,7 +280,7 @@ def SA_detect_repeated():
         try:
             value = request.get_json()
         except:     
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 409})          #非法字元
         adminName = value['adminName']
         if re.search(r"^(?!.*[\u4e00-\u9fa5])\w{1,20}$", adminName) == None:
             return jsonify({"rspCode": 401})  #帳號格式不符
@@ -353,10 +353,10 @@ def GM_register():
                     status = GM_verify_mail(token_cut, GMMail)
                     if status == {}:
                         print("寄信成功\n")
-                        return jsonify({"rspCode": 201})             #電子郵件已申請過，驗證信再次寄出
+                        return jsonify({"rspCode": 200})             #電子郵件已申請過，驗證信再次寄出
                     else:
                         print("寄信失敗\n")
-                        return jsonify({"rspCode": 408})             #驗證信寄送失敗
+                        return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 elif existMail.adminType == userType['STOP']:
                     print(123)
                     token = GM_verify_token(current_app.config['SECRET_KEY'], existMail.adminID)
@@ -364,12 +364,12 @@ def GM_register():
                     status = GM_verify_mail(token_cut, GMMail)
                     if status == {}:
                         print("寄信成功\n")
-                        return jsonify({"rspCode": 202})             #電子郵件已申請過，驗證信再次寄出
+                        return jsonify({"rspCode": 200})             #電子郵件已申請過，驗證信再次寄出
                     else:
                         print("寄信失敗\n")
-                        return jsonify({"rspCode": 409})             #驗證信寄送失敗
+                        return jsonify({"rspCode": 407})             #驗證信寄送失敗
                 else:
-                    return jsonify({"rspCode": 410})          #電子郵件與他人重複
+                    return jsonify({"rspCode": 408})          #電子郵件與他人重複
             else:
                 try:
                     salt = generate_salt()
@@ -384,10 +384,10 @@ def GM_register():
                 status = GM_verify_mail(token_cut, GMMail)
                 if status == {}:
                     print("寄信成功\n")
-                    return jsonify({"rspCode": 203})             #帳號申請成功，驗證信已寄出
+                    return jsonify({"rspCode": 200})             #帳號申請成功，驗證信已寄出
                 else:
                     print("寄信失敗\n")
-                    return jsonify({"rspCode": 411})             #驗證信寄送失敗
+                    return jsonify({"rspCode": 407})             #驗證信寄送失敗
     else:
         return ({"rspCode": 300})                             #method使用錯誤
 
@@ -503,7 +503,7 @@ def GM_forgot_password():
         try:
             value = request.get_json()
         except:
-            return jsonify({"rspCode": 403})          #非法字元
+            return jsonify({"rspCode": 406})          #非法字元
         GMMail = value['GMMail']
         if len(GMMail) > 50 or len(GMMail) < 1:
             return ({"rspCode": 401})      #電子郵件長度不符

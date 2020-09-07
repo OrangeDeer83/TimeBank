@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint, session, jsonify, request
 from ..models.model import *
 from ..models import db, userType,noticeType
@@ -64,7 +65,7 @@ def approve():
         reportStatus_ = int(json['reportStatus'])
     except:
         return jsonify({"rspCode":49})
-    if db.session.query(adminAccount).filter(adminAccount.adminID == adminID_).first() == None:
+    if db.session.query(adminAccount).filter(adminAccount.adminID == adminID_).first() == None: 
         return jsonify({"rspCode":44}) 
     if not(reportStatus_ in [1,2]):
         #Status 不合法

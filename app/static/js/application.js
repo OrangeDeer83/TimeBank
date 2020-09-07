@@ -9,6 +9,7 @@ const error = document.getElementById("error");
 const userClass = document.getElementById("userClass");
 var classList = [];
 var currentQuotaList = [5];
+const applyDocument = document.getElementById('applyDocument');
 
 // Show all error.
 function showError(rspCode)
@@ -244,6 +245,12 @@ function showQuota(index)
         document.getElementById("applyFrequency").value = "1";
     }
 }
+
+
+applyDocument.addEventListener('change', (newDocument) =>
+{
+    document.getElementById('uploadFileLabel').innerHTML = newDocument.target.files[0].name;
+});
 
 // Send application to the server.
 function sendApplication()

@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Blueprint ,url_for, jsonify ,request ,current_app, send_from_directory ,session, redirect
 from ..models.model import *
 from ..models.dao import *

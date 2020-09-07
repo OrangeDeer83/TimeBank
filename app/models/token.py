@@ -1,3 +1,4 @@
+#coding:utf-8
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 
 def USER_forgot_password_token(key, userID):

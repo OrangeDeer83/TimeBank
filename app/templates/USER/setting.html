@@ -25,9 +25,9 @@
                 <div class="formPicture">
                     <form action="/account/setting/propic" method="POST" enctype="Multipart/Form-Data">
                         <div class="upload">
-                            <input id="upload_img" type="file" name="propic" accept="image/*" />
+                            <input id="upload_img" type="file" name="propic" accept="image/*" onchange="previewImg()" />
                             <!--<input type="text" id="userIDFile" name="userID" style="display:none">正式版會移除-->
-                            <label for="upload_img"><img class="photo" id="profilePicture" src="../static/img/photo.jpg" /></label>
+                            <label for="upload_img"><img class="photo" id="profilePicture" src="{{url_for('static', filename='img/photo.jpg')}}" /></label>
                         </div>
                         <div id="limit">大小限制為5MB</div>
                         <div class="formSave">
